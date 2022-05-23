@@ -182,7 +182,16 @@ const func = {
 
 		document.getElementById('wrap').removeChild(document.getElementById('modal'));
 
-		func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/${url}`, input.value, true, 'application/yaml', func.refresh);
+
+		var sendData = JSON.stringify ({
+			cluster : sessionStorage.getItem('cluster'),
+			namespace : sessionStorage.getItem('nameSpace'),
+			resourceName : url,
+			yaml : input.value
+		});
+
+
+		func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/${url}`, sendData, true, 'application/json', func.refresh);
 	}, false);
 	},
 
@@ -232,7 +241,15 @@ const func = {
 
 		document.getElementById('wrap').removeChild(document.getElementById('modal'));
 
-		func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/${document.getElementById('modify').getAttribute('data-role')}/${sessionStorage.getItem('commonName')}`, input.value, true, 'application/yaml', func.refresh);
+		var sendData = JSON.stringify ({
+			cluster : sessionStorage.getItem('cluster'),
+			namespace : sessionStorage.getItem('nameSpace'),
+			resourceName : sessionStorage.getItem('commonName'),
+			yaml : input.value
+		});
+
+
+		func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/${document.getElementById('modify').getAttribute('data-role')}/${sessionStorage.getItem('commonName')}`, sendData, true, 'application/json', func.refresh);
 	}, false);
 	},
 
@@ -339,35 +356,35 @@ const func = {
 		var request = new XMLHttpRequest();
 
 		setTimeout(function() {
-		request.open(method, url, false);
-		request.setRequestHeader('Content-type', header);
-		request.setRequestHeader('Authorization', sessionStorage.getItem('token'));
-		request.setRequestHeader('uLang', CURRENT_LOCALE_LANGUAGE);
-		
-		request.onreadystatechange = () => {
-			if (request.readyState === XMLHttpRequest.DONE){
-				if(request.status === 200 && request.responseText != ''){
+			request.open(method, url, false);
+			request.setRequestHeader('Content-type', header);
+			request.setRequestHeader('Authorization', sessionStorage.getItem('token'));
+			request.setRequestHeader('uLang', CURRENT_LOCALE_LANGUAGE);
 
-					//토큰 만료 검사
-					if(JSON.parse(request.responseText).resultMessage == 'TOKEN_EXPIRED') {
-						func.refreshToken();
-						return func.loadData(method, url, header, callbackFunction, list);
-					}
-					else if(JSON.parse(request.responseText).resultMessage == 'TOKEN_FAILED') {
+			request.onreadystatechange = () => {
+				if (request.readyState === XMLHttpRequest.DONE){
+					if(request.status === 200 && request.responseText != ''){
+
+						//토큰 만료 검사
+						if(JSON.parse(request.responseText).resultMessage == 'TOKEN_EXPIRED') {
+							func.refreshToken();
+							return func.loadData(method, url, header, callbackFunction, list);
+						}
+						else if(JSON.parse(request.responseText).resultMessage == 'TOKEN_FAILED') {
+							func.loginCheck();
+							return func.loadData(method, url, header, callbackFunction, list);
+						}
+						else {
+							callbackFunction(JSON.parse(request.responseText), list);
+						}
+					} else if(JSON.parse(request.responseText).httpStatusCode === 500){
+						sessionStorage.clear();
 						func.loginCheck();
-						return func.loadData(method, url, header, callbackFunction, list);
-					}
-					else {
-						callbackFunction(JSON.parse(request.responseText), list);
-					}
-				} else if(JSON.parse(request.responseText).httpStatusCode === 500){
-					sessionStorage.clear();
-					func.loginCheck();
+					};
 				};
 			};
-		};
 
-		request.send(); },0);
+			request.send(); },0);
 	},
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -385,58 +402,58 @@ const func = {
 		var request = new XMLHttpRequest();
 
 		setTimeout(function() {
-		request.open(method, url, false);
-		request.setRequestHeader('Content-type', header);
-		request.setRequestHeader('Authorization', sessionStorage.getItem('token'));
-		request.setRequestHeader('uLang', CURRENT_LOCALE_LANGUAGE);
+			request.open(method, url, false);
+			request.setRequestHeader('Content-type', header);
+			request.setRequestHeader('Authorization', sessionStorage.getItem('token'));
+			request.setRequestHeader('uLang', CURRENT_LOCALE_LANGUAGE);
 
-		request.onreadystatechange = () => {
-			if (request.readyState === XMLHttpRequest.DONE){
-				if(request.status === 200 && request.responseText != ''){
+			request.onreadystatechange = () => {
+				if (request.readyState === XMLHttpRequest.DONE){
+					if(request.status === 200 && request.responseText != ''){
 
-					//토큰 만료 검사
-					if(JSON.parse(request.responseText).resultMessage == 'TOKEN_EXPIRED') {
-						func.refreshToken();
-						return func.saveData(method, url, data, bull, header, callFunc);
-					}
-					else if(JSON.parse(request.responseText).resultMessage == 'TOKEN_FAILED') {
-						func.loginCheck();
-						return func.loadData(method, url, header, callbackFunction, list);
-					}
-                    else {
-						document.getElementById('wrap').removeChild(document.getElementById('loading'));
+						//토큰 만료 검사
+						if(JSON.parse(request.responseText).resultMessage == 'TOKEN_EXPIRED') {
+							func.refreshToken();
+							return func.saveData(method, url, data, bull, header, callFunc);
+						}
+						else if(JSON.parse(request.responseText).resultMessage == 'TOKEN_FAILED') {
+							func.loginCheck();
+							return func.loadData(method, url, header, callbackFunction, list);
+						}
+						else {
+							document.getElementById('wrap').removeChild(document.getElementById('loading'));
 
-						if (method == 'POST') {
-							if (JSON.parse(request.responseText).httpStatusCode == 200) {
+							if (method == 'POST') {
+								if (JSON.parse(request.responseText).httpStatusCode == 200) {
+									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
+								} else {
+									func.alertPopup('ERROR', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, 'closed');
+								}
+							} else if (method == 'PATCH') {
 								func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-							} else {
-								func.alertPopup('ERROR', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, 'closed');
-							}
-						} else if (method == 'PATCH') {
-							func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-						} else if (method == 'PUT') {
-							if (JSON.parse(request.responseText).httpStatusCode != 400) {
+							} else if (method == 'PUT') {
+								if (JSON.parse(request.responseText).httpStatusCode != 400) {
+									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
+								} else {
+									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, func.refresh);
+								}
+							} else if (method == 'DELETE') {
 								func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-							} else {
-								func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, func.refresh);
-							}
-						} else if (method == 'DELETE') {
-							func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-						};
-					}
-				} else {
-					/*
-					if(method == 'DELETE'){
-						/func.alertPopup('DELETE', 'DELETE FAILED', func.winReload);
+							};
+						}
 					} else {
-						/func.alertPopup('SAVE', 'SAVE FAILED', func.winReload);
+						/*
+                        if(method == 'DELETE'){
+                            /func.alertPopup('DELETE', 'DELETE FAILED', func.winReload);
+                        } else {
+                            /func.alertPopup('SAVE', 'SAVE FAILED', func.winReload);
+                        };
+                        */
 					};
-					*/
 				};
 			};
-		};
 
-		request.send(data); }, 0);
+			request.send(data); }, 0);
 	},
 
 	/////////////////////////////////////////////////////////////////////////////////////
