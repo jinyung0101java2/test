@@ -1,6 +1,6 @@
 spring:
   application:
-    name: paas-ta-container-platform-admin
+    name: cp-portal-webadmin
 
 management:
   security:
@@ -8,7 +8,7 @@ management:
 
 private:
   registry:
-    imageName: paas-ta-container-platform-harbor
+    imageName: cp-harbor
 
 keycloak:
   oauth:
@@ -34,13 +34,6 @@ spring:
   profiles: local
   freemarker:
     template-loader-path: classpath:/templates/
-  devtools:
-    livereload:
-      enabled: true
-  thymeleaf:
-    cache: false
-  resources:
-    static-locations: file:src/main/resources/static/
 
 logging:
   level:
@@ -81,20 +74,20 @@ logging:
   file: logs/application.log
 
 server:
-  port: ${WEBADMIN_SERVER_PORT}
+  port: ${PORT:8090}
   servlet:
     session:
       cookie:
         name: CPADMINPORTALSESSION
 
 cpApi:
-  url: ${CONTAINER_PLATFORM_API_URI}
+  url: ${CP_PORTAL_API_URI}
   authorization:
     id: admin
     password: PaaS-TA
 
 commonApi:
-  url: ${CONTAINER_PLATFORM_COMMON_API_URI}
+  url: ${CP_PORTAL_COMMON_API_URI}
   authorization:
     id: admin
     password: PaaS-TA
