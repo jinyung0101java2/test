@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page users">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
+            </ul>
+            <!-- Click event class="on" -->
+            <fieldset>
+                <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+                <button type="submit" id="search" th:text="#{M0031}"></button>
+            </fieldset>
+        </article>
+        <article class="base">
+            <div class="notice">
+                <!-- tab menu -->
+                <ul id="tabParent">
+                    <li class="on">
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)" class="tabBtn">Administrator</a>
+                    </li>
+                    <li>
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_USERS)">User</a>
+                    </li>
+                </ul>
+                <!-------------------- Administrator Tab -------------------->
+                <div class="table_style01 on">
+                    <!-- board -->
+                    <table>
+                        <caption>Administrator List</caption>
+                        <colgroup >
+                            <col width="25%" />
+                            <col width="25%" />
+                            <col width="25%" />
+                            <col width="25%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">User ID</th>
+                            <th scope="col">Authority</th>
+                            <th scope="col">Roles</th>
+                            <th scope="col">Created Time</th>
+                        </tr>
+                        </thead>
+                        <tbody class="adminList">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- btn -->
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(4, 0);
+            document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+
+            const user = {
+                offset : 0, // 로드 페이지 넘버
+                limit : 10, // 로드 게시물 개수
+                allItemCount : 0, //게시물 촐 개수
+                type : 'administrator',
+                trID : '',
+                trSum : 0,
+
+                init(){
+                    func.nameLoad = user.reset;
+
+                    user.load();
+
+                    user.event();
+                },
+
+                reset(){
+                    func.removeHtml(document.querySelector('.adminList'));
+
+                    user.offset = 0;
+                    user.trID = '';
+
+                    user.load();
+                },
+
+                load(){
+                    func.loading();
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users?userType=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
+                },
+
+                draw(data){
+
+                    if(user.offset == 0) user.allItemCount = data.itemMetaData.allItemCount;
+
+                    if(user.allItemCount > 0){
+                        for(var i=0; i<=data.items.length-1; i++){
+                            if(user.trID != `u${data.items[i].userId.replace(/\./gi, '')}`){
+                                user.trID = `u${data.items[i].userId.replace(/\./gi, '')}`;
+                                user.trSum = 1;
+
+                                var html = `<tr>
+									<td class="left ${user.trID}" data-class="${user.trID}"><a href="javascript:;" data-name="${data.items[i].userId}" data-spac="ALL">${data.items[i].userId}</a></td>
+									<td class="left">${convertUserTypeString(data.items[i].userType)}</td>
+									<td class="left">${data.items[i].roleSetCode}</td>
+									<td class="${user.trID}" data-class="${user.trID}">${data.items[i].created}</td>
+								</tr>`;
+                            }
+
+                            func.appendHtml(document.querySelector('.adminList'), html, 'tbody');
+                        };
+                    } else {
+                        var html = `<tr><td colspan="6">No Data.</td></tr>`;
+
+                        func.removeHtml(document.querySelector('.adminList'));
+
+                        func.appendHtml(document.querySelector('.adminList'), html, 'tbody');
+                    }
+
+
+                    if(document.getElementById('loading')){
+                        document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                    };
+
+                    user.listEvent();
+                },
+
+                event(){
+
+                    var tabBtn = document.querySelectorAll('.tabBtn');
+
+                    for(var i=0; i<=tabBtn.length-1; i++){
+                        tabBtn[i].addEventListener('click', (e) => {
+                            document.getElementById('searchText').value = '';
+
+                        if(e.target.parentNode.classList != 'on'){
+                            var tab = document.getElementById('tabParent').children;
+
+                            for(var j=0; j<=tab.length-1; j++){
+                                tab[j].classList.toggle('on', false);
+                            };
+
+                            e.target.parentNode.classList.toggle('on', true);
+
+                            user.offset = 0;
+
+                            user.type = e.target.innerText.toLowerCase();
+
+                            func.removeHtml(document.querySelector('.adminList'));
+
+                            user.load();
+                        };
+                    }, false);
+                    };
+                },
+
+                listEvent(){
+                    var listAll = document.querySelector('.adminList').querySelectorAll('a');
+
+                    for(var i=0; i<=listAll.length-1; i++){
+                        listAll[i].addEventListener('click', (e) => {
+                            sessionStorage.setItem('nameSpace', e.target.getAttribute('data-spac'));
+                        sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
+
+                        document.location.href = URI_CP_MANAGEMENTS_USERS_ADMIN + URI_CP_DETAILS;
+                    }, true);
+                    };
+                },
+            }
+
+            user.init();
+        }
+    </script>
+</th:block>
+</html>

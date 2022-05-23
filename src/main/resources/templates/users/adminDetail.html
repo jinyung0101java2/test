@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+            <article class="location">
+                <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
+                </ul>
+            </article>
+            <article class="base detail">
+                <div class="notice">
+                    <h4>Details</h4>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Details</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="listTable">
+                            <tr>
+                                <th scope="row" class="left">User ID</th>
+                                <td class="left customBorderTop" id="uid"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Services Account</th>
+                                <td class="left" id="account"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Created time</th>
+                                <td class="left" id="time"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Details</caption>
+                            <colgroup >
+                                <col width="18%" />
+                                <col width="13%" />
+                                <col width="14%" />
+                                <col width="14%" />
+                                <col width="13%" />
+                                <col width="13%" />
+                                <col width="13%" />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col" rowspan="2">Services Account UID</th>
+                                <th scope="col" rowspan="2">Namespaces</th>
+                                <th scope="col" rowspan="2">Authority</th>
+                                <th scope="col" rowspan="2">Role</th>
+                                <th scope="col" colspan="3">Secrets</th>
+                            </tr>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Label</th>
+                                <th scope="col">Type</th>
+                            </tr>
+                            </thead>
+                            <tbody class="detailList">
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4 class="kubernetes">Kubernetes Clusters Info</h4>
+                    <div class="table_style01 kubernetes">
+                        <table>
+                            <caption>kubernetes Clusters Info</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="listTable">
+                            <tr>
+                                <th scope="row" class="left">Name</th>
+                                <td class="left customBorderTop" id="name"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">API URL</th>
+                                <td class="left" id="url"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Token</th>
+                                <td class="left" id="token"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- btn -->
+                <div class="btn02">
+                    <div>
+                        <a href="javascript:;" id="modify" th:text="#{M0025}"></a>
+                        <a class="beforeBtn" onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)" th:text="#{M0028}"></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(4, 0);
+
+        const userDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                func.loading();
+
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}?userType=`+ SELECTED_ADMINISTRATOR, 'application/json', userDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('uid').innerText = data.userId;
+                document.getElementById('account').innerText = data.serviceAccountName;
+                document.getElementById('time').innerText = data.created;
+
+                // Kubernetes Clusters Info
+                document.getElementById('name').innerText = data.clusterName;
+                document.getElementById('url').innerText = data.clusterApiUrl;
+                document.getElementById('token').innerText = data.clusterToken;
+
+                if(data.items.length > 0){
+                    for(var i=0; i<=data.items.length-1; i++){
+                        var html = `<tr>
+								<td class="left">${data.items[i].serviceAccountUid}</td>
+								<td class="left">${data.items[i].cpNamespace}</td>
+								<td class="left">${convertUserTypeString(data.items[i].userType)}</td>
+								<td class="left">${data.items[i].roleSetCode}</td>
+								<td class="left">${data.items[i].secrets.saSecret}</td>`;
+
+                        var label = '';
+
+                        if(data.items[i].secrets.secretLabels != '-'){
+                            for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].secrets.secretLabels).length-1; j++){
+                                label += `<dl>
+										<dt>${Object.getOwnPropertyNames(data.items[i].secrets.secretLabels)[j]}</dt>
+										<dd>${data.items[i].secrets.secretLabels[Object.keys(data.items[i].secrets.secretLabels)[j]]}</dd>
+									</dl>`;
+                            };
+                        } else {
+                            label = `<dl><dt>-</dt></dl>`;
+                        }
+
+                        html += `<td class="left box">${label}</td>`;
+
+                        html += `<td class="left">${data.items[i].secrets.secretType}</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                    };
+                } else {
+                    var html = '<tr><td colspan="7">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                };
+
+                document.getElementById('wrap').removeChild(document.getElementById('loading'));
+
+                userDetail.event();
+            },
+
+            event(){
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    var params = "?userType=" + SELECTED_ADMINISTRATOR;
+                    document.location.href = URI_CP_MANAGEMENTS_USERS + URI_CP_UPDATE + params;
+            }, false);
+            }
+        }
+
+        userDetail.init();
+    }
+</script>
+</th:block>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Workloads</a></li>
+                <li><a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">Replica Sets</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left" id="name"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">UID</th>
+                            <td class="left" id="uid"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Namespaces</th>
+                            <td class="left" id="space"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Labels</th>
+                            <td class="left box" id="label"></div>
+                </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="left">Annotations</th>
+                    <td class="left box" id="annot"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="left">Created time</th>
+                    <td class="left" id="time"></td>
+                </tr>
+                </tbody>
+                </table>
+            </div>
+            <h4>Resource Info</h4>
+            <div class="table_style01">
+                <table>
+                    <caption>Resource Info</caption>
+                    <colgroup >
+                        <col width="20%" />
+                        <col width="80%" />
+                    </colgroup>
+                    <tbody class="listTable">
+                    <tr>
+                        <th scope="row" class="left">Selector</th>
+                        <td class="left box" id="selector"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="left">Image</th>
+                        <td class="left" id="image"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4>Pods</h4>
+            <div class="table_style01">
+                <table>
+                    <caption>Pods</caption>
+                    <colgroup >
+                        <col width="20%" />
+                        <col width="20%" />
+                        <col width="26%" />
+                        <col width="8%" />
+                        <col width="8%" />
+                        <col width="18%" />
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Namespaces</th>
+                        <th scope="col">Labels</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Restarts</th>
+                        <th scope="col">Created time</th>
+                    </tr>
+                    </thead>
+                    <tbody class="podsList">
+                    </tbody>
+                </table>
+            </div>
+            <h4>Events</h4>
+            <div class="table_style01">
+                <table>
+                    <caption>Events</caption>
+                    <colgroup >
+                        <col width="20%" />
+                        <col width="20%" />
+                        <col width="16%" />
+                        <col width="8%" />
+                        <col width="18%" />
+                        <col width="18%" />
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col">Message</th>
+                        <th scope="col">Source</th>
+                        <th scope="col">Sub-object</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">First seen</th>
+                        <th scope="col">Last seen</th>
+                    </tr>
+                    </thead>
+                    <tbody class="eventList">
+                    </tbody>
+                </table>
+            </div>
+
+    <!-- btn -->
+    <div class="btn02">
+        <button type="submit" id="delete" th:text="#{M0026}"></button>
+        <div>
+            <a href="javascript:;" id="modify" data-role="replicaSets" th:text="#{M0025}"></a>
+            <a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)" th:text="#{M0028}"></a>
+        </div>
+    </div>
+    </article>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(1, 2);
+
+        const replica = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // replica 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/replicaSets/${sessionStorage.getItem('commonName')}`, 'application/json', replica.draw);
+            },
+
+            draw(data){
+
+
+
+                // Details data
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('uid').innerText = data.uid;
+                document.getElementById('space').innerText = sessionStorage.getItem('nameSpace');
+
+                if(data.labels != '-'){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.labels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.labels)[i]}</dt><dd>${data.labels[Object.keys(data.labels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('label'), html, 'dl');
+                    };
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('label'), html, 'dl');
+                };
+
+                document.getElementById('time').innerText = data.creationTimestamp;
+
+                if(data.annotations.length > 0){
+                    for(i=0; i<=data.annotations.length-1; i++){
+                        if(data.annotations[i].checkYn == 'Y'){
+                            var html = `<dl class="fly">
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else if(data.annotations[i].checkYn == 'N'){
+                            var html = `<dl>
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else {
+                            var html = `<dl>
+												<dt>-</dt>
+											</dl>`;
+                        };
+
+                        func.appendHtml(document.getElementById('annot'), html, 'dl');
+                    };
+                };
+
+                // Resource Info
+                if(data.selector.matchLabels != '-'){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.selector.matchLabels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.selector.matchLabels)[i]}</dt><dd>${data.selector.matchLabels[Object.keys(data.selector.matchLabels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('selector'), html, 'dl');
+                    };
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('selector'), html, 'dl');
+                };
+
+                document.getElementById('image').innerText = data.image;
+                //document.getElementById('address').innerText = JSON.stringify(data.addresses).replace(/\[{/gi, "").replace(/\}]/gi, "").replace(/\},{/gi, "\n");
+
+                var matchLabel = JSON.stringify(data.selector.matchLabels).replace(/\"/gi, "").replace(/\{/gi, "").replace(/\}/gi, "").split(',');
+
+                var replicaKey = '';
+
+                for(var i=0; i<=matchLabel.length-1; i++){
+                    matchLabel[i] = matchLabel[i].split(':');
+                };
+
+                for(var j=0; j<=matchLabel.length-1; j++){
+                    if(j > 0) replicaKey += ',';
+                    replicaKey += ''+matchLabel[j][0];
+                    replicaKey += '='+matchLabel[j][1];
+                };
+
+                // pods 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/pods/resources?selector=${replicaKey}&type=replicaSets&ownerReferencesUid=${data.uid}&offset=0&limit=100`, 'application/json', replica.podsList);
+
+                // event 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/events/resources/${data.uid}`, 'application/json', replica.eventList);
+            },
+
+            podsList(data){
+
+                func.removeHtml(document.querySelector('.podsList'));
+
+                if(data.items.length > 0){
+                    for(var i=0; i<=data.items.length-1; i++){
+                        var html = `<tr>
+								<td class="left">${data.items[i].name}</td>
+								<td class="left">${data.items[i].namespace}</td>`;
+
+
+                        var label = '';
+
+                        if(data.labels != '-'){
+                            for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].labels).length-1; j++){
+                                label += `<dl><dt>${Object.getOwnPropertyNames(data.items[i].labels)[j]}</dt><dd>${data.items[i].labels[Object.keys(data.items[i].labels)[j]]}</dd></dl>`;
+                            };
+                        } else {
+                            label = `<dl><dt>-</dt></dl>`;
+                        }
+
+                        html += `<td class="left box">${label}</td>`;
+
+                        html += `<td>${data.items[i].podStatus}</td>
+								<td>${data.items[i].restarts}</td>
+								<td>${data.items[i].creationTimestamp}</td>
+							</tr>`;
+
+                        func.appendHtml(document.querySelector('.podsList'), html, 'tbody');
+                    };
+                } else {
+                    var html = '<tr><td colspan="6">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.podsList'), html, 'tbody');
+                };
+
+                replica.event();
+            },
+
+            eventList(data){
+
+                func.removeHtml(document.querySelector('.eventList'));
+
+                if(data.items.length > 0){
+                    for(var i=0; i<=data.items.length-1; i++){
+                        var html = `<tr>
+								<td class="left">${data.items[i].message}</td>
+								<td class="left">${data.items[i].source.component} ${data.items[i].source.host}</td>
+								<td>${data.items[i].filePath}</td>
+								<td>${data.items[i].count}</td>
+								<td>${data.items[i].firstTimestamp}</td>
+								<td>${data.items[i].lastTimestamp}</td>
+							</tr>`;
+
+                        func.appendHtml(document.querySelector('.eventList'), html, 'tbody');
+                    };
+                } else {
+                    var html = '<tr><td colspan="6">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.eventList'), html, 'tbody');
+                };
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, replica.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/replicaSets/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/replicaSets/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        replica.init();
+    }
+</script>
+</th:block>
+</html>

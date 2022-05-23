@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page clusters">
+        <article class="location">
+            <ul>
+                <li><a href="javascript:;">Overview</a></li>
+                <li><a href="javascript:;">Clusters</a></li>
+                <li>Namespaces</li>
+            </ul>
+        </article>
+        <article class="base">
+            <div class="creat">
+                <h3 th:text="|Namespaces #{M0025}|"></h3>
+                <div>
+                    <dl>
+                        <dt><label for="name">Name</label></dt>
+                        <dd>
+                            <input id="name" type="text" placeholder="Test-Name" disabled/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="user">Admin User</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="user">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <div class="check-quotas">
+                        <p>Resource Quotas</p>
+                        <a href="javascript:;" class="resAdd" th:text="#{M0027}"></a>
+                    </div>
+                    <div class="table_style01 limitTable ">
+                        <table>
+                            <caption class="blind">Resource Quotas</caption>
+                            <colgroup>
+                                <col width="30%"/>
+                                <col width="70%"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody class="resourceQuotas">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="check-quotas">
+                        <p>Limit Ranges</p>
+                        <a href="javascript:;" class="limAdd" th:text="#{M0027}"></a>
+                    </div>
+                    <div class="table_style01 limitTable">
+                        <table>
+                            <colgroup>
+                                <col width="35%"/>
+                                <col width="12%"/>
+                                <col width="14%"/>
+                                <col width="7%"/>
+                                <col width="7%"/>
+                                <col width="13%"/>
+                                <col width="12%"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Resource</th>
+                                <th scope="col">Min</th>
+                                <th scope="col">Max</th>
+                                <th scope="col">Default Request</th>
+                                <th scope="col">Default Limit</th>
+                            </tr>
+                            </thead>
+                            <tbody class="limitQuotas">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button onclick="movePage(URI_CP_CLUSTERS_NAMESPACES + URI_CP_DETAILS);" th:text="#{M0028}"></button>
+                <div>
+                    <button type="submit" id="save" th:text="#{M0030}"></button>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(0, 0);
+
+            const modifyNamespaces = {
+                init() {
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/users/adminCheck`, 'application/json', modifyNamespaces.draw);
+
+                    // resource 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/resourceQuotas/template?offset=0&limit=0`, 'application/json', modifyNamespaces.resource);
+
+                    // limit 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/limitRanges/template?offset=0&limit=0`, 'application/json', modifyNamespaces.limit);
+                },
+
+                draw(data) {
+
+                    document.getElementById('name').value = data.namespace;
+
+                    var select = '';
+
+                    func.appendHtml(document.getElementById('user'), `<option value="" disabled="disabled">`+ MSG_NO_NAMESPACE_ADMINISTRATOR + `</option>`, 'select');
+
+                    for (var i = 0; i <= data.items.length - 1; i++) {
+
+                        var users = data.items[i];
+
+                        if (users.isNsAdmin == 'Y') {
+                            select = users.userId;
+                        };
+
+                        var html = `<option value="${users.userId}">${users.userId}</option>`;
+
+                        func.appendHtml(document.getElementById('user'), html, 'select');
+                    }
+                    ;
+
+                    if (select) {
+                        document.getElementById('user').value = select;
+                    } else {
+                        document.getElementById('user').value = '';
+                    }
+
+                    modifyNamespaces.event();
+                },
+
+                event() {
+                    document.querySelector('.resAdd').addEventListener('click', (e) => {
+                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/resourceQuotas/template`, 'application/json', modifyNamespaces.resourceSelect);
+                    }, false);
+
+                    document.querySelector('.limAdd').addEventListener('click', (e) => {
+                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/limitRanges/template`, 'application/json', modifyNamespaces.limitSelect);
+                    }, false);
+
+                    document.getElementById('save').addEventListener('click', (e) => {
+                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM , modifyNamespaces.modify);
+                    }, false);
+                },
+
+                modify() {
+                    var resourceName = document.querySelector('.resourceQuotas').querySelectorAll('input');
+                    var limitName = document.querySelector('.limitQuotas').querySelectorAll('input');
+
+                    var resourceQuotasList = [];
+                    var limitRangesList = [];
+
+                    for (var i = 0; i <= resourceName.length - 1; i++) {
+                        resourceQuotasList.push(resourceName[i].getAttribute('data-name'));
+                    }
+                    ;
+
+                    for (var j = 0; j <= limitName.length - 1; j++) {
+                        limitRangesList.push(limitName[j].getAttribute('data-name'));
+                    }
+                    ;
+
+                    var createName = {
+                        "name": document.getElementById('name').value,
+                        "nsAdminUserId": document.getElementById('user').value,
+                        "resourceQuotasList": resourceQuotasList,
+                        "limitRangesList": limitRangesList,
+                    };
+
+                    func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}`, JSON.stringify(createName), true, 'application/json', modifyNamespaces.returnPage);
+                },
+
+                returnPage() {
+                    document.location.href = URI_CP_CLUSTERS_NAMESPACES + URI_CP_DETAILS;
+                },
+
+                resource(data) {
+
+
+                    func.removeHtml(document.querySelector('.resourceQuotas'));
+
+
+                    for (var i = 0; i <= data.items.length - 1; i++) {
+                        if (data.items[i].checkYn == 'Y') {
+                            var html = `<tr><td><input type="checkbox" data-name="${data.items[i].name}"></td><td class="left">${data.items[i].name}</td><td class="left">${data.items[i].status}</td></tr>`;
+
+                            func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
+                        }
+                        ;
+                    }
+                    ;
+
+                    if (document.querySelector('.resourceQuotas').querySelectorAll('tbody tr').length == 0) {
+                        var html = `<tr><td></td><td colspan="2">No Data.</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
+                    }
+                    ;
+                },
+
+                limit(data) {
+
+                    func.removeHtml(document.querySelector('.limitQuotas'));
+
+
+                    for (var i = 0; i <= data.items.length - 1; i++) {
+                        if (data.items[i].checkYn == 'Y') {
+                            var html = `<tr>
+											<td><input type="checkbox" data-name="${data.items[i].name}" data-comp="${data.items[i].name}${data.items[i].type}${data.items[i].resource}"></td>
+											<td class="left">${data.items[i].name}</td>
+											<td>${data.items[i].type}</td>
+											<td>${data.items[i].resource}</td>
+											<td>${data.items[i].min}</td>
+											<td>${data.items[i].max}</td>
+											<td>${data.items[i].defaultRequest}</td>
+											<td>${data.items[i].defaultLimit}</td>
+										</tr>`;
+
+                            func.appendHtml(document.querySelector('.limitQuotas'), html, 'tbody');
+                        }
+                        ;
+                    }
+
+                    if (document.querySelector('.limitQuotas').querySelectorAll('tbody tr').length == 0) {
+                        var html = `<tr><td></td><td colspan="7">No Data.</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.limitQuotas'), html, 'tbody');
+                    }
+                    ;
+
+                },
+
+                resourceSelect(data) {
+
+                    if (data.items.length > 0) {
+                        var html = `<div class='modal-wrap' id='modal'><div class='modal wide'><h5>Resource Quotas</h5>`;
+
+                        html += `<div class="table_style01">
+									<table>
+										<caption>Resource Quotas</caption>
+										<colgroup >
+											<col width="7%" />
+											<col width="27%" />
+											<col width="66%" />
+										</colgroup>
+										<thead>
+											<tr>
+												<th scope="col"></th>
+												<th scope="col">Name</th>
+												<th scope="col">Status</th>
+											</tr>
+										</thead>
+										<tbody class="resourceList">`;
+
+                        var select = document.querySelector('.resourceQuotas').querySelectorAll('input[type=checkbox]');
+
+                        for (var i = 0; i <= data.items.length - 1; i++) {
+                            var chk = '';
+
+                            for (var j = 0; j <= select.length - 1; j++) {
+                                if (select[j].getAttribute('data-name') == data.items[i].name) {
+                                    chk = 'checked';
+                                }
+                                ;
+                            }
+                            ;
+
+                            html += `<tr>
+										<td><input type="checkbox" id="resourceChk${i}" data-name="${data.items[i].name}" data-stat='${data.items[i].status}' ${chk}><label for="resourceChk${i}"></td>
+										<td class="left">${data.items[i].name}</td>
+										<td class="left">${data.items[i].status}</td>
+									</tr>`;
+                        }
+
+                        html += `			</tbody>
+									</table>
+								</div>`;
+                        html += `<a class='confirm' href='javascript:;'>` +MSG_SELECTION_COMPLETE+ `</a>`;
+                        html += `<a class='close' href='javascript:;'>` + MSG_CLOSE+ `</a></div></div>`;
+
+                        func.appendHtml(document.getElementById('wrap'), html, 'div');
+
+                        document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
+                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                        }, false);
+
+                        document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
+
+                            var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
+
+                            func.removeHtml(document.querySelector('.resourceQuotas'));
+
+                            for (var i = 0; i <= input.length - 1; i++) {
+                                if (input[i].checked == false) {
+                                    document.getElementById('modal').querySelector('.resourceList').removeChild(input[i].parentNode.parentNode);
+                                } else {
+                                    input[i].setAttribute('id', '');
+                                }
+                                ;
+                            }
+                            ;
+
+                            if (document.getElementById('modal').querySelectorAll('.resourceList tr').length > 0) {
+                                var html = document.getElementById('modal').querySelector('.resourceList').innerHTML;
+                            } else {
+                                var html = '<tr><td></td><td colspan="2">No Data.</td></tr>';
+                            }
+                            ;
+
+                            func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
+
+                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                        }, false);
+                    } else {
+                        func.alertPopup('ERROR', MSG_NO_LIST , false, MSG_CLOSE, true);
+                    }
+                    ;
+                },
+
+                limitSelect(data) {
+
+                    if (data.items.length > 0) {
+                        var html = `<div class='modal-wrap' id='modal'><div class='modal wide'><h5>Limit Ranges</h5>`;
+
+                        html += `<div class="table_style01">
+									<table>
+										<caption>Limit Ranges</caption>
+										<colgroup >
+											<col width="7%" />
+											<col width="25%" />
+											<col width="12%" />
+											<col width="15%" />
+											<col width="8%" />
+											<col width="8%" />
+											<col width="13%" />
+											<col width="12%" />
+										</colgroup>
+										<thead>
+											<tr>
+												<th scope="col"></th>
+												<th scope="col">Name</th>
+												<th scope="col">Type</th>
+												<th scope="col">Resource</th>
+												<th scope="col">Min</th>
+												<th scope="col">Max</th>
+												<th scope="col">Default Request</th>
+												<th scope="col">Default Limit</th>
+											</tr>
+										</thead>
+										<tbody class="limitList">`;
+
+                        var select = document.querySelector('.limitQuotas').querySelectorAll('input[type=checkbox]');
+
+                        for (var i = 0; i <= data.items.length - 1; i++) {
+                            var chk = '';
+
+                            for (var j = 0; j <= select.length - 1; j++) {
+                                if (select[j].getAttribute('data-comp') == data.items[i].name + data.items[i].type + data.items[i].resource) {
+                                    chk = 'checked';
+                                }
+                                ;
+                            }
+                            ;
+
+                            html += `<tr>
+										<td><input type="checkbox" id="limitChk${i}" data-name="${data.items[i].name}" data-comp="${data.items[i].name}${data.items[i].type}${data.items[i].resource}" ${chk}><label for="limitChk${i}"></td>
+										<td class="left">${data.items[i].name}</td>
+										<td>${data.items[i].type}</td>
+										<td>${data.items[i].resource}</td>
+										<td>${data.items[i].min}</td>
+										<td>${data.items[i].max}</td>
+										<td>${data.items[i].defaultRequest}</td>
+										<td>${data.items[i].defaultLimit}</td>
+									</tr>`;
+                        }
+                        ;
+
+                        html += `</tbody></table></div>`;
+                        html += `<a class='confirm' href='javascript:;'>`+ MSG_SELECTION_COMPLETE + `</a>`;
+                        html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
+
+                        func.appendHtml(document.getElementById('wrap'), html, 'div');
+
+                        document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
+                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                        }, false);
+
+                        //동일한 limitRanges 정책 체크 추가
+                        var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
+
+                        for(var i=0; i<=input.length-1; i++){
+                            input[i].addEventListener('click', (e) => {
+                                modifyNamespaces.limitRangesChecked(e.target.getAttribute('data-name'), e.target.checked);
+                        }, false);
+                        };
+
+
+
+                        document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
+                            var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
+
+                            func.removeHtml(document.querySelector('.limitQuotas'));
+
+                            for (var i = 0; i <= input.length - 1; i++) {
+                                if (input[i].checked == false) {
+                                    document.getElementById('modal').querySelector('.limitList').removeChild(input[i].parentNode.parentNode);
+                                } else {
+                                    input[i].setAttribute('id', '');
+                                }
+                                ;
+                            }
+                            ;
+
+                            if (document.getElementById('modal').querySelectorAll('.limitList tr').length > 0) {
+                                var html = document.getElementById('modal').querySelector('.limitList').innerHTML;
+                            } else {
+                                var html = '<tr><td></td><td colspan="7">No Data.</td></tr>';
+                            }
+                            ;
+
+                            func.appendHtml(document.querySelector('.limitQuotas'), html, 'tbody');
+
+                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                        }, false);
+                    } else {
+                        func.alertPopup('ERROR', MSG_NO_LIST, false, MSG_CLOSE, true);
+                    }
+                    ;
+                },
+                limitRangesChecked(name,isCheck){
+                    var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
+
+                    for(var i=0; i<=input.length-1; i++){
+                        if(name == input[i].getAttribute('data-name')){
+                            input[i].checked = isCheck;
+                        };
+                    };
+                },
+            }
+
+            modifyNamespaces.init();
+        }
+    </script>
+</th:block>
+</html>

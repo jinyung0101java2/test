@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Storages</a></li>
+                <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)">Storage Classes</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left" id="name"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">UID</th>
+                            <td class="left" id="uid"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Labels</th>
+                            <td class="box left" id="label"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Annotations</th>
+                            <td class="left box" id="annot"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Created time</th>
+                            <td class="left" id="time"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h4>Resource Info</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Resource Info</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="resourceTable">
+                        <tr>
+                            <th scope="row" class="left">Provider</th>
+                            <td class="left" id="provider"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" id="modify" data-role="storageClasses" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(3, 2);
+
+        const storageClassDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/storageClasses/${sessionStorage.getItem('commonName')}`, 'application/json', storageClassDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('uid').innerText = data.uid;
+
+                if(data.labels != '-'){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.labels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.labels)[i]}</dt><dd>${data.labels[Object.keys(data.labels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('label'), html, 'dl');
+                    };
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('label'), html, 'dl');
+                };
+
+                document.getElementById('time').innerText = data.creationTimestamp;
+
+                if(data.annotations.length > 0){
+                    for(i=0; i<=data.annotations.length-1; i++){
+                        if(data.annotations[i].checkYn == 'Y'){
+                            var html = `<dl class="fly">
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else if(data.annotations[i].checkYn == 'N'){
+                            var html = `<dl>
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else {
+                            var html = `<dl>
+												<dt>-</dt>
+											</dl>`;
+                        };
+
+                        func.appendHtml(document.getElementById('annot'), html, 'dl');
+                    };
+                };
+
+                // Resource Info
+                document.getElementById('provider').innerText = data.provisioner;
+
+                if(data.parameters != "-") {
+                    for (var i = 0; i <= Object.getOwnPropertyNames(data.parameters).length - 1; i++) {
+
+                        var html = `<tr><th class="left">${Object.getOwnPropertyNames(data.parameters)[i]}</th><td class="left">${data.parameters[Object.keys(data.parameters)[i]]}</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.resourceTable'), html, 'tbody');
+                    }
+                    ;
+                }
+                storageClassDetail.event();//resourceTable
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, storageClassDetail.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/storageClasses/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/storageClasses/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        storageClassDetail.init();
+    }
+</script>
+</th:block>
+</html>

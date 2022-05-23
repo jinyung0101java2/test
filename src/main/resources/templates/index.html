@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <!-- Content -->
+    <div id="content">
+        <article class="view">
+            <h3>Overview</h3>
+            <div>
+                <dl>
+                    <dt>Namespaces</dt>
+                    <dd id="nameStatus">0</dd>
+                </dl>
+                <dl>
+                    <dt>Deployments</dt>
+                    <dd id="deployStatus">0</dd>
+                </dl>
+                <dl>
+                    <dt>Pods</dt>
+                    <dd id="podStatus">0</dd>
+                </dl>
+                <dl>
+                    <dt>Users</dt>
+                    <dd id="userStatus">0</dd>
+                </dl>
+            </div>
+        </article>
+        <article class="chart">
+            <h4>Charts</h4>
+            <ul>
+                <li id="deployChart">
+                    <h5>Deployment</h5>
+                    <!-- doughnutChart -->
+                    <div class="pie">
+                    </div>
+                    <ul class="legend">
+                    </ul>
+                    <a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">more</a>
+                </li>
+                <li id="podChart">
+                    <h5>Pods</h5>
+                    <div class="pie">
+                    </div>
+                    <ul class="legend">
+                    </ul>
+                    <a onclick="movePage(URI_CP_WORKLOADS_PODS)">more</a>
+                </li>
+                <li id="servicesChart">
+                    <h5>Replica Sets</h5>
+                    <div class="pie">
+                    </div>
+                    <ul class="legend">
+                    </ul>
+                    <a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">more</a>
+                </li>
+            </ul>
+        </article>
+    </div>
+    <!-- // Content -->
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init();
+
+            const overview = {
+                init() {
+                    func.nameLoad = overview.load;
+
+                    sessionStorage.setItem('nameSpace', 'ALL');
+
+                    overview.load();
+                },
+
+                load() {
+                    func.loading();
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/overview`, 'application/json', overview.draw);
+                },
+
+                draw(data) {
+
+                    if (data.httpStatusCode == 500) {
+
+                    }
+
+                    var legends = document.querySelectorAll('.legend');
+
+                    for (var i = 0; i < legends.length; i++) {
+                        func.removeHtml(legends[i]);
+                    }
+                    ;
+
+                    // dstatus setting
+                    func.countUp(document.getElementById('nameStatus'), data.namespacesCount);
+                    func.countUp(document.getElementById('deployStatus'), data.deploymentsCount);
+                    func.countUp(document.getElementById('podStatus'), data.podsCount);
+                    func.countUp(document.getElementById('userStatus'), data.usersCount);
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    // deployment legend
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    var deploy = [];
+
+                    for (var i = 0; i <= Object.getOwnPropertyNames(data.deploymentsUsage).length - 1; i++) {
+                        // chart legend append
+                        var html = `<li><dl><dt>${Object.getOwnPropertyNames(data.deploymentsUsage)[i]}</dt><dd>${data.deploymentsUsage[Object.keys(data.deploymentsUsage)[i]]} %</dd></dl></li>`;
+
+                        func.appendHtml(document.getElementById('deployChart').querySelector('.legend'), html, 'li');
+
+                        // chart data
+                        var arr = [Object.getOwnPropertyNames(data.deploymentsUsage)[i], Number(data.deploymentsUsage[Object.keys(data.deploymentsUsage)[i]].replace('%', ''))];
+
+                        deploy.push(arr);
+                    }
+
+                    // deployment chart
+                    func.donutChart(document.getElementById('deployChart').querySelector('.pie'), deploy);
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    // pod legend
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    var deploy = [];
+                    for (var i = 0; i <= Object.getOwnPropertyNames(data.podsUsage).length - 1; i++) {
+                        // chart legend append
+                        var html = `<li><dl><dt>${Object.getOwnPropertyNames(data.deploymentsUsage)[i]}</dt><dd>${data.podsUsage[Object.keys(data.podsUsage)[i]]} %</dd></dl></li>`;
+
+                        func.appendHtml(document.getElementById('podChart').querySelector('.legend'), html, 'li');
+
+                        // chart data
+                        var arr = [Object.getOwnPropertyNames(data.podsUsage)[i], Number(data.podsUsage[Object.keys(data.podsUsage)[i]].replace('%', ''))];
+
+                        deploy.push(arr);
+                    }
+
+                    func.donutChart(document.getElementById('podChart').querySelector('.pie'), deploy);
+
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    // service legend
+                    //////////////////////////////////////////////////////////////////////////////////////////////
+                    var deploy = [];
+                    for (var i = 0; i <= Object.getOwnPropertyNames(data.replicaSetsUsage).length - 1; i++) {
+                        // chart legend append
+                        var html = `<li><dl><dt>${Object.getOwnPropertyNames(data.replicaSetsUsage)[i]}</dt><dd>${data.replicaSetsUsage[Object.keys(data.podsUsage)[i]]} %</dd></dl></li>`;
+
+                        func.appendHtml(document.getElementById('servicesChart').querySelector('.legend'), html, 'li');
+
+                        // chart data
+                        var arr = [Object.getOwnPropertyNames(data.replicaSetsUsage)[i], Number(data.replicaSetsUsage[Object.keys(data.replicaSetsUsage)[i]].replace('%', ''))];
+
+                        deploy.push(arr);
+                    }
+
+                    func.donutChart(document.getElementById('servicesChart').querySelector('.pie'), deploy);
+
+                    document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                },
+            }
+
+            overview.init();
+        }
+    </script>
+</th:block>
+
+</html>

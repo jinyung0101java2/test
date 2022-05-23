@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+            <article class="location">
+                <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)">Services</a></li>
+                    <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)">Ingresses</a></li>
+                </ul>
+                <!-- Click event class="on" -->
+                <fieldset>
+                    <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+                    <button type="submit" id="search" th:text="#{M0031}"></button>
+                </fieldset>
+            </article>
+            <article class="base">
+                <div class="notice">
+                    <h3>List</h3>
+                    <!-- User -->
+                    <div class="table_style01">
+                        <!-- board -->
+                        <table>
+                            <caption>Ingresses List</caption>
+                            <colgroup >
+                                <col width="26%" />
+                                <col width="56%" />
+                                <col width="18%" />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Target</th>
+                                <th scope="col">Created Time</th>
+                            </tr>
+                            </thead>
+                            <tbody class="listTable">
+                            </tbody>
+                        </table>
+                        <!-- more btn -->
+                        <a class="more" href="javascript:;">more</a>
+                    </div>
+                    <!-- btn -->
+                    <a href="javascript:;" class="create" th:text="#{M0024}"></a>
+                </div>
+            </article>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(2, -1);
+
+        const ingresses = {
+            offset : 0, // 로드 페이지 넘버
+            limit : 10, // 로드 게시물 개수
+            allItemCount : 0, //게시물 총 개수
+            searchName : '',
+
+            init(){
+                func.nameLoad = ingresses.reset;
+
+                ingresses.load();
+
+                ingresses.event();
+            },
+
+            reset(){
+                func.removeHtml(document.querySelector('.listTable'));
+
+                ingresses.offset = 0;
+
+                ingresses.load();
+            },
+
+            load(){
+                func.loading();
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses?searchName=${document.getElementById('searchText').value}&limit=${ingresses.limit}&offset=${ingresses.offset}`, 'application/json', ingresses.draw);
+            },
+
+            draw(data){
+
+                if(ingresses.offset == 0) ingresses.allItemCount = data.itemMetaData.allItemCount;
+
+                if(data.httpStatusCode == 200){
+                    if(data.items.length > 0){
+                        for(var i=0; i<=data.items.length-1; i++){
+                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
+
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        };
+                    } else {
+                        var html = `<tr><td colspan="5">No Data.</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                    };
+                } else {
+                    var html = `<tr><td colspan="5">No Data.</td></tr>`;
+
+                    func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                };
+
+                // more 버튼 활성, 비활성
+                if(document.querySelector('.listTable').querySelectorAll('tr').length < ingresses.allItemCount){
+                    document.querySelector('.more').classList.toggle('on', true);
+                } else {
+                    document.querySelector('.more').classList.toggle('on', false);
+                };
+
+                if(document.getElementById('loading')){
+                    document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                };
+
+                ingresses.listEvent();
+            },
+
+            event(){
+                // more 버튼 event
+                document.querySelector('.more').addEventListener('click', (e) => {
+                    if(document.querySelector('.listTable').querySelectorAll('tr').length < ingresses.allItemCount){
+                    ingresses.offset++;
+
+                    ingresses.load();
+                };
+            }, false);
+
+                document.querySelector('.create').addEventListener('click', (e) => {
+                    sessionStorage.setItem('commonName', '');
+
+                func.create('Create', 'ingresses', MSG_SAVE);
+            }, false);
+            },
+
+            listEvent(){
+                var listAll = document.querySelector('.listTable').querySelectorAll('a');
+
+                for(var i=ingresses.offset*10; i<=listAll.length-1; i++){
+                    listAll[i].addEventListener('click', (e) => {
+                        sessionStorage.setItem('nameSpace', e.target.getAttribute('data-id'));
+                    sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
+
+                    document.location.href = URI_CP_SERVICES_INGRESSES + URI_CP_DETAILS;
+                }, true);
+                };
+            },
+        }
+
+        ingresses.init();
+    }
+</script>
+</th:block>
+</html>

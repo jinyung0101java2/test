@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Storages</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)">Storage Classes</a></li>
+                </ul>
+            <!-- Click event class="on" -->
+            <fieldset>
+                    <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+                    <button type="submit" id="search" th:text="#{M0031}"></button>
+                </fieldset>
+        </article>
+        <article class="base">
+            <div class="notice">
+                <h3>List</h3>
+                <!-- User -->
+                <div class="table_style01">
+                    <!-- board -->
+                    <table>
+                        <caption>storageClasses List</caption>
+                        <colgroup >
+                            <col width="25%" />
+                            <col width="25%" />
+                            <col width="25%" />
+                            <col width="25%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Provider</th>
+                            <th scope="col">Parameters</th>
+                            <th scope="col">Created Time</th>
+                        </tr>
+                        </thead>
+                        <tbody class="listTable">
+                        </tbody>
+                    </table>
+                    <!-- more btn -->
+                    <a class="more" href="javascript:;">more</a>
+                </div>
+                <!-- btn -->
+                <a href="javascript:;" class="create" th:text="#{M0024}"></a>
+            </div>
+        </article>
+    </div>
+    <div id="nameTopDiv" class="nameTop" style="display: none !important;"></div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(3, 2);
+        document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+
+        const storageClass = {
+            offset : 0, // 로드 페이지 넘버
+            limit : 10, // 로드 게시물 개수
+            allItemCount : 0, //게시물 총 개수
+
+            init(){
+                func.nameLoad = storageClass.reset;
+
+                // nameSpace session 초기화
+                sessionStorage.setItem('nameSpace', 'ALL');
+
+                storageClass.load();
+
+                storageClass.event();
+            },
+
+            reset(){
+                func.removeHtml(document.querySelector('.listTable'));
+
+                storageClass.offset = 0;
+
+                storageClass.load();
+            },
+
+            load(){
+                func.loading();
+
+                // persistentVolumes 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/storageClasses?searchName=${document.getElementById('searchText').value}&limit=${storageClass.limit}&offset=${storageClass.offset}`, 'application/json', storageClass.draw);
+            },
+
+            draw(data){
+
+                if(storageClass.offset == 0) storageClass.allItemCount = data.itemMetaData.allItemCount;
+
+                if(data.httpStatusCode == 200){
+                    if(data.items.length > 0){
+                        for(var i=0; i<=data.items.length-1; i++){
+                            var html = `<tr>
+									<td class="left"><a href="javascript:;" data-name="${data.items[i].name}">${data.items[i].name}</a></td>
+									<td class="left">${data.items[i].provisioner}</td>`;
+
+                            var label = '';
+
+                            if(data.items[i].parameters != '-'){
+                                for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].parameters).length-1; j++){
+                                    label += `<dl><dt>${Object.getOwnPropertyNames(data.items[i].parameters)[j]}</dt><dd>${data.items[i].parameters[Object.keys(data.items[i].parameters)[j]]}</dd></dl>`;
+                                };
+                            } else {
+                                label = `<dl><dt>-</dt></dl>`;
+                            }
+
+                            html += `<td class="left box">${label}</td>`;
+                            html += `<td>${data.items[i].creationTimestamp}</td></tr>`;
+
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        };
+                    } else {
+                        var html = `<tr><td colspan="4">No Data.</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                    };
+                } else {
+                    var html = `<tr><td colspan="4">No Data.</td></tr>`;
+
+                    func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                };
+
+                // more 버튼 활성, 비활성
+                if(document.querySelector('.listTable').querySelectorAll('tr').length < storageClass.allItemCount){
+                    document.querySelector('.more').classList.toggle('on', true);
+                } else {
+                    document.querySelector('.more').classList.toggle('on', false);
+                };
+
+                if(document.getElementById('loading')){
+                    document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                };
+
+                storageClass.listEvent();
+            },
+
+            event(){
+                // more 버튼 event
+                document.querySelector('.more').addEventListener('click', (e) => {
+                    if(document.querySelector('.listTable').querySelectorAll('tr').length < storageClass.allItemCount){
+                    storageClass.offset++;
+
+                    storageClass.load();
+                };
+            }, false);
+
+                document.querySelector('.create').addEventListener('click', (e) => {
+                    sessionStorage.setItem('commonName', '');
+
+                func.create('Create', 'storageClasses', MSG_SAVE);
+            }, false);
+            },
+
+            listEvent(){
+                var listAll = document.querySelector('.listTable').querySelectorAll('a');
+
+                for(var i=storageClass.offset*10; i<=listAll.length-1; i++){
+                    listAll[i].addEventListener('click', (e) => {
+                        sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
+
+                    document.location.href = URI_CP_STORAGES_STORAGECLASSES + URI_CP_DETAILS;
+                }, true);
+                };
+            },
+        }
+
+        storageClass.init();
+    }
+</script>
+</th:block>
+</html>

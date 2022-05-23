@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page users">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
+            </ul>
+            <!-- Click event class="on" -->
+            <fieldset>
+                <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}"/>
+                <button type="submit" id="search" th:text="#{M0031}"></button>
+            </fieldset>
+        </article>
+        <article class="base">
+            <div class="notice">
+                <!-- tab menu -->
+                <ul id="tabParent">
+                    <li>
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Administrator</a>
+                    </li>
+                    <li class="on">
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_USERS)" class="tabBtn">User</a>
+                    </li>
+                </ul>
+                <ul id="tablinkParent">
+                    <button class="tablink tablink-on" onclick="movePage(URI_CP_MANAGEMENTS_USERS)" style="border-left: none !important;" th:text="#{M0810}"></button>
+                    <button class="tablink" onclick="movePage(URI_CP_MANAGEMENTS_INACTIVE_USERS)" th:text="#{M0811}"></button>
+                </ul>
+                <!-------------------- Administrator Tab -------------------->
+                <div class="table_style01 on userListTableDiv">
+                    <!-- board -->
+                    <table>
+                        <caption>User List</caption>
+                        <colgroup >
+                            <col width="16%" />
+                            <col width="16%" />
+                            <col width="16%" />
+                            <col width="16%" />
+                            <col width="16%" />
+                            <col width="20%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col" style="border-top: none !important;">User ID</th>
+                            <th scope="col">Services Account</th>
+                            <th scope="col">Namespaces</th>
+                            <th scope="col">Authority</th>
+                            <th scope="col">Roles</th>
+                            <th scope="col">Created Time</th>
+                        </tr>
+                        </thead>
+                        <tbody class="listTable">
+                        </tbody>
+                    </table>
+                    <!-- more btn -->
+                    <a class="more" href="javascript:;">more</a>
+                </div>
+                <!-- btn -->
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(4, 0);
+            document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+
+            const user = {
+                offset : 0, // 로드 페이지 넘버
+                limit : 10, // 로드 게시물 개수
+                allItemCount : 0, //게시물 총 개수
+                type : 'user',
+
+                init(){
+                    func.nameLoad = user.reset;
+
+                    user.load();
+
+                    user.event();
+                },
+
+                reset(){
+                    func.removeHtml(document.querySelector('.listTable'));
+
+                    user.offset = 0;
+                    user.load();
+                },
+
+                load(){
+                    func.loading();
+
+                    // user 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users?userType=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
+                },
+
+                draw(data){
+
+                    if(user.offset == 0) user.allItemCount = data.itemMetaData.allItemCount;
+
+                    if(data.httpStatusCode == 200){
+
+                        if(data.items.length > 0){
+
+                            for(var i=0; i<= data.items.length -1; i++){
+
+                                var users = data.items[i];
+                                var rowspanCount = users.items.length;
+
+                                var html =
+                                    `<tr><td class="left" rowspan="${rowspanCount}">`+
+                                    `<a href="javascript:;" data-name="${users.userId}" data-spac="ALL">${users.userId}</td>`+
+                                    `<td class="left" rowspan="${rowspanCount}">${users.serviceAccountName}</td>`+
+                                    `<td class="left">${users.items[0].cpNamespace}</td>`+
+                                    `<td class="left">${convertUserTypeString(users.items[0].userType)}</td>`+
+                                    `<td class="left">${users.items[0].roleSetCode}</td>`+
+                                    `<td class="left list-table-last-td" rowspan="${rowspanCount}">${users.created}</td>`+
+                                    `</tr>`;
+
+                                if(rowspanCount > 1) {
+                                    for (var j = 1; j <= rowspanCount - 1; j++) {
+                                        html +=
+                                            `<tr><td class="left">${users.items[j].cpNamespace}</td>` +
+                                            `<td class="left">${convertUserTypeString(users.items[j].userType)}</td>` +
+                                            `<td class="left">${users.items[j].roleSetCode}</td></tr>`;
+                                    }
+
+                                }
+
+
+                                func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+
+                            };
+
+                        }
+                        else {
+                            var html = `<tr><td colspan="6">No Data.</td></tr>`;
+
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        };
+                    } else {
+                        var html = `<tr><td colspan="6">No Data.</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                    };
+
+
+                    // more 버튼 활성, 비활성
+                    if(user.limit * (user.offset + 1) < user.allItemCount){
+                        document.querySelector('.more').classList.toggle('on', true);
+                    } else {
+                        document.querySelector('.more').classList.toggle('on', false);
+                    };
+
+                    if(document.getElementById('loading')){
+                        document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                    };
+
+                    user.listEvent();
+                },
+
+                event(){
+                    // more 버튼 event
+                    document.querySelector('.more').addEventListener('click', (e) => {
+                        if(user.limit * (user.offset + 1) < user.allItemCount){
+                        user.offset++;
+                        user.load();
+                    };
+                }, false);
+                },
+
+                listEvent(){
+                    var listAll = document.querySelector('.listTable').querySelectorAll('a');
+
+                    for(var i=0; i<=listAll.length-1; i++){
+                        listAll[i].addEventListener('click', (e) => {
+                        sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
+                        sessionStorage.setItem('nameSpace', e.target.getAttribute('data-spac'));
+
+                        document.location.href = URI_CP_MANAGEMENTS_USERS + URI_CP_DETAILS;
+                    }, true);
+                    };
+                },
+            }
+
+            user.init();
+        }
+    </script>
+</th:block>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<header th:fragment="headerFragment">
+    <div>
+        <!-- logo -->
+        <h1>
+            <a onclick="movePage(URI_CP_BASE_URL)"><img src="/img/logo.png" alt="PaaS-TA Logo"/></a>
+        </h1>
+        <!-- menu -->
+        <div>
+            <!-- title -->
+            <h3 id="nameSpaceTitleDiv">
+                <a href="javascript:;" class="nameTop">ALL</a>
+                <ul class="nameSpace scroll02">
+                </ul>
+            </h3>
+            <div>
+                <a href="javascript:;" id="logout" th:text="#{M0809}"></a>
+            </div>
+
+            <div id="localeLangDiv">
+                <fieldset>
+                    <select name="u_locale_lang" id="u_locale_lang" onchange="changeLocaleLanguage()">
+                        <option value="ko">Korean</option>
+                        <option value="en">English</option>
+                    </select>
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+</html>

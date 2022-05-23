@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<aside th:fragment="asideFragment">
+    <nav>
+        <ul>
+            <li class="plus">
+                <a href="javascript:;" class="dep01">Clusters</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)">Nodes</a></li>
+                </ul>
+            </li>
+            <li class="plus">
+                <a href="javascript:;" class="dep01">Workloads</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Deployments</a></li>
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_PODS)">Pods</a></li>
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">Replica Sets</a></li>
+                </ul>
+            </li>
+            <li class="plus">
+                <a href="javascript:;" class="dep01">Services</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)">Services</a></li>
+                    <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)">Ingresses</a></li>
+                </ul>
+            </li>
+            <li class="plus">
+                <a href="javascript:;" class="dep01">Storages</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Persistent Volumes</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS)">Persistent Volume Claims</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)">Storage Classes</a></li>
+                </ul>
+            </li>
+            <li class="plus">
+                <a href="javascript:;" class="dep01">Managements</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)">Roles</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)">Resource Quotas</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_LIMITRANGES)">Limit Ranges</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)">ConfigMaps</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Storages</a></li>
+                <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Persistent Volumes</a></li>
+                </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                    <h4>Details</h4>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Details</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="cdetailsList">
+                            <tr>
+                                <th scope="row" class="left">Name</th>
+                                <td class="left" id="name"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">UID</th>
+                                <td class="left" id="uid"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Labels</th>
+                                <td class="box left" id="label"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Annotations</th>
+                                <td class="left box" id="annot"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Created time</th>
+                                <td class="left" id="time"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>Resource Info</h4>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Resource Info</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="resourceList">
+                            <tr>
+                                <th scope="row" class="left">Status</th>
+                                <td class="left" id="status"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Claim</th>
+                                <td class="left" id="claim"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Return Policy</th>
+                                <td class="left" id="policy"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Storage Classes</th>
+                                <td class="left" id="storage"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Access Mode</th>
+                                <td class="left" id="access"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>Source</h4>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Source</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="csourceList">
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>Capacity</h4>
+                    <div class="table_style01">
+                        <table>
+                            <caption>Capacity</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="capacityList">
+                            <tr>
+                                <th scope="row" class="left">Resource name</th>
+                                <td class="left" id="resource"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Capacity</th>
+                                <td class="left" id="capacity"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" id="modify"  data-role="persistentVolumes" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(3, 0);
+
+        const persistentDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // replica 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/persistentVolumes/${sessionStorage.getItem('commonName')}`, 'application/json', persistentDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('uid').innerText = data.uid;
+
+                if(data.labels != '-'){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.labels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.labels)[i]}</dt><dd>${data.labels[Object.keys(data.labels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('label'), html, 'dl');
+                    };
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('label'), html, 'dl');
+                };
+
+                if(data.annotations.length > 0){
+                    for(var i=0; i<=data.annotations.length-1; i++){
+                        if(data.annotations[i].checkYn == 'Y'){
+                            var html = `<dl class="fly">
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else if(data.annotations[i].checkYn == 'N'){
+                            var html = `<dl>
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else {
+                            var html = `<dl>
+												<dt>-</dt>
+											</dl>`;
+                        };
+
+                        func.appendHtml(document.getElementById('annot'), html, 'dl');
+                    };
+                };
+
+                document.getElementById('time').innerText = data.creationTimestamp;
+
+                // Resource Info
+                document.getElementById('status').innerText = data.persistentVolumeStatus;
+                document.getElementById('claim').innerText = `${data.claim.namespace} / ${data.claim.name}`;
+                document.getElementById('policy').innerText = data.returnPolicy;
+                document.getElementById('storage').innerText = data.storageClasses;
+
+                var amVar = '';
+                for(var j=0; j<=data.accessMode.length-1; j++){
+                    if(j == 0){
+                        amVar += data.accessMode[j];
+                    } else {
+                        amVar += `, ${data.accessMode[j]}`;
+                    }
+                };
+
+                document.getElementById('access').innerText = amVar;
+
+                // Source Info
+                if(data.source.length > 0){
+                    for(var x=0; x<=Object.getOwnPropertyNames(data.source[0]).length-1; x++){
+                        var html = `<tr>
+								<th class="left">${Object.getOwnPropertyNames(data.source[0])[x]}</th>
+								<td class="left">${data.source[0][Object.keys(data.source[0])[x]]}</td>
+							</tr>`;
+
+                        func.appendHtml(document.querySelector('.csourceList'), html, 'tbody');
+                    };
+                } else {
+
+                };
+
+                // Capacity Info
+                document.getElementById('resource').innerText = Object.getOwnPropertyNames(data.capacity)[0];
+                document.getElementById('capacity').innerText = data.capacity[Object.keys(data.capacity)[0]];
+
+                persistentDetail.event();
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, persistentDetail.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/persistentVolumes/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/persistentVolumes/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        persistentDetail.init();
+    }
+</script>
+</th:block>
+</body>
+</html>

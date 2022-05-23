@@ -1,0 +1,97 @@
+buildscript {
+	ext {
+		springBootVersion = '2.3.10.RELEASE'
+		springBootManagementPlugin = '1.0.11.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "io.spring.gradle:dependency-management-plugin:${springBootManagementPlugin}"
+	}
+}
+
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+
+group = 'org.paasta.container.platform.web.admin'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+ext {
+	springIoPlatformVersion = 'Cairo-SR8'
+	springSecurityTagLibsVersion = '5.3.3.RELEASE'
+	springSecurityOauthVersion = '2.2.4.RELEASE'
+	jstlVersion = '1.2'
+	gsonVersion = '2.8.6'
+	lombokVersion = '1.18.12'
+	swaggerVersion = '2.9.2'
+	sitemeshVersion = '3.0.1'
+	httpclientVersion = '4.5.3'
+	httpcoreVersion = '4.4.6'
+	thymeleafVersion = '2.4.1'
+}
+
+
+war {
+	archivesBaseName = 'paas-ta-container-platform-webadmin'
+}
+
+dependencies {
+
+	compile("org.sitemesh:sitemesh:${sitemeshVersion}")
+	compile("org.apache.httpcomponents:httpclient:${httpclientVersion}")
+	compile("org.apache.httpcomponents:httpcore:${httpcoreVersion}")
+	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "org.springframework.boot:spring-boot-starter-aop"
+	compile('org.springframework.boot:spring-boot-starter-freemarker')
+	compile "org.springframework.boot:spring-boot-starter-security"
+	compile "org.springframework.boot:spring-boot-starter-data-redis"
+	compile "org.springframework.boot:spring-boot-starter-validation"
+	compile "org.springframework.boot:spring-boot-devtools"
+	implementation("org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauthVersion}")
+	compile "org.springframework.security:spring-security-taglibs:${springSecurityTagLibsVersion}"
+	compile group: 'org.json', name: 'json', version: '20210307'
+	compile("io.springfox:springfox-swagger2:${swaggerVersion}") {
+		exclude module: 'swagger-annotations'
+		exclude module: 'swagger-models'
+	}
+	compile("io.swagger:swagger-annotations:1.5.21")
+	compile("io.swagger:swagger-models:1.5.21")
+	compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
+	compile "javax.servlet:jstl:${jstlVersion}"
+	compile "com.google.code.gson:gson:${gsonVersion}"
+	compile group: 'org.apache.tiles', name: 'tiles-jsp', version: '3.0.5'
+	providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1'
+	compileOnly "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
+	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+	implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.32'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.0'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.0'
+	compile "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleafVersion}"
+}

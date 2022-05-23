@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page clusters">
+            <article class="location">
+                <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
+                </ul>
+            </article>
+            <article class="base">
+                <div class="creat">
+                    <h3 th:text="|Users #{M0024}|"></h3>
+                    <div>
+                        <dl>
+                            <dt><label for="userId">User ID</label></dt>
+                            <dd>
+                                <input id="userId" type="text" placeholder="소문자와 영숫자 “-” 또는 “.” 만 포함, 시작과 끝은 영숫자
+									"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><label for="pass">Password</label></dt>
+                            <dd>
+                                <input id="pass" type="password" placeholder="4~40자, 최소 하나 이상의 영문, 숫자, 특수 문자 혼합, 영문 시작"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><label for="passConfirm">Password Confirm</label></dt>
+                            <dd>
+                                <input id="passConfirm" type="password" placeholder="4~40자, 최소 하나 이상의 영문, 숫자, 특수 문자 혼합, 영문 시작"/>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><label for="email">Email</label></dt>
+                            <dd>
+                                <input id="email" type="email" placeholder="email@email.kr"/>
+                            </dd>
+                        </dl>
+                        <div class="check-quotas">
+                            <p>Namespaces &frasl; Roles</p>
+                            <a href="javascript:;" class="resAdd" th:text="#{M0027}"></a>
+                        </div>
+                        <div class="table_style01 limitTable">
+                            <table>
+                                <caption>Namespaces &frasl; Roles</caption>
+                                <colgroup >
+                                    <col width="50%" />
+                                    <col width="50%" />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Namespaces</th>
+                                    <th scope="col">Roles</th>
+                                </tr>
+                                </thead>
+                                <tbody class="resourceQuotas">
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">No Data.</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- btn -->
+                <div class="btn02">
+                    <button type="submit" id="save" th:text="#{M0030}"></button>
+                    <div>
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_USERS)" th:text="#{M0028}"></a>
+                    </div>
+                </div>
+            </article>
+        </div>
+</div>
+<div layout:fragment="modal">
+    <div class="modal-wrap" style="display: none;">
+        <div class="modal">
+            <h5 th:text="#{M0035}"></h5>
+            <p th:text="#{M0020}"></p>
+            <button class="confirm" type="submit" th:text="#{M0030}"></button>
+            <a class="close" href="javascript:;" th:text="#{M0023}"></a>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(4, 0);
+
+        const createUser = {
+            init(){
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/users/adminCheck`, 'application/json', createUser.draw);
+            },
+
+            draw(data){
+
+                createUser.event();
+            },
+
+            event(){
+                document.querySelector('.resAdd').addEventListener('click', (e) => {
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/popup/users/all/namespacesRolesList`, 'application/json', createUser.resource);
+            }, false);
+
+                document.getElementById('save').addEventListener('click', (e) => {
+                    var resourceName = document.querySelector('.resourceQuotas').querySelectorAll('input');
+
+                var resourceQuotasList = [];
+
+                for(var i=0; i<=resourceName.length-1; i++){
+                    resourceQuotasList.push({"namespace":resourceName[i].getAttribute('data-name'),"role":resourceName[i].getAttribute('data-stat')});
+                };
+
+                var createName = {
+                    "userId": document.getElementById('userId').value,
+                    "password": document.getElementById('pass').value,
+                    "passwordConfirm" : document.getElementById('passConfirm').value,
+                    "email": document.getElementById('email').value,
+                    "selectValues": resourceQuotasList,
+                };
+
+                func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users`, JSON.stringify(createName), true, 'application/json', func.historyBack);
+            }, false);
+            },
+
+            resource(data){
+
+                if(data.items.length > 0){
+                    var html = `<div class='modal-wrap' id='modal'><div class='modal wide'><h5>Namespaces ⁄ Roles</h5>`;
+
+                    html += `<div class="table_style01">
+									<table>
+										<caption>Namespaces ⁄ Roles</caption>
+										<colgroup >
+											<col width="7%" />
+											<col width="46%" />
+											<col width="47%" />
+										</colgroup>
+										<thead>
+											<tr>
+												<th scope="col"></th>
+												<th scope="col">Namespaces</th>
+												<th scope="col">Roles</th>
+											</tr>
+										</thead>
+										<tbody class="resourceList">`;
+
+                    var select = document.querySelector('.resourceQuotas').querySelectorAll('input[type=checkbox]');
+
+                    for(var i=0; i<=data.items.length-1; i++){
+                        var chk = '';
+
+                        for(var j=0; j<=select.length-1; j++){
+                            if(select[j].getAttribute('data-comp') == data.items[i].namespace+data.items[i].name){
+                                chk = 'checked';
+                            };
+                        };
+
+                        html += `<tr>
+										<td><input type="checkbox" id="resourceChk${i}" data-name="${data.items[i].namespace}" data-stat='${data.items[i].name}' data-comp="${data.items[i].namespace}${data.items[i].name}" ${chk}><label for="resourceChk${i}"></td>
+										<td class="left">${data.items[i].namespace}</td>
+										<td class="left">${data.items[i].name}</td>
+									</tr>`;
+                    }
+
+                    html +=	`			</tbody>
+									</table>
+								</div>`;
+                    html += `<a class='confirm' href='javascript:;'>`+ MSG_SELECTION_COMPLETE+ `</a>`;
+                    html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
+
+                    func.appendHtml(document.getElementById('wrap'), html, 'div');
+
+                    document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
+                        document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                }, false);
+
+                    //체크박스 중복선택 체크
+                    var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
+
+                    for(var i=0; i<=input.length-1; i++){
+                        input[i].addEventListener('click', (e) => {
+                            if(e.target.checked) createUser.overlap(e.target, e.target.getAttribute('data-name'));
+                    }, false);
+                    };
+
+                    // 리스트 선택 완료
+                    document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
+                        func.removeHtml(document.querySelector('.resourceQuotas'));
+
+                    for(var i=0; i<=input.length-1; i++){
+                        if(input[i].checked == false){
+
+                            document.getElementById('modal').querySelector('.resourceList').removeChild(input[i].parentNode.parentNode);
+                        } else {
+                            input[i].setAttribute('id','');
+                        };
+                    };
+
+                    if(document.getElementById('modal').querySelectorAll('.resourceList tr').length > 0){
+                        var html = document.getElementById('modal').querySelector('.resourceList').innerHTML;
+                    } else {
+                        var html = '<tr><td></td><td colspan="2">No Data.</td></tr>';
+                    };
+
+                    func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
+
+                    document.getElementById('wrap').removeChild(document.getElementById('modal'));
+                }, false);
+                } else {
+                    func.alertPopup('ERROR', MSG_NO_LIST, false, MSG_CLOSE, true);
+                };
+            },
+
+            overlap(obj, name){
+                var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]:checked');
+                var cnt = 0;
+
+                for(var i=0; i<=input.length-1; i++){
+                    if(name == input[i].getAttribute('data-name')){
+                        cnt++;
+                        if(cnt > 1){
+                            obj.checked = false;
+
+                            window.alert(MSG_CANNOT_SELECT_SAME_NAMESPACE);
+                        };
+                    };
+                };
+            },
+        }
+
+        createUser.init();
+    }
+</script>
+</th:block>
+</html>

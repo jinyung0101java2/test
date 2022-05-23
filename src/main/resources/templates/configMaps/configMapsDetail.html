@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)">Configmaps</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left" id="name"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">UID</th>
+                            <td class="left" id="uid"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Namespaces</th>
+                            <td class="left" id="space"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Labels</th>
+                            <td class="box left" id="label"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Annotations</th>
+                            <td class="left box" id="annot"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Created time</th>
+                            <td class="left" id="time"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Immutable</th>
+                            <td class="left" id="immutable"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="25%" />
+                            <col width="75%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">Key</th>
+                            <th scope="col">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody class="detailList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" id="modify" data-role="configMaps" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(4, 4);
+
+        const configMapsDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/configMaps/${sessionStorage.getItem('commonName')}`, 'application/json', configMapsDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('name').innerText = data.metadata.name;
+                document.getElementById('uid').innerText = data.metadata.uid;
+                document.getElementById('space').innerText = data.metadata.namespace;
+                document.getElementById('time').innerText = data.metadata.creationTimestamp;
+                document.getElementById('immutable').innerText = data.immutable;
+
+                if(data.metadata.labels != null){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.metadata.labels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.metadata.labels)[i]}</dt><dd>${data.metadata.labels[Object.keys(data.metadata.labels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('label'), html, 'dl');
+                    }
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('label'), html, 'dl');
+                }
+
+                let annotations;
+                if(data.metadata.annotations != null) {
+                    annotations = new Map(Object.entries(data.metadata.annotations));
+                    if (annotations.size > 0) {
+                        for (let item of annotations) {
+                            let html = `<dl><dt>${item[0]}</dt><dd> ${item[1]}</dd></dl>`;
+                            func.appendHtml(document.getElementById('annot'), html, 'dl');
+                        }
+                    }
+                }
+                else {
+                    let html = `<dl><dt>-</dt></dl>`;
+                    func.appendHtml(document.getElementById('annot'), html, 'dl');
+                }
+
+                func.removeHtml(document.querySelector('.detailList'));
+                const map = new Map(Object.entries(data.data));
+                if(map != null && map.size > 0){
+                    for(let item of map) {
+                        let html = `<tr><td>${item[0]}</td><td>${item[1]}</td>`
+                        func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                    }
+
+                }
+                else {
+                    var html = '<tr><td colspan="6">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                };
+
+                configMapsDetail.event()
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, configMapsDetail.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/configMaps/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/configMaps/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        configMapsDetail.init();
+    }
+</script>
+</th:block>
+</html>

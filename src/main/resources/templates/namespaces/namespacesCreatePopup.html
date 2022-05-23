@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page clusters">
+        <article class="location">
+            <ul>
+                <li><a href="javascript:;">Overview</a></li>
+                <li><a href="javascript:;">Clusters</a></li>
+                <li>Namespaces</li>
+            </ul>
+        </article>
+        <article class="base">
+            <div class="creat">
+                <h3 th:text="|Namespaces #{M0024}|"></h3>
+                <div>
+                    <dl>
+                        <dt><label for="name">Name</label></dt>
+                        <dd>
+                            <input id="name" type="text" disabled="disabled" placeholder="Test-Name"/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="user">Admin User</label></dt>
+                        <dd class="selectbox">
+                            <a href="javascript:;" th:text="#{M0027}"></a>
+                            <ul>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                            </ul>
+                        </dd>
+                    </dl>
+                    <div class="check-quotas">
+                        <input type="checkbox" id="check">
+                        <label for="check">check</label>
+                        <p>Resource Quotas</p>
+                    </div>
+                    <div>
+                        <input type="checkbox" checked="checke" id="check02">
+                        <label for="check02">check</label>
+                        <p>Resource Quotas</p>
+                    </div>
+                    <div class="quotas-list">
+                        <dl>
+                            <dt>Test-resource-quotas-03</dt>
+                            <dd>Text</dd>
+                        </dl>
+                        <dl>
+                            <dt>Test-resource-quotas-02</dt>
+                            <dd><a href="javascript:;">Link Text</a></dd>
+                        </dl>
+                        <dl>
+                            <dt>Test-resource-quotas-01</dt>
+                            <dd>Text</dd>
+                        </dl>
+                    </div>
+                    <dl>
+                        <dt><label for="limit">Limit Ranges</label></dt>
+                        <dd class="selectbox">
+                            <a href="javascript:;" th:text="#{M0027}"></a>
+                            <ul>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                                <li><a href="javascript:;">Test-User</a></li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" th:text="#{M0028}"></a>
+                    <button type="submit" th:text="#{M0030}"></button>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<div layout:fragment="modal">
+    <div class="modal-wrap">
+        <div class="modal">
+            <h5 th:text="#{M0035}"></h5>
+            <p th:text="#{M0020}"></p>
+            <a class="confirm" href="javascript:;" th:text="#{M0030}"></a>
+            <a class="close" href="javascript:;" th:text="#{M0023}"></a>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script src="../resources/js/common.js" type="text/javascript"></script>
+</th:block>
+</html>

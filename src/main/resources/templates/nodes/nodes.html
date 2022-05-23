@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+	<div id="content" class="sub-page clusters">
+		<article class="location">
+			<ul>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+				<li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Clusters</a></li>
+				<li><a onclick="movePage(URI_CP_CLUSTERS_NODES)">Nodes</a></li>
+			</ul>
+			<!-- Click event class="on" -->
+			<fieldset>
+				<input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+				<button type="submit" id="search" th:text="#{M0031}"></button>
+			</fieldset>
+		</article>
+		<article class="base">
+			<div class="notice">
+				<h3>List</h3>
+				<!-- User -->
+				<div class="table_style01">
+					<!-- board -->
+					<table>
+						<caption>Nodes List</caption>
+						<colgroup >
+							<col width="25%" />
+							<col width="45%" />
+							<col width="10%" />
+							<col width="20%" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Name</th>
+								<th scope="col">Labels</th>
+								<th scope="col">Status</th>
+								<th scope="col">Created Time</th>
+							</tr>
+						</thead>
+						<tbody class="listTable">
+						</tbody>
+					</table>
+					<!-- more btn -->
+					<a class="more" href="javascript:;">more</a>
+				</div>
+			</div>
+		</article>
+	</div>
+</div>
+
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		window.onload = () => {
+
+			func.init(0, 1);
+			document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+
+			const node = {
+				offset : 0, // 로드 페이지 넘버
+				limit : 10, // 로드 게시물 개수
+				allItemCount : 0, //게시물 총 개수
+
+				init(){
+					func.nameLoad = node.reset;
+					
+					sessionStorage.setItem('nameSpace', 'ALL');
+
+					node.load();
+					
+					node.event();
+				},
+
+				reset(){
+					func.removeHtml(document.querySelector('.listTable'));
+
+					node.offset = 0;
+
+					node.load();
+				},
+
+				load(){
+					func.loading();
+
+					// node 정보 조회
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/nodes?searchName=${document.getElementById('searchText').value}&limit=${node.limit}&offset=${node.offset}`, 'application/json', node.draw);
+				},
+
+				draw(data){
+					
+					if(node.offset == 0) node.allItemCount = data.itemMetaData.allItemCount;
+
+					if(data.httpStatusCode == 200){
+						if(data.items.length > 0){
+							for(var i=0; i<=data.items.length-1; i++){
+								var html = `<tr>
+									<td class="left"><a href="javascript:;" data-name="${data.items[i].name}">${data.items[i].name}</a></td>`;
+
+								var label = '';
+								
+								if(data.labels != '-'){
+									for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].labels).length-1; j++){
+										label += `<dl><dt>${Object.getOwnPropertyNames(data.items[i].labels)[j]}</dt><dd>${data.items[i].labels[Object.keys(data.items[i].labels)[j]]}</dd></dl>`;
+									};
+								} else {
+									label = `<dl><dt>-</dt></dl>`;
+								}
+
+								html += `<td class="left box">${label}</td>`;
+
+								html += `<td class="${data.items[i].ready.toLowerCase()}">${data.items[i].ready}</td>
+									<td>${data.items[i].creationTimestamp}</td>
+								</tr>`;
+
+								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+							};
+						} else {
+							var html = '<tr><td colspan="4">No Data.</td></tr>';
+
+							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+						};
+					} else {
+						var html = `<tr><td colspan="4">No Data.</td></tr>`;
+
+						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+					};
+
+					// more 버튼 활성, 비활성
+					if(document.querySelector('.listTable').querySelectorAll('tr').length < node.allItemCount){
+						document.querySelector('.more').classList.toggle('on', true);
+					} else {
+						document.querySelector('.more').classList.toggle('on', false);
+					};
+					
+					if(document.getElementById('loading')){
+						document.getElementById('wrap').removeChild(document.getElementById('loading'));
+					};
+					
+					node.listEvent();
+				},
+
+				event(){
+					// more 버튼 event
+					document.querySelector('.more').addEventListener('click', (e) => {
+						if(document.querySelector('.listTable').querySelectorAll('tr').length < node.allItemCount){
+       						node.offset++;
+						    node.load();
+						};
+					}, false);
+				},
+
+				listEvent(){
+					var listAll = document.querySelector('.listTable').querySelectorAll('a');
+					
+					for(var i=node.offset*10; i<=listAll.length-1; i++){
+
+						listAll[i].addEventListener('click', (e) => {
+							sessionStorage.setItem('nodeName', e.target.getAttribute('data-name'));
+
+							document.location.href = URI_CP_CLUSTERS_NODES + URI_CP_DETAILS;
+						}, true);
+					};
+				},
+			}
+
+			node.init();
+		}
+	</script>
+</th:block>
+</html>

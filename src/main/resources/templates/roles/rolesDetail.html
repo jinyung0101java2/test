@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)">Roles</a></li>
+                </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left" id="name"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">UID</th>
+                            <td class="left" id="uid"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Namespaces</th>
+                            <td class="left" id="space"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Labels</th>
+                            <td class="box left" id="label"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Annotations</th>
+                            <td class="left box" id="annot"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Created time</th>
+                            <td class="left" id="time"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h4>Rules</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Rules</caption>
+                        <colgroup >
+                            <col width="25%" />
+                            <col width="15%" />
+                            <col width="15%" />
+                            <col width="25%" />
+                            <col width="20%" />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">Resource</th>
+                            <th scope="col">Non-resource URL</th>
+                            <th scope="col">Resource name</th>
+                            <th scope="col">Verb</th>
+                            <th scope="col">API group</th>
+                        </tr>
+                        </thead>
+                        <tbody class="ruleList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                        <a href="javascript:;" id="modify" data-role="roles" th:text="#{M0025}"></a>
+                        <a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)" th:text="#{M0028}"></a>
+                    </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(4, 1);
+
+        const roleDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/roles/${sessionStorage.getItem('commonName')}`, 'application/json', roleDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('uid').innerText = data.uid;
+                document.getElementById('space').innerText = sessionStorage.getItem('nameSpace');
+
+                if(data.labels != '-'){
+                    for(var i=0; i<=Object.getOwnPropertyNames(data.labels).length-1; i++){
+                        var html = `<dl><dt>${Object.getOwnPropertyNames(data.labels)[i]}</dt><dd>${data.labels[Object.keys(data.labels)[i]]}</dd></dl>`;
+
+                        func.appendHtml(document.getElementById('label'), html, 'dl');
+                    };
+                } else {
+                    var html = `<dl><dt>-</dt></dl>`;
+
+                    func.appendHtml(document.getElementById('label'), html, 'dl');
+                };
+
+                document.getElementById('time').innerText = data.creationTimestamp;
+
+                if(data.annotations.length > 0){
+                    for(i=0; i<=data.annotations.length-1; i++){
+                        if(data.annotations[i].checkYn == 'Y'){
+                            var html = `<dl class="fly">
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else if(data.annotations[i].checkYn == 'N'){
+                            var html = `<dl>
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+                        } else {
+                            var html = `<dl>
+												<dt>-</dt>
+											</dl>`;
+                        };
+
+                        func.appendHtml(document.getElementById('annot'), html, 'dl');
+                    };
+                };
+
+                func.removeHtml(document.querySelector('.ruleList'));
+
+                if(data.rules.length > 0){
+                    for(var i=0; i<=data.rules.length-1; i++){
+                        var html = `<tr><td class="left ellips"><span>${data.rules[i].resources.join("<br>")}</span></td><td class="left">${data.rules[i].nonResourceURLs}</td><td class="left">${data.rules[i].resourceNames}</td><td class="left"><span>${data.rules[i].verbs.join(", ")}</span></td><td class="left">${data.rules[i].apiGroups}</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.ruleList'), html, 'tbody');
+                    };
+                } else {
+                    var html = '<tr><td colspan="5">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.ruleList'), html, 'tbody');
+                };
+
+                roleDetail.event()
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, roleDetail.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/roles/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/roles/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        roleDetail.init();
+    }
+</script>
+</th:block>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+	<div id="content" class="sub-page">
+		<article class="location">
+			<ul>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+				<li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Workloads</a></li>
+				<li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Deployments</a></li>
+			</ul>
+		</article>
+		<article class="base detail">
+			<div class="notice">
+				<h4>Details</h4>
+				<div class="table_style01">
+					<table>
+						<caption>Details</caption>
+						<colgroup >
+							<col width="20%" />
+							<col width="80%" />
+						</colgroup>
+						<tbody class="listTable">
+							<tr>
+								<th scope="row" class="left">Name</th>
+								<td class="left" id="name"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">UID</th>
+								<td class="left" id="uid"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Namespaces</th>
+								<td class="left" id="space"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Labels</th>
+								<td class="box left" id="label"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Annotations</th>
+								<td class="left box" id="annot"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Created time</th>
+								<td class="left" id="time"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h4>Resource Info</h4>
+				<div class="table_style01">
+					<table>
+						<caption>Resource Info</caption>
+						<colgroup >
+							<col width="20%" />
+							<col width="80%" />
+						</colgroup>
+						<tbody class="listTable">
+							<tr>
+								<th scope="row" class="left">Strategy</th>
+								<td class="left" id="strategy"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Min ready seconds</th>
+								<td class="left" id="min"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Revision history limit</th>
+								<td class="left" id="limit"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Selector</th>
+								<td class="left box" id="selector"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h4>Rolling update strategy</h4>
+				<div class="table_style01">
+					<table>
+						<caption>Rolling update strategy</caption>
+						<colgroup >
+							<col width="20%" />
+							<col width="80%" />
+						</colgroup>
+						<tbody class="listTable">
+							<tr>
+								<th scope="row" class="left">Max surge</th>
+								<td class="left" id="surge"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Max unavailable</th>
+								<td class="left" id="unavailable"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h4>Pods status</h4>
+				<div class="table_style01">
+					<table>
+						<caption>Pods status</caption>
+						<colgroup >
+							<col width="20%" />
+							<col width="80%" />
+						</colgroup>
+						<tbody class="listTable">
+							<tr>
+								<th scope="row" class="left">Updated</th>
+								<td class="left" id="updated"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Total</th>
+								<td class="left" id="total"></td>
+							</tr>
+							<tr>
+								<th scope="row" class="left">Available</th>
+								<td class="left" id="available"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<h4>Event</h4>
+				<div class="table_style01">
+					<table>
+						<caption>Event List</caption>
+						<colgroup >
+							<col width="18%" />
+							<col width="18%" />
+							<col width="18%" />
+							<col width="10%" />
+							<col width="18%" />
+							<col width="18%" />
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Message</th>
+								<th scope="col">Source</th>
+								<th scope="col">Sub-object</th>
+								<th scope="col">Count</th>
+								<th scope="col">First seen</th>
+								<th scope="col">Last seen</th>
+							</tr>
+						</thead>
+						<tbody class="eventList">
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!-- btn -->
+			<div class="btn02">
+				<button type="submit" id="delete" th:text="#{M0026}"></button>
+				<div>
+					<a href="javascript:;"  id="modify" data-role="deployments" th:text="#{M0025}"></a>
+					<a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS);" th:text="#{M0028}"></a>
+				</div>
+			</div>
+		</article>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		window.onload = () => {
+
+			func.init(1, 0);
+
+			const depolyDetail = {
+				init(){
+					document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+					// depolyDetail 정보 조회
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/deployments/${sessionStorage.getItem('commonName')}`, 'application/json', depolyDetail.draw);
+				},
+
+				draw(data){
+		
+					// Details data
+					document.getElementById('name').innerText = data.name;
+					document.getElementById('uid').innerText = data.uid;
+					document.getElementById('space').innerText = sessionStorage.getItem('nameSpace');
+					
+					if(data.labels != '-'){
+						for(var i=0; i<=Object.getOwnPropertyNames(data.labels).length-1; i++){
+							var html = `<dl><dt>${Object.getOwnPropertyNames(data.labels)[i]}</dt><dd>${data.labels[Object.keys(data.labels)[i]]}</dd></dl>`;
+
+							func.appendHtml(document.getElementById('label'), html, 'dl');
+						};
+					} else {
+						var html = `<dl><dt>-</dt></dl>`;
+
+						func.appendHtml(document.getElementById('label'), html, 'dl');
+					}
+
+					document.getElementById('time').innerText = data.creationTimestamp;
+
+					if(data.annotations.length > 0){
+						for(i=0; i<=data.annotations.length-1; i++){
+							if(data.annotations[i].checkYn == 'Y'){
+								var html = `<dl class="fly">
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+							} else if(data.annotations[i].checkYn == 'N'){
+								var html = `<dl>
+												<dt>${data.annotations[i].key}</dt>
+												<dd> ${data.annotations[i].value}</dd>
+											</dl>`;
+							} else {
+								var html = `<dl>
+												<dt>-</dt>
+											</dl>`;
+							};
+
+							func.appendHtml(document.getElementById('annot'), html, 'dl');
+						};
+					};
+					
+					// Resource Info
+					document.getElementById('strategy').innerText = data.strategy.type;
+					document.getElementById('min').innerText = data.minReadySeconds;
+					document.getElementById('limit').innerText = data.revisionHistoryLimit;
+					
+					if(data.selector.matchLabels != '-'){
+						for(var i=0; i<=Object.getOwnPropertyNames(data.selector.matchLabels).length-1; i++){
+							var html = `<dl><dt>${Object.getOwnPropertyNames(data.selector.matchLabels)[i]}</dt><dd>${data.selector.matchLabels[Object.keys(data.selector.matchLabels)[i]]}</dd></dl>`;
+
+							func.appendHtml(document.getElementById('selector'), html, 'dl');
+						};
+					} else {
+						var html = `<dl><dt>-</dt></dl>`;
+
+						func.appendHtml(document.getElementById('selector'), html, 'dl');
+					};
+					
+					// Rolling update strategy
+					document.getElementById('surge').innerText = data.strategy.rollingUpdate.maxSurge;
+					document.getElementById('unavailable').innerText = data.strategy.rollingUpdate.maxUnavailable;
+
+					// Pods status
+					document.getElementById('updated').innerText = data.updated;
+					document.getElementById('total').innerText = data.total;
+					document.getElementById('available').innerText = data.available;
+
+					// event 정보 조회
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/events/resources/${data.uid}`, 'application/json', depolyDetail.list);
+				},
+
+				list(data){
+									
+					func.removeHtml(document.querySelector('.eventList'));
+
+					if(data.items.length > 0){
+						for(var i=0; i<=data.items.length-1; i++){
+							var html = `<tr>
+								<td class="left">${data.items[i].message}</td>
+								<td class="left">${data.items[i].source.component} ${data.items[i].source.host}</td>
+								<td>${data.items[i].filePath}</td>
+								<td>${data.items[i].count}</td>
+								<td>${data.items[i].firstTimestamp}</td>
+								<td>${data.items[i].lastTimestamp}</td>
+							</tr>`;
+
+							func.appendHtml(document.querySelector('.eventList'), html, 'tbody');
+						};
+					} else {
+						var html = '<tr><td colspan="6">No Data.</td></tr>';
+
+						func.appendHtml(document.querySelector('.eventList'), html, 'tbody');
+					};
+					
+					depolyDetail.event();
+				},
+
+				event(){
+					document.getElementById('delete').addEventListener('click', (e) => {
+						func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, depolyDetail.delete);
+					}, false);
+
+					document.getElementById('modify').addEventListener('click', (e) => {
+						// Resource yaml 정보 조회
+						func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/deployments/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+					}, false);
+				},
+
+				delete(){
+					func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/deployments/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+				},
+			}
+
+			depolyDetail.init();
+		}
+	</script>
+</th:block>
+</html>

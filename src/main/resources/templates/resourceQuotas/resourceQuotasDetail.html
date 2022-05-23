@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Managements</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)">Resource Quotas</a></li>
+                </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                        <table>
+                            <caption>Details</caption>
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="80%" />
+                            </colgroup>
+                            <tbody class="listTable">
+                            <tr>
+                                <th scope="row" class="left">Name</th>
+                                <td class="left" id="name"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Namespaces</th>
+                                <td class="left" id="space"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Scopes</th>
+                                <td class="ellips left" id="scopes"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="left">Created time</th>
+                                <td class="left" id="time"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="table_style01">
+                        <table>
+                            <caption>Details</caption>
+                            <colgroup >
+                                <col width="60%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col">Resource Name</th>
+                                <th scope="col">Hard</th>
+                                <th scope="col">Used</th>
+                            </tr>
+                            </thead>
+                            <tbody class="detailList">
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" id="modify" data-role="resourceQuotas" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(4, 2);
+
+        const resourceDetail = {
+            init(){
+                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+
+                // nameSpace 정보 조회
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/resourceQuotas/${sessionStorage.getItem('commonName')}`, 'application/json', resourceDetail.draw);
+            },
+
+            draw(data){
+
+                // Details data
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('space').innerText = data.namespace;
+                document.getElementById('scopes').innerHTML = data.scopes;
+                document.getElementById('time').innerText = data.creationTimestamp;
+
+                func.removeHtml(document.querySelector('.detailList'));
+
+                if(data.items.length > 0){
+                    for(var i=0; i<=data.items.length-1; i++){
+                        var html = `<tr><td class="left">${data.items[i].resource}</td><td>${data.items[i].hard}</td><td>${data.items[i].used}</td></tr>`;
+
+                        func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                    };
+                } else {
+                    var html = '<tr><td colspan="3">No Data.</td></tr>';
+
+                    func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
+                };
+
+                resourceDetail.event()
+            },
+
+            event(){
+                document.getElementById('delete').addEventListener('click', (e) => {
+                    func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, resourceDetail.delete);
+            }, false);
+
+                document.getElementById('modify').addEventListener('click', (e) => {
+                    // Resource yaml 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/resourceQuotas/${sessionStorage.getItem('commonName')}/yaml`, 'application/json', func.modify);
+            }, false);
+            },
+
+            delete(){
+                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/resourceQuotas/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+            },
+        }
+
+        resourceDetail.init();
+    }
+</script>
+</th:block>
+</html>

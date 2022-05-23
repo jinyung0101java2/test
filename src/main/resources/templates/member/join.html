@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8" />
+	<title>Join</title>
+	<link href="/css/layout.css" rel="stylesheet" type="text/css" />
+	<link rel='shortcut icon' type='image/x-icon' href='/img/favicon.ico'/>
+</head>
+<body>
+	<div id="wrap">
+		<div id="content" class="member">
+			<article class="join">
+				<h1>
+					<a href="javascript:;"><img src="/img/login_logo.png" alt="Paas-TA logo" style="margin-bottom: -100px; margin-left: -20px;"/></a>
+				</h1>
+				<dl>
+					<dt>Kubernetes Cluster</dt>
+					<dd>
+						<input type="text" id="name" maxlength="253" placeholder="Kubernetes Cluster Name" />
+						<input type="text" id="url"  placeholder="Kubernetes Cluster API URL" />
+						<input type="password" id="token" placeholder="Kubernetes Cluster Token" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>Namespace</dt>
+					<dd>
+						<input type="text" id="space" maxlength="253" placeholder="Namespace Name" />
+					</dd>
+				</dl>
+				<dl>
+					<dt>User</dt>
+					<dd>
+						<input type="text" id="id" maxlength="100" placeholder="ID" />
+						<input type="password" id="pass" maxlength="253" placeholder="Password" />
+						<input type="password" id="psChk" maxlength="253" placeholder="Check password" />
+						<input type="email" id="mail" placeholder="E-mail" />
+					</dd>
+				</dl>
+				<!-- btn -->
+				<div class="btn">
+					<a href="/container-platform/login">Cancel</a>
+					<button type="submit" id="join">회원가입</button>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="/js/common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		window.onload = () => {
+
+			const join = {
+
+				init(){
+					document.getElementById('join').addEventListener('click', (e) => {
+			
+							var joinInfo = {
+								"userId": document.getElementById('id').value,
+								"password": document.getElementById('pass').value,
+								"passwordConfirm" : document.getElementById('psChk').value,
+								"email": document.getElementById('mail').value,
+								"clusterName": document.getElementById('name').value,
+								"clusterApiUrl": document.getElementById('url').value,
+								"clusterToken": document.getElementById('token').value,
+								"cpNamespace": document.getElementById('space').value
+							};
+
+							func.saveData('POST', `${func.url}signUp?isAdmin=true`, JSON.stringify(joinInfo), true, 'application/json', join.success);
+					
+					}, false);
+				},
+
+				success(){
+					location.href = `/`;
+				},
+			};
+
+			join.init();
+		};
+	</script>
+</body>
+</html>

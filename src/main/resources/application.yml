@@ -1,0 +1,100 @@
+spring:
+  application:
+    name: paas-ta-container-platform-admin
+
+management:
+  security:
+    enabled: false
+
+private:
+  registry:
+    imageName: paas-ta-container-platform-harbor
+
+keycloak:
+  oauth:
+    info:
+      uri: ${KEYCLOAK_URI}/auth/realms/${KEYCLOAK_CP_REALM}/protocol/openid-connect/userinfo
+    token:
+      check:
+        uri: ${KEYCLOAK_URI}/auth/realms/${KEYCLOAK_CP_REALM}/protocol/openid-connect/token/introspect
+      access:
+        uri: ${KEYCLOAK_URI}/auth/realms/${KEYCLOAK_CP_REALM}/protocol/openid-connect/token
+    logout:
+      url: ${KEYCLOAK_URI}/auth/realms/${KEYCLOAK_CP_REALM}/protocol/openid-connect/logout
+    authorization:
+      uri: ${KEYCLOAK_URI}/auth/realms/${KEYCLOAK_CP_REALM}/protocol/openid-connect/auth
+    client:
+      id: ${KEYCLOAK_CP_CLIENT_ID}
+      secret: ${KEYCLOAK_CP_CLIENT_SECRET}
+      scope:
+      clusterAdminRole: cp-cluster-admin-role
+
+---
+spring:
+  profiles: local
+  freemarker:
+    template-loader-path: classpath:/templates/
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+  resources:
+    static-locations: file:src/main/resources/static/
+
+logging:
+  level:
+    ROOT: INFO
+  path: classpath:logback-spring.xml
+  file: logs/application.log
+
+server:
+  port: ${PORT:8090}
+  servlet:
+    session:
+      cookie:
+        name: CPADMINPORTALSESSION
+
+cpApi:
+  url: http://localhost:3333
+  authorization:
+    id: admin
+    password: PaaS-TA
+
+commonApi:
+  url: http://localhost:3334
+  authorization:
+    id: admin
+    password: PaaS-TA
+
+---
+spring:
+  profiles:
+    active: prod
+  freemarker:
+    template-loader-path: classpath:/templates/
+
+logging:
+  level:
+    ROOT: INFO
+  path: classpath:logback-spring.xml
+  file: logs/application.log
+
+server:
+  port: ${WEBADMIN_SERVER_PORT}
+  servlet:
+    session:
+      cookie:
+        name: CPADMINPORTALSESSION
+
+cpApi:
+  url: ${CONTAINER_PLATFORM_API_URI}
+  authorization:
+    id: admin
+    password: PaaS-TA
+
+commonApi:
+  url: ${CONTAINER_PLATFORM_COMMON_API_URI}
+  authorization:
+    id: admin
+    password: PaaS-TA
