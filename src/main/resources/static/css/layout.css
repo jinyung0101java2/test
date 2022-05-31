@@ -530,3 +530,48 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 #localeLangDiv fieldset:after {content:""; width:10px; height:10px; border-bottom:2px solid #666666; border-left:2px solid #666666; transform:rotate(-45deg); position:absolute; top:13px; right:17px;cursor:pointer;}
 #localeLangDiv fieldset select {height: 40px; line-height:40px; width:100%; padding-left:18px; font-size:18px; color:#47494d; cursor:pointer;}
 #u_locale_lang{width : 115px;height: 40px;}
+
+/*----------------------------- global -----------------------------*/
+.fc-blue {color: #1c77ff;}
+.flex-c {display: flex; justify-content: center;}
+.flex-s {display: flex; justify-content: baseline;}
+.flex-e {display: flex; justify-content: flex-end;}
+
+/*select*/
+.g-select-wrap {display: flex; flex: 1 1 auto;}
+.g-select {position: relative; margin-left: 15px;}
+.g-select:first-child {margin-left: 0;}
+.g-select:after {content:""; width:10px; height:10px; border-bottom:2px solid #666666; border-left:2px solid #666666; transform:rotate(-45deg); position:absolute; top:13px; right:22px;cursor:pointer;}
+.g-select.lang select {min-width: 100px;}
+.g-select select {height:40px; line-height:40px; width:100%; padding-left:18px; font-size:18px; color:#47494d; cursor:pointer; max-width: 220px; min-width: 150px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
+.base-type2 {padding: 60px 0; margin: 0 68px; border-bottom: 1px solid #ebebeb;}
+.base-type3 .chart {padding: 60px 0; margin: 0 68px; border-bottom: 1px solid #ebebeb; background: transparent;}
+.base-type3 .chart:last-child {border-bottom: 0;}
+.base-type3 .chart h4 span {font-family: 'Apple SD Gothic Neo B', sans-serif; color: #000;}
+.p-info {color: rgba(255, 255, 255, 0.589); line-height: 1.3; font-weight: 400; margin-right: 50px; width: 250px; display: flex; flex-direction: column; justify-content: center;}
+.creat .temp-txt {margin-top: 50px;}
+.creat .temp-txt textarea {min-height: 300px; font-size: 18px;}
+.creat dl dd .temp-txt {margin-top: 0;}
+.add-btn {width :100px; text-align: center; background-color:#bdbfc4; color:#fff; line-height:52px; height:50px; font-size:16px; font-weight:400; border-radius:2px; margin-left: 15px; cursor: pointer;}
+/* tab */
+.tab-cont-wrap .tab-btn {display: flex; border-bottom: 2px solid #000;}
+.tab-cont-wrap .tab-btn li {margin-left: 10px;}
+.tab-cont-wrap .tab-btn li:first-child {margin-left :0;}
+.tab-cont-wrap .tab-btn a {display: block; font-size: 18px; padding: 15px; background-color: #bdbfc4; color: #fff; min-width: 150px; text-align: center;}
+.tab-cont-wrap .tab-btn li.active a {background-color: #0950bf;}
+/*----------------------------- service ingress -----------------------------*/
+.creat-type2 .g-select-wrap .g-select select {height: 50px; line-height: 50px; max-width: 212px; min-width: 212px; border-color: #ebebeb;}
+.creat-type2 .g-select-wrap .g-select:after {top: 17px;}
+.creat-type2 .g-select-wrap input {border: 1px solid #ebebeb; height: 50px; line-height: 48px; padding-left: 18px; margin-left: 15px; font-size: 18px;}
+.creat-type2 .g-select-wrap input.long {width: 100%;}
+.creat-type2 .tit {font-size: 24px; font-weight: 400; line-height: 1.3; margin-top: 60px; font-family: 'Apple SD Gothic Neo B', sans-serif;}
+.creat-type2 .con-section {border-bottom: 1px solid #ebebeb; padding: 20px 0;}
+.creat-type2 dl {display: flex; align-items: center;}
+.creat-type2 dl dt {margin-bottom: 0; margin-right: 20px; width: 80px;}
+.creat-type2 dl dd {display: flex; align-items: center;}
+.creat-type2 dl dd input {min-width: 500px;}
+.creat-type2 .add-btn {margin-left: 0; margin-top: 20px; width: 200px; background-color: #0950bf;}
+.creat-type2 dl dd .con-txt {display: flex; align-items: center; margin-left: 15px;}
+.creat-type2 dl dd .con-txt p {font-size: 16px; color: #47494d; font-weight: 400; width: 100%; font-family: 'Apple SD Gothic Neo B', sans-serif; max-width: 80px;}
+
+.delete-btn {color: #fff; background-color: #bdbfc4; width: 120px; line-height: 52px; height: 50px; font-size: 16px; border-radius: 2px; margin-left: 10px; text-align: center; font-family: 'Apple SD Gothic Neo L', sans-serif;}

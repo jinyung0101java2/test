@@ -90,7 +90,7 @@
                 if(data.httpStatusCode == 200){
                     if(data.items.length > 0){
                         for(var i=0; i<=data.items.length-1; i++){
-                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
+                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="center"><a href="http://${data.items[i].host}${data.items[i].path}">http://${data.items[i].host}${data.items[i].path}</a> > ${data.items[i].targetService}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
@@ -130,9 +130,7 @@
             }, false);
 
                 document.querySelector('.create').addEventListener('click', (e) => {
-                    sessionStorage.setItem('commonName', '');
-
-                func.create('Create', 'ingresses', MSG_SAVE);
+                    document.location.href = URI_CP_SERVICES_INGRESSES + URI_CP_CREATE;
             }, false);
             },
 

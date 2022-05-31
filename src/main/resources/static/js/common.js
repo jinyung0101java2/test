@@ -23,7 +23,7 @@ const func = {
 			nav1d[depth1].parentNode.classList.toggle('on', true);
 
 			if(depth2 >= 0){
-				if(depth1 >= 3) depth1--;
+				if(depth1 >= 5) depth1--;
 
 				var nav2d = nav2b[depth1].querySelectorAll('a');
 
