@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)">Services</a></li>
+                <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)">Ingresses</a></li>
+            </ul>
+        </article>
+        <article class="base">
+            <div class="creat creat-type2">
+                <div>
+                    <h3 th:text="|Ingresses #{M0024}|"></h3>
+                    <div class="g-select-wrap">
+                        <div class="g-select">
+                            <select>
+                                <option value="">Default</option>
+                            </select>
+                        </div>
+                        <input type="text" placeholder="Name">
+                        <input type="text" placeholder="Desc" class="long">
+                    </div>
+                </div>
+
+                <!-- Rule -->
+                <h4 class="tit">Rule</h4>
+                <div class="con-section">
+                    <dl>
+                        <dt><label>Host</label></dt>
+                        <dd>
+                            <input type="text" placeholder="eg.example.com" />
+                        </dd>
+                    </dl>
+
+                    <!-- path -->
+                    <dl class="content-path">
+                        <dt><label>Path</label></dt>
+                        <dd class="g-select-wrap">
+                            <div class="g-select">
+                                <select>
+                                    <option value="">Prefix</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="eg.example.com" />
+                        </dd>
+                    </dl>
+                    <dl class="content-target">
+                        <dt><label>Target</label></dt>
+                        <dd class="g-select-wrap">
+                            <div class="g-select">
+                                <select>
+                                    <option value="">Prefix</option>
+                                </select>
+                            </div>
+                            <div class="con-txt">
+                                <p><label>Port</label></p>
+                                <input type="text" />
+                            </div>
+                        </dd>
+                    </dl>
+                    <button type="button" class="add-btn" onclick="pathCreate()">경로 추가</button>
+                </div>
+                <!-- // Rule -->
+                <div class="flex-e rule-add-btn">
+                    <button class="add-btn" onclick="ruleCreate()">룰 추가</button>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <div>
+                    <button type="submit">저장</button>
+                    <button onclick="movePage(URI_CP_SERVICES_INGRESSES)">취소</button>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+            func.init(2,1);
+
+           /* const createIngresses = {
+            },
+            draw(data) {
+
+            },
+            event(){
+
+            },
+            save() {
+
+            },
+            resource(data) {
+
+            },
+            limit(data) {
+
+            }*/
+
+
+        }
+        /* path 추가 */
+        function pathCreate () {
+            let newPath = document.createElement('dl')
+            let currentPath = event.currentTarget.parentNode.querySelector('.content-target')
+            newPath.classList.add('content-path')
+            newPath.innerHTML = `
+			<dt><label">Path</label></dt>
+			<dd class="g-select-wrap">
+				<div class="g-select">
+					<select>
+						<option value="">Prefix</option>
+					</select>
+				</div>
+				<input type="text" placeholder="eg.example.com" />
+				<button class="delete-btn" onclick="deleteBtn()">삭제</button>
+			</dd>
+			`
+            currentPath.insertAdjacentElement('beforebegin', newPath)
+        }
+        /* Rule 추가 */
+        let conSection = document.querySelector('.rule-add-btn');
+        function ruleCreate() {
+            let newRule = document.createElement('div');
+            newRule.classList.add('con-section');
+            newRule.innerHTML = `
+				<div class="flex-e">
+					<button title="룰 삭제" onclick="deleteBtn()">&#10006;</button>
+					<span class="blind">룰 삭제</span>
+				</div>
+				<dl>
+					<dt><label">Host</label></dt>
+					<dd>
+						<input type="text" placeholder="eg.example.com" />
+					</dd>
+				</dl>
+				<!-- path -->
+                <dl class="content-path">
+                <dt><label">Path</label></dt>
+                <dd class="g-select-wrap">
+                <div class="g-select">
+                <select>
+                <option value="">Prefix</option>
+                </select>
+                </div>
+                <input type="text" placeholder="eg.example.com" />
+                </dd>
+                </dl>
+                <dl class="content-target">
+                <dt><label">Target</label></dt>
+                <dd class="g-select-wrap">
+                <div class="g-select">
+                <select>
+                <option value="">Prefix</option>
+                </select>
+                </div>
+                <div class="con-txt">
+                <p><label>Port</label></p>
+                <input type="text" />
+                </div>
+                </dd>
+                </dl>
+                <button type="button" class="add-btn" onclick="pathCreate()">경로 추가</button>
+                `
+			conSection.insertAdjacentElement('beforebegin', newRule)
+		}
+
+		/* path, Rule 삭제 */
+		function deleteBtn() {
+			let currentPath = event.currentTarget.parentNode.parentNode
+			currentPath.remove()
+		}
+    </script>
+</th:block>
+</html>

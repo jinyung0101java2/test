@@ -31,6 +31,18 @@ public class IngressesController {
         return BASE_URL + "ingresses";}
 
     /**
+     * Ingresses 생성 페이지 이동(Go to the ingresses create page)
+     *
+     * @return the view
+     */
+    @ApiOperation(value = "Ingresses 생성 페이지 이동(Go to the ingresses create page)", nickname = "createIngresses")
+    @GetMapping(value = ConstantsUrl.URI_CP_SERVICES_INGRESSES + ConstantsUrl.URI_CP_CREATE)
+    public String createIngresses() {
+        return BASE_URL + "ingressesCreate";
+    }
+
+
+    /**
      * Ingresses 상세 페이지 이동(Go to the ingresses details page)
      *
      * @return the view
@@ -39,4 +51,15 @@ public class IngressesController {
     @GetMapping(value = ConstantsUrl.URI_CP_SERVICES_INGRESSES + ConstantsUrl.URI_CP_DETAILS)
     public String getIngressesDetails(){return
             BASE_URL + "ingressesDetail";}
+
+    /**
+     * Ingresses 수정 페이지 이동(Go to the ingresses update page)
+     *
+     * @return the view
+     */
+    @ApiOperation(value = "Ingresses 수정 페이지 이동(Go to the ingresses update page)", nickname = "updateIngresses")
+    @GetMapping(value = ConstantsUrl.URI_CP_SERVICES_INGRESSES + ConstantsUrl.URI_CP_UPDATE)
+    public String updateIngresses() {
+        return BASE_URL + "ingressesUpdate";
+    }
 }
