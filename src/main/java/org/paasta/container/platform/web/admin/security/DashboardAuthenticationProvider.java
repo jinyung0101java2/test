@@ -6,6 +6,7 @@ import org.paasta.container.platform.web.admin.common.PropertyService;
 import org.paasta.container.platform.web.admin.common.model.ResultStatus;
 import org.paasta.container.platform.web.admin.login.LoginService;
 import org.paasta.container.platform.web.admin.login.ProviderService;
+import org.paasta.container.platform.web.admin.login.model.AuthenticationResponse;
 import org.paasta.container.platform.web.admin.login.model.Users;
 import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
 
@@ -34,8 +35,8 @@ import java.util.List;
 public class DashboardAuthenticationProvider implements AuthenticationProvider {
 
 
-    @Value("${keycloak.oauth.client.clusterAdminRole}")
-    private String clusterAdminRole;
+    @Value("${keycloak.oauth.client.superAdminRole}")
+    private String superAdminRole;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardAuthenticationProvider.class);
     private final ProviderService providerService;
@@ -70,48 +71,29 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
         final List<String> userRoles = dashboardAuthenticationDetails.getRoles();
 
         LOGGER.info("###############################################################");
-        LOGGER.info(CommonUtils.loggerReplace("SESSION INFOMATION SETTING [" + name + "]" + " [" + userId + ","+userAuthId+"]" + " [" + authentication.getPrincipal() + "] "));
+        LOGGER.info(CommonUtils.loggerReplace("SESSION INFOMATION SETTING [" + name + "]" + " [" + userId + ","+userAuthId+"]"));
         LOGGER.info("###############################################################");
 
+        Users users = new Users(userId, userAuthId, false);
 
-        // 1. CLUSTER ADMIN ROLE 에 맵핑된 사용자인지 확인
-       try {
-            if( !userRoles.contains(clusterAdminRole)){
-                LOGGER.info(CommonUtils.loggerReplace("***** [UNAUTHORIZED] THE USER ["+ userId +"] DOES NOT HAVE A CLUSTER ADMIN ROLE...NEED TO ADD CP CLUSTER ADMIN ROLE MAPPING IN KEYCLOAK."));
-                throw new InternalAuthenticationServiceException(Constants.NOT_CLUSTER_ADMIN_ROLE); }
-       }
-       catch (Exception e) {
-           throw new InternalAuthenticationServiceException(e.getMessage());
-       }
-
-
-        // 2. 클러스터 관리자 계정 생성 (등록된 관리자 계정이 없다면 생성 진행)
         try {
-                LOGGER.info("###############################################################");
-                LOGGER.info(CommonUtils.loggerReplace("[REGISTRATION] CREATE CLUSTER ADMIN  [" + userId + ","+userAuthId+"]"));
-                LOGGER.info("###############################################################");
+            // SUPER-ADMIN 권한인 경우
+            if(userRoles.contains(superAdminRole)){
+                users.setIsSuperAdmin(true);
+            }
 
-                // 클러스터 관리자 계정 생성
-                Users newClusterAdmin = new Users();
-                newClusterAdmin.setUserId(userId);
-                newClusterAdmin.setUserAuthId(userAuthId);
+            LOGGER.info("###############################################################");
+            LOGGER.info(CommonUtils.loggerReplace("[CHECK REGISTRATION] USER  [" + userId + ", "+userAuthId+ ", isSuperAdmin: "+ users.getIsSuperAdmin()+ " ]"));
+            LOGGER.info("###############################################################");
 
-                ResultStatus resultStatus =  providerService.registerClusterAdmin(newClusterAdmin);
+            // 사용자 계정 생성
+            ResultStatus resultStatus =  providerService.registerUsers(users);
 
-                if(resultStatus.getResultCode().equals(Constants.RESULT_STATUS_FAIL)) {
-
-                    if(resultStatus.getResultMessage().equals(Constants.USER_NOT_REGISTERED_IN_KEYCLOAK)) {
-                        LOGGER.info("***** THIS ACCOUNT IS NOT REGISTERED WITH KEYCLOAK.");
-                        throw new InternalAuthenticationServiceException(Constants.USER_NOT_REGISTERED_IN_KEYCLOAK);
-                    }
-                    else if(resultStatus.getResultMessage().equals(Constants.CLUSTER_ADMIN_ALREADY_REGISTERED)) {
-                        LOGGER.info(CommonUtils.loggerReplace("***** [DENY REGISTRATION] CLUSTER ADMIN ACCOUNT ALREADY EXISTS, THE USER ["+ userId +"] REGISTRATION IS DENIED."));
-                    }
-                    else {
-                        LOGGER.info("EXCEPTION OCCURRED DURING CLUSTER ADMIN CREATED...LOOK AT THE LOGS ON THE CP API, COMMON API.");
-                        throw new InternalAuthenticationServiceException("EXCEPTION OCCURRED DURING CLUSTER ADMIN CREATED.");
-                    }
+            if(resultStatus.getResultCode().equals(Constants.RESULT_STATUS_FAIL)) {
+                if(!Constants.ALREADY_REGISTERED_MESSAGE.contains(resultStatus.getResultMessage())) {
+                    throw new InternalAuthenticationServiceException(resultStatus.getResultMessage());
                 }
+            }
 
         }
         catch(Exception e){
@@ -121,22 +103,22 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
 
         // 3. CP-API 로그인 처리
         try {
-            Users loginClusterAdmin = new Users();
-            loginClusterAdmin.setUserId(userId);
-            loginClusterAdmin.setUserAuthId(userAuthId);
+            Users loginUser = new Users();
+            loginUser.setUserId(userId);
+            loginUser.setUserAuthId(userAuthId);
 
-            ResultStatus resultStatus = providerService.loginClusterAdmin(loginClusterAdmin);
+            AuthenticationResponse authenticationResponse = providerService.loginUsers(loginUser);
 
-            if(resultStatus.getResultCode().equals(Constants.RESULT_STATUS_SUCCESS)){
+            if(authenticationResponse.getResultCode().equals(Constants.RESULT_STATUS_SUCCESS)){
                 LOGGER.info("###############################################################");
                 LOGGER.info("[LOGIN] CP API LOGIN SUCCESSFUL ");
                 LOGGER.info("###############################################################");
-                UsersLoginMetaData usersLoginMetaData = loginService.setAuthDetailsLoginMetaData(resultStatus);
+                UsersLoginMetaData usersLoginMetaData = loginService.setAuthDetailsLoginMetaData(authenticationResponse);
                 dashboardAuthenticationDetails.setUsersLoginMetaData(usersLoginMetaData);
             }
             else {
                 //로그인 실패
-                if(resultStatus.getResultMessage().equals(Constants.LOGIN_FAIL)) {
+                if(authenticationResponse.getResultMessage().equals(Constants.LOGIN_FAIL)) {
                     LOGGER.info(CommonUtils.loggerReplace("***** [UNAUTHORIZED] THE USER ["+ userId +"] NO PERMISSIONS DURING THE AUTHENTICATION CHECK OF ID AND AUTH ID(KEYCLOAK ID)"));
                     throw new InternalAuthenticationServiceException(Constants.LOGIN_FAIL); }
                 else {
@@ -177,4 +159,3 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
 
 
 }
-

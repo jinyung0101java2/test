@@ -5,6 +5,7 @@ import org.paasta.container.platform.web.admin.common.ConstantsUrl;
 import org.paasta.container.platform.web.admin.common.PropertyService;
 import org.paasta.container.platform.web.admin.common.RestTemplateService;
 import org.paasta.container.platform.web.admin.common.model.ResultStatus;
+import org.paasta.container.platform.web.admin.login.model.AuthenticationResponse;
 import org.paasta.container.platform.web.admin.login.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -40,8 +41,8 @@ public class ProviderService {
      * @param users the users
      * @return the resultStatus
      */
-    public ResultStatus loginClusterAdmin(Users users) {
-        return restTemplateService.send(TARGET_CP_API, ConstantsUrl.URL_API_LOGIN, HttpMethod.POST, users, ResultStatus.class);
+    public AuthenticationResponse loginUsers(Users users) {
+        return restTemplateService.send(TARGET_CP_API, ConstantsUrl.URL_API_LOGIN, HttpMethod.POST, users, AuthenticationResponse.class);
     }
 
 
@@ -51,8 +52,8 @@ public class ProviderService {
      * @param users the users
      * @return the resultStatus
      */
-    public ResultStatus registerClusterAdmin(Users users) {
-        return restTemplateService.send(TARGET_CP_API, ConstantsUrl.URL_API_SIGNUP + propertyService.getKeycloakClusterAdminRole(),
+    public ResultStatus registerUsers(Users users) {
+        return restTemplateService.send(TARGET_CP_API, ConstantsUrl.URL_API_SIGNUP,
                 HttpMethod.POST, users, ResultStatus.class);
     }
 
@@ -67,14 +68,14 @@ public class ProviderService {
      * @return the user detail
      */
     public Users getUsers(String cluster, String namespace, String userId) {
-         Users users = restTemplateService.send(TARGET_CP_API, URI_API_USERS_DETAIL
+        Users users = restTemplateService.send(TARGET_CP_API, URI_API_USERS_DETAIL
                 .replace("{cluster:.+}", cluster)
                 .replace("{namespace:.+}", namespace)
                 .replace("{userId:.+}", userId), HttpMethod.GET, null, Users.class);
 
-         users.setClusterToken(Constants.EMPTY_VALUE);
-         users.setSaToken(Constants.EMPTY_VALUE);
-         users.setPassword(Constants.EMPTY_VALUE);
+        users.setClusterToken(Constants.EMPTY_VALUE);
+        users.setSaToken(Constants.EMPTY_VALUE);
+        users.setPassword(Constants.EMPTY_VALUE);
 
 
         return users;

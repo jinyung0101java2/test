@@ -1,7 +1,7 @@
 package org.paasta.container.platform.web.admin.login;
 
 import org.paasta.container.platform.web.admin.common.Constants;
-import org.paasta.container.platform.web.admin.common.model.ResultStatus;
+import org.paasta.container.platform.web.admin.login.model.AuthenticationResponse;
 import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
 import org.paasta.container.platform.web.admin.security.DashboardAuthenticationDetails;
 import org.slf4j.Logger;
@@ -44,15 +44,15 @@ public class LoginService {
     /**
      * Users Details MetaData 객체 생성(Create Users Login Meta-Information Object)
      *
-     * @param resultStatus the ResultStatus
+     * @param authenticationResponse the AuthenticationResponse
      */
-    public UsersLoginMetaData setAuthDetailsLoginMetaData(ResultStatus resultStatus) {
+    public UsersLoginMetaData setAuthDetailsLoginMetaData(AuthenticationResponse authenticationResponse) {
 
 
         UsersLoginMetaData usersLoginMetaData = new UsersLoginMetaData();
-        usersLoginMetaData.setAccessToken(resultStatus.getToken());
-        usersLoginMetaData.setClusterName(resultStatus.getClusterName());
-        usersLoginMetaData.setUserId(resultStatus.getUserId());
+        usersLoginMetaData.setAccessToken(authenticationResponse.getToken());
+        usersLoginMetaData.setClusterId(authenticationResponse.getClusterId());
+        usersLoginMetaData.setUserId(authenticationResponse.getUserId());
         usersLoginMetaData.setSelectedNamespace("");
         usersLoginMetaData.setUserMetaData("");
         usersLoginMetaData.setUserMetaDataList(null);

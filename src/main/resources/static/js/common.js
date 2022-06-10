@@ -271,7 +271,7 @@ const func = {
 						}
 
 						sessionStorage.setItem('user' , JSON.parse(request.responseText).userId);
-						sessionStorage.setItem('cluster' , JSON.parse(request.responseText).clusterName);
+						sessionStorage.setItem('cluster' , 'cp-cluster');
 						sessionStorage.setItem('token' , 'Bearer ' + JSON.parse(request.responseText).accessToken);
 
 					} else {

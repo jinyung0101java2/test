@@ -28,9 +28,16 @@ public class Constants {
     public static final String CLUSTER_ADMIN_ALREADY_REGISTERED = "CLUSTER_ADMIN_ALREADY_REGISTERED";
     public static final String NOT_CLUSTER_ADMIN_ROLE = "NOT_CLUSTER_ADMIN_ROLE";
     public static final String LOGIN_FAIL = "LOGIN_FAILED";
-    public static final String USER_NOT_REGISTERED_IN_KEYCLOAK = "USER_NOT_REGISTERED_IN_KEYCLOAK";
 
-    public static final List<String> LOGIN_UNAUTHORIZED_MESSAGE =   Arrays.asList(new String[]{LOGIN_FAIL, NOT_CLUSTER_ADMIN_ROLE, USER_NOT_REGISTERED_IN_KEYCLOAK});
+    public static final String USER_NOT_REGISTERED_IN_KEYCLOAK_MESSAGE = "USER_NOT_REGISTERED_IN_KEYCLOAK";
+    public static final String USER_NOT_MAPPED_TO_THE_NAMESPACE_MESSAGE = "USER_NOT_MAPPED_TO_THE_NAMESPACE";
+    public static final String SUPER_ADMIN_ALREADY_REGISTERED_MESSAGE = "SUPER_ADMIN_ALREADY_REGISTERED";
+    public static final String USER_ALREADY_REGISTERED_MESSAGE = "USER_ALREADY_REGISTERED";
+    public static final String USER_REGISTRATION_AVAILABLE_MESSAGE = "USER_REGISTRATION_AVAILABLE";
+
+
+    public static final List<String> ALREADY_REGISTERED_MESSAGE =   Arrays.asList(new String[]{SUPER_ADMIN_ALREADY_REGISTERED_MESSAGE, USER_ALREADY_REGISTERED_MESSAGE});
+    public static final List<String> LOGIN_UNAUTHORIZED_MESSAGE =   Arrays.asList(new String[]{LOGIN_FAIL, NOT_CLUSTER_ADMIN_ROLE, USER_NOT_REGISTERED_IN_KEYCLOAK_MESSAGE});
 
     public static final String CHECK_Y = "Y";
     public static final String CHECK_N = "N";

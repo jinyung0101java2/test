@@ -1,6 +1,7 @@
 package org.paasta.container.platform.web.admin.login.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import javax.validation.constraints.Pattern;
  * @since 2020.09.22
  **/
 @Data
+@NoArgsConstructor
 public class Users {
     private String resultCode;
     private String resultMessage;
@@ -53,6 +55,12 @@ public class Users {
     private String lastModified;
     private String browser;
     private String clientIp;
+    private Boolean isSuperAdmin;
 
+    public Users(String userId, String userAuthId, Boolean isSuperAdmin){
+        this.userId = userId;
+        this.userAuthId = userAuthId;
+        this.isSuperAdmin = isSuperAdmin;
+    }
 
 }

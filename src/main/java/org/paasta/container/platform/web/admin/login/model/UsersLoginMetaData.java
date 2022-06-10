@@ -23,7 +23,7 @@ public class UsersLoginMetaData implements Serializable {
     private String accessToken;
     private String userMetaData;
     private String selectedNamespace;
-    private String clusterName;
+    private String clusterId;
     private List<UsersLoginMetaDataItem> userMetaDataList;
     private String active;
 

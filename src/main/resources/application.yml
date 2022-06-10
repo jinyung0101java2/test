@@ -27,7 +27,7 @@ keycloak:
       id: ${KEYCLOAK_CP_CLIENT_ID}
       secret: ${KEYCLOAK_CP_CLIENT_SECRET}
       scope:
-      clusterAdminRole: cp-cluster-admin-role
+      superAdminRole: cp-cluster-admin-role
 
 ---
 spring:

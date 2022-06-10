@@ -48,8 +48,8 @@ public class ConstantsUrl {
 
 
     //CP-API REQUEST URI
-    public static final String URL_API_LOGIN = "/login?isAdmin=true";
-    public static final String URL_API_SIGNUP = "/signUp?isAdmin=true&param=";
+    public static final String URL_API_LOGIN = "/login";
+    public static final String URL_API_SIGNUP = "/signUp";
 
     //LOCALE LANGUAGE
     public static final String URL_API_LOCALE_LANGUAGE = "/localeLanguage";

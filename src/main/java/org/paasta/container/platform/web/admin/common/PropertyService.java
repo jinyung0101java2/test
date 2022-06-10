@@ -24,7 +24,7 @@ public class PropertyService {
     @Value("${private.registry.imageName}")
     private String privateRegistryImageName;
 
-    @Value("${keycloak.oauth.client.clusterAdminRole}")
-    private String keycloakClusterAdminRole;
+    @Value("${keycloak.oauth.client.superAdminRole}")
+    private String keycloakSuperAdminRole;
 
 }
