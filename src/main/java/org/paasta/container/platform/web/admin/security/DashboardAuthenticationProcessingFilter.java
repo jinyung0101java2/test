@@ -59,12 +59,15 @@ public class DashboardAuthenticationProcessingFilter extends OAuth2ClientAuthent
             resultAuth =  getAuthenticationManager().authenticate(authentication);
         }
         catch (Exception e){
+            LOGGER.info("######### AUTHENTICATION EXCEPTION MESSAGE : {}", CommonUtils.loggerReplace(e.getMessage()));
             String redirect_url = "/error/500";
 
+            if(e.getMessage().equals(Constants.LOGIN_INACTIVE_USER_MESSAGE)) {
+                redirect_url = "/error/inactive";
+            }
             if(Constants.LOGIN_UNAUTHORIZED_MESSAGE.contains(e.getMessage())) {
                 redirect_url = "/error/401";
             }
-
             response.sendRedirect(redirect_url);
         }
         return resultAuth;

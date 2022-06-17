@@ -41,17 +41,11 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardAuthenticationProvider.class);
     private final ProviderService providerService;
     private final LoginService loginService;
-    private final PropertyService propertyService;
 
-
-
-    public DashboardAuthenticationProvider(ProviderService providerService,LoginService loginService, PropertyService propertyService)
-    {
+    public DashboardAuthenticationProvider(ProviderService providerService, LoginService loginService) {
         this.providerService = providerService;
         this.loginService = loginService;
-        this.propertyService = propertyService;
     }
-
 
 
     @Override
@@ -66,69 +60,53 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
         }
 
         DashboardAuthenticationDetails dashboardAuthenticationDetails = (DashboardAuthenticationDetails) details;
-        final String userId=dashboardAuthenticationDetails.getUserid();
-        final String userAuthId =dashboardAuthenticationDetails.getId();
+        final String userId = dashboardAuthenticationDetails.getUserid();
+        final String userAuthId = dashboardAuthenticationDetails.getId();
         final List<String> userRoles = dashboardAuthenticationDetails.getRoles();
 
         LOGGER.info("###############################################################");
-        LOGGER.info(CommonUtils.loggerReplace("SESSION INFOMATION SETTING [" + name + "]" + " [" + userId + ","+userAuthId+"]"));
+        LOGGER.info(CommonUtils.loggerReplace("SESSION INFOMATION SETTING [" + name + "]" + " [" + userId + "," + userAuthId + "]"));
         LOGGER.info("###############################################################");
 
         Users users = new Users(userId, userAuthId, false);
+        // SUPER-ADMIN 권한인 경우
+        if (userRoles.contains(superAdminRole)) {
+            users.setIsSuperAdmin(true);
+        }
 
         try {
-            // SUPER-ADMIN 권한인 경우
-            if(userRoles.contains(superAdminRole)){
-                users.setIsSuperAdmin(true);
-            }
-
             LOGGER.info("###############################################################");
-            LOGGER.info(CommonUtils.loggerReplace("[CHECK REGISTRATION] USER  [" + userId + ", "+userAuthId+ ", isSuperAdmin: "+ users.getIsSuperAdmin()+ " ]"));
+            LOGGER.info(CommonUtils.loggerReplace("[CHECK REGISTRATION] USER  [" + userId + ", " + userAuthId + ", isMappingSuperAdminRole: " + users.getIsSuperAdmin() + " ]"));
             LOGGER.info("###############################################################");
 
             // 사용자 계정 생성
-            ResultStatus resultStatus =  providerService.registerUsers(users);
+            ResultStatus resultStatus = providerService.registerUsers(users);
 
-            if(resultStatus.getResultCode().equals(Constants.RESULT_STATUS_FAIL)) {
-                if(!Constants.ALREADY_REGISTERED_MESSAGE.contains(resultStatus.getResultMessage())) {
+            if (resultStatus.getResultCode().equals(Constants.RESULT_STATUS_FAIL)) {
+                if (!Constants.ALREADY_REGISTERED_MESSAGE.contains(resultStatus.getResultMessage())) {
                     throw new InternalAuthenticationServiceException(resultStatus.getResultMessage());
                 }
             }
 
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new InternalAuthenticationServiceException(e.getMessage());
         }
 
 
         // 3. CP-API 로그인 처리
         try {
-            Users loginUser = new Users();
-            loginUser.setUserId(userId);
-            loginUser.setUserAuthId(userAuthId);
+            AuthenticationResponse authenticationResponse = providerService.loginUsers(users);
 
-            AuthenticationResponse authenticationResponse = providerService.loginUsers(loginUser);
-
-            if(authenticationResponse.getResultCode().equals(Constants.RESULT_STATUS_SUCCESS)){
+            if (authenticationResponse.getResultCode().equals(Constants.RESULT_STATUS_SUCCESS)) {
                 LOGGER.info("###############################################################");
                 LOGGER.info("[LOGIN] CP API LOGIN SUCCESSFUL ");
                 LOGGER.info("###############################################################");
                 UsersLoginMetaData usersLoginMetaData = loginService.setAuthDetailsLoginMetaData(authenticationResponse);
                 dashboardAuthenticationDetails.setUsersLoginMetaData(usersLoginMetaData);
+            } else {
+                throw new InternalAuthenticationServiceException(authenticationResponse.getResultMessage());
             }
-            else {
-                //로그인 실패
-                if(authenticationResponse.getResultMessage().equals(Constants.LOGIN_FAIL)) {
-                    LOGGER.info(CommonUtils.loggerReplace("***** [UNAUTHORIZED] THE USER ["+ userId +"] NO PERMISSIONS DURING THE AUTHENTICATION CHECK OF ID AND AUTH ID(KEYCLOAK ID)"));
-                    throw new InternalAuthenticationServiceException(Constants.LOGIN_FAIL); }
-                else {
-                    LOGGER.info("EXCEPTION OCCURRED DURING CP API LOGIN...LOOK AT THE LOGS ON THE CP API, COMMON API.");
-                    throw new InternalAuthenticationServiceException("EXCEPTION OCCURRED DURING CP API LOGIN");
-                }
-            }
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new InternalAuthenticationServiceException(e.getMessage());
         }
 

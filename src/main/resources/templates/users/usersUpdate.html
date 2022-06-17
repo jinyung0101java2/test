@@ -63,6 +63,7 @@
             </article>
         </div>
     <input type="hidden" id="userType" th:value="${userType}"/>
+    <input type="hidden" id="userAuthId" th:value="${userAuthId}"/>
 </div>
 
 <th:block layout:fragment="script">
@@ -86,6 +87,7 @@
                 // Details data
                 document.getElementById('userId').value = data.userId;
                 document.getElementById('account').value = data.serviceAccountName;
+                document.getElementById('userAuthId').value = data.userAuthId;
 
                 if(data.items.length > 0){
                     for(var i=0; i<=data.items.length-1; i++){
@@ -118,6 +120,7 @@
 
                 var createName = {
                     "userId": document.getElementById('userId').value,
+                    "userAuthId" : document.getElementById('userAuthId').value,
                     "serviceAccountName": document.getElementById('account').value,
                     "selectValues": resourceQuotasList,
                 };

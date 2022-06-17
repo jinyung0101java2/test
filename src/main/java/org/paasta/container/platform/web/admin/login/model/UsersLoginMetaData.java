@@ -20,11 +20,14 @@ import java.util.List;
 public class UsersLoginMetaData implements Serializable {
 
     private String userId;
+    private String userAuthid;
+    private String userType;
     private String accessToken;
     private String userMetaData;
     private String selectedNamespace;
     private String clusterId;
     private List<UsersLoginMetaDataItem> userMetaDataList;
     private String active;
+    private Boolean isSuperAdmin;
 
 }

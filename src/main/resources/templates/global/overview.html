@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+
+<div layout:fragment="content">
+    <!-- Content -->
+    <div id="content">
+        <article class="view">
+            <h3>Container Platform Info</h3>
+            <div class="flex-s">
+                <div class="p-info">
+                    <div>
+                        <span>Name : </span>
+                        <span>manage-cluster</span>
+                    </div>
+                    <div>
+                        <span>Created : </span>
+                        <span>2022-06-23</span>
+                    </div>
+                </div>
+                <div>
+                    <dl>
+                        <dt>Cluster</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl>
+                        <dt>NameSpace</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl>
+                        <dt>PVC</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl>
+                        <dt>PV</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl>
+                        <dt>Pod</dt>
+                        <dd>0</dd>
+                    </dl>
+                </div>
+            </div>
+        </article>
+        <article class="base base-type2">
+            <div class="notice">
+                <h4>Cluster Info</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Cluster Info</caption>
+                        <colgroup >
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">클러스터</th>
+                            <th scope="col">프로바이더</th>
+                            <th scope="col">K8s버전</th>
+                            <th scope="col">노드</th>
+                            <th scope="col">파드</th>
+                            <th scope="col">PVC</th>
+                            <th scope="col">PV</th>
+                            <th scope="col">CPU</th>
+                            <th scope="col">MEM</th>
+                            <th scope="col">스토리지</th>
+                        </tr>
+                        </thead>
+                        <tbody class="listTable">
+                        <tr>
+                            <td><span class="fc-blue" onclick="movePage(URI_CP_INDEX_URL)" style="cursor:pointer;">Manage-cluster</span></td>
+                            <td>AWS</td>
+                            <td>1.21.5</td>
+                            <td>3/3</td>
+                            <td>15/180</td>
+                            <td>39/45</td>
+                            <td>100/100</td>
+                            <td>78%</td>
+                            <td>40%</td>
+                            <td>56%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="fc-blue" onclick="movePage(URI_CP_INDEX_URL)" style="cursor:pointer;">OpenStack-cluster</span></td>
+                            <td>OpenStack</td>
+                            <td>1.22.3</td>
+                            <td>4/4</td>
+                            <td>23/210</td>
+                            <td>42/54</td>
+                            <td>100/120</td>
+                            <td>40%</td>
+                            <td>52%</td>
+                            <td>25%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="javascript:;" class="more">more</a>
+            </div>
+        </article>
+        <article class="base-type3">
+            <div class="chart">
+                <h4><span>TOP 5</span> CPU</h4>
+                <ul>
+                    <li id="deployChart">
+                        <h5>Deployment</h5>
+                        <!-- doughnutChart -->
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/deployments.html">more</a>
+                    </li>
+                    <li id="podChart">
+                        <h5>Pods</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/pods.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="chart">
+                <h4><span>TOP 5</span> MEM</h4>
+                <ul>
+                    <li id="deployChart">
+                        <h5>Deployment</h5>
+                        <!-- doughnutChart -->
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/deployments.html">more</a>
+                    </li>
+                    <li id="podChart">
+                        <h5>Pods</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/pods.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                    <li id="servicesChart">
+                        <h5>Replica Sets</h5>
+                        <div class="pie">
+                        </div>
+                        <ul class="legend">
+                        </ul>
+                        <a href="workloads/replicaSets.html">more</a>
+                    </li>
+                </ul>
+            </div>
+        </article>
+    </div>
+    <!-- // Content -->
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+            func.init();
+        }
+    </script>
+</th:block>
+
+</html>

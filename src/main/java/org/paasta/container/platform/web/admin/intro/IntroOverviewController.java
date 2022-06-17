@@ -5,8 +5,11 @@ import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.web.admin.common.Constants;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
 import org.paasta.container.platform.web.admin.config.NoAuth;
+import org.paasta.container.platform.web.admin.login.LoginService;
+import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,24 +30,34 @@ public class IntroOverviewController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntroOverviewController.class);
 
+    @Autowired
+    private LoginService loginService;
+
     /**
      * index 페이지 이동(Move Intro overview page)
      *
      * @return the view
      */
     @ApiOperation(value = "Intro overview 페이지 이동(Move Intro overview page)", nickname = "indexView")
-    @GetMapping("/")
+    @GetMapping(value = {"/", ConstantsUrl.URI_CP_GLOBAL_URL})
     @NoAuth
-    public RedirectView baseView(@RequestParam(name = Constants.SERVICE_SESSION_REFRESH, required = false, defaultValue = "false") String sessionRefresh) {
+    public Object baseView(@RequestParam(name = Constants.SERVICE_SESSION_REFRESH, required = false, defaultValue = "false") String sessionRefresh) {
 
-        if(sessionRefresh.equalsIgnoreCase(Constants.CHECK_TRUE)){
+        if (sessionRefresh.equalsIgnoreCase(Constants.CHECK_TRUE)) {
             LOGGER.info("[FOR THE SERVICE TYPE] CONNECT VIA DASHBOARD URI BUTTON TO REFRESH SESSION...");
             SecurityContextHolder.clearContext();
             return new RedirectView("/");
         }
 
-        return new RedirectView(ConstantsUrl.URI_CP_INDEX_URL);
+        UsersLoginMetaData usersLoginMetaData = loginService.getAuthenticationUserMetaData();
+
+        if (Constants.AUTH_ADMIN_LIST.contains(usersLoginMetaData.getUserType())) {
+            return "global/overview";
+        }
+
+        return "index";
     }
+
 
     /**
      * Index 페이지 이동(Move Intro overview page)

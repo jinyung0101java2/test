@@ -9,8 +9,8 @@ package org.paasta.container.platform.web.admin.common;
  */
 public class ConstantsUrl {
     public static final String URI_CP_BASE_URL = "/container-platform";
-
-    public static final String URI_CP_INDEX_URL = "/container-platform";
+    public static final String URI_CP_GLOBAL_URL = "/container-platform";
+    public static final String URI_CP_INDEX_URL = "/container-platform/clusters";
     public static final String URI_CP_CLUSTERS_NAMESPACES = "/container-platform/namespaces";
     public static final String URI_CP_CLUSTERS_NODES = "/container-platform/nodes";
 

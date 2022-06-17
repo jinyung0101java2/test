@@ -55,11 +55,11 @@ public class CustomErrorController implements ErrorController {
 
 
     /**
-     * HTTP Code 400 Error 페이지 이동(Go to the http code 400 error 페이지)
+     * HTTP Code 400 Error 페이지 이동(Go to the http code 400 error page)
      *
      * @return the view
      */
-    @ApiOperation(value = "HTTP Code 400 Error 페이지 이동(Go to the http code 400 error 페이지)", nickname = "handleError400")
+    @ApiOperation(value = "HTTP Code 400 Error 페이지 이동(Go to the http code 400 error page)", nickname = "handleError400")
     @NoAuth
     @GetMapping("/error/400")
     public String handleError400() {
@@ -68,11 +68,11 @@ public class CustomErrorController implements ErrorController {
 
 
     /**
-     * HTTP Code 401 Error 페이지 이동(Go to the http code 401 error 페이지)
+     * HTTP Code 401 Error 페이지 이동(Go to the http code 401 error page)
      *
      * @return the view
      */
-    @ApiOperation(value = "HTTP Code 401 Error 페이지 이동(Go to the http code 401 error 페이지)", nickname = "handleError401")
+    @ApiOperation(value = "HTTP Code 401 Error 페이지 이동(Go to the http code 401 error page)", nickname = "handleError401")
     @NoAuth
     @GetMapping("/error/401")
     public String handleError401() {
@@ -81,11 +81,11 @@ public class CustomErrorController implements ErrorController {
 
 
     /**
-     * HTTP Code 403 Error 페이지 이동(Go to the http code 403 error 페이지)
+     * HTTP Code 403 Error 페이지 이동(Go to the http code 403 error page)
      *
      * @return the view
      */
-    @ApiOperation(value = "HTTP Code 403 Error 페이지 이동(Go to the http code 403 error 페이지)", nickname = "handleError403")
+    @ApiOperation(value = "HTTP Code 403 Error 페이지 이동(Go to the http code 403 error page)", nickname = "handleError403")
     @NoAuth
     @GetMapping("/error/403")
     public String handleError403() {
@@ -94,11 +94,11 @@ public class CustomErrorController implements ErrorController {
 
 
     /**
-     * HTTP Code 404 Error 페이지 이동(Go to the http code 404 error 페이지)
+     * HTTP Code 404 Error 페이지 이동(Go to the http code 404 error page)
      *
      * @return the view
      */
-    @ApiOperation(value = "HTTP Code 404 Error 페이지 이동(Go to the http code 404 error 페이지)", nickname = "handleError404")
+    @ApiOperation(value = "HTTP Code 404 Error 페이지 이동(Go to the http code 404 error page)", nickname = "handleError404")
     @NoAuth
     @GetMapping("/error/404")
     public String handleError404() {
@@ -107,11 +107,11 @@ public class CustomErrorController implements ErrorController {
 
 
     /**
-     * HTTP Code 500 Error 페이지 이동(Go to the http code 500 error 페이지)
+     * HTTP Code 500 Error 페이지 이동(Go to the http code 500 error page)
      *
      * @return the view
      */
-    @ApiOperation(value = "HTTP Code 500 Error 페이지 이동(Go to the http code 500 error 페이지)", nickname = "handleError500")
+    @ApiOperation(value = "HTTP Code 500 Error 페이지 이동(Go to the http code 500 error page)", nickname = "handleError500")
     @NoAuth
     @GetMapping("/error/500")
     public String handleError500() {
@@ -119,5 +119,16 @@ public class CustomErrorController implements ErrorController {
     }
 
 
+    /**
+     * inactive 페이지 이동(Go to the inactive page)
+     *
+     * @return the view
+     */
+    @ApiOperation(value = "inactive 페이지 이동(Go to the inactive page)", nickname = "handleInActive")
+    @NoAuth
+    @GetMapping("/error/inactive")
+    public String handleInActive() {
+        return BASE_URL + "inactive";
+    }
 
 }

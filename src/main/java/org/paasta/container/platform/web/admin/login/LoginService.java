@@ -47,17 +47,17 @@ public class LoginService {
      * @param authenticationResponse the AuthenticationResponse
      */
     public UsersLoginMetaData setAuthDetailsLoginMetaData(AuthenticationResponse authenticationResponse) {
-
-
         UsersLoginMetaData usersLoginMetaData = new UsersLoginMetaData();
         usersLoginMetaData.setAccessToken(authenticationResponse.getToken());
         usersLoginMetaData.setClusterId(authenticationResponse.getClusterId());
         usersLoginMetaData.setUserId(authenticationResponse.getUserId());
+        usersLoginMetaData.setUserAuthid(authenticationResponse.getUserAuthId());
+        usersLoginMetaData.setUserType(authenticationResponse.getUserType());
+        usersLoginMetaData.setIsSuperAdmin(authenticationResponse.getIsSuperAdmin());
         usersLoginMetaData.setSelectedNamespace("");
         usersLoginMetaData.setUserMetaData("");
         usersLoginMetaData.setUserMetaDataList(null);
         usersLoginMetaData.setActive(Constants.CHECK_Y);
-
         return usersLoginMetaData;
     }
 
