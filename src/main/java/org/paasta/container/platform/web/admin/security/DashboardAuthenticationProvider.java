@@ -41,10 +41,12 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardAuthenticationProvider.class);
     private final ProviderService providerService;
     private final LoginService loginService;
+    private final PropertyService propertyService;
 
-    public DashboardAuthenticationProvider(ProviderService providerService, LoginService loginService) {
+    public DashboardAuthenticationProvider(ProviderService providerService, LoginService loginService, PropertyService propertyService) {
         this.providerService = providerService;
         this.loginService = loginService;
+        this.propertyService = propertyService;
     }
 
 
