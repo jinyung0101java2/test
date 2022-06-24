@@ -64,16 +64,12 @@
 <th:block layout:fragment="script">
     <script type="text/javascript">
         window.onload = () => {
-
+            IS_OVERVIEW = true;
             func.init();
 
             const overview = {
                 init() {
                     func.nameLoad = overview.load;
-
-                    sessionStorage.setItem('nameSpace', 'ALL');
-
-                    overview.load();
                 },
 
                 load() {
@@ -81,6 +77,7 @@
 
                     // nameSpace 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/overview`, 'application/json', overview.draw);
+                    IS_OVERVIEW = false;
                 },
 
                 draw(data) {

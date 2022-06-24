@@ -61,7 +61,7 @@
     window.onload = () => {
 
         func.init(3, 0);
-        document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+        callbackFuncNameLoad();
 
         const persistentVolumes = {
             offset : 0, // 로드 페이지 넘버
@@ -70,9 +70,6 @@
 
             init(){
                 func.nameLoad = persistentVolumes.reset;
-
-                // nameSpace session 초기화
-                sessionStorage.setItem('nameSpace', 'ALL');
 
                 persistentVolumes.load();
 

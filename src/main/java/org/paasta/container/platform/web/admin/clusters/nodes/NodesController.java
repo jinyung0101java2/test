@@ -39,9 +39,7 @@ public class NodesController {
      */
     @ApiOperation(value = "Nodes 상세 페이지 이동(Go to the nodes details page)", nickname = "getNodesDetails")
     @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_NODES + ConstantsUrl.URI_CP_DETAILS)
-    public String getNodesDetails(@RequestParam(required = false, defaultValue = Constants.ALL_VAL) String namespace,
-                                  Model model) {
-        model.addAttribute("selectedNamespace", namespace);
+    public String getNodesDetails() {
         return BASE_URL + "nodesDetail";
     }
 

@@ -57,7 +57,8 @@
     window.onload = () => {
 
         func.init(3, 2);
-        document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+        callbackFuncNameLoad();
+
 
         const storageClass = {
             offset : 0, // 로드 페이지 넘버
@@ -66,9 +67,6 @@
 
             init(){
                 func.nameLoad = storageClass.reset;
-
-                // nameSpace session 초기화
-                sessionStorage.setItem('nameSpace', 'ALL');
 
                 storageClass.load();
 

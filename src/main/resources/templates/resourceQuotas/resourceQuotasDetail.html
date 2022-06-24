@@ -81,7 +81,6 @@
 
         const resourceDetail = {
             init(){
-                document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
                 // nameSpace 정보 조회
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/resourceQuotas/${sessionStorage.getItem('commonName')}`, 'application/json', resourceDetail.draw);

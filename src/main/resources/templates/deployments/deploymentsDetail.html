@@ -169,7 +169,6 @@
 
 			const depolyDetail = {
 				init(){
-					document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
 					// depolyDetail 정보 조회
 					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/deployments/${sessionStorage.getItem('commonName')}`, 'application/json', depolyDetail.draw);

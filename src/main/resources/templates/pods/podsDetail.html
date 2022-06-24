@@ -166,7 +166,6 @@
 
         const podsDetail = {
             init(){
-                document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
                 // podsDetail 정보 조회
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/pods/${sessionStorage.getItem('commonName')}`, 'application/json', podsDetail.draw);

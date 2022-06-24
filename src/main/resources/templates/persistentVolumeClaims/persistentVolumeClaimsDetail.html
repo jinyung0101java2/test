@@ -98,7 +98,6 @@
 
         const volumeClaimsDetail = {
             init(){
-                document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
                 // replica 정보 조회
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/persistentVolumeClaims/${sessionStorage.getItem('commonName')}`, 'application/json', volumeClaimsDetail.draw);

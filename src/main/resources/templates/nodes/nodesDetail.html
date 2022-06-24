@@ -179,7 +179,6 @@
 			</div>
 		</article>
 	</div>
-	<input type="hidden" id="selectedNamespace" th:value="${selectedNamespace}"/>
 </div>
 
 <th:block layout:fragment="script">
@@ -190,18 +189,15 @@
 
 			const nodeDetail = {
 				init(){
-					var selectedNamespace = document.getElementById('selectedNamespace').value;
-					sessionStorage.setItem('nameSpace', selectedNamespace);
-					document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
 					// node 정보 조회
 					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/nodes/${sessionStorage.getItem('nodeName')}`, 'application/json', nodeDetail.draw);
 					
 					// pods 정보 조회
-					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/pods/nodes/${sessionStorage.getItem('nodeName')}`, 'application/json', nodeDetail.podsList);
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/ALL/pods/nodes/${sessionStorage.getItem('nodeName')}`, 'application/json', nodeDetail.podsList);
 					
 					// events 정보 조회
-					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/events/resources/${sessionStorage.getItem('nodeName')}?type=node`, 'application/json', nodeDetail.eventsList);
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/ALL/events/resources/${sessionStorage.getItem('nodeName')}?type=node`, 'application/json', nodeDetail.eventsList);
 				},
 
 				draw(data){

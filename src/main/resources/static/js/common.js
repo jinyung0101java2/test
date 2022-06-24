@@ -4,6 +4,7 @@ const func = {
 	url : URI_REQUEST_CP_API,
 	ui : 'http://localhost:8091/',
 	nameLoad : new function(){},
+	clusterData:  new Object(),
 	nameData : new Object(),
 	createIm : '',
 
@@ -11,9 +12,7 @@ const func = {
 
 		// Locale Language 조회
 		func.getLocaleLang();
-
-		// Namespaces 목록조회
-		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/selectbox`, 'application/json', func.namespaces);
+		func.loadData('GET', `${func.url}users/clustersList`, 'application/json', func.clusters);
 
 		// navigation 초기 선택 설정
 		if(depth1 >= 0){
@@ -99,37 +98,78 @@ const func = {
 		movePage(URI_CP_LOGOUT);
 	},
 
+	clusters(data){
+		func.clusterData = data;
+
+		 var html ='';
+		  for(var i=0; i<=data.items.length-1; i++){
+			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}">${data.items[i].clusterName}</a></li>`;
+			};
+
+		     document.getElementById("clusterListUl").innerHTML = html;
+
+			if(sessionStorage.getItem('cluster') != null){
+				document.querySelector('.clusterTop').innerText = sessionStorage.getItem('clusterName');
+			} else {
+				document.querySelector('.clusterTop').innerText = data.items[0].clusterName;
+				sessionStorage.setItem('cluster', data.items[0].clusterId);
+				sessionStorage.setItem('clusterName', data.items[0].clusterName);
+			};
+
+			var name = document.querySelector('.clusterUl').querySelectorAll('a');
+
+			for(var i=0 ; i<name.length; i++){
+				name[i].addEventListener('click', (e) => {
+				sessionStorage.setItem('cluster' , e.target.getAttribute('data-name'));
+				sessionStorage.setItem('clusterName', e.target.innerText);
+				document.querySelector('.clusterTop').innerText = e.target.innerText;
+				sessionStorage.removeItem('nameSpace');
+				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
+			}, false);
+			};
+
+		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
+
+	},
+
 	namespaces(data){
 		func.nameData = data;
 
+		var html = '';
 		if(document.querySelector('.nameSpace')){
 			for(var i=0; i<=data.items.length-1; i++){
-				if(i == 0){
-					var html = `<li><a href="javascript:;" data-name="${data.items[i].toUpperCase()}">${data.items[i].toUpperCase()}</a></li>`;
-				} else {
-					var html = `<li><a href="javascript:;" data-name="${data.items[i]}">${data.items[i]}</a></li>`;
-				}
-
-				func.appendHtml(document.querySelector('.nameSpace'), html, 'li');
+				var namespace = data.items[i].cpNamespace;
+				html += `<li><a href="javascript:;" data-name="${namespace}">${namespace}</a></li>`;
 			};
+
+			document.getElementById("namespaceListUl").innerHTML = html;
 
 			if(sessionStorage.getItem('nameSpace') != null){
 				document.querySelector('.nameTop').innerText = sessionStorage.getItem('nameSpace');
 			} else {
-				document.querySelector('.nameTop').innerText = 'ALL';
-				sessionStorage.setItem('nameSpace', 'ALL');
+				document.querySelector('.nameTop').innerText =  data.items[0].cpNamespace;
+				sessionStorage.setItem('nameSpace', data.items[0].cpNamespace);
 			};
 
 			var name = document.querySelector('.nameSpace').querySelectorAll('a');
 
 			for(var i=0 ; i<name.length; i++){
 				name[i].addEventListener('click', (e) => {
-					sessionStorage.setItem('nameSpace' , e.target.getAttribute('data-name'));
+				sessionStorage.setItem('nameSpace' , e.target.getAttribute('data-name'));
 				document.querySelector('.nameTop').innerText = e.target.innerText;
-
-				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/overview`, 'application/json', func.nameLoad);
+				if(IS_NAMELOAD) {
+					func.loadData('GET', null, 'application/json', func.nameLoad);
+				}
+				else {
+					movePage(URI_CP_INDEX_URL);
+				}
 			}, false);
 			};
+
+			if(IS_OVERVIEW) {
+				func.loadData('GET', null, 'application/json', func.nameLoad);
+			}
+
 		};
 	},
 
@@ -160,14 +200,14 @@ const func = {
 		func.appendHtml(document.getElementById('wrap'), html, 'div');
 
 		for(var i=0; i<=func.nameData.items.length-1; i++){
-			if(func.nameData.items[i] != 'all'){
-				var html = `<option value="${func.nameData.items[i]}">${func.nameData.items[i]}</option>`
-
+			var namespace = func.nameData.items[i].cpNamespace;
+			if(namespace != NAMESPACE_ALL_VALUE){
+				var html = `<option value="${namespace}">${namespace}</option>`;
 				func.appendHtml(document.getElementById('createName'), html, 'select');
 			};
 		};
 
-		document.getElementById('createName').value = func.nameData.items[1];
+		document.getElementById('createName').selectedIndex = 0;
 
 		document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
 			document.getElementById('wrap').removeChild(document.getElementById('modal'));
@@ -222,8 +262,8 @@ const func = {
 		func.appendHtml(document.getElementById('wrap'), html, 'div');
 
 		for(var i=0; i<=func.nameData.items.length-1; i++){
-			var html = `<option value="${func.nameData.items[i]}">${func.nameData.items[i]}</option>`
-
+			var namespace = func.nameData.items[i].cpNamespace;
+			var html = `<option value="${namespace}">${namespace}</option>`;
 			func.appendHtml(document.getElementById('createName'), html, 'select');
 		};
 
@@ -271,8 +311,9 @@ const func = {
 						}
 
 						sessionStorage.setItem('user' , JSON.parse(request.responseText).userId);
-						sessionStorage.setItem('cluster' , 'cp-cluster');
+						sessionStorage.setItem('userType' , JSON.parse(request.responseText).userType);
 						sessionStorage.setItem('token' , 'Bearer ' + JSON.parse(request.responseText).accessToken);
+
 
 					} else {
 						func.alertPopup('ERROR', JSON.parse(request.responseText).detailMessage, true, MSG_CLOSE, func.refresh);
@@ -352,6 +393,11 @@ const func = {
 		if(sessionStorage.getItem('token') == null){
 			func.loginCheck();
 		};
+
+		if(url == null) {
+			callbackFunction();
+			return false;
+		}
 
 		var request = new XMLHttpRequest();
 

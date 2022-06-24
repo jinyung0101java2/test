@@ -57,13 +57,17 @@
 
      // VALUE
      var NAMESPACE_ALL_VALUE ='ALL';
+     var AUTH_SUPER_ADMIN = "SUPER_ADMIN";
      var AUTH_CLUSTER_ADMIN = "CLUSTER_ADMIN";
      var AUTH_NAMESPACE_ADMIN = "NAMESPACE_ADMIN";
      var AUTH_USER = "USER";
 
+     var AUTH_ADMIN_LST =[AUTH_SUPER_ADMIN, AUTH_CLUSTER_ADMIN];
+
      var AUTH_CLUSTER_ADMIN_CG = "CLUSTER ADMIN";
      var AUTH_NAMESPACE_ADMIN_CG = "NAMESPACE ADMIN";
      var AUTH_USER_CG = "USER";
+
 
      var SELECTED_ADMINISTRATOR = "administrator";
      var SELECTED_USER = "user";
@@ -101,6 +105,9 @@
 
      var CURRENT_LOCALE_LANGUAGE = '';
 
+     var IS_OVERVIEW = false;
+     var IS_NAMELOAD = false;
+
 </script>
 <script>
 function movePage(locationName) {
@@ -136,6 +143,15 @@ function setSelectValue(id, val) {
 
 function reloadPage() {
     location.reload();
+}
+
+function callbackFuncNameLoad() {
+ /*  var items = document.querySelectorAll('.scroll02');
+    for (var i = 0, len = items.length; i < len; i++) {
+         items[i].classList.toggle('hidden', isHidden);
+    }*/
+    IS_NAMELOAD = true;
+
 }
 </script>
 </span>
