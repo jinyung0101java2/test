@@ -12,88 +12,555 @@
             </ul>
         </article>
         <article class="base detail">
-           <div class="notice">
-                    <h4>Details</h4>
-                    <div class="table_style01">
-                        <table>
-                            <caption>Details</caption>
-                            <colgroup >
-                                <col width="20%" />
-                                <col width="80%" />
-                            </colgroup>
-                            <tbody class="listTable">
-                            <tr>
-                                <th scope="row" class="left">Name</th>
-                                <td class="left" id="name"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="left">Path Type</th>
-                                <td class="box left" id="type"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="left">Path</th>
-                                <td class="left box" id="path"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="left">Target Service</th>
-                                <td class="box left" id="target"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="left">Port</th>
-                                <td class="box left" id="port"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="left">Created time</th>
-                                <td class="left" id="time"></td>
-                            </tr>
-                    </tbody>
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01 table_style01_downsize">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="15%" />
+                            <col width="20%" />
+                            <col width="10%" />
+                            <col width="15%" />
+                            <col width="10%" />
+                            <col width="40%" />
+                        </colgroup>
+                        <tbody class="listDeatilTable">
+                        <tr>
+                            <th scope="row" class="left">Namespaces</th>
+                            <td class="left" id="namespace"></td>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left" id="name"></td>
+                            <th scope="row" class="left">Desc</th>
+                            <td class="left" id="desc"></td>
+                        </tr>
+                        </tbody>
                     </table>
+                    <br>
+                    <h4>Rules</h4>
+                    <div class="table_style01">
+                        <div class="listRulesTable">
+                        </div>
+                    </div>
                 </div>
-        </div>
-           <!-- btn -->
-           <div class="btn02">
-            <button type="submit" id="delete" th:text="#{M0026}"></button>
-            <div>
-                <a href="javascript:;" id="modify" data-role="ingresses" th:text="#{M0025}"></a>
-                <a onclick="movePage(URI_CP_SERVICES_INGRESSES)" th:text="#{M0028}"></a>
+                <div class="creat creat-type2">
+                    <div class="flex-e rule-add-btn">
+                        <button type="button" id="ruleCreate" class="add-btn" onclick="ruleCreate()">룰 추가</button>
+                    </div>
+                </div>
             </div>
-             </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:;" id="modify" data-role="ingresses" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_SERVICES_INGRESSES)" th:text="#{M0028}"></a>
+                </div>
+            </div>
         </article>
     </div>
 </div>
 <th:block layout:fragment="script">
     <script type="text/javascript">
-    window.onload = () => {
+        window.onload = () => {
 
-        func.init(2, 1);
+            func.init(2, 1);
+            var tdPortOrder = "";
+            var order ='';
+            const ingresses = {
+                init(){
+                    document.querySelector('header h3 ul').classList.toggle('hidden', true);
 
-        const ingresses = {
-            init(){
-                document.querySelector('header h3 ul').classList.toggle('hidden', true);
+                    // ingress 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/${sessionStorage.getItem('commonName')}`, 'application/json', ingresses.draw);
 
-                // ingress 정보 조회
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/${sessionStorage.getItem('commonName')}`, 'application/json', ingresses.draw);
-            },
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', ingresses.drawSelectServ);
+                },
 
-            draw(data){
+                draw(data){
 
-                // Details data
-                document.getElementById('name').innerText = data.name;
-                document.getElementById('type').innerText = "-";
-                document.getElementById('type').innerText = data.pathType;
-                document.getElementById('path').innerHTML = `<a href="http://${data.host}${data.path}">http://${data.host}${data.path}</a>`;
-                document.getElementById('target').innerText = data.targetService;
-                document.getElementById('port').innerText = data.port;
-                document.getElementById('time').innerText = data.creationTimestamp;
-            },
+                    var html = "";
 
-            delete(){
-                func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
-            },
+                    for (var i = 0;  i <= data.spec.rules.length-1; i++) {
+                        html += `<table class="ruleTable">
+                            <colgroup >
+                                <col width="20%" />
+                                <col width="25%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="10%" />
+                                <col width="5%" />
+                            </colgroup>
+                            <thead><tr>
+                            <th scope="row" class="left">Host</th>
+                            <th scope="row" class="left">PathType</th>
+                            <th scope="row" class="left">Path</th>
+                            <th scope="row" class="left">Target</th>
+                            <th scope="row" class="left">Port</th>
+                            <th scope="row" class="left"></th></thead></tr><tbody class="tbody">`;
+                        for (var j = 0; j <= data.spec.rules[i].http.paths.length-1; j++) {
+                            html += `<tr>
+                            <td class="left host"><input class="editHost" value="${data.spec.rules[i].host}" disabled="true"/><button type="button" class="editHostBtn">Edit</button></td>
+                            <td class="left pathType"><input class="editPathType" type="hidden" value="${data.spec.rules[i].http.paths[j].pathType}" />
+                                <select class="selectPathType" disabled>
+                                    <option value="Prefix">Prefix</option>
+                                    <option value="ImplementationSpecific">ImplementationSpecific</option>
+                                    <option value="Exact">Exact</option>
+                                </select>
+                                <button type="button" class="editPathTypeBtn">Edit</button>
+                            </td>
+                            <td class="left path"><input class="editPath" value="${data.spec.rules[i].http.paths[j].path}" disabled="true"/><button type="button" class="editPathBtn">Edit</button></td>
+                            <td class="left tdTarget"><input class="editTarget" type="hidden" value="${data.spec.rules[i].http.paths[j].backend.service.name}"/>
+                            <select class="selectTarget" name="selectTarget" disabled>
+                            </select>
+                            <button type="button" class="editTargetBtn">Edit</button>
+                            </td>
+                            <td class="left port tdPort">${data.spec.rules[i].http.paths[j].backend.service.port.number}</td>
+                            <td class="left"><button type="button" class="deleteRow">Del</button></td>
+                            </tr>`;
+                        }
+                        html += `</tbody></table><div style="height: 20px"></div>`;
+                    }
+                    func.appendHtml(document.querySelector('.listRulesTable'), html, 'div');
+
+                    document.getElementById('namespace').innerText = data.namespace;
+                    document.getElementById('name').innerText = data.name;
+
+                    var ruleTable = document.getElementsByClassName('ruleTable');
+                    for (var i = 0 ; i < ruleTable.length; i++) {
+                        ruleTable[i].setAttribute('id', 'ruleTable_'+`${i}`);
+                    }
+
+                    var tbody = document.getElementsByClassName('tbody');
+                    for (var i = 0 ; i < tbody.length; i++) {
+                        tbody[i].setAttribute('id', 'tbody_'+`${i}`);
+                    }
+
+                    var editHost = document.getElementsByClassName('editHost');
+                    for (var i = 0 ; i < editHost.length; i++) {
+                        editHost[i].setAttribute('id', 'editHost_'+`${i}`);
+                    }
+
+                    var editHostBtn = document.getElementsByClassName('editHostBtn');
+                    for (var i = 0 ; i < editHostBtn.length; i++) {
+                        editHostBtn[i].setAttribute('id', 'editHostBtn_'+`${i}`);
+                    }
+
+                    var editPath = document.getElementsByClassName('editPath');
+                    for (var i = 0 ; i < editPath.length; i++) {
+                        editPath[i].setAttribute('id', 'editPath_'+`${i}`);
+                    }
+
+                    var editPathBtn = document.getElementsByClassName('editPathBtn');
+                    for (var i = 0 ; i < editPathBtn.length; i++) {
+                        editPathBtn[i].setAttribute('id', 'editPathBtn_'+`${i}`);
+                    }
+
+                    var pathType = document.getElementsByClassName('pathType');
+                    for (var i = 0 ; i < pathType.length; i++) {
+                        pathType[i].setAttribute('id', 'pathType_'+`${i}`);
+                    }
+
+                    var editPathType = document.getElementsByClassName('editPathType');
+                    for (var i = 0 ; i < editPathType.length; i++) {
+                        editPathType[i].setAttribute('id', 'editPathType_'+`${i}`);
+                    }
+
+                    var selectPathType = document.getElementsByClassName('selectPathType');
+                    for (var i = 0 ; i < selectPathType.length; i++) {
+                        selectPathType[i].setAttribute('id', 'selectPathType_'+`${i}`);
+                    }
+
+                    var selectTarget = document.getElementsByClassName('selectTarget');
+                    for (var i = 0 ; i < selectTarget.length; i++) {
+                        selectTarget[i].setAttribute('id', 'selectTarget_'+`${i}`);
+                    }
+
+                    var editTarget = document.getElementsByClassName('editTarget');
+                    for (var i = 0 ; i < editTarget.length; i++) {
+                        editTarget[i].setAttribute('id', 'editTarget_'+`${i}`);
+                    }
+
+                    for (var i = 0 ; i < pathType.length; i++) {
+                        var selPathType = document.getElementById('selectPathType_' + `${i}`);
+                        var optionPathType = selPathType.options.length;
+                        var str = document.getElementById('editPathType_'+`${i}`).value;
+                        for (var j = 0; j < optionPathType; j++) {
+                            if (selPathType.options[j].value === str){
+                                selPathType.options[j].selected = true;
+                            }
+                        }
+                    }
+
+                    var editPathTypeBtn = document.getElementsByClassName('editPathTypeBtn');
+                    for (var i = 0 ; i < editPathTypeBtn.length; i++) {
+                        editPathTypeBtn[i].setAttribute('id', 'editPathTypeBtn_'+`${i}`);
+                    }
+
+                    var editTargetBtn = document.getElementsByClassName('editTargetBtn');
+                    for (var i = 0 ; i < editTargetBtn.length; i++) {
+                        editTargetBtn[i].setAttribute('id', 'editTargetBtn_'+`${i}`);
+                    }
+
+                    var tdPort = document.getElementsByClassName('tdPort');
+                    for (var i = 0 ; i < tdPort.length; i++) {
+                        tdPort[i].setAttribute('id', 'tdPort_'+`${i}`);
+                    }
+
+                    ingresses.event(data);
+                    btnSynch();
+                },
+
+                drawServ(data){
+                    var target = document.getElementsByName('target');
+
+                    for (var i = 0; i <= target.length-1; i++) {
+                        func.removeHtml(document.getElementById(`${target[i].getAttribute('id')}`));
+                    }
+
+                    for (var i = 0; i <= target.length-1; i++) {
+                        for (var j = 0; j <= data.items.length-1; j++) {
+                            var services = data.items[j];
+                            var html = `<option value="${services.name}">${services.name}</option>`;
+                            func.appendHtml(document.getElementById(`${target[i].getAttribute('id')}`),html,'select')
+                        }
+                    }
+
+                    for (var i = 0; i <= target.length-1; i++) {
+                        document.getElementById(`${target[i].getAttribute('id')}`).querySelector('option').setAttribute('selected', 'selected');
+                    }
+                },
+
+                drawSelectServ(data){
+                    var selectTarget = document.getElementsByName('selectTarget');
+
+                    for (var i = 0; i <= selectTarget.length-1; i++) {
+                        for (var j = 0; j <= data.items.length-1; j++) {
+                            var services = data.items[j];
+                            var html = `<option value="${services.name}">${services.name}</option>`;
+                            func.appendHtml(document.getElementById(`${selectTarget[i].getAttribute('id')}`),html,'select')
+                        }
+                    }
+
+                    var tdTarget = document.getElementsByClassName('tdTarget');
+                    for (var i = 0 ; i < tdTarget.length; i++) {
+                        var selTarget = document.getElementById('selectTarget_' + `${i}`);
+                        var optionTarget = selTarget.options.length;
+                        var str = document.getElementById('editTarget_'+`${i}`).value;
+                        for (var j = 0; j < optionTarget; j++) {
+                            if (selTarget.options[j].value === str){
+                                selTarget.options[j].selected = true;
+                            }
+                        }
+                    }
+
+                    var target = document.getElementsByClassName('target');
+                    document.addEventListener('change', (e) =>{
+                        for (var i = 0; i <= target.length-1; i++) {
+                            if (e.target && e.target.id == 'target_' + `${i}`) {
+                                order =`${i}`;
+                                var service = document.getElementById('target_' + `${i}`).value;
+                                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services/${service}`, 'application/json', ingresses.drawPort);
+                            }
+                        }
+                    });
+
+                },
+
+                drawPort(data){
+                    document.getElementById('port_'+`${order}`).value = `${data.port[0].port}`;
+                },
+
+                drawTdPort(data) {
+                    document.getElementById('tdPort_'+`${tdPortOrder}`).innerText = '';
+                    document.getElementById('tdPort_'+`${tdPortOrder}`).innerText = `${data.port[0].port}`;
+                },
+
+                event(){
+                    document.getElementById('delete').addEventListener('click', (e) => {
+                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, ingresses.delete);
+                    }, false);
+
+                    document.getElementById('ruleCreate').addEventListener('click', (e) => {
+                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', ingresses.drawServ);
+                    }, false);
+
+                    document.getElementById('modify').addEventListener('click', (e) => {
+                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, ingresses.save);
+                    }, true);
+
+                    var pathCreate = document.getElementsByClassName('pathCreate');
+                    document.addEventListener('click', (e) => {
+                        for (var i = 0; i <= pathCreate.length-1; i++) {
+                            if (e.target && e.target.id == 'pathCreate_' + `${i}`) {
+                                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', ingresses.drawServ);
+                            }
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        var editHost = document.getElementsByClassName('editHost');
+                        for (var i = 0; i <= editHost.length - 1; i++) {
+                            if (e.target && e.target.id == 'editHostBtn_' + `${i}`) {
+                                var editHost = document.getElementById('editHost_'+ `${i}`);
+                                var value = editHost.value;
+                                editHost.removeAttribute('disabled');
+                                editHost.focus();
+                                editHost.value = '';
+                                editHost.value = value;
+                            }
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        var editPathTypeBtn = document.getElementsByClassName('editPathTypeBtn');
+                        for (var i = 0; i <= editPathTypeBtn.length - 1; i++) {
+                            if (e.target && e.target.id == 'editPathTypeBtn_' + `${i}`) {
+                                var selectPathType = document.getElementById('selectPathType_'+ `${i}`);
+                                selectPathType.removeAttribute('disabled');
+                                selectPathType.focus();
+                            }
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        var editTargetBtn = document.getElementsByClassName('editTargetBtn');
+                        for (var i = 0; i <= editTargetBtn.length - 1; i++) {
+                            if (e.target && e.target.id == 'editTargetBtn_' + `${i}`) {
+                                var selectPathType = document.getElementById('selectTarget_'+ `${i}`);
+                                selectPathType.removeAttribute('disabled');
+                                selectPathType.focus();
+                            }
+                        }
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        var editPath = document.getElementsByClassName('editPath');
+                        for (var i = 0; i <= editPath.length - 1; i++) {
+                            if (e.target && e.target.id == 'editPathBtn_' + `${i}`) {
+                                var editPath = document.getElementById('editPath_'+ `${i}`);
+                                var value = editPath.value;
+                                editPath.removeAttribute('disabled');
+                                editPath.focus();
+                                editPath.value = '';
+                                editPath.value = value;
+                            }
+                        }
+                    });
+
+                    var tdTarget = document.getElementsByClassName('tdTarget');
+                    document.addEventListener('change', (e) =>{
+                        for (var i = 0; i <= tdTarget.length-1; i++) {
+                            if (e.target && e.target.id == 'selectTarget_' + `${i}`) {
+                                tdPortOrder =`${i}`;
+                                var service = document.getElementById('selectTarget_' + `${i}`).value;
+                                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services/${service}`, 'application/json', ingresses.drawTdPort);
+                            }
+                        }
+                    });
+
+                    var deleteRow = document.getElementsByClassName('deleteRow');
+                    var deleteLength = deleteRow.length;
+                    document.addEventListener('click', (e) => {
+                        for (var i = 0; i <= deleteLength-1; i++) {
+                            if (e.target && e.target.id == 'deleteRow_' + `${i}`) {
+                                var parentBody = document.getElementById('deleteRow_' + `${i}`).parentElement.parentElement.parentElement;
+                                var parentTr = document.getElementById('deleteRow_' + `${i}`).parentElement.parentElement;
+                                for (var j = 0; j <= parentBody.rows.length-1; j++) {
+                                    var deleteRow = parentTr.childNodes[j].nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.firstChild.id;
+                                    if (deleteRow == 'deleteRow_' + `${i}`) {
+                                        parentBody.removeChild(parentBody.childNodes[j]);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+
+                save(){
+
+                    var rulesList = new Array;
+                    var ruleTable = document.getElementsByClassName('ruleTable');
+                    for (var i = 0; i < ruleTable.length; i++) {
+                        if (document.querySelector('#ruleTable_' + `${i}` + ' > tbody > tr')) {
+                            var host = document.querySelector('#ruleTable_0 > tbody > tr > td > input').value;
+                            rulesList.push("host:" + host);
+
+                            var rows = document.getElementById('tbody_' + `${i}`).getElementsByTagName('tr');
+                            for (var j = 0; j < rows.length; j++) {
+
+                                var pathType = rows[j].querySelector('td.pathType > select').value;
+                                rulesList.push("pathType:" + pathType);
+
+                                var path = rows[j].querySelector('td.path > input').value;
+                                rulesList.push("path:" + path);
+
+                                var target = rows[j].querySelector('td.tdTarget > select').value;
+                                rulesList.push("target:" + target);
+
+                                var port = rows[j].querySelector('td.port').innerHTML;
+                                rulesList.push("port:" + port);
+                            }
+                        }
+                    }
+
+                    if (document.querySelectorAll('.rules').length !== 0) {
+                        var rules = document.querySelectorAll('.rules');
+                        for (var i = 0; i < rules.length; i++) {
+                            rulesList.push(`${rules[i].getAttribute('name')}` + ":" + `${rules[i].value}`)
+                        }
+                    }
+
+                    let updateIngresses = {
+
+                        "cluster": sessionStorage.getItem('cluster'),
+                        "namespace": sessionStorage.getItem('nameSpace'),
+                        "resourceName": document.getElementById('name').innerHTML,
+                        "metadataName": document.getElementById('name').innerHTML,
+                        "rules": rulesList
+
+                    };
+                    func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/${sessionStorage.getItem('commonName')}`, JSON.stringify(updateIngresses), true, 'application/json', func.refresh);
+                },
+
+                delete(){
+                    func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                },
+            };
+
+            ingresses.init();
+        };
+
+        /* path,target 추가 */
+        function pathCreate () {
+
+            let newPath = document.createElement('dl');
+            let newTarget = document.createElement('dl');
+
+            let currentPath = event.currentTarget.parentNode.querySelector('.content-target');
+            let currentTarget = event.currentTarget.parentNode.querySelector('.content-target');
+
+            newPath.classList.add('content-path');
+            newTarget.classList.add('content-target');
+
+            newPath.innerHTML = `
+			<dt><label">Path</label></dt>
+			<dd class="g-select-wrap">
+				<div class="g-select">
+					<select name="pathType" class="rules">
+						<option value="Prefix">Prefix</option>
+                        <option value="ImplementationSpecific">ImplementationSpecific</option>
+                        <option value="Exact">Exact</option>
+					</select>
+				</div>
+				<input name="path" type="text" class="rules" placeholder="e.g. /example" />
+				<button class="delete-btn" onclick="deleteBtn()">삭제</button>
+			</dd>`;
+
+            newTarget.innerHTML = `
+			<dt><label>Target</label></dt>
+            <dd class="g-select-wrap">
+                <div class="g-select">
+                    <select name="target" id="target" class="rules target">
+                    </select>
+                </div>
+                <div class="con-txt">
+                    <p><label>Port</label></p>
+                    <input name="port" class="rules port" type="text" placeholder="e.g. 80"/>
+                </div>
+                <button class="delete-btn" onclick="deleteBtn()">삭제</button>
+            </dd>`;
+
+            currentPath.insertAdjacentElement('afterend', newTarget);
+            currentTarget.insertAdjacentElement('afterend', newPath);
+
+            btnSynch();
         }
 
-        ingresses.init();
-    }
-</script>
+        /* Rule 추가 */
+        let conSection = document.querySelector('.rule-add-btn');
+        function ruleCreate() {
+            let newRule = document.createElement('div');
+            newRule.classList.add('con-section');
+            newRule.innerHTML = `
+				<div class="flex-e">
+					<button title="룰 삭제" onclick="deleteBtn()">&#10006;</button>
+					<span class="blind">룰 삭제</span>
+				</div>
+				<dl>
+					<dt><label">Host</label></dt>
+					<dd>
+						<input name="host" class="rules" type="text" placeholder="e.g. example.com" />
+					</dd>
+				</dl>
+				<!-- path -->
+                <dl class="content-path">
+                <dt><label">Path</label></dt>
+                <dd class="g-select-wrap">
+                <div class="g-select">
+                <select name="pathType" class="rules">
+                <option value="Prefix">Prefix</option>
+                <option value="ImplementationSpecific">ImplementationSpecific</option>
+                <option value="Exact">Exact</option>
+                </select>
+                </div>
+                <input class="rules" name="path" type="text" placeholder="e.g. /example" />
+                </dd>
+                </dl>
+                <dl class="content-target">
+                <dt><label">Target</label></dt>
+                <dd class="g-select-wrap">
+                <div class="g-select">
+                <select name="target" id="target" class="rules target">
+                </select>
+                </div>
+                <div class="con-txt">
+                <p><label>Port</label></p>
+                <input name="port" class="rules port" type="text" placeholder="e.g. 80"/>
+                </div>
+                </dd>
+                </dl>
+                <button type="button" name="pathCreate" id="pathCreate" class="add-btn pathCreate" onclick="pathCreate()">경로 추가</button>`;
+                conSection.insertAdjacentElement('beforebegin', newRule)
+
+                btnSynch();
+                };
+
+        /* path, Rule 삭제 */
+        function deleteBtn() {
+            let currentPath = event.currentTarget.parentNode.parentNode;
+            currentPath.remove();
+            btnSynch();
+        }
+
+        function btnSynch() {
+            let target = document.getElementsByName('target');
+            let pathCreate = document.getElementsByName('pathCreate');
+            let port = document.getElementsByName('port');
+            let deleteRow = document.getElementsByClassName('deleteRow');
+
+            for (var i = 0 ; i < target.length; i++) {
+                target[i].setAttribute('id', 'target_'+`${i}`);
+            }
+
+            for (var i = 0 ; i < pathCreate.length; i++) {
+                pathCreate[i].setAttribute('id', 'pathCreate_'+`${i}`);
+            }
+
+            for (var i = 0 ; i < port.length; i++) {
+                port[i].setAttribute('id', 'port_'+`${i}`);
+            }
+
+            for (var i = 0 ; i < deleteRow.length; i++) {
+                deleteRow[i].setAttribute('id', 'deleteRow_'+`${i}`);
+            }
+        }
+    </script>
+    <style>
+        input.editHost {width: 160px; color: #818894; font-size: 16px; background: white;}
+        input.editPath {width: 160px; color: #818894; font-size: 16px; background: white;}
+        select.selectPathType {border: none; color: #818894; line-height: 1; background: white; height: 23px; width: 210px;}
+        select.selectTarget {border: none; color: #818894; line-height: 1; background: white; height: 23px; width: 155px;}
+    </style>
 </th:block>
 </html>
