@@ -252,6 +252,7 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .table_style01 table tr td.failed,
 .table_style01 table tr td.fail {color:#f34111;}
 .table_style01 table tr td.pending {color:#d9d9d9;}
+.table_style01_downsize {margin-bottom: -45px;}
 
 /*.aas {color:#0ca583; color:#ffc53e; color:#f34111; color:#844adb; color:#d9d9d9}*/
 
