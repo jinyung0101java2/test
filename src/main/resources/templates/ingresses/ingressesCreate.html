@@ -92,9 +92,10 @@
 
                 init(){
 
-                    sessionStorage.setItem('nameSpace', 'all');
+                    sessionStorage.setItem('nameSpace', 'ALL');
+
                     //namespace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/selectbox`, 'application/json', createIngresses.drawName);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', createIngresses.drawName);
 
                     //service 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/services`, 'application/json', createIngresses.drawServ);
@@ -110,10 +111,11 @@
                     createIngresses.init();
                 },
 
-                drawName(){
+                drawName(data){
+                    func.nameData = data;
 
-                    for (var i=0; i<=func.nameData.items.length-1; i++){
-                        var html = `<option value="${func.nameData.items[i]}">${func.nameData.items[i]}</option>`;
+                    for (var i=0; i <= data.items.length-1; i++){
+                        var html = `<option value="${data.items[i].cpNamespace}">${data.items[i].cpNamespace}</option>`;
 
                         func.appendHtml(document.getElementById('namespace'), html, 'select');
                     };
@@ -144,27 +146,26 @@
                 },
 
                 drawPort(data) {
-                    if (`${sessionStorage.getItem('nameSpace')}` !== 'all') {
+                    if (`${sessionStorage.getItem('nameSpace')}` !== 'ALL') {
                         document.getElementById('port_'+`${order}`).value = `${data.port[0].port}`;
                     }
                 },
 
                 checkName(data) {
-                    if (sessionStorage.getItem('nameSpace') != 'all') {
+                    if (document.getElementById('namespace').value !== 'ALL') {
                         if (Array.isArray(data.items) && data.items.length != 0) {
                             func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
                         } else {
                             func.alertPopup('ERROR', '해당 Namespace는 Service가 존재하지 않습니다. 해당 Namespace에 Service를 생성해 주세요.', true, MSG_CLOSE, 'closed');
                             document.getElementById('namespace').options[0].selected = true;
                         }
-                    } else {
+                    } else if (document.getElementById('namespace').value === 'ALL') {
                         func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
                     }
                 },
 
                 checkTarget(data){
-
-                    if (sessionStorage.getItem('nameSpace') == 'all'){
+                    if (document.getElementById('namespace').value === 'ALL'){
                         func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
                     } else {
                         if (Array.isArray(data.items) && data.items.length != 0) {
