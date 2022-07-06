@@ -92,7 +92,6 @@
 
                 init(){
 
-<<<<<<< src/main/resources/templates/ingresses/ingressesCreate.html
                     sessionStorage.setItem('nameSpace', 'ALL');
 
                     //namespace 정보 조회
@@ -117,30 +116,6 @@
 
                     for (var i=0; i <= data.items.length-1; i++){
                         var html = `<option value="${data.items[i].cpNamespace}">${data.items[i].cpNamespace}</option>`;
-=======
-                    sessionStorage.setItem('nameSpace', 'ALL');
-                    //namespace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/selectbox`, 'application/json', createIngresses.drawName);
-
-                    //service 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/services`, 'application/json', createIngresses.drawServ);
-
-                    createIngresses.reset;
-
-                    createIngresses.event();
-                },
-
-                reset(){
-                    func.removeHtml(document.getElementById('target'));
-
-                    createIngresses.init();
-                },
-
-                drawName(){
-
-                    for (var i=0; i<=func.nameData.items.length-1; i++){
-                        var html = `<option value="${func.nameData.items[i]}">${func.nameData.items[i]}</option>`;
->>>>>>> src/main/resources/templates/ingresses/ingressesCreate.html
 
                         func.appendHtml(document.getElementById('namespace'), html, 'select');
                     };
@@ -171,43 +146,26 @@
                 },
 
                 drawPort(data) {
-<<<<<<< src/main/resources/templates/ingresses/ingressesCreate.html
                     if (`${sessionStorage.getItem('nameSpace')}` !== 'ALL') {
-=======
-                    if (`${sessionStorage.getItem('nameSpace')}` !== 'ALL') {
->>>>>>> src/main/resources/templates/ingresses/ingressesCreate.html
                         document.getElementById('port_'+`${order}`).value = `${data.port[0].port}`;
                     }
                 },
 
                 checkName(data) {
-<<<<<<< src/main/resources/templates/ingresses/ingressesCreate.html
                     if (document.getElementById('namespace').value !== 'ALL') {
-=======
-                    if (sessionStorage.getItem('nameSpace') != 'ALL') {
->>>>>>> src/main/resources/templates/ingresses/ingressesCreate.html
                         if (Array.isArray(data.items) && data.items.length != 0) {
                             func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
                         } else {
                             func.alertPopup('ERROR', '해당 Namespace는 Service가 존재하지 않습니다. 해당 Namespace에 Service를 생성해 주세요.', true, MSG_CLOSE, 'closed');
                             document.getElementById('namespace').options[0].selected = true;
                         }
-<<<<<<< src/main/resources/templates/ingresses/ingressesCreate.html
                     } else if (document.getElementById('namespace').value === 'ALL') {
-=======
-                    } else {
->>>>>>> src/main/resources/templates/ingresses/ingressesCreate.html
                         func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
                     }
                 },
 
                 checkTarget(data){
-<<<<<<< src/main/resources/templates/ingresses/ingressesCreate.html
                     if (document.getElementById('namespace').value === 'ALL'){
-=======
-
-                    if (sessionStorage.getItem('nameSpace') == 'ALL'){
->>>>>>> src/main/resources/templates/ingresses/ingressesCreate.html
                         func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
                     } else {
                         if (Array.isArray(data.items) && data.items.length != 0) {
@@ -297,21 +255,21 @@
             newTarget.classList.add('content-target');
 
             newPath.innerHTML = `
-			<dt><label">Path</label></dt>
-			<dd class="g-select-wrap">
-				<div class="g-select">
-					<select name="pathType" class="rules">
-						<option value="Prefix">Prefix</option>
+            <dt><label">Path</label></dt>
+            <dd class="g-select-wrap">
+                <div class="g-select">
+                    <select name="pathType" class="rules">
+                        <option value="Prefix">Prefix</option>
                         <option value="ImplementationSpecific">ImplementationSpecific</option>
                         <option value="Exact">Exact</option>
-					</select>
-				</div>
-				<input name="path" type="text" class="rules" placeholder="e.g. /example" />
-				<button class="delete-btn" onclick="deleteBtn()">삭제</button>
-			</dd>`;
+                    </select>
+                </div>
+                <input name="path" type="text" class="rules" placeholder="e.g. /example" />
+                <button class="delete-btn" onclick="deleteBtn()">삭제</button>
+            </dd>`;
 
             newTarget.innerHTML = `
-			<dt><label>Target</label></dt>
+            <dt><label>Target</label></dt>
             <dd class="g-select-wrap">
                 <div class="g-select">
                     <select name="target" id="target" class="rules target">
@@ -336,17 +294,17 @@
             let newRule = document.createElement('div');
             newRule.classList.add('con-section');
             newRule.innerHTML = `
-				<div class="flex-e">
-					<button title="룰 삭제" onclick="deleteBtn()">&#10006;</button>
-					<span class="blind">룰 삭제</span>
-				</div>
-				<dl>
-					<dt><label">Host</label></dt>
-					<dd>
-						<input name="host" class="rules" type="text" placeholder="e.g. example.com" />
-					</dd>
-				</dl>
-				<!-- path -->
+                <div class="flex-e">
+                    <button title="룰 삭제" onclick="deleteBtn()">&#10006;</button>
+                    <span class="blind">룰 삭제</span>
+                </div>
+                <dl>
+                    <dt><label">Host</label></dt>
+                    <dd>
+                        <input name="host" class="rules" type="text" placeholder="e.g. example.com" />
+                    </dd>
+                </dl>
+                <!-- path -->
                 <dl class="content-path">
                     <dt><label">Path</label></dt>
                     <dd class="g-select-wrap">
