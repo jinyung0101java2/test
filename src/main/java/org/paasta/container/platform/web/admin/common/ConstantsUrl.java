@@ -33,6 +33,10 @@ public class ConstantsUrl {
     public static final String URI_CP_MANAGEMENTS_INACTIVE_USERS = "/container-platform/inactiveUsers";
     public static final String URI_CP_MANAGEMENTS_CONFIGMAPS = "/container-platform/configMaps";
 
+    public static final String URI_CP_GLOBAL_CLUSTERS = "/global/clusters";
+    public static final String URI_CP_GLOBAL_CLOUD_ACCOUNTS = "/global/cloudAccounts";
+    public static final String URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES = "/global/templates";
+
     public static final String URI_CP_LIST = "/list";
     public static final String URI_CP_DETAILS = "/details";
     public static final String URI_CP_CREATE = "/create";

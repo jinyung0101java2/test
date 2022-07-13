@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)">CloudAccounts</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left">
+                                <input class="left" id="cloudAccountDetailName" type="text" readonly>
+                                <button type="button" class="right" id="cloudAccountDetailNameButton" onclick="activeEdit('cloudAccountDetailName', this.id)">Edit</button>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Provider</th>
+                            <td class="left">
+                                <input class="left" id="cloudAccountDetailProvider" type="text" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Region</th>
+                            <td class="left">
+                                <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:" id="modify" data-role="cloudAccounts" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(1, 1);
+            let accountInfo;
+            const cloudAccountsDetail = {
+                init(){
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}accounts/${sessionStorage.getItem('commonName')}`, 'application/json', cloudAccountsDetail.draw);
+                },
+
+                draw(data){
+
+                    // Details data
+
+                    document.getElementById('cloudAccountDetailName').value = data.name;
+                    document.getElementById('cloudAccountDetailProvider').value = data.provider;
+                    document.getElementById('cloudAccountDetailRegion').value = data.region;
+
+                    accountInfo = data;
+
+                    var html = ``;
+                    if (data.provider == 'GCP') {
+                        html = `<tr><th scope="row" class="left">Provider-Info</th><td class="left">
+                                <input class="left" id="cloudAccountGCPProviderInfo" type="password" readonly>
+                                </td></tr>`;
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        document.getElementById('cloudAccountGCPProviderInfo').value = MASKED_DATA;
+
+
+                    } else if (data.provider == 'AWS') {
+                        html += `<tr><th scope="row" class="left">Access-Key</th><td class="left box">
+                                    <input class="left" id="cloudAccountAWSAccessKey" type="password" readonly>
+                                </td></tr>`;
+                        html += `<tr><th scope="row" class="left">Secret-Key</th><td class="left">
+                                    <input class="left" id="cloudAccountAWSSecretKey" type="password" readonly>
+                                </td></tr>`;
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        document.getElementById('cloudAccountAWSAccessKey').value = MASKED_DATA;
+                        document.getElementById('cloudAccountAWSSecretKey').value = MASKED_DATA;
+                    }
+
+                    html = `<tr><th scope="row" class="left">Created</th><td class="left" id="created"></td></tr>`;
+                    func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                    document.getElementById('created').innerText = data.created;
+
+                    cloudAccountsDetail.event()
+                },
+
+                event(){
+                    document.getElementById('delete').addEventListener('click', () => {
+                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, cloudAccountsDetail.delete);
+                }, false);
+
+                    document.getElementById('modify').addEventListener('click', () => {
+                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, cloudAccountsDetail.modify);
+                }, false);
+                },
+
+                modify(){
+                    let updateAccount = {
+                        "resourceUid": sessionStorage.getItem('commonName'),
+                        "resourceName": document.getElementById('cloudAccountDetailName').value
+
+                    };
+                    //     //FIXME! alert 창 띄우기
+
+                    console.log("updateAccount: " + JSON.stringify(updateAccount));
+                    func.saveData('PATCH', `${func.url}accounts`, JSON.stringify(updateAccount), true, 'application/json', cloudAccountsDetail.returnPage());
+                },
+
+                returnPage() {
+                    document.location.href = URI_CP_GLOBAL_CLOUD_ACCOUNTS + URI_CP_DETAILS;
+                },
+
+                delete(){
+                    func.saveData('DELETE', `${func.url}accounts/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                },
+            };
+
+            cloudAccountsDetail.init();
+        }
+    </script>
+</th:block>
+</html>

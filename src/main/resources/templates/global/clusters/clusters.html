@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/global}">
+<div layout:fragment="content">
+	<div id="content" class="sub-page">
+		<article class="location">
+			<ul>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+				<li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+				<li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
+			</ul>
+			<!-- Click event class="on" -->
+			<fieldset>
+				<input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+				<button type="submit" id="search" th:text="#{M0031}"></button>
+			</fieldset>
+		</article>
+		<article class="base">
+			<div class="notice">
+				<h3>List</h3>
+				<!-- User -->
+				<div class="table_style01">
+					<!-- board -->
+					<table>
+						<caption>clusters List</caption>
+						<colgroup >
+							<col width="42%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col width="8%" />
+						</colgroup>
+						<thead>
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Provider</th>
+							<th scope="col">k8s version</th>
+							<th scope="col">node</th>
+							<th scope="col">pods</th>
+							<th scope="col">status</th>
+						</tr>
+						</thead>
+						<tbody class="listTable">
+						</tbody>
+					</table>
+					<!-- more btn -->
+					<a class="more" href="javascript:">more</a>
+				</div>
+				<!-- btn -->
+				<a href="javascript:" class="create" th:text="#{M0024}"></a>
+			</div>
+		</article>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		window.onload = () => {
+
+			func.init(1, 0);
+			callbackFuncNameLoad();
+
+			const cluster = {
+				offset : 0, // 로드 페이지 넘버
+				limit : 10, // 로드 게시물 개수
+				allItemCount : 0, //게시물 촐 개수
+				type : 'administrator',
+
+				init(){
+					func.nameLoad = cluster.reset;
+
+					cluster.load();
+
+					cluster.event();
+				},
+
+				reset(){
+					func.removeHtml(document.querySelector('.listTable'));
+					cluster.offset = 0;
+					cluster.load();
+				},
+
+				load(){
+					func.loading();
+
+					// nameSpace 정보 조회
+					func.loadData('GET', `${func.url}clusters?searchName=${document.getElementById('searchText').value}&limit=${cluster.limit}&offset=${cluster.offset}`, 'application/json', cluster.draw);
+				},
+
+				draw(data){
+					console.log(data);
+					if(cluster.offset == 0) cluster.allItemCount = data.items.length;
+                    let html;
+					if(data.httpStatusCode == 200){
+						if(data.items.length > 0){
+							for(var i=0; i<=data.items.length-1; i++){
+								html = `<tr><td class="left"><a href="javascript:;" data-id="${data.items[i].clusterId}">${data.items[i].name}</a></td>
+											<td>${data.items[i].providerType}</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											</tr>`;
+								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+							}
+						} else {
+							html = `<tr><td colspan="3">No Data.</td></tr>`;
+
+							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+						}
+					} else {
+						html = `<tr><td colspan="3">No Data.</td></tr>`;
+
+						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+					}
+
+					// more 버튼 활성, 비활성
+					if(document.querySelector('.listTable').querySelectorAll('tr').length < cluster.allItemCount){
+						document.querySelector('.more').classList.toggle('on', true);
+					} else {
+						document.querySelector('.more').classList.toggle('on', false);
+					}
+
+					if(document.getElementById('loading')){
+						document.getElementById('wrap').removeChild(document.getElementById('loading'));
+					}
+
+					cluster.listEvent();
+				},
+
+				event(){
+					// more 버튼 event
+					document.querySelector('.more').addEventListener('click', () => {
+						if(document.querySelector('.listTable').querySelectorAll('tr').length < cluster.allItemCount){
+							cluster.offset++;
+
+							cluster.load();
+						}
+					}, false);
+
+					document.querySelector('.create').addEventListener('click', () => {
+						document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_CREATE;
+					}, false);
+				},
+
+				listEvent(){
+					var listAll = document.querySelector('.listTable').querySelectorAll('a');
+					for(var i=cluster.offset*10; i<=listAll.length-1; i++){
+						listAll[i].addEventListener('click', (e) => {
+							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
+							document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_DETAILS;
+						}, true);
+					}
+				},
+			};
+
+			cluster.init();
+		}
+	</script>
+</th:block>
+</html>

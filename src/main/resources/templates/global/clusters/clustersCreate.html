@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page clusters">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
+            </ul>
+        </article>
+        <article class="base tab-cont-wrap">
+            <!-- tab btn -->
+            <ul class="tab-btn">
+                <!-- 활성화시 active 클래스 추가 -->
+                <li type="create"><a href="javascript:">Cluster Create</a></li>
+                <li type="register"><a href="javascript:">Cluster Register</a></li>
+            </ul>
+            <!-- // tab btn -->
+            <!-- tab content -->
+            <div class="creat tab-content">
+                <!-- Cluster 생성 -->
+                <div>
+                    <dl>
+                        <dt><label for="createName">Cluster Name</label></dt>
+                        <dd>
+                            <input id="createName" type="text" placeholder="Test-Name" disabled/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Provider</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="createProvider" onchange="changeProviderSelect()">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Cloud Account</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="createCloudAccount">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Template</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="createTemplates" onchange="changeTemplateSelect()">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dd>
+                            <textarea id="createTemplatesDetail" rows="30"></textarea>
+                        </dd>
+                    </dl>
+                    <!-- btn -->
+                    <div class="btn02">
+                        <div>
+                            <button type="submit" id="save" th:text="#{M0030}"></button>
+                            <button onclick="movePage(URI_CP_GLOBAL_CLUSTER);" th:text="#{M0028}"></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cluster 등록 -->
+                <div>
+                    <dl>
+                        <dt><label for="registerName">Cluster Name</label></dt>
+                        <dd>
+                            <input id="registerName" type="text" placeholder="Test-Name"/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Provider</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="registerProvider">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Cluster IP</label></dt>
+                        <!-- 파일첨부 -->
+                        <dd>
+                            <input id="registerIP" type="text" placeholder="e.g) http://0.0.0.0:6443"/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Credentials</label></dt>
+                        <dd>
+                            <textarea id="registerCredentials" rows="20"></textarea>
+                        </dd>
+                    </dl>
+                    <!-- btn -->
+                    <div class="btn02">
+                        <div>
+                            <button type="submit" id="register" th:text="#{M0030}"></button>
+                            <button onclick="movePage(URI_CP_GLOBAL_CLUSTER);" th:text="#{M0028}"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- // tab content -->
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+
+
+        window.onload = () => {
+            let info;
+            func.init(1, 0);
+
+
+            const createClusters = {
+                init() {
+                    func.loadData('GET', `${func.url}accounts/provider/info`, 'application/json', createClusters.draw);
+
+                },
+
+                draw(data) {
+                    console.log(data);
+                    info = new Map(Object.entries(data));
+                    console.log(info);
+                    let html = ``;
+                    for (let key of info.keys()) {
+                        html += `<option value="${key}"`;
+                        if (key == 'AWS') html += ` selected`;
+                        html += `>${key}</option>`;
+                    }
+                    func.appendHtml(document.getElementById('createProvider'), html, 'select');
+                    func.appendHtml(document.getElementById('registerProvider'), html, 'select');
+
+                    createClusters.event();
+                },
+
+                event() {
+                    document.getElementById('save').addEventListener('click', () => {
+                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createClusters.save);
+                    }, false);
+                    document.getElementById('register').addEventListener('click', () => {
+                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createClusters.save);
+                    }, false);
+                    changeProviderSelect();
+                },
+
+                save() {
+                    let createType = document.querySelector('.tab-btn li.active').getAttribute('type');
+                    let createName;
+
+                    switch(createType) {
+                        case 'create':
+                            createName = {
+                                "resourceName": document.getElementById('createName').value,
+                                "providerType": document.getElementById('createProvider').value,
+                                "providerInfo": {
+                                    "accessKey": document.getElementById('accessKey').value,
+                                    "secretKey": document.getElementById('secretKey').value
+                                }
+                            };
+                            break;
+                        case 'register':
+                            createName = {
+                                "cluster": document.getElementById('registerName').value,
+                                "resourceName": document.getElementById('registerName').value,
+                                "clusterApiUrl": document.getElementById('registerIP').value,
+                                "ProviderType": document.getElementById('registerProvider').value,
+                                "clusterToken": document.getElementById('registerCredentials').value,
+                                "isClusterRegister": true
+                                }
+                    }
+                    //check FILE
+                    func.saveData('POST', `${func.url}clusters`, JSON.stringify(createName), true, 'application/json', func.historyBack());
+
+                }
+            };
+            createClusters.init();
+        };
+
+        function changeProviderSelect() {
+            func.removeHtml(document.getElementById('createCloudAccount'));
+            func.removeHtml(document.getElementById('createTemplates'));
+
+            let html = ``;
+            let provider = document.querySelector('#createProvider > option:checked').value;
+            func.loadData('GET', `${func.url}accounts/provider/${provider}`, 'application/json', (e) => {
+                for (let item of e.items) {
+                    html += `<option value="${item.name}" data-id="${item.id}"`;
+                    html += `>${item.name}</option>`;
+                }
+
+                func.appendHtml(document.getElementById('createCloudAccount'), html, 'dl');
+            });
+
+            func.loadData('GET', `${func.url}templates/provider/${provider}`, 'application/json', (e) => {
+                // console.log('itemList : ' + JSON.stringify(itemList));
+                html = ``;
+                for (let item of e.items) { //FIXME!, 없는 경우
+                    // console.log('item : ' + JSON.stringify(item));
+
+                    html += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+                }
+
+                func.appendHtml(document.getElementById('createTemplates'), html, 'dl');
+                changeTemplateSelect();
+            });
+
+
+        }
+
+        function changeTemplateSelect() {
+            func.removeHtml(document.getElementById('createTemplatesDetail'));
+            func.loadData('GET', `${func.url}templates/${document.querySelector('#createTemplates > option:checked').getAttribute('data-id')}`, 'application/json', (e) => {
+                document.getElementById('createTemplatesDetail').value = e.hclScript;
+            })
+        }
+
+        let tabs = document.querySelector('.tab-btn');
+        let tabBtns = document.querySelectorAll('.tab-btn li');
+        let tabContent = document.querySelectorAll('.tab-content > div');
+
+        tabBtns[0].classList.add('active');
+
+        for (let i = 0; i < tabBtns.length; i ++) {
+            (function(idx) {
+                tabBtns[idx].onclick = function() {
+                    for( let j=0; j<tabBtns.length; j++ ) {
+                        tabBtns[j].classList.remove('active');
+                        tabContent[j].style.display = 'none'
+                    }
+                    tabBtns[idx].classList.add('active');
+                    tabContent[idx].style.display = '';
+                };
+                tabContent[idx].style.display = 'none';
+                tabContent[0].style.display = ''
+            })(i);
+        }
+
+    </script>
+</th:block>
+</html>

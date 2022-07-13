@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailName" type="text" readonly>
+                                <button type="button" class="right" id="clusterDetailNameButton" onclick="activeEdit('clusterDetailName', this.id)">Edit</button>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Provider</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailProvider" type="text" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Kubernetes Version</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailVersion" type="text" readonly>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <th scope="row" class="left">Region</th>-->
+<!--                            <td class="left">-->
+<!--                                <input class="left" id="clusterDetailRegion" type="text" readonly>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <th scope="row" class="left">Master IP</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailIP" type="text" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Description</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailDescription" type="text" readonly>
+                                <button type="button" class="right" id="clusterDetailDescriptionButton" onclick="activeEdit('clusterDetailDescription', this.id)">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Cluster CA Certification</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailCertification" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Created</th>
+                            <td class="left">
+                                <input class="left" id="clusterDetailCreated" type="text" readonly>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:" id="modify" data-role="clusters" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_CLUSTER)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(1, 0);
+            let isHide = false;
+            let clusterInfo = '';
+            const clusterDetail = {
+                init(){
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('commonName')}`, 'application/json', clusterDetail.draw);
+                },
+
+                draw(data){
+
+                    // Details data
+                    clusterInfo = data;
+                    document.getElementById('clusterDetailName').value = data.name;
+                    document.getElementById('clusterDetailProvider').value = data.providerType;
+                    // document.getElementById('clusterDetailVersion').value = data.providerType; //FIXME! get version API 붙이기
+                    document.getElementById('clusterDetailIP').value = data.clusterApiUrl;
+                    document.getElementById('clusterDetailCreated').value = data.created;
+                    document.getElementById('clusterDetailDescription').value = data.description;
+
+                    clusterDetail.event()
+                },
+
+                event(){
+                    switchCA();
+                    document.getElementById('delete').addEventListener('click', () => {
+                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, clusterDetail.delete);
+                    }, false);
+
+                    document.getElementById('modify').addEventListener('click', () => {
+                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, clusterDetail.modify);
+                    }, false);
+                },
+
+                modify() {
+                    let updateAccount;
+                    updateAccount = {
+                        "cluster": sessionStorage.getItem('commonName'),
+                        "resourceName": document.getElementById('clusterDetailName').value,
+                        "clusterApiUrl": clusterInfo.clusterApiUrl,
+                        "providerType": clusterInfo.providerType,
+                        "clusterToken": clusterInfo.clusterToken,
+                        "clusterType": clusterInfo.clusterType,
+                        "description": document.getElementById('clusterDetailDescription').value
+                    };
+                    console.log("updateAccount: " + JSON.stringify(updateAccount));
+                    //FIXME!!
+                    func.saveData('PUT', `${func.url}clusters`, JSON.stringify(updateAccount), true, 'application/json', clusterDetail.returnPage());
+                },
+
+                returnPage() {
+                    document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_DETAILS;
+                },
+
+                delete(){
+                    func.saveData('DELETE', `${func.url}accounts/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                },
+            };
+
+            clusterDetail.init();
+
+            function switchCA() {
+                isHide = !isHide;
+                if (isHide) {
+                    document.getElementById('clusterDetailCertification').value = MASKED_DATA;
+                } else {
+                    document.getElementById('clusterDetailCertification').value = clusterInfo.clusterToken;
+                }
+            }
+        }
+
+    </script>
+</th:block>
+</html>
