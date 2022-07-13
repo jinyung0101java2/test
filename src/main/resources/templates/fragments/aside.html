@@ -5,14 +5,14 @@
     <nav>
         <ul>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Clusters</a>
+                <a href="javascript:" class="dep01">Clusters</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
                     <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)">Nodes</a></li>
                 </ul>
             </li>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Workloads</a>
+                <a href="javascript:" class="dep01">Workloads</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Deployments</a></li>
                     <li><a onclick="movePage(URI_CP_WORKLOADS_PODS)">Pods</a></li>
@@ -20,14 +20,14 @@
                 </ul>
             </li>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Services</a>
+                <a href="javascript:" class="dep01">Services</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)">Services</a></li>
                     <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)">Ingresses</a></li>
                 </ul>
             </li>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Storages</a>
+                <a href="javascript:" class="dep01">Storages</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Persistent Volumes</a></li>
                     <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS)">Persistent Volume Claims</a></li>
@@ -35,7 +35,7 @@
                 </ul>
             </li>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Managements</a>
+                <a href="javascript:" class="dep01">Managements</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
                     <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)">Roles</a></li>
@@ -53,13 +53,15 @@
         <ul>
             <li>
                 <a href="#none" class="dep01">Global</a>
+                <ul class="sub">
+                </ul>
             </li>
             <li class="plus">
-                <a href="javascript:;" class="dep01">Management</a>
+                <a href="javascript:" class="dep01">Management</a>
                 <ul class="sub">
-                    <li><a href="#none">Clusters</a></li>
-                    <li><a href="#none">Cloud Account</a></li>
-                    <li><a href="#none">Instance Code Temp</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)">Cloud Account</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)">Instance Code Template</a></li>
                 </ul>
             </li>
         </ul>

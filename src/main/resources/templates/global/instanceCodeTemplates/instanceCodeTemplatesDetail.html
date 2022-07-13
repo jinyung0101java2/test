@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)">Instance Code Template</a></li>
+            </ul>
+        </article>
+        <article class="base detail">
+            <div class="notice">
+                <h4>Details</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Details</caption>
+                        <colgroup >
+                            <col width="20%" />
+                            <col width="80%" />
+                        </colgroup>
+                        <tbody class="listTable">
+                        <tr>
+                            <th scope="row" class="left">Name</th>
+                            <td class="left">
+                                <input class="left" id="name" type="text" readonly>
+                                <button type="button" class="right" id="nameButton" onclick="activeEdit('name', this.id)">Edit</button>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Provider</th>
+                            <td class="left">
+                                <input class="left" id="provider" type="text" readonly>
+                                <button type="button" class="right" id="providerButton" onclick="activeEdit('provider', this.id)">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="left">Instance Code</th>
+                            <td class="left">
+                                <textarea class="left" id="code" rows="30" readonly></textarea>
+                                <button type="button" class="right" id="codeButton" onclick="activeEdit('code', this.id)">Edit</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <div>
+                    <a href="javascript:" id="modify" data-role="instanceCodeTemplates" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" th:text="#{M0028}"></a>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        window.onload = () => {
+
+            func.init(1, 2);
+
+            const instanceCodeDetail = {
+                init(){
+
+                    // nameSpace 정보 조회
+                    func.loadData('GET', `${func.url}templates/${sessionStorage.getItem('commonName')}`, 'application/json', instanceCodeDetail.draw);
+                },
+
+                draw(data){
+
+                    // Details data
+
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('provider').value = data.provider;
+                    document.getElementById('code').value = data.hclScript;
+
+                    instanceCodeDetail.event()
+                },
+
+                event(){
+                    document.getElementById('delete').addEventListener('click', () => {
+                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, instanceCodeDetail.delete);
+                }, false);
+                    document.getElementById('modify').addEventListener('click', () => {
+                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, instanceCodeDetail.modify);
+                    }, false);
+
+                },
+
+                delete(){
+                    func.saveData('DELETE', `${func.url}templates/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                },
+
+                modify() {
+                    let updateTemplate = {
+                        "resourceUid": sessionStorage.getItem('commonName'),
+                        "resourceName": document.getElementById('name').value,
+                        "provider": document.getElementById('provider').value,
+                        "hclScript": document.getElementById('code').value
+                    };
+                    console.log(JSON.stringify(updateTemplate));
+                    func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', instanceCodeDetail.returnPage);
+                },
+
+                returnPage() {
+                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
+                }
+            };
+
+            instanceCodeDetail.init();
+        }
+    </script>
+</th:block>
+</html>

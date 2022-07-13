@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/global}">
+
+<div layout:fragment="content">
+    <div id="content" class="sub-page clusters">
+        <article class="location">
+            <ul>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)">Instance Code Template</a></li>
+            </ul>
+        </article>
+        <article class="base">
+            <div class="creat">
+                <h3 th:text="|Instance Code Template #{M0024}|"></h3>
+                <div>
+                    <dl>
+                        <dt><label for="name">Name</label></dt>
+                        <dd>
+                            <input id="name" type="text" th:placeholder="#{M0010}"/>
+<!--        FIXME, placeHolder 문구                    -->
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="provider">Provider</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="provider">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="code">code</label></dt>
+                        <dd>
+                            <textarea id="code" rows="30"></textarea>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- btn -->
+            <div class="btn02">
+                <button onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES);" th:text="#{M0028}"></button>
+                <div>
+                    <button type="submit" id="save" th:text="#{M0030}"></button>
+                </div>
+            </div>
+        </article>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        let info;
+        let providerInfo = "";
+
+        window.onload = () => {
+
+            func.init(1, 2);
+
+
+            const createCodeTemplates = {
+                init() {
+
+                    // provider 정보 조회
+                    func.loadData('GET', `${func.url}accounts/provider/info`, 'application/json', createCodeTemplates.draw);
+
+                },
+
+                draw(data) {
+                    console.log(data);
+                    info = new Map(Object.entries(data));
+                    console.log(info);
+                    let html = ``;
+                    for (let key of info.keys()) {
+                        html += `<option value="${key}"`;
+                        if (key == 'AWS') html += ` selected`;
+                        html += `>${key}</option>`;
+                    }
+                    func.appendHtml(document.getElementById('provider'), html, 'select');
+
+                    createCodeTemplates.event();
+                },
+
+                event() {
+                    document.getElementById('save').addEventListener('click', () => {
+                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createCodeTemplates.save);
+                    }, false);
+                },
+
+                save() {
+                    let createName;
+                    let providerType = document.getElementById('provider').value;
+
+                    createName = {
+                        "resourceName": document.getElementById('name').value,
+                        "provider": providerType,
+                        "hclScript": document.getElementById('code').value
+                    };
+
+                    //check FILE
+                    console.log("createName: " + JSON.stringify(createName));
+                    func.saveData('POST', `${func.url}templates`, JSON.stringify(createName), true, 'application/json', createCodeTemplates.returnPage());
+                    //FIXME!!, 확인 버튼 클릭 전 이동하는 이슈
+                },
+
+                returnPage() {
+                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES;
+                }
+            };
+            createCodeTemplates.init();
+        }
+
+    </script>
+</th:block>
+</html>

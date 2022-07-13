@@ -31,6 +31,10 @@
      var URI_CP_MANAGEMENTS_INACTIVE_USERS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_INACTIVE_USERS}]];
      var URI_CP_MANAGEMENTS_CONFIGMAPS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_CONFIGMAPS}]];
 
+     var URI_CP_GLOBAL_CLUSTER = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_CLUSTERS}]];
+     var URI_CP_GLOBAL_CLOUD_ACCOUNTS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_CLOUD_ACCOUNTS}]];
+     var URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES}]];
+
      var URI_CP_LIST = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LIST}]];
      var URI_CP_DETAILS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_DETAILS}]];
      var URI_CP_CREATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CREATE}]];
@@ -42,18 +46,12 @@
      var URI_CP_GET_USER_LOGIN_DATA =  [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GET_USER_LOGIN_DATA}]];
      var URI_CP_REFRESH_TOKEN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_REFRESH_TOKEN}]];
 
+     var URI_CP_LOGOUT = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LOGOUT}]];
 
-     var URI_CP_LIST = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LIST}]];
-     var URI_CP_DETAILS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_DETAILS}]];
-     var URI_CP_CREATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CREATE}]];
-
-     var URI_CP_LOGOUT = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LOGOUT}]];;
-
-
-     var URL_API_LOCALE_LANGUAGE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_LOCALE_LANGUAGE}]];;
-     var URL_API_CHANGE_LOCALE_PARAM = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_CHANGE_LOCALE_PARAM}]];;
-     var LANG_KO = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_KO}]];;
-     var LANG_EN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_EN}]];;
+     var URL_API_LOCALE_LANGUAGE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_LOCALE_LANGUAGE}]];
+     var URL_API_CHANGE_LOCALE_PARAM = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_CHANGE_LOCALE_PARAM}]];
+     var LANG_KO = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_KO}]];
+     var LANG_EN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_EN}]];
 
      // VALUE
      var NAMESPACE_ALL_VALUE ='ALL';
@@ -72,6 +70,8 @@
      var SELECTED_ADMINISTRATOR = "administrator";
      var SELECTED_USER = "user";
 
+     //GLOBAL
+     const MASKED_DATA = "*********************";
 
      // NAMESPACE PROPERTIES
      var MSG_ENTER_THE_NAMESPACE = [[#{M0010}]];
@@ -100,6 +100,7 @@
      var MSG_CONFIRM_DELETION	= [[#{M0034}]];
      var MSG_CONFIRM_SAVE = [[#{M0035}]];
      var MSG_PAAS_TA_LOGO = [[#{M0036}]];
+     var MSG_INVALID_FORMAT = "형식이 올바르지 않습니다.";
 
      var MSG_SIGN_OUT = [[#{M0809}]];
 
@@ -135,6 +136,11 @@ function changeLocaleLanguage() {
     var u_locale_lang = document.getElementById("u_locale_lang").value;
     var reqUrl =  URL_API_LOCALE_LANGUAGE+"?"+ URL_API_CHANGE_LOCALE_PARAM + "=" + u_locale_lang;
     func.setLocaleLang(reqUrl);
+}
+
+function activeEdit(id, buttonId) {
+    document.getElementById(id).readOnly = false;
+    document.getElementById(buttonId).style.display = 'none';
 }
 
 function setSelectValue(id, val) {
