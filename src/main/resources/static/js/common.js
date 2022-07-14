@@ -12,7 +12,7 @@ const func = {
 
 		// Locale Language 조회
 		func.getLocaleLang();
-		func.loadData('GET', `${func.url}users/clustersList`, 'application/json', func.clusters);
+		func.loadData('GET', `${func.url}users/clustersList?isGlobal=${IS_GLOBAL}`, 'application/json', func.clusters);
 
 		// navigation 초기 선택 설정
 		if(depth1 >= 0){
@@ -102,14 +102,19 @@ const func = {
 		func.clusterData = data;
 
 		 var html ='';
+		 var userType = '';
+
 		  for(var i=0; i<=data.items.length-1; i++){
-			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}">${data.items[i].clusterName}</a></li>`;
+			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}" data-auth="${data.items[i].userType}">${data.items[i].clusterName}</a></li>`;
 			};
 
 		     document.getElementById("clusterListUl").innerHTML = html;
 
+		     /////////////////////
 			if(sessionStorage.getItem('cluster') != null){
 				document.querySelector('.clusterTop').innerText = sessionStorage.getItem('clusterName');
+
+
 			} else {
 				document.querySelector('.clusterTop').innerText = data.items[0].clusterName;
 				sessionStorage.setItem('cluster', data.items[0].clusterId);
@@ -119,16 +124,21 @@ const func = {
 			var name = document.querySelector('.clusterUl').querySelectorAll('a');
 
 			for(var i=0 ; i<name.length; i++){
+				if(name[i].getAttribute('data-name') === sessionStorage.getItem('cluster')) {
+					userType = name[i].getAttribute('data-auth');
+				}
+
 				name[i].addEventListener('click', (e) => {
 				sessionStorage.setItem('cluster' , e.target.getAttribute('data-name'));
 				sessionStorage.setItem('clusterName', e.target.innerText);
 				document.querySelector('.clusterTop').innerText = e.target.innerText;
 				sessionStorage.removeItem('nameSpace');
-				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
+				userType = e.target.getAttribute('data-auth');
+				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList?userType=${userType}`, 'application/json', func.namespaces);
 			}, false);
 			};
 
-		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
+		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList?userType=${userType}`, 'application/json', func.namespaces);
 
 	},
 

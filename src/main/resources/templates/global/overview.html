@@ -9,36 +9,26 @@
         <article class="view">
             <h3>Container Platform Info</h3>
             <div class="flex-s">
-                <div class="p-info">
-                    <div>
-                        <span>Name : </span>
-                        <span>manage-cluster</span>
-                    </div>
-                    <div>
-                        <span>Created : </span>
-                        <span>2022-06-23</span>
-                    </div>
-                </div>
                 <div>
                     <dl>
                         <dt>Cluster</dt>
-                        <dd>0</dd>
+                        <dd id="clusterStatus">0</dd>
                     </dl>
                     <dl>
-                        <dt>NameSpace</dt>
-                        <dd>0</dd>
-                    </dl>
-                    <dl>
-                        <dt>PVC</dt>
-                        <dd>0</dd>
+                        <dt>Namespace</dt>
+                        <dd id="namespaceStatus">0</dd>
                     </dl>
                     <dl>
                         <dt>PV</dt>
-                        <dd>0</dd>
+                        <dd id="pvStatus">0</dd>
+                    </dl>
+                    <dl>
+                        <dt>PVC</dt>
+                        <dd id="pvcStatus">0</dd>
                     </dl>
                     <dl>
                         <dt>Pod</dt>
-                        <dd>0</dd>
+                        <dd id="podStatus">0</dd>
                     </dl>
                 </div>
             </div>
@@ -59,7 +49,6 @@
                             <col />
                             <col />
                             <col />
-                            <col />
                         </colgroup>
                         <thead>
                         <tr>
@@ -68,134 +57,136 @@
                             <th scope="col">K8s버전</th>
                             <th scope="col">노드</th>
                             <th scope="col">파드</th>
-                            <th scope="col">PVC</th>
                             <th scope="col">PV</th>
+                            <th scope="col">PVC</th>
                             <th scope="col">CPU</th>
                             <th scope="col">MEM</th>
-                            <th scope="col">스토리지</th>
                         </tr>
                         </thead>
                         <tbody class="listTable">
-                        <tr>
-                            <td><span class="fc-blue" onclick="movePage(URI_CP_INDEX_URL)" style="cursor:pointer;">Manage-cluster</span></td>
-                            <td>AWS</td>
-                            <td>1.21.5</td>
-                            <td>3/3</td>
-                            <td>15/180</td>
-                            <td>39/45</td>
-                            <td>100/100</td>
-                            <td>78%</td>
-                            <td>40%</td>
-                            <td>56%</td>
-                        </tr>
-                        <tr>
-                            <td><span class="fc-blue" onclick="movePage(URI_CP_INDEX_URL)" style="cursor:pointer;">OpenStack-cluster</span></td>
-                            <td>OpenStack</td>
-                            <td>1.22.3</td>
-                            <td>4/4</td>
-                            <td>23/210</td>
-                            <td>42/54</td>
-                            <td>100/120</td>
-                            <td>40%</td>
-                            <td>52%</td>
-                            <td>25%</td>
-                        </tr>
                         </tbody>
                     </table>
+                    <!-- more btn -->
                 </div>
                 <a href="javascript:;" class="more">more</a>
             </div>
         </article>
         <article class="base-type3">
             <div class="chart">
-                <h4><span>TOP 5</span> CPU</h4>
+                <h4><span>Node TOP 10</span></h4>
                 <ul>
-                    <li id="deployChart">
-                        <h5>Deployment</h5>
-                        <!-- doughnutChart -->
-                        <div class="pie">
+                    <li id="topNodesCpu">
+                        <h5>CPU</h5>
+                        <div class="table_style01">
+                            <table>
+                                <colgroup >
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th scope="col">클러스터</th>
+                                    <th scope="col">노드</th>
+                                    <th scope="col">CPU(cores)</th>
+                                    <th scope="col">CPU%</th>
+                                    <th scope="col">MEMORY(bytes)</th>
+                                    <th scope="col">MEMORY%</th>
+                                </tr>
+                                </thead>
+                            <tbody class="topNodesCpuListTable">
+                            </tbody>
+                        </table>
                         </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/deployments.html">more</a>
                     </li>
-                    <li id="podChart">
-                        <h5>Pods</h5>
-                        <div class="pie">
+                </ul>
+                <ul>
+                    <li id="topNodesMem">
+                        <h5>Memory</h5>
+                        <div class="table_style01">
+                            <table>
+                                <colgroup >
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th scope="col">클러스터</th>
+                                    <th scope="col">노드</th>
+                                    <th scope="col">CPU(cores)</th>
+                                    <th scope="col">CPU%</th>
+                                    <th scope="col">MEMORY(bytes)</th>
+                                    <th scope="col">MEMORY%</th>
+                                </tr>
+                                </thead>
+                                <tbody class="topNodesMemListTable">
+                                </tbody>
+                            </table>
                         </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/pods.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
                     </li>
                 </ul>
             </div>
             <div class="chart">
-                <h4><span>TOP 5</span> MEM</h4>
+                <h4><span>Pod TOP 10</span></h4>
                 <ul>
-                    <li id="deployChart">
-                        <h5>Deployment</h5>
-                        <!-- doughnutChart -->
-                        <div class="pie">
+                    <li id="topPodsCpu">
+                        <h5>CPU</h5>
+                        <div class="table_style01">
+                            <table>
+                                <colgroup >
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th scope="col">클러스터</th>
+                                    <th scope="col">네임스페이스</th>
+                                    <th scope="col">이름</th>
+                                    <th scope="col">CPU(cores)</th>
+                                    <th scope="col">MEMORY(bytes)</th>
+                                </tr>
+                                </thead>
+                                <tbody class="topPodsCpuListTable">
+                                </tbody>
+                            </table>
                         </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/deployments.html">more</a>
                     </li>
-                    <li id="podChart">
-                        <h5>Pods</h5>
-                        <div class="pie">
+                </ul>
+                <ul>
+                    <li id="topPodsCpu">
+                        <h5>Memory</h5>
+                        <div class="table_style01">
+                            <table>
+                                <colgroup >
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th scope="col">클러스터</th>
+                                    <th scope="col">네임스페이스</th>
+                                    <th scope="col">이름</th>
+                                    <th scope="col">CPU(cores)</th>
+                                    <th scope="col">MEMORY(bytes)</th>
+                                </tr>
+                                </thead>
+                                <tbody class="topPodsMemListTable">
+                                </tbody>
+                            </table>
                         </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/pods.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
-                    </li>
-                    <li id="servicesChart">
-                        <h5>Replica Sets</h5>
-                        <div class="pie">
-                        </div>
-                        <ul class="legend">
-                        </ul>
-                        <a href="workloads/replicaSets.html">more</a>
                     </li>
                 </ul>
             </div>
@@ -205,12 +196,162 @@
 </div>
 
 <th:block layout:fragment="script">
-    <script type="text/javascript">
+ <script type="text/javascript">
         window.onload = () => {
+            IS_GLOBAL = true;
+            IS_OVERVIEW = true;
             func.init();
             callbackFuncNameLoad();
+
+            const overview = {
+                init() {
+                    func.nameLoad = overview.load;
+                },
+
+                load() {
+                    func.loading();
+
+                    // nameSpace 정보 조회
+                   func.loadData('GET', `${func.url}global/overview`, 'application/json', overview.draw);
+                    IS_OVERVIEW = false;
+                },
+
+                draw(data) {
+
+                    var legends = document.querySelectorAll('.legend');
+
+                    for (var i = 0; i < legends.length; i++) {
+                        func.removeHtml(legends[i]);
+                    }
+                    ;
+
+                    if (data.httpStatusCode == 500) {
+
+                    }
+
+
+
+                    if(data.httpStatusCode == 200){
+
+                        // all count status
+                        func.countUp(document.getElementById('clusterStatus'), data.clusterStatus);
+                        func.countUp(document.getElementById('namespaceStatus'), data.namespaceStatus);
+                        func.countUp(document.getElementById('pvStatus'), data.pvStatus);
+                        func.countUp(document.getElementById('pvcStatus'), data.pvcStatus);
+                        func.countUp(document.getElementById('podStatus'), data.podStatus);
+
+                        // cluster info list
+                        if(data.items.length > 0){
+                            for(var i=0; i<=data.items.length-1; i++){
+                                var html = `<tr><td class="left"><a href="javascript:;">${data.items[i].clusterName}</a></td>` +
+                                    `<td class="center">${data.items[i].clusterProviderType}</td>`+
+                                    `<td class="center">${data.items[i].version}</td>`+
+                                    `<td class="center">${data.items[i].nodeCount.count}/${data.items[i].nodeCount.all}</td>`+
+                                    `<td class="center">${data.items[i].podCount.count}/${data.items[i].podCount.all}</td>`+
+                                    `<td class="center">${data.items[i].pvCount.count}/${data.items[i].pvCount.all}</td>`+
+                                    `<td class="center">${data.items[i].pvcCount.count}/${data.items[i].pvcCount.all}</td>`+
+                                    `<td class="center">${data.items[i].usage.cpu}</td>`+
+                                    `<td class="center">${data.items[i].usage.memory}</td></tr>`;
+
+                                func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            };
+                        } else {
+                            var html = '<tr><td colspan="9">No Data.</td></tr>';
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                        };
+
+
+
+                        // top node cpu
+                        if(data.topNodesCPU.length > 0){
+                            for(var i=0; i<=data.topNodesCPU.length-1; i++){
+                                var item = data.topNodesCPU[i];
+                                var html = `<tr><td class="center">${item.clusterName}</td>` +
+                                    `<td class="center">${item.name}</td>`+
+                                    `<td class="center">${item.cpu.usage}</td>`+
+                                    `<td class="center">${item.cpu.percent}</td>` +
+                                    `<td class="center">${item.memory.usage}</td>` +
+                                    `<td class="center">${item.memory.percent}</td></tr>`;
+
+                                func.appendHtml(document.querySelector('.topNodesCpuListTable'), html, 'tbody');
+                            };
+                        } else {
+                            var html = '<tr><td colspan="6">No Data.</td></tr>';
+                            func.appendHtml(document.querySelector('.topNodesCpuListTable'), html, 'tbody');
+                        };
+
+
+                        // top node memory
+                        if(data.topNodesMEM.length > 0){
+                            for(var i=0; i<=data.topNodesMEM.length-1; i++){
+                                var item = data.topNodesMEM[i];
+                                var html = `<tr><td class="center">${item.clusterName}</td>` +
+                                    `<td class="center">${item.name}</td>`+
+                                    `<td class="center">${item.cpu.usage}</td>`+
+                                    `<td class="center">${item.cpu.percent}</td>` +
+                                    `<td class="center">${item.memory.usage}</td>` +
+                                    `<td class="center">${item.memory.percent}</td></tr>`;
+
+                                func.appendHtml(document.querySelector('.topNodesMemListTable'), html, 'tbody');
+                            };
+                        } else {
+                            var html = '<tr><td colspan="6">No Data.</td></tr>';
+                            func.appendHtml(document.querySelector('.topNodesMemListTable'), html, 'tbody');
+                        };
+
+
+                        // top pod cpu
+                        if(data.topPodsCPU.length > 0){
+                            for(var i=0; i<=data.topPodsCPU.length-1; i++){
+                                var item = data.topPodsCPU[i];
+                                var html = `<tr><td class="center">${item.clusterName}</td>` +
+                                    `<td class="center">${item.namespace}</td>`+
+                                    `<td class="center">${item.name}</td>`+
+                                    `<td class="center">${item.cpu.usage}</td>`+
+                                    `<td class="center">${item.memory.usage}</td></tr>`;
+
+                                func.appendHtml(document.querySelector('.topPodsCpuListTable'), html, 'tbody');
+                            };
+                        } else {
+                            var html = '<tr><td colspan="5">No Data.</td></tr>';
+                            func.appendHtml(document.querySelector('.topPodsCpuListTable'), html, 'tbody');
+                        };
+
+
+                        // top pod memory
+                        if(data.topPodsMEM.length > 0){
+                            for(var i=0; i<=data.topPodsMEM.length-1; i++){
+                                var item = data.topPodsMEM[i];
+                                var html = `<tr><td class="center">${item.clusterName}</td>` +
+                                    `<td class="center">${item.namespace}</td>`+
+                                    `<td class="center">${item.name}</td>`+
+                                    `<td class="center">${item.cpu.usage}</td>`+
+                                    `<td class="center">${item.memory.usage}</td></tr>`;
+
+                                func.appendHtml(document.querySelector('.topPodsMemListTable'), html, 'tbody');
+                            };
+                        } else {
+                            var html = '<tr><td colspan="5">No Data.</td></tr>';
+                            func.appendHtml(document.querySelector('.topPodsMemListTable'), html, 'tbody');
+                        };
+
+
+                    }
+                    else {
+                        var html = '<tr><td colspan="9">No Data.</td></tr>';
+                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                    }
+
+
+
+                    document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                },
+            }
+
+            overview.init();
         }
-    </script>
+
+    </script>-
 </th:block>
 
 </html>
