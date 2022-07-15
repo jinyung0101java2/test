@@ -51,7 +51,7 @@ public class ApplicationWebSecurityConfigurerAdapter extends WebSecurityConfigur
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**","/js/**", "/font/**","/img/**", "/error/**","/common/error/**", ConstantsUrl.URI_CP_SESSION_OUT);
+        web.ignoring().antMatchers("/dist/**","/plugins/**","/css/**","/js/**", "/font/**","/img/**", "/error/**","/common/error/**", ConstantsUrl.URI_CP_SESSION_OUT);
     }
 
 

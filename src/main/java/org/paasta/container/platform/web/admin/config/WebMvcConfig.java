@@ -37,6 +37,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/", "classpath:/static/");
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/dist/**").addResourceLocations("classpath:/static/dist/");
+        registry.addResourceHandler("/plugins/**").addResourceLocations("classpath:/static/plugins/");
         registry.addResourceHandler("/font/**").addResourceLocations("classpath:/static/font/");
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
@@ -90,6 +92,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(customIntercepter())
                 .excludePathPatterns("/common/**")
                 .excludePathPatterns("/css/**")
+                .excludePathPatterns("/dist/**")
+                .excludePathPatterns("/plugins/**")
                 .excludePathPatterns("/font/**")
                 .excludePathPatterns("/img/**")
                 .excludePathPatterns("/js/**")
