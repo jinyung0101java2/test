@@ -39,23 +39,13 @@
                 <div class="table_style01">
                     <table>
                         <caption>Cluster Info</caption>
-                        <colgroup >
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                        </colgroup>
                         <thead>
                         <tr>
                             <th scope="col">클러스터</th>
                             <th scope="col">프로바이더</th>
                             <th scope="col">K8s버전</th>
                             <th scope="col">노드</th>
+                            <th scope="col">네임스페이스</th>
                             <th scope="col">파드</th>
                             <th scope="col">PV</th>
                             <th scope="col">PVC</th>
@@ -68,7 +58,6 @@
                     </table>
                     <!-- more btn -->
                 </div>
-                <a href="javascript:;" class="more">more</a>
             </div>
         </article>
         <article class="base-type3">
@@ -133,70 +122,13 @@
                     </li>
                 </ul>
             </div>
-            <div class="chart">
-                <h4><span>Pod TOP 10</span></h4>
-                <ul>
-                    <li id="topPodsCpu">
-                        <h5>CPU</h5>
-                        <div class="table_style01">
-                            <table>
-                                <colgroup >
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col />
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th scope="col">클러스터</th>
-                                    <th scope="col">네임스페이스</th>
-                                    <th scope="col">이름</th>
-                                    <th scope="col">CPU(cores)</th>
-                                    <th scope="col">MEMORY(bytes)</th>
-                                </tr>
-                                </thead>
-                                <tbody class="topPodsCpuListTable">
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
-                <ul>
-                    <li id="topPodsCpu">
-                        <h5>Memory</h5>
-                        <div class="table_style01">
-                            <table>
-                                <colgroup >
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col />
-                                    <col />
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th scope="col">클러스터</th>
-                                    <th scope="col">네임스페이스</th>
-                                    <th scope="col">이름</th>
-                                    <th scope="col">CPU(cores)</th>
-                                    <th scope="col">MEMORY(bytes)</th>
-                                </tr>
-                                </thead>
-                                <tbody class="topPodsMemListTable">
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </article>
     </div>
     <!-- // Content -->
 </div>
 
 <th:block layout:fragment="script">
- <script type="text/javascript">
+<!-- <script type="text/javascript">
         window.onload = () => {
             IS_GLOBAL = true;
             IS_OVERVIEW = true;
@@ -243,20 +175,22 @@
                         // cluster info list
                         if(data.items.length > 0){
                             for(var i=0; i<=data.items.length-1; i++){
-                                var html = `<tr><td class="left"><a href="javascript:;">${data.items[i].clusterName}</a></td>` +
-                                    `<td class="center">${data.items[i].clusterProviderType}</td>`+
-                                    `<td class="center">${data.items[i].version}</td>`+
-                                    `<td class="center">${data.items[i].nodeCount.count}/${data.items[i].nodeCount.all}</td>`+
-                                    `<td class="center">${data.items[i].podCount.count}/${data.items[i].podCount.all}</td>`+
-                                    `<td class="center">${data.items[i].pvCount.count}/${data.items[i].pvCount.all}</td>`+
-                                    `<td class="center">${data.items[i].pvcCount.count}/${data.items[i].pvcCount.all}</td>`+
-                                    `<td class="center">${data.items[i].usage.cpu}</td>`+
-                                    `<td class="center">${data.items[i].usage.memory}</td></tr>`;
+                                   var item = data.items[i];
+                                var html = `<tr><td class="left"><a href="javascript:;">${item.clusterName}</a></td>` +
+                                    `<td class="center">${item.clusterProviderType}</td>`+
+                                    `<td class="center">${item.version}</td>`+
+                                    `<td class="center">${item.nodeCount.count}/${item.nodeCount.all}</td>`+
+                                    `<td class="center">${item.namespaceCount.count}/${item.namespaceCount.all}</td>`+
+                                    `<td class="center">${item.podCount.count}/${item.podCount.all}</td>`+
+                                    `<td class="center">${item.pvCount.count}/${item.pvCount.all}</td>`+
+                                    `<td class="center">${item.pvcCount.count}/${item.pvcCount.all}</td>`+
+                                    `<td class="center">${item.usage.cpu}</td>`+
+                                    `<td class="center">${item.usage.memory}</td></tr>`;
 
                                 func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                             };
                         } else {
-                            var html = '<tr><td colspan="9">No Data.</td></tr>';
+                            var html = '<tr><td colspan="10">No Data.</td></tr>';
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
 
@@ -300,45 +234,9 @@
                         };
 
 
-                        // top pod cpu
-                        if(data.topPodsCPU.length > 0){
-                            for(var i=0; i<=data.topPodsCPU.length-1; i++){
-                                var item = data.topPodsCPU[i];
-                                var html = `<tr><td class="center">${item.clusterName}</td>` +
-                                    `<td class="center">${item.namespace}</td>`+
-                                    `<td class="center">${item.name}</td>`+
-                                    `<td class="center">${item.cpu.usage}</td>`+
-                                    `<td class="center">${item.memory.usage}</td></tr>`;
-
-                                func.appendHtml(document.querySelector('.topPodsCpuListTable'), html, 'tbody');
-                            };
-                        } else {
-                            var html = '<tr><td colspan="5">No Data.</td></tr>';
-                            func.appendHtml(document.querySelector('.topPodsCpuListTable'), html, 'tbody');
-                        };
-
-
-                        // top pod memory
-                        if(data.topPodsMEM.length > 0){
-                            for(var i=0; i<=data.topPodsMEM.length-1; i++){
-                                var item = data.topPodsMEM[i];
-                                var html = `<tr><td class="center">${item.clusterName}</td>` +
-                                    `<td class="center">${item.namespace}</td>`+
-                                    `<td class="center">${item.name}</td>`+
-                                    `<td class="center">${item.cpu.usage}</td>`+
-                                    `<td class="center">${item.memory.usage}</td></tr>`;
-
-                                func.appendHtml(document.querySelector('.topPodsMemListTable'), html, 'tbody');
-                            };
-                        } else {
-                            var html = '<tr><td colspan="5">No Data.</td></tr>';
-                            func.appendHtml(document.querySelector('.topPodsMemListTable'), html, 'tbody');
-                        };
-
-
                     }
                     else {
-                        var html = '<tr><td colspan="9">No Data.</td></tr>';
+                        var html = '<tr><td colspan="10">No Data.</td></tr>';
                         func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                     }
 
@@ -351,7 +249,7 @@
             overview.init();
         }
 
-    </script>-
+    </script>-->
 </th:block>
 
 </html>
