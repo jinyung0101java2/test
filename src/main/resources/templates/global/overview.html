@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/global}">
 <th:block layout:fragment="style">
+<!--    <link rel="stylesheet" href="/dist/css/adminlte.min.css">-->
 </th:block>
 <div layout:fragment="content">
     <!-- Content -->
@@ -35,31 +36,38 @@
             </div>
         </article>
         <article class="base base-type2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Cluster Usage</h3>
-                    <!-- /.card -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-                    <table class="table table-striped">
+            <div class="notice">
+                <h4>Cluster Info</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Cluster Info</caption>
+                        <colgroup >
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
                         <thead>
                         <tr>
-                            <th>클러스터</th>
-                            <th>프로바이더</th>
-                            <th>k8s 버전</th>
-                            <th>노드</th>
-                            <th>네임스페이스</th>
-                            <th>파드</th>
-                            <th>CPU</th>
-                            <th>Memory</th>
+                            <th scope="col">클러스터</th>
+                            <th scope="col">프로바이더</th>
+                            <th scope="col">K8s버전</th>
+                            <th scope="col">노드</th>
+                            <th scope="col">네임스페이스</th>
+                            <th scope="col">파드</th>
+                            <th scope="col">CPU</th>
+                            <th scope="col">MEM</th>
                         </tr>
                         </thead>
                         <tbody class="clusterListTable">
                         </tbody>
                     </table>
+                    <!-- more btn -->
                 </div>
-                <!-- /.card-body -->
             </div>
         </article>
         <article class="base-type3">
@@ -194,7 +202,7 @@
                                     `<td class="center">${item.nodeCount.count}/${item.nodeCount.all}</td>`+
                                     `<td class="center">${item.namespaceCount.count}/${item.namespaceCount.all}</td>`+
                                     `<td class="center">${item.podCount.count}/${item.podCount.all}</td>`+
-                                    `<td class="center">${item.usage.cpu}</td>`+
+                                    `<td class="center"><div class="col-6 text-center"><input type="text" class="knob" value="50" data-width="90" data-height="90" data-fgColor="#39CCCC"><div class="knob-label">CPU</div></div></td>`+
                                     `<td class="center">${item.usage.memory}</td></tr>`;
 
                                 func.appendHtml(document.querySelector('.clusterListTable'), html, 'tbody');
@@ -329,16 +337,16 @@
 
     </script>
 <!-- Bar-->
-    <script>
+<!--<script>
         $(function () {
             /* ChartJS
-             * -------
+             * -&#45;&#45;&#45;&#45;&#45;&#45;
              * Here we will create a few charts using ChartJS
              */
 
-            //--------------
+            //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
             //- AREA CHART -
-            //--------------
+            //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
 
             // Get context with jQuery - using jQuery's .get() method.
             var areaChartData = {
@@ -390,9 +398,9 @@
             }
 
 
-            //-------------
+            //-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
             //- BAR CHART -
-            //-------------
+            //-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
             var barChartCanvas = $('#barChart').get(0).getContext('2d')
             var barChartData = $.extend(true, {}, areaChartData)
             var temp0 = areaChartData.datasets[0]
@@ -413,6 +421,6 @@
             })
 
         })
-    </script>
+    </script>-->
 </th:block>
 </html>
