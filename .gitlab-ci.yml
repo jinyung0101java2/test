@@ -30,6 +30,8 @@ build:
     paths:
       - build
       - .gradle
+  tags:
+  - deploy
 
 test:
   stage: test
@@ -40,3 +42,5 @@ test:
     paths:
       - build
       - .gradle
+  tags:
+  - deploy
