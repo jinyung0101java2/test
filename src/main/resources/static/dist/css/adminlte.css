@@ -5999,6 +5999,8 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   padding: 0.75rem;
 }
 
+/*
+
 .modal-open {
   overflow: hidden;
 }
@@ -6236,6 +6238,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
     max-width: 1140px;
   }
 }
+*/
 
 .tooltip {
   position: absolute;
