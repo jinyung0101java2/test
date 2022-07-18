@@ -26,7 +26,7 @@ public class TerramanConstant {
     * TERRAFORM COMMAND 명령어
     * */
     public static final String DIRECTORY_COMMAND = "pwd";
-    public static final String MOD_CHG = "chmod +x";
+    public static final String MOD_CHG = "chmod";
     public static final String KUBECTL = "kubectl";
     public static final String BASE_DIR = "/tmp/terraform/";
 
@@ -39,6 +39,6 @@ public class TerramanConstant {
     public static final String TERRAFORM_CHANGE_DIRECTORY_COMMAND = "cd /paas-ta-container-platform-deployment/standalone/aws";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
 //    public static final String KUBESPRAY_CHMOD_COMMAND = "chmod -R 755 deploy_kubespray.sh";
-    public static final String KUBESPRAY_CHMOD_COMMAND = MOD_CHG + " deploy_kubespray.sh";
+    public static final String KUBESPRAY_CHMOD_COMMAND = MOD_CHG + "-R 755 deploy_kubespray.sh";
     public static final String KUBESPRAY_DEPLOY_COMMAND = "./deploy_kubespray.sh";
 }
