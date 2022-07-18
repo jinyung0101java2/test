@@ -9,6 +9,7 @@ import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class TerramanService {
      * @param terramanRequest the init terramanRequest
      * @return the resultStatus
      */
+    @Async
     public ResultStatusModel createTerraman(TerramanRequest terramanRequest) {
         /**
          * 변수 정의
@@ -228,7 +230,7 @@ public class TerramanService {
 
         CommonFileUtils fileUtil = new CommonFileUtils();
 
-        String delResult = fileUtil.tfFileDelete("kubespray_var.sh");
+        String delResult = fileUtil.tfFileDelete(TerramanConstant.KUBESPRAY_FILE);
         if(!StringUtils.equals(delResult, "200")) {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
@@ -263,7 +265,7 @@ public class TerramanService {
             fileData += line;
         }
 
-        String fileResult = fileUtil.createWithWrite("kubespray_var.sh", fileData);
+        String fileResult = fileUtil.createWithWrite(TerramanConstant.KUBESPRAY_FILE, fileData);
 
         if(!StringUtils.equals(fileResult, "200")) {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);

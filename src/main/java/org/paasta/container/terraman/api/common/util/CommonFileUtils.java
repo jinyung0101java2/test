@@ -3,6 +3,7 @@ package org.paasta.container.terraman.api.common.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.FileModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import java.io.*;
 
 public class CommonFileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonFileUtils.class);
-    private static final String filePath = "provider.tf";
 
     /**
      * terraform 파일 생성 및 작성 (String)
@@ -55,7 +55,7 @@ public class CommonFileUtils {
     public String tfCreateWithWrite(FileModel fileModel) {
         String resultCode = "200";
         try {
-            File file = new File(filePath); // File객체 생성
+            File file = new File(TerramanConstant.FILE_PATH); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
                 file.createNewFile(); // 신규생성
             }

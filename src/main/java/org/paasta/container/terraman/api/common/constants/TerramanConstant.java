@@ -2,7 +2,9 @@ package org.paasta.container.terraman.api.common.constants;
 
 public class TerramanConstant {
 
-    public static final String TERRAFORM_STATE = "terraform.tfstate";
+    public static final String TERRAFORM_STATE = ".\\terraform.tfstate";
+    public static final String FILE_PATH = ".\\provider.tf";
+    public static final String KUBESPRAY_FILE = ".\\kubespray_var.sh";
 
     /*
     * TERRAFORM LOG MESSAGE

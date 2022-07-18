@@ -62,8 +62,8 @@ public class CommonService {
             Method methodSetHttpStatusCode = aClass.getMethod("setHttpStatusCode", Integer.class);
             Method methodSetDetailMessage = aClass.getMethod("setDetailMessage", String.class);
 
-            if (Constants.RESULT_STATUS_FAIL.equals(map.get("resultCode"))) {
-                methodSetResultCode.invoke(reqObject, map.get("resultCode"));
+            if (Constants.RESULT_STATUS_FAIL.equals(resultCode)) {
+                methodSetResultCode.invoke(reqObject, resultCode);
                 methodSetResultMessage.invoke(reqObject, CommonStatusCode.CONFLICT.getMsg());
                 methodSetHttpStatusCode.invoke(reqObject, CommonStatusCode.CONFLICT.getCode());
                 methodSetDetailMessage.invoke(reqObject, CommonStatusCode.CONFLICT.getMsg());
