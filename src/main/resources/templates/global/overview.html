@@ -36,30 +36,28 @@
             </div>
         </article>
         <article class="base base-type2">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Striped Full Width Table</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body p-0">
-                    <table class="table table-striped">
+            <div class="notice">
+                <h4>Cluster Info</h4>
+                <div class="table_style01">
+                    <table>
+                        <caption>Cluster Info</caption>
                         <thead>
                         <tr>
-                            <th>Cluster</th>
-                            <th>Provider</th>
-                            <th>k8s Version</th>
-                            <th>Node</th>
-                            <th>Namespace</th>
-                            <th>Pod</th>
-                            <th>CPU</th>
-                            <th>Memory</th>
+                            <th scope="col">클러스터</th>
+                            <th scope="col">프로바이더</th>
+                            <th scope="col">K8s버전</th>
+                            <th scope="col">노드</th>
+                            <th scope="col">네임스페이스</th>
+                            <th scope="col">파드</th>
+                            <th scope="col">CPU</th>
+                            <th scope="col">MEM</th>
                         </tr>
                         </thead>
                         <tbody class="clusterListTable">
                         </tbody>
                     </table>
+                    <!-- more btn -->
                 </div>
-                <!-- /.card-body -->
             </div>
         </article>
         <article class="base-type3">
@@ -194,7 +192,7 @@
                                     `<td class="center">${item.nodeCount.count}/${item.nodeCount.all}</td>`+
                                     `<td class="center">${item.namespaceCount.count}/${item.namespaceCount.all}</td>`+
                                     `<td class="center">${item.podCount.count}/${item.podCount.all}</td>`+
-                                    `<td class="center"></td>`+
+                                    `<td class="center"><input type="text" class="knob" value="50" data-width="90" data-height="90" data-fgColor="#39CCCC"><div class="knob-label">CPU</div></td>`+
                                     `<td class="center">${item.usage.memory}</td></tr>`;
 
                                 func.appendHtml(document.querySelector('.clusterListTable'), html, 'tbody');
@@ -253,7 +251,76 @@
 
 
                     document.getElementById('wrap').removeChild(document.getElementById('loading'));
+
+
+                    overview.knob();
                 },
+
+                knob() {
+
+                    /* jQueryKnob */
+
+                    $('.knob').knob({
+                        /*change : function (value) {
+                         //console.log("change : " + value);
+                         },
+                         release : function (value) {
+                         console.log("release : " + value);
+                         },
+                         cancel : function () {
+                         console.log("cancel : " + this.value);
+                         },*/
+                        draw: function () {
+
+                            // "tron" case
+                            if (this.$.data('skin') == 'tron') {
+
+                                var a   = this.angle(this.cv)  // Angle
+                                    ,
+                                    sa  = this.startAngle          // Previous start angle
+                                    ,
+                                    sat = this.startAngle         // Start angle
+                                    ,
+                                    ea                            // Previous end angle
+                                    ,
+                                    eat = sat + a                 // End angle
+                                    ,
+                                    r   = true
+
+                                this.g.lineWidth = this.lineWidth
+
+                                this.o.cursor
+                                && (sat = eat - 0.3)
+                                && (eat = eat + 0.3)
+
+                                if (this.o.displayPrevious) {
+                                    ea = this.startAngle + this.angle(this.value)
+                                    this.o.cursor
+                                    && (sa = ea - 0.3)
+                                    && (ea = ea + 0.3)
+                                    this.g.beginPath()
+                                    this.g.strokeStyle = this.previousColor
+                                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
+                                    this.g.stroke()
+                                }
+
+                                this.g.beginPath()
+                                this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
+                                this.g.stroke()
+
+                                this.g.lineWidth = 2
+                                this.g.beginPath()
+                                this.g.strokeStyle = this.o.fgColor
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
+                                this.g.stroke()
+
+                                return false
+                            }
+                        }
+                    })
+                    /* END JQUERY KNOB */
+                }
             }
 
             overview.init();
@@ -263,68 +330,6 @@
 <!-- Percent-->
 <script>
         $(function () {
-            /* jQueryKnob */
-
-            $('.knob').knob({
-                /*change : function (value) {
-                 //console.log("change : " + value);
-                 },
-                 release : function (value) {
-                 console.log("release : " + value);
-                 },
-                 cancel : function () {
-                 console.log("cancel : " + this.value);
-                 },*/
-                draw: function () {
-
-                    // "tron" case
-                    if (this.$.data('skin') == 'tron') {
-
-                        var a   = this.angle(this.cv)  // Angle
-                            ,
-                            sa  = this.startAngle          // Previous start angle
-                            ,
-                            sat = this.startAngle         // Start angle
-                            ,
-                            ea                            // Previous end angle
-                            ,
-                            eat = sat + a                 // End angle
-                            ,
-                            r   = true
-
-                        this.g.lineWidth = this.lineWidth
-
-                        this.o.cursor
-                        && (sat = eat - 0.3)
-                        && (eat = eat + 0.3)
-
-                        if (this.o.displayPrevious) {
-                            ea = this.startAngle + this.angle(this.value)
-                            this.o.cursor
-                            && (sa = ea - 0.3)
-                            && (ea = ea + 0.3)
-                            this.g.beginPath()
-                            this.g.strokeStyle = this.previousColor
-                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
-                            this.g.stroke()
-                        }
-
-                        this.g.beginPath()
-                        this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
-                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
-                        this.g.stroke()
-
-                        this.g.lineWidth = 2
-                        this.g.beginPath()
-                        this.g.strokeStyle = this.o.fgColor
-                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
-                        this.g.stroke()
-
-                        return false
-                    }
-                }
-            })
-            /* END JQUERY KNOB */
         })
 
     </script>
