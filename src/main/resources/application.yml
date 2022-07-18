@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: cp-terraman-api
+
+project:
+  name: cp-terraman-api
+  artifactId: cp-terraman-api
+  description: API of the PaaS-TA Container Terraman Portal
+
+management:
+  security:
+    enabled: false
+
+---
+spring:
+  profiles: local
+  cp:
+    datasource:
+      jdbc-url: jdbc:mysql://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      driver-class-name: org.mariadb.jdbc.Driver
+      validationQuery: SELECT 1
+      username: ${DATABASE_USER_ID}
+      password: ${DATABASE_USER_PASSWORD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      show_sql: true
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+logging:
+  level:
+    ROOT: INFO
+  file:
+    path: classpath:logback-spring.xml
+
+server:
+  port: 8080
+  auth:
+    valid: N
+
+commonApi:
+  url: http://localhost:3334
+  authorization:
+    id: admin
+    password: PaaS-TA
+
+---
+spring:
+  profiles:
+    active: prod
+  cp:
+    datasource:
+      jdbc-url: jdbc:mysql://${DATABASE_URL}/cpdev_bak?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      driver-class-name: org.mariadb.jdbc.Driver
+      validationQuery: SELECT 1
+      username: ${DATABASE_USER_ID}
+      password: ${DATABASE_USER_PASSWORD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: none
+      show_sql: true
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+logging:
+  level:
+    ROOT: INFO
+  file:
+    path: classpath:logback-spring.xml
+
+server:
+  port: ${PORT:3333}
+  auth:
+    valid: N
+
+commonApi:
+  url: ${CP_PORTAL_COMMON_API_DNS}
+  authorization:
+    id: admin
+    password: PaaS-TA
