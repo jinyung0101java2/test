@@ -89,7 +89,9 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_START_LOG(provider));
 
         // command line 실행
-        cResult = commandService.execCommandOutput(TerramanConstant.FILE_COPY_COMMAND);
+        LOGGER.info("FILE_COPY_DIRECTORY :: " + (TerramanConstant.FILE_COPY_COMMAND + clusterId));
+        cResult = commandService.execCommandOutput(TerramanConstant.FILE_COPY_COMMAND + clusterId);
+        LOGGER.info("FILE_COPY_DIRECTORY_RESULT :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info(cResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);

@@ -2,13 +2,13 @@ package org.paasta.container.terraman.api.common.constants;
 
 public class TerramanConstant {
 
-    public static final String TERRAFORM_STATE = ".\\terraform.tfstate";
-    public static final String FILE_PATH = ".\\provider.tf";
-    public static final String KUBESPRAY_FILE = ".\\kubespray_var.sh";
+    public static final String TERRAFORM_STATE = "./terraform.tfstate";
+    public static final String FILE_PATH = "./provider.tf";
+    public static final String KUBESPRAY_FILE = "./kubespray_var.sh";
 
     /*
-    * TERRAFORM LOG MESSAGE
-    * */
+     * TERRAFORM LOG MESSAGE
+     * */
     public static final String TERRAFORM_START_LOG(String provider) {
         return "Start creating cluster(Provider : "+provider+")";
     }
@@ -23,22 +23,22 @@ public class TerramanConstant {
     public static final String KUBESPRAY_DEPLOY_LOG = "The provisioning of the cluster is complete.";
 
     /*
-    * TERRAFORM COMMAND 명령어
-    * */
+     * TERRAFORM COMMAND 명령어
+     * */
     public static final String DIRECTORY_COMMAND = "pwd";
     public static final String MOD_CHG = "chmod";
     public static final String KUBECTL = "kubectl";
     public static final String BASE_DIR = "/tmp/terraform/";
 
 
-    public static final String FILE_COPY_COMMAND = KUBECTL + " cp -n paas-ta-container-platform-mariadb-0:bitnami" + BASE_DIR;
+    public static final String FILE_COPY_COMMAND = KUBECTL + " cp -n mariadb paas-ta-container-platform-mariadb-0:bitnami/ " + BASE_DIR;
     public static final String INSTANCE_COPY_COMMAND = "cp tf-source/aws/terraman-opt02/opt02-resource.tf ./instance.tf";
     public static final String TERRAFORM_INIT_COMMAND = "terraform init";
     public static final String TERRAFORM_PLAN_COMMAND = "terraform plan -var vpc_name=paasta-cp-vpc -var route_table_name=paasta-cp-routing-public";
     public static final String TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve -var vpc_name=paasta-cp-vpc -var route_table_name=paasta-cp-routing-public";
     public static final String TERRAFORM_CHANGE_DIRECTORY_COMMAND = "cd /paas-ta-container-platform-deployment/standalone/aws";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
-//    public static final String KUBESPRAY_CHMOD_COMMAND = "chmod -R 755 deploy_kubespray.sh";
+    //    public static final String KUBESPRAY_CHMOD_COMMAND = "chmod -R 755 deploy_kubespray.sh";
     public static final String KUBESPRAY_CHMOD_COMMAND = MOD_CHG + "-R 755 deploy_kubespray.sh";
     public static final String KUBESPRAY_DEPLOY_COMMAND = "./deploy_kubespray.sh";
 }

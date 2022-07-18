@@ -29,6 +29,7 @@ public class CommandService {
         String osName = System.getProperty("os.name");
 
         // windows
+        LOGGER.info("command :: " + command);
         if(osName.contains("Windows")) {
             if(StringUtils.equals(command, TerramanConstant.DIRECTORY_COMMAND)) {
                 command = "cd";
