@@ -7,7 +7,8 @@
 @font-face{font-family:'Apple SD Gothic Neo L'; src:url('../font/Apple+산돌고딕+Neo/AppleSDGothicNeoL.ttf')}
 
 
-*, :before, :after {margin:0; padding:0; border:0; font-style:normal; vertical-align:top; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; outline:none;}
+*, :before, :after {margin:0; padding:0; border:0; font-style:normal; vertical-align:top; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; outline:none;
+	font-family:'Apple SD Gothic Neo',"Noto Sans KR", "맑은 고딕" !important;}
 
 html {-webkit-font-smoothing:antialiased;}
 table {width:100%; border-collapse:collapse; border-spacing:0; table-layout:fixed;}
