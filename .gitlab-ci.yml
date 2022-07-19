@@ -57,3 +57,10 @@ test:
       - .gradle
   tags:
   - deploy
+
+  deploy:
+    stage: deploy
+    script:
+      - java -jar build/libs/paas-ta-container-terraman-api.jar
+    tags:
+    - deploy
