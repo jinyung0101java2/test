@@ -582,3 +582,7 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .creat-type2 .add-btn {margin-left: 0; margin-top: 20px; width: 200px; background-color: #0950bf;}
 .creat-type2 dl dd .con-txt {display: flex; align-items: center; margin-left: 15px;}
 .creat-type2 dl dd .con-txt p {font-size: 16px; color: #47494d; font-weight: 400; width: 100%; font-family: 'Apple SD Gothic Neo B', sans-serif; max-width: 80px;}
+
+
+.slabel { background-color: #eee; text-align: center; text-decoration: none; display: inline-block; padding:0 8px; line-height:28px; border-radius:5px;}
+.soverview {border-radius:8px;}
