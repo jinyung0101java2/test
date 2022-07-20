@@ -62,11 +62,11 @@
         </article>
         <article class="chart" style="padding-top: 40px ; !important;">
             <ul>
-                <li>
+                <li class="soverview">
                     <h5>TOP Node 5 (CPU %)</h5>
                        <canvas id="topCpuChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </li>
-                <li>
+                <li class="soverview">
                     <h5>TOP Node 5 (MEMORY %)</h5>
                     <canvas id="topMemChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </li>
@@ -95,8 +95,6 @@
             IS_GLOBAL = true;
             IS_OVERVIEW = true;
             var overviewData = null;
-            var CPU_UNIT = "m";
-            var MEMORY_UNIT = "Mi";
             func.init();
             callbackFuncNameLoad();
 
@@ -243,20 +241,40 @@
                   var cpuRawData = overviewData.topNodesCPU;
                   var memRawData = overviewData.topNodesMEM;
 
-                    const cpuData = {
+                  var cpuLabels = [];
+                  var cpuData = [];
+                  var memLabels = [];
+                  var memData = [];
+
+                  for (var i = 0; i < cpuRawData.length; i++) {
+                      var item = cpuRawData[i];
+                       cpuLabels.push(item.name);
+                       cpuData.push(item.cpu.percent);
+                    };
+
+                    for (var i = 0; i < memRawData.length; i++) {
+                        var item = memRawData[i];
+                        memLabels.push(item.name);
+                        memData.push(item.memory.percent);
+                    };
+
+
+                    const cpuDataSet = {
+                        labels: cpuLabels,
                         datasets: [{
                             label: 'CPU %',
-                            data: cpuRawData,
+                            data: cpuData,
                             backgroundColor:  'rgba(75, 192, 192, 0.2)',
                             borderColor:  'rgba(75, 192, 192, 0.7)',
                             borderWidth: 1
                         }]
                     };
 
-                    const memData = {
+                    const memDataSet = {
+                        labels: memLabels,
                         datasets: [{
                             label: 'MEMORY %',
-                            data: memRawData,
+                            data: memData,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor:  'rgba(54, 162, 235, 0.7)',
                             borderWidth: 1
@@ -266,7 +284,7 @@
 
                     const cpuConfig = {
                         type: 'bar',
-                        data: cpuData,
+                        data: cpuDataSet,
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
@@ -291,7 +309,7 @@
                                             };
                                         },
                                         label: function(tooltipItems, data) {
-                                            var item = tooltipItems.raw;
+                                            var item =  cpuRawData[tooltipItems.dataIndex];
                                             var label = "Cluster : " + item.clusterName;
                                             var label2 = "CPU % : "  + item.cpu.percent +  '%';
                                             var label3 = "CPU (cores) : " + item.cpu.usage + CPU_UNIT;
@@ -306,7 +324,7 @@
 
                     const memConfig = {
                         type: 'bar',
-                        data: memData,
+                        data: memDataSet,
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
@@ -331,7 +349,7 @@
                                             };
                                         },
                                         label: function(tooltipItems, data) {
-                                            var item = tooltipItems.raw;
+                                            var item =  memRawData[tooltipItems.dataIndex];
                                             var label = "Cluster : " + item.clusterName;
                                             var label2 = "MEMORY % : "  + item.memory.percent +  '%';
                                             var label3 = "MEMORY (bytes) : " + item.memory.usage + MEMORY_UNIT;
