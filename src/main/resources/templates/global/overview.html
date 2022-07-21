@@ -114,17 +114,6 @@
 
                 draw(data) {
 
-                    var legends = document.querySelectorAll('.legend');
-                    for (var i = 0; i < legends.length; i++) {
-                        func.removeHtml(legends[i]);
-                    };
-
-                    if (data.httpStatusCode == 500) {
-
-                    }
-
-
-
                     if(data.httpStatusCode == 200){
 
                         overviewData = data;
@@ -155,14 +144,15 @@
                         };
 
                         document.getElementById('clusterListTable').innerHTML = clusterListTableHTML;
+                        overview.knob();
+                        overview.chart();
 
                     }
 
                     document.getElementById('wrap').removeChild(document.getElementById('loading'));
 
 
-                    overview.knob();
-                    overview.chart();
+
                 },
 
                 knob() {
@@ -288,10 +278,6 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            parsing: {
-                                xAxisKey: 'name',
-                                yAxisKey: 'cpu.percent'
-                            },
                             scales: {
                                 y: {
                                     beginAtZero: true
@@ -328,10 +314,6 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            parsing: {
-                                xAxisKey: 'name',
-                                yAxisKey: 'memory.percent'
-                            },
                             scales: {
                                 y: {
                                     beginAtZero: true
