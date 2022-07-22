@@ -29,6 +29,8 @@ public class CustomIntercepter extends HandlerInterceptorAdapter {
 
 
         if (!(  url.indexOf("/css") >= 0 ||
+                url.indexOf("/dist") >= 0 ||
+                url.indexOf("/plugins") >= 0 ||
                 url.indexOf("/font") >= 0 ||
                 url.indexOf("/img") >= 0 ||
                 url.indexOf("/js") >= 0 ||
