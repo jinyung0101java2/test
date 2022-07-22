@@ -264,7 +264,7 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .table_style01 table tr td.ellips div {display:none; position:absolute; bottom:-70px; left:0px; width:70%; min-width:400px; height:70px; padding:10px 15px; overflow-y:scroll; overflow-x:hidden; background-color:#333333; color:#ffffff; white-space:normal; border:1px solid #ebebeb; z-index:3; text-align:left; font-size:13px;}
 .table_style01 table tr td.ellips:hover div {display:block;}
 .table_style01 table tr td.left {text-align:left;}
-.table_style01 table tr td a {color:#1c77ff; text-decoration:underline;}
+.table_style01 table tr td a { text-decoration:underline;}
 .table_style01 table tr td.box dl {position:relative; float:left; margin-right:5px; margin-bottom:5px; padding:0 8px; line-height:28px; background:#eee; border-radius:5px;}
 .table_style01 table tr td.box dl dt {float:left; padding-right:4px; color:#666;}
 .table_style01 table tr td.box dl dd {float:left;}

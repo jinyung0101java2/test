@@ -411,6 +411,7 @@ const func = {
 
 		var request = new XMLHttpRequest();
 
+		console.log('url:' + url);
 		setTimeout(function() {
 			request.open(method, url, false);
 			request.setRequestHeader('Content-type', header);
