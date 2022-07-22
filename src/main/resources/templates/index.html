@@ -30,22 +30,25 @@
         <article class="chart">
             <h4>Charts</h4>
             <ul>
-                <li id="deployChart">
+                <li>
                     <h5>Deployment</h5>
                     <!-- doughnutChart -->
-                    <div class="pie">
+                    <div>
+                        <canvas id="deploymentChart" style="height: 250px; max-width: 100%;"></canvas>
                     </div>
                     <a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">more</a>
                 </li>
-                <li id="podChart">
+                <li>
                     <h5>Pods</h5>
-                    <div class="pie">
+                    <div>
+                        <canvas id="podChart" style="height: 250px; max-width: 100%;"></canvas>
                     </div>
                     <a onclick="movePage(URI_CP_WORKLOADS_PODS)">more</a>
                 </li>
-                <li id="servicesChart">
-                    <h5>Replica Sets</h5>
-                    <div class="pie">
+                <li>
+                    <h5>ReplicaSets</h5>
+                    <div>
+                        <canvas id="replicaSetChart" style="height: 250px; max-width: 100%;"></canvas>
                     </div>
                     <a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">more</a>
                 </li>
@@ -65,6 +68,7 @@
 
     <script type="text/javascript">
         window.onload = () => {
+
             IS_OVERVIEW = true;
             func.init();
 
@@ -83,21 +87,98 @@
 
                 draw(data) {
 
-                    if (data.httpStatusCode == 500) {
+                    if (data.httpStatusCode == 200) {
+                        // dstatus setting
+                        func.countUp(document.getElementById('nameStatus'), data.namespacesCount);
+                        func.countUp(document.getElementById('deployStatus'), data.deploymentsCount);
+                        func.countUp(document.getElementById('podStatus'), data.podsCount);
+                        func.countUp(document.getElementById('userStatus'), data.usersCount);
+
+                        overview.chart(data);
 
                     }
-
-
-                    // dstatus setting
-                    func.countUp(document.getElementById('nameStatus'), data.namespacesCount);
-                    func.countUp(document.getElementById('deployStatus'), data.deploymentsCount);
-                    func.countUp(document.getElementById('podStatus'), data.podsCount);
-                    func.countUp(document.getElementById('userStatus'), data.usersCount);
-
-
                     document.getElementById('wrap').removeChild(document.getElementById('loading'));
                 },
+                chart(data) {
+                    /* ChartJS
+            * -------
+            * Here we will create a few charts using ChartJS
+            */
+                    const backgroundColor = [
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 159, 64, 0.5)',
+                        'rgba(255, 159, 64, 0.5)',
+                        'rgba(255, 205, 86, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(201, 203, 207, 0.5)'
+                    ];
+
+
+                    var dataId = ['deploymentChart', 'podChart', 'replicaSetChart'];
+                    var dataArr = [data.deploymentsUsage, data.podsUsage, data.replicaSetsUsage];
+
+
+                    for (var i = 0; i < dataId.length; i++) {
+
+                        var usage = dataArr[i];
+                        var labels = [];
+                        var data = [];
+
+                        for(var k = 0; k < usage.length; k++) {
+                            var item = usage[k];
+                            labels.push(item.type);
+                            data.push(item.percent);
+                        }
+
+
+                        const dataSets = {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColor
+                            }]
+                        };
+
+                        const config = {
+                            type: 'doughnut',
+                            data: dataSets,
+                            plugins: {
+                                tooltip: {
+                                    padding : 15,
+                                    callbacks: {
+                                        labelColor: function(context) {
+                                            return {
+                                                borderColor: 'rgb(54, 162, 235)',
+                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                borderRadius: 2,
+                                            };
+                                        },
+                                        label: function(tooltipItems, data) {
+                                            console.log(tooltipItems);
+                                            var item =  usage[tooltipItems.dataIndex];
+                                            console.log(item);
+                                            var label = "Percent : "  + item.percent +  '%';
+                                            var label2 = "Count : " + item.count;
+                                            return [label, label2];
+                                        },
+
+                                    }
+                                }
+                            }
+                        };
+
+                        new Chart(
+                            document.getElementById(dataId[i]),
+                            config
+                        );
+                    }
+                    ;
+
+
+                    //-------------
+                }
             }
+
 
             overview.init();
         }
