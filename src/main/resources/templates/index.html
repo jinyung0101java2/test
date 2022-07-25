@@ -104,7 +104,7 @@
             * -------
             * Here we will create a few charts using ChartJS
             */
-                    const backgroundColor = [
+                    var backgroundColor = [
                         'rgba(54, 162, 235, 0.5)',
                         'rgba(255, 159, 64, 0.5)',
                         'rgba(255, 159, 64, 0.5)',
@@ -119,49 +119,44 @@
 
 
                     for (var i = 0; i < dataId.length; i++) {
-
-                        var usage = dataArr[i];
+                        var usageRawData = dataArr[i];
                         var labels = [];
-                        var data = [];
 
-                        for(var k = 0; k < usage.length; k++) {
-                            var item = usage[k];
+                        for(var k = 0; k < usageRawData.length; k++) {
+                            var item = usageRawData[k];
                             labels.push(item.type);
-                            data.push(item.percent);
                         }
 
-
-                        const dataSets = {
+                        var dataSets = {
                             labels: labels,
                             datasets: [{
-                                data: data,
+                                data: usageRawData,
                                 backgroundColor: backgroundColor
                             }]
                         };
 
-                        const config = {
+
+                        var config = {
                             type: 'doughnut',
                             data: dataSets,
-                            plugins: {
-                                tooltip: {
-                                    padding : 15,
-                                    callbacks: {
-                                        labelColor: function(context) {
-                                            return {
-                                                borderColor: 'rgb(54, 162, 235)',
-                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                borderRadius: 2,
-                                            };
-                                        },
-                                        label: function(tooltipItems, data) {
-                                            console.log(tooltipItems);
-                                            var item =  usage[tooltipItems.dataIndex];
-                                            console.log(item);
-                                            var label = "Percent : "  + item.percent +  '%';
-                                            var label2 = "Count : " + item.count;
-                                            return [label, label2];
-                                        },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                parsing: {
+                                    key: 'percent'
+                                },
+                                plugins: {
+                                    tooltip: {
+                                        callbacks: {
+                                          label: function(tooltipItems, data) {
+                                            var item = tooltipItems.raw;
+                                            var label = item.type;
+                                            var label2 = "Percent : " + item.percent +  '%';
+                                            var label3 = "Count : "  + item.count;
+                                              return [label, label2, label3];
+                                            }
 
+                                        }
                                     }
                                 }
                             }
