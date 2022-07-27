@@ -217,6 +217,11 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .location fieldset ::-webkit-input-placeholder {color:rgba(255, 255, 255, 0.568);}
 .location fieldset button {float:left; width:31px; height:40px; background:url("../img/search_icon.png") no-repeat 0 0; background-position:right 50%; text-indent:-9999px;}
 
+/* base-top */
+.base-top {padding:60px 70px 0px 70px;}
+.base-top > div:first-child {background-color:#ffffff; padding:50px 40px 30px 40px; box-shadow:-3px 2px 5px -5px rgba(204, 204, 204, 0.5);}
+.base-top.tab-cont-wrap > div {background-color:#ffffff; padding:50px 40px 30px 40px; box-shadow:-3px 2px 5px -5px rgba(204, 204, 204, 0.5);}
+
 /* base */
 .base {padding:60px 70px 200px 70px;}
 .base > div:first-child {background-color:#ffffff; padding:50px 40px 30px 40px; box-shadow:-3px 2px 5px -5px rgba(204, 204, 204, 0.5);}
@@ -224,6 +229,9 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 
 /* title */
 .notice > h3 {font-family:'Apple SD Gothic Neo B', sans-serif; padding-top:9px; color:#47494d; font-size:26px; line-height:30px;}
+
+/* info */
+.info > h3 {font-family:'Apple SD Gothic Neo B', sans-serif; padding-top:9px; color:#47494d; font-size:26px; line-height:30px;}
 
 /*selectbox*/
 .selectbox {width:500px;}
@@ -300,6 +308,15 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .btn02 div button {width :120px; float:left; background-color:#0950bf; color:#fff; line-height:55px; height:52px; font-size:16px; font-weight:300; border-radius:2px; font-family:'Apple SD Gothic Neo L', sans-serif;}
 .btn02 div a:first-child {margin-right:6px;}
 .btn02 div button:first-child {margin-right:6px;}
+
+/* btn04 */
+.btn04 {margin-top:29px; overflow:hidden; text-align:center;  font-family:'Apple SD Gothic Neo L', sans-serif;}
+.btn04 > button {color:#fff; background-color:#bdbfc4; float:left; width:240px; line-height:55px; height:52px; font-size:16px; border-radius:2px;}
+/*.btn03 div {float:right; overflow:hidden;}
+.btn03 div a {width :120px; float:left; background-color:#0950bf; color:#fff; line-height:55px; height:52px; font-size:16px; font-weight:300; border-radius:2px;}
+.btn03 div button {width :120px; float:left; background-color:#0950bf; color:#fff; line-height:55px; height:52px; font-size:16px; font-weight:300; border-radius:2px; font-family:'Apple SD Gothic Neo L', sans-serif;}
+.btn03 div a:first-child {margin-right:6px;}
+.btn03 div button:first-child {margin-right:6px;}*/
 
 /* delete-btn */
 .delete-btn {color:#fff; background-color:#bdbfc4; width:120px; line-height:52px; height:50px; font-size:16px; border-radius:2px; margin-left: 10px; text-align:center;  font-family:'Apple SD Gothic Neo L', sans-serif;}
@@ -582,7 +599,10 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .creat-type2 .add-btn {margin-left: 0; margin-top: 20px; width: 200px; background-color: #0950bf;}
 .creat-type2 dl dd .con-txt {display: flex; align-items: center; margin-left: 15px;}
 .creat-type2 dl dd .con-txt p {font-size: 16px; color: #47494d; font-weight: 400; width: 100%; font-family: 'Apple SD Gothic Neo B', sans-serif; max-width: 80px;}
+.creat-type2 .info-section {padding: 50px 0 0 0;}
 
-
-.slabel { background-color: #eee; text-align: center; text-decoration: none; display: inline-block; padding:0 8px; line-height:28px; border-radius:5px;}
-.soverview {border-radius:8px;}
+.custom-access-title {padding: 25px 0;}
+.custom-access-contents-wrap {background-color: #fff; padding: 0 30px;}
+.custom-access-contents {background-color: #eee; padding: 10px; overflow: auto; margin: 0 0 15px 0; word-break: break-all;}
+.custom-access-copy-button {cursor:pointer;}
+#out_a {margin: -80px 0 0 0;}
