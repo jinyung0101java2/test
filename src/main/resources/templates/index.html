@@ -27,11 +27,11 @@
                 </dl>
             </div>
         </article>
-        <article class="chart">
-            <h4>Charts</h4>
+        <article class="chart base-type2">
+            <h4>Workloads</h4>
             <ul>
                 <li>
-                    <h5>Deployment</h5>
+                    <h5>Deployments</h5>
                     <!-- doughnutChart -->
                     <div>
                         <canvas id="deploymentChart" style="height: 250px; max-width: 100%;"></canvas>
@@ -51,6 +51,18 @@
                         <canvas id="replicaSetChart" style="height: 250px; max-width: 100%;"></canvas>
                     </div>
                     <a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">more</a>
+                </li>
+            </ul>
+        </article>
+        <article class="chart" style="padding-top: 40px ; !important;">
+            <ul>
+                <li class="soverview">
+                    <h5>TOP 5 Pods (CPU)</h5>
+                    <canvas id="topPodsCpuChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </li>
+                <li class="soverview">
+                    <h5>TOP 5 Pods (Memory)</h5>
+                    <canvas id="topPodsMemChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </li>
             </ul>
         </article>
@@ -94,74 +106,82 @@
                         func.countUp(document.getElementById('podStatus'), data.podsCount);
                         func.countUp(document.getElementById('userStatus'), data.usersCount);
 
-                        overview.chart(data);
+                        overview.workloadChart(data);
+                        overview.topChart(data);
 
                     }
                     document.getElementById('wrap').removeChild(document.getElementById('loading'));
                 },
-                chart(data) {
+                workloadChart(data) {
                     /* ChartJS
             * -------
             * Here we will create a few charts using ChartJS
             */
-                    const backgroundColor = [
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 159, 64, 0.5)',
-                        'rgba(255, 159, 64, 0.5)',
-                        'rgba(255, 205, 86, 0.5)',
-                        'rgba(153, 102, 255, 0.5)',
-                        'rgba(201, 203, 207, 0.5)'
+                    var backgroundColor = [
+                        {type: 'Running', background: 'rgba(76, 175, 80, 0.4)'},
+                        {type: 'Failed', background: 'rgba(231, 76, 60, 0.4)'},
+                        {type: 'Succeeded', background: 'rgba(142, 68, 173, 0.4)'},
+                        {type: 'Pending', background: 'rgba(241, 196, 15, 0.4)'},
+                        {type: 'Unknown', background: 'rgba(189, 195, 199, 0.4)'}
                     ];
 
+                    var otherBackgroundColor = [
+                        'rgba(149, 165, 166 , 0.4)',
+                        'rgba(127, 140, 141 , 0.4)',
+                        'rgba(52, 73, 94 , 0.4)',
+                        'rgba(255, 205, 86, 0.4)',
+                        'rgba(161, 136, 127, 0.4)'];
 
-                    var dataId = ['deploymentChart', 'podChart', 'replicaSetChart'];
-                    var dataArr = [data.deploymentsUsage, data.podsUsage, data.replicaSetsUsage];
+                    var dataId = ['deploymentChart', 'replicaSetChart', 'podChart'];
+                    var dataArr = [data.deploymentsUsage, data.replicaSetsUsage, data.podsUsage];
 
 
                     for (var i = 0; i < dataId.length; i++) {
-
-                        var usage = dataArr[i];
+                        var usageRawData = dataArr[i];
                         var labels = [];
-                        var data = [];
+                        var backgrounds =[];
 
-                        for(var k = 0; k < usage.length; k++) {
-                            var item = usage[k];
+                        for(var k = 0; k < usageRawData.length; k++) {
+                            var item = usageRawData[k];
                             labels.push(item.type);
-                            data.push(item.percent);
+
+                            var item_bg = backgroundColor.find( x => x.type === item.type);
+                            if(!isEmpty(item_bg)) {
+                                backgrounds.push(item_bg.background);
+                            }
                         }
 
+                        backgrounds =  backgrounds.concat(otherBackgroundColor);
 
-                        const dataSets = {
+                        var dataSets = {
                             labels: labels,
                             datasets: [{
-                                data: data,
-                                backgroundColor: backgroundColor
+                                data: usageRawData,
+                                backgroundColor: backgrounds
                             }]
                         };
 
-                        const config = {
+                        var config = {
                             type: 'doughnut',
                             data: dataSets,
-                            plugins: {
-                                tooltip: {
-                                    padding : 15,
-                                    callbacks: {
-                                        labelColor: function(context) {
-                                            return {
-                                                borderColor: 'rgb(54, 162, 235)',
-                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                borderRadius: 2,
-                                            };
-                                        },
-                                        label: function(tooltipItems, data) {
-                                            console.log(tooltipItems);
-                                            var item =  usage[tooltipItems.dataIndex];
-                                            console.log(item);
-                                            var label = "Percent : "  + item.percent +  '%';
-                                            var label2 = "Count : " + item.count;
-                                            return [label, label2];
-                                        },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                parsing: {
+                                    key: 'percent'
+                                },
+                                plugins: {
+                                    tooltip: {
+                                        callbacks: {
+                                          label: function(tooltipItems, data) {
+                                            var item = tooltipItems.raw;
+                                            var label = item.type;
+                                            var label2 = "Percent : " + item.percent +  '%';
+                                            var label3 = "Count : "  + item.count;
+                                              return [label, label2, label3];
+                                            }
 
+                                        }
                                     }
                                 }
                             }
@@ -171,17 +191,101 @@
                             document.getElementById(dataId[i]),
                             config
                         );
+                    };
+                },
+                topChart(data) {
+                    /* ChartJS
+            * -------
+            * Here we will create a few charts using ChartJS
+            */
+
+                    var topPodsCpuData = data.topPodsCPU;
+                    var topPodsMemData = data.topPodsMEM;
+
+                    var dataObj = [
+                        {id: 'topPodsCpuChart', type: 'cpu', data: data.topPodsCPU, label: 'CPU (cores)', backgroundColor: 'rgba(75, 192, 192, 0.4)', borderColor: 'rgba(75, 192, 192, 0.7)'},
+                        {id: 'topPodsMemChart', type : 'memory', data: data.topPodsMEM, label: 'Memory (bytes)', backgroundColor: 'rgba(54, 162, 235, 0.4)', borderColor: 'rgba(54, 162, 235, 0.7)'}
+                                   ];
+
+                    for(var i=0; i<dataObj.length; i++) {
+                        var topLabels = [];
+                        var topData = [];
+                        var rawData = dataObj[i];
+                        var usageRawData = rawData.data;
+                        var chartId = rawData.id;
+                        var type = rawData.type;
+                        var titleLabel =  rawData.label;
+                        var backgroundColor = rawData.backgroundColor;
+                        var borderColor = rawData.borderColor;
+
+                        for (var k = 0; k < usageRawData.length; k++) {
+                            var item = usageRawData[k];
+                            topLabels.push(chunkString(item.name, 10));
+                            topData.push(item[type].usage);
+                        };
+
+                        var dataSets = {
+                            labels: topLabels,
+                            datasets: [{
+                                label: titleLabel,
+                                data: topData,
+                                backgroundColor:  backgroundColor,
+                                borderWidth: 1
+                            }]
+                        };
+
+                        var config = {
+                            type: 'bar',
+                            data: dataSets,
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                plugins: {
+                                    tooltip: {
+                                        padding : 15,
+                                        callbacks: {
+                                            title: function(tooltipItems, data) {
+                                            },
+                                            labelColor: function(context) {
+                                                return {
+                                                    borderColor: 'rgb(75, 192, 192)',
+                                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                    borderRadius: 2,
+                                                };
+                                            },
+                                            label: function(tooltipItems, data) {
+                                                var index = tooltipItems.dataIndex;
+                                                var item = (tooltipItems.dataset.label == 'CPU (cores)' ?  topPodsCpuData: topPodsMemData)[index];
+                                                var label = item.name;
+                                                var label2 = 'Namespace : ' + item.namespace;
+                                                var label3 = 'CPU (cores) : ' + item.cpu.usage + CPU_UNIT;
+                                                var label4 = 'Memory (bytes) : ' + item.memory.usage + MEMORY_UNIT;
+                                                return [label, label2, label3, label4];
+                                            },
+
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        new Chart(
+                            document.getElementById(chartId),
+                            config
+                        );
                     }
-                    ;
 
-
-                    //-------------
-                }
+                },
             }
-
 
             overview.init();
         }
+
     </script>
 </th:block>
 
