@@ -63,12 +63,12 @@
         <article class="chart" style="padding-top: 40px ; !important;">
             <ul>
                 <li class="soverview">
-                    <h5>TOP Node 5 (CPU %)</h5>
-                       <canvas id="topCpuChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <h5>TOP 5 Nodes (CPU)</h5>
+                       <canvas id="topNodesCpuChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </li>
                 <li class="soverview">
-                    <h5>TOP Node 5 (MEMORY %)</h5>
-                    <canvas id="topMemChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <h5>TOP 5 Nodes (Memory)</h5>
+                    <canvas id="topNodesMemChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </li>
             </ul>
         </article>
@@ -142,7 +142,7 @@
 
                         document.getElementById('clusterListTable').innerHTML = clusterListTableHTML;
                         overview.knob();
-                        overview.chart();
+                        overview.chart(data);
                         overview.listEvent();
 
                     }
@@ -221,139 +221,93 @@
                     })
                     /* END JQUERY KNOB */
                 },
-                chart() {
+                chart(data) {
                     /* ChartJS
             * -------
             * Here we will create a few charts using ChartJS
             */
-                  var cpuRawData = overviewData.topNodesCPU;
-                  var memRawData = overviewData.topNodesMEM;
+                    var topNodesCpuData = data.topNodesCPU;
+                    var topNodesMemData = data.topNodesMEM;
 
-                  var cpuLabels = [];
-                  var cpuData = [];
-                  var memLabels = [];
-                  var memData = [];
+                    var dataObj = [
+                        {id: 'topNodesCpuChart', type: 'cpu', data: data.topNodesCPU, label: 'CPU %', backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 0.7)'},
+                        {id: 'topNodesMemChart', type : 'memory', data: data.topNodesMEM, label: 'MEMORY %', backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 0.7)'}
+                    ];
 
-                  for (var i = 0; i < cpuRawData.length; i++) {
-                      var item = cpuRawData[i];
-                       cpuLabels.push(item.name);
-                       cpuData.push(item.cpu.percent);
-                    };
+                    for(var i=0; i<dataObj.length; i++) {
+                        var topLabels = [];
+                        var topData = [];
+                        var rawData = dataObj[i];
+                        var usageRawData = rawData.data;
+                        var chartId = rawData.id;
+                        var type = rawData.type;
+                        var titleLabel =  rawData.label;
+                        var backgroundColor = rawData.backgroundColor;
+                        var borderColor = rawData.borderColor;
 
-                    for (var i = 0; i < memRawData.length; i++) {
-                        var item = memRawData[i];
-                        memLabels.push(item.name);
-                        memData.push(item.memory.percent);
-                    };
+                        for (var k = 0; k < usageRawData.length; k++) {
+                            var item = usageRawData[k];
+                            topLabels.push(chunkString(item.name, 10));
+                            topData.push(item[type].percent);
+                        };
 
+                        var dataSets = {
+                            labels: topLabels,
+                            datasets: [{
+                                label: titleLabel,
+                                data: topData,
+                                backgroundColor:  backgroundColor,
+                                borderColor: borderColor ,
+                                borderWidth: 1
+                            }]
+                        };
 
-                    const cpuDataSet = {
-                        labels: cpuLabels,
-                        datasets: [{
-                            label: 'CPU %',
-                            data: cpuData,
-                            backgroundColor:  'rgba(75, 192, 192, 0.2)',
-                            borderColor:  'rgba(75, 192, 192, 0.7)',
-                            borderWidth: 1
-                        }]
-                    };
+                        var config = {
+                            type: 'bar',
+                            data: dataSets,
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                plugins: {
+                                    tooltip: {
+                                        padding : 15,
+                                        callbacks: {
+                                            title: function(tooltipItems, data) {
+                                            },
+                                            labelColor: function(context) {
+                                                return {
+                                                    borderColor: 'rgb(75, 192, 192)',
+                                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                    borderRadius: 2,
+                                                };
+                                            },
+                                            label: function(tooltipItems, data) {
+                                                var index = tooltipItems.dataIndex;
+                                                var item = (tooltipItems.dataset.label == 'CPU %' ?  topNodesCpuData: topNodesMemData)[index];
+                                                var label = item.name;
+                                                var label2 = 'Cluster : ' + item.clusterName;
+                                                var label3 = 'CPU % : '+ item.cpu.percent +'%, CPU (cores) : ' + item.cpu.usage + CPU_UNIT;
+                                                var label4 = 'Memory % : '+ item.memory.percent +'%, MEMORY (bytes) : ' + item.memory.usage + MEMORY_UNIT;
+                                                return [label, label2, label3, label4];
+                                            },
 
-                    const memDataSet = {
-                        labels: memLabels,
-                        datasets: [{
-                            label: 'MEMORY %',
-                            data: memData,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor:  'rgba(54, 162, 235, 0.7)',
-                            borderWidth: 1
-                        }]
-                    };
-
-
-                    const cpuConfig = {
-                        type: 'bar',
-                        data: cpuDataSet,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            },
-                            plugins: {
-                                tooltip: {
-                                    padding : 15,
-                                    callbacks: {
-                                        labelColor: function(context) {
-                                            return {
-                                                borderColor: 'rgb(75, 192, 192)',
-                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                                borderRadius: 2,
-                                            };
-                                        },
-                                        label: function(tooltipItems, data) {
-                                            var item =  cpuRawData[tooltipItems.dataIndex];
-                                            var label = "Cluster : " + item.clusterName;
-                                            var label2 = "CPU % : "  + item.cpu.percent +  '%';
-                                            var label3 = "CPU (cores) : " + item.cpu.usage + CPU_UNIT;
-                                            return [label, label2, label3];
-                                        },
-
+                                        }
                                     }
                                 }
                             }
-                        }
-                    };
+                        };
 
-                    const memConfig = {
-                        type: 'bar',
-                        data: memDataSet,
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            },
-                            plugins: {
-                                tooltip: {
-                                    padding : 15,
-                                    callbacks: {
-                                        labelColor: function(context) {
-                                            return {
-                                                borderColor: 'rgb(54, 162, 235)',
-                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                borderRadius: 2,
-                                            };
-                                        },
-                                        label: function(tooltipItems, data) {
-                                            var item =  memRawData[tooltipItems.dataIndex];
-                                            var label = "Cluster : " + item.clusterName;
-                                            var label2 = "MEMORY % : "  + item.memory.percent +  '%';
-                                            var label3 = "MEMORY (bytes) : " + item.memory.usage + MEMORY_UNIT;
-                                            return [label, label2, label3];
-                                        },
+                        new Chart(
+                            document.getElementById(chartId),
+                            config
+                        );
+                    }
 
-                                    }
-                                }
-                            }
-                        }
-                    };
-
-
-                    const cpuChartDraw = new Chart(
-                        document.getElementById('topCpuChart'),
-                        cpuConfig
-                    );
-
-                    const memChartDraw = new Chart(
-                        document.getElementById('topMemChart'),
-                        memConfig
-                    );
-
-                    //-------------
                 },
                 listEvent() {
                     var listAll = document.getElementById('clusterListTable').querySelectorAll('a');
