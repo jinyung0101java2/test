@@ -42,14 +42,14 @@
                         <caption>Cluster Info</caption>
                         <thead>
                         <tr>
-                            <th scope="col">클러스터</th>
-                            <th scope="col">프로바이더</th>
-                            <th scope="col">K8s버전</th>
-                            <th scope="col">노드</th>
-                            <th scope="col">네임스페이스</th>
-                            <th scope="col">파드</th>
-                            <th scope="col">CPU</th>
-                            <th scope="col">MEM</th>
+                            <th scope="col" width="15%" th:text="#{M0812}"></th>
+                            <th scope="col" width="11%" th:text="#{M0813}"></th>
+                            <th scope="col" width="13%" th:text="#{M0814}"></th>
+                            <th scope="col" width="11%" th:text="Nodes"></th>
+                            <th scope="col" width="11%" th:text="Namespaces"></th>
+                            <th scope="col" width="11%" th:text="Pods"></th>
+                            <th scope="col" width="14%" th:text="'CPU ' + #{M0815}"></th>
+                            <th scope="col" width="14%" th:text="'Memory ' + #{M0815}"></th>
                         </tr>
                         </thead>
                         <tbody id="clusterListTable">
@@ -230,8 +230,8 @@
                     var topNodesMemData = data.topNodesMEM;
 
                     var dataObj = [
-                        {id: 'topNodesCpuChart', type: 'cpu', data: data.topNodesCPU, label: 'CPU %', backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 0.7)'},
-                        {id: 'topNodesMemChart', type : 'memory', data: data.topNodesMEM, label: 'MEMORY %', backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 0.7)'}
+                        {id: 'topNodesCpuChart', type: 'cpu', data: data.topNodesCPU, label: 'CPU %', backgroundColor: 'rgba(75, 192, 192, 0.4)', borderColor: 'rgba(75, 192, 192, 0.7)'},
+                        {id: 'topNodesMemChart', type : 'memory', data: data.topNodesMEM, label: 'Memory %', backgroundColor: 'rgba(54, 162, 235, 0.4)', borderColor: 'rgba(54, 162, 235, 0.7)'}
                     ];
 
                     for(var i=0; i<dataObj.length; i++) {
@@ -257,7 +257,6 @@
                                 label: titleLabel,
                                 data: topData,
                                 backgroundColor:  backgroundColor,
-                                borderColor: borderColor ,
                                 borderWidth: 1
                             }]
                         };
@@ -292,7 +291,7 @@
                                                 var label = item.name;
                                                 var label2 = 'Cluster : ' + item.clusterName;
                                                 var label3 = 'CPU % : '+ item.cpu.percent +'%, CPU (cores) : ' + item.cpu.usage + CPU_UNIT;
-                                                var label4 = 'Memory % : '+ item.memory.percent +'%, MEMORY (bytes) : ' + item.memory.usage + MEMORY_UNIT;
+                                                var label4 = 'Memory % : '+ item.memory.percent +'%, Memory (bytes) : ' + item.memory.usage + MEMORY_UNIT;
                                                 return [label, label2, label3, label4];
                                             },
 

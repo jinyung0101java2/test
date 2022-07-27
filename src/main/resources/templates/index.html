@@ -118,19 +118,19 @@
             * Here we will create a few charts using ChartJS
             */
                     var backgroundColor = [
-                        {type: 'Running', background: 'rgba(76, 175, 80, 0.3)'},
-                        {type: 'Failed', background: 'rgba(231, 76, 60, 0.3)'},
-                        {type: 'Succeeded', background: 'rgba(142, 68, 173, 0.3)'},
-                        {type: 'Pending', background: 'rgba(241, 196, 15, 0.3)'},
-                        {type: 'Unknown', background: 'rgba(189, 195, 199, 0.3)'}
+                        {type: 'Running', background: 'rgba(76, 175, 80, 0.4)'},
+                        {type: 'Failed', background: 'rgba(231, 76, 60, 0.4)'},
+                        {type: 'Succeeded', background: 'rgba(142, 68, 173, 0.4)'},
+                        {type: 'Pending', background: 'rgba(241, 196, 15, 0.4)'},
+                        {type: 'Unknown', background: 'rgba(189, 195, 199, 0.4)'}
                     ];
 
                     var otherBackgroundColor = [
-                        'rgba(149, 165, 166 , 0.3)',
-                        'rgba(127, 140, 141 , 0.3)',
-                        'rgba(52, 73, 94 , 0.3)',
-                        'rgba(255, 205, 86, 0.3)',
-                        'rgba(161, 136, 127, 0.3)'];
+                        'rgba(149, 165, 166 , 0.4)',
+                        'rgba(127, 140, 141 , 0.4)',
+                        'rgba(52, 73, 94 , 0.4)',
+                        'rgba(255, 205, 86, 0.4)',
+                        'rgba(161, 136, 127, 0.4)'];
 
                     var dataId = ['deploymentChart', 'replicaSetChart', 'podChart'];
                     var dataArr = [data.deploymentsUsage, data.replicaSetsUsage, data.podsUsage];
@@ -203,8 +203,8 @@
                     var topPodsMemData = data.topPodsMEM;
 
                     var dataObj = [
-                        {id: 'topPodsCpuChart', type: 'cpu', data: data.topPodsCPU, label: 'CPU (cores)', backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 0.7)'},
-                        {id: 'topPodsMemChart', type : 'memory', data: data.topPodsMEM, label: 'MEMORY (bytes)', backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 0.7)'}
+                        {id: 'topPodsCpuChart', type: 'cpu', data: data.topPodsCPU, label: 'CPU (cores)', backgroundColor: 'rgba(75, 192, 192, 0.4)', borderColor: 'rgba(75, 192, 192, 0.7)'},
+                        {id: 'topPodsMemChart', type : 'memory', data: data.topPodsMEM, label: 'Memory (bytes)', backgroundColor: 'rgba(54, 162, 235, 0.4)', borderColor: 'rgba(54, 162, 235, 0.7)'}
                                    ];
 
                     for(var i=0; i<dataObj.length; i++) {
@@ -230,7 +230,6 @@
                                 label: titleLabel,
                                 data: topData,
                                 backgroundColor:  backgroundColor,
-                                borderColor: borderColor ,
                                 borderWidth: 1
                             }]
                         };
@@ -265,7 +264,7 @@
                                                 var label = item.name;
                                                 var label2 = 'Namespace : ' + item.namespace;
                                                 var label3 = 'CPU (cores) : ' + item.cpu.usage + CPU_UNIT;
-                                                var label4 = 'MEMORY (bytes) : ' + item.memory.usage + MEMORY_UNIT;
+                                                var label4 = 'Memory (bytes) : ' + item.memory.usage + MEMORY_UNIT;
                                                 return [label, label2, label3, label4];
                                             },
 
