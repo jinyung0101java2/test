@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+    <div id="content" class="sub-page">
+            <article class="location">
+                <ul>
+                    <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_INFO_ACCESS)">Info</a></li>
+                    <li><a onclick="movePage(URI_CP_INFO_PRIVATE_REPOSITORY)">Private Repository</a></li>
+                </ul>
+                <!-- Click event class="on" -->
+                <fieldset>
+                    <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+                    <button type="submit" id="search" th:text="#{M0031}"></button>
+                </fieldset>
+            </article>
+            <article class="base-top">
+                <div class="info">
+                    <h3>Private Repository Info</h3>
+                    <div class="table_style01">
+                        <br>
+                        <p th:text="#{M0079}"></p>
+                        <br>
+                        <h4>What is Harbor?</h4>
+                        <p>Harbor is an open source registry that secures artifacts with policies and role-based access control, ensures images are scanned and free from vulnerabilities, and signs images as trusted.
+                        Harbor, a CNCF Graduated project, delivers compliance, performance, and interoperability to help you consistently and securely manage artifacts across cloud native compute platforms like Kubernetes and Docker.</p>
+                        <div class="btn04">
+                            <button onclick="window.open('https://goharbor.io/')">Harbor docs</button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="base">
+                <div class="info">
+                    <h3>How to Access</h3>
+                    <div class="table_style01">
+                        <br>
+                        <i class="fa fa-info-circle"></i>&nbsp;<span th:text="#{M0080}"></span>
+                        <div class="btn04">
+                            <button id="harborBtn" th:text="#{M0081}"></button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+    window.onload = () => {
+
+        func.init(5, 1);
+        //callbackFuncNameLoad();
+        document.getElementById('nameSpaceTitleDiv').style.display="none";
+        document.getElementById('clusterTitleDiv').style.display="none";
+
+        const privateRepositoryInfo = {
+
+            init(){
+
+                func.loadData('GET', `${func.url}privateRegistry/cp-harbor`, 'application/json', privateRepositoryInfo.event);
+
+            },
+
+            event(data){
+
+                document.getElementById('harborBtn').addEventListener('click', (e) => {
+                    window.open('about:blank').location.href = data.repositoryUrl;
+                }, false);
+            },
+
+        };
+
+        privateRepositoryInfo.init();
+    }
+</script>
+</th:block>
+</html>
