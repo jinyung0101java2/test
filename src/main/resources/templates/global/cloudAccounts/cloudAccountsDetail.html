@@ -82,24 +82,43 @@
                     accountInfo = data;
 
                     var html = ``;
-                    if (data.provider == 'GCP') {
-                        html = `<tr><th scope="row" class="left">Provider-Info</th><td class="left">
+
+                    switch (data.provider) {
+                        case 'GCP':
+                            html = `<tr><th scope="row" class="left">Provider-Info</th><td class="left">
                                 <input class="left" id="cloudAccountGCPProviderInfo" type="password" readonly>
                                 </td></tr>`;
-                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
-                        document.getElementById('cloudAccountGCPProviderInfo').value = MASKED_DATA;
-
-
-                    } else if (data.provider == 'AWS') {
-                        html += `<tr><th scope="row" class="left">Access-Key</th><td class="left box">
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountGCPProviderInfo').value = MASKED_DATA;
+                            break;
+                        case 'AWS':
+                            html += `<tr><th scope="row" class="left">Access-Key</th><td class="left box">
                                     <input class="left" id="cloudAccountAWSAccessKey" type="password" readonly>
                                 </td></tr>`;
-                        html += `<tr><th scope="row" class="left">Secret-Key</th><td class="left">
+                            html += `<tr><th scope="row" class="left">Secret-Key</th><td class="left">
                                     <input class="left" id="cloudAccountAWSSecretKey" type="password" readonly>
                                 </td></tr>`;
-                        func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
-                        document.getElementById('cloudAccountAWSAccessKey').value = MASKED_DATA;
-                        document.getElementById('cloudAccountAWSSecretKey').value = MASKED_DATA;
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountAWSAccessKey').value = MASKED_DATA;
+                            document.getElementById('cloudAccountAWSSecretKey').value = MASKED_DATA;
+                            break;
+                        case 'OPENSTACK':
+                            html +=  `<tr><th scope="row" class="left">Auth_URL</th><td class="left box">
+                                    <input class="left" id="cloudAccountOPENSTACKURL" type="password" readonly>
+                                </td></tr>`;
+                            html +=  `<tr><th scope="row" class="left">Password</th><td class="left box">
+                                    <input class="left" id="cloudAccountOPENSTACKPassword" type="password" readonly>
+                                </td></tr>`;
+                            html +=  `<tr><th scope="row" class="left">UserName</th><td class="left box">
+                                    <input class="left" id="cloudAccountOPENSTACKUserName" type="password" readonly>
+                                </td></tr>`;
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountOPENSTACKURL').value = MASKED_DATA;
+                            document.getElementById('cloudAccountOPENSTACKPassword').value = MASKED_DATA;
+                            document.getElementById('cloudAccountOPENSTACKUserName').value = MASKED_DATA;
+                            break;
+                        default:
+                            //FIXME! Error 처리
                     }
 
                     html = `<tr><th scope="row" class="left">Created</th><td class="left" id="created"></td></tr>`;
@@ -127,7 +146,6 @@
                     };
                     //     //FIXME! alert 창 띄우기
 
-                    console.log("updateAccount: " + JSON.stringify(updateAccount));
                     func.saveData('PATCH', `${func.url}accounts`, JSON.stringify(updateAccount), true, 'application/json', cloudAccountsDetail.returnPage());
                 },
 

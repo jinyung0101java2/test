@@ -66,9 +66,7 @@
                 },
 
                 draw(data) {
-                    console.log(data);
                     info = new Map(Object.entries(data));
-                    console.log(info);
                     let html = ``;
                     for (let key of info.keys()) {
                         html += `<option value="${key}"`;
@@ -76,8 +74,6 @@
                         html += `>${key}</option>`;
                     }
                     func.appendHtml(document.getElementById('provider'), html, 'select');
-
-                    // document.getElementById('user').querySelector('option').setAttribute('selected', 'selected');
 
                     createCloudAccounts.event();
                 },
@@ -114,9 +110,24 @@
                                     "projectName": document.getElementById('projectName').value
                                 }
                             };
+                            break;
+                        case 'OPENSTACK':
+                            createName = {
+                                "resourceName": document.getElementById('name').value,
+                                "providerType": providerType,
+                                "providerInfo": {
+                                    "auth_url": document.getElementById('auth_url').value,
+                                    "password": document.getElementById('password').value,
+                                    "user_name" : document.getElementById('user_name').value
+                                    }
+                            };
+                            break;
+                        default:
+                            //FIXME! error 처리.
+
+
                     }
                     //check FILE
-                    console.log("createName: " + JSON.stringify(createName));
                     func.saveData('POST', `${func.url}accounts`, JSON.stringify(createName), true, 'application/json', func.historyBack());
 
                 }
@@ -151,7 +162,6 @@
         providerInfo = "";
         let file = event.target.files[0];
         if (file.type && !file.type.endsWith('json')) {
-            // console.log('File is not an Json.');
             func.alertPopup('ERROR', MSG_INVALID_FORMAT, false, MSG_CLOSE, true);
             return; //FIXME! Alert
         }

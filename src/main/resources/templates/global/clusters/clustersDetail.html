@@ -97,9 +97,14 @@
             let isHide = false;
             let clusterInfo = '';
             const clusterDetail = {
-                init(){
 
-                    // nameSpace 정보 조회
+                init(){
+                    clusterDetail.load();
+                    clusterDetail.event();
+                },
+
+                load() {
+                    func.loading();
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('commonName')}`, 'application/json', clusterDetail.draw);
                 },
 
@@ -114,7 +119,9 @@
                     document.getElementById('clusterDetailCreated').value = data.created;
                     document.getElementById('clusterDetailDescription').value = data.description;
 
-                    clusterDetail.event()
+                    if(document.getElementById('loading')){
+                        document.getElementById('wrap').removeChild(document.getElementById('loading'));
+                    }
                 },
 
                 event(){
@@ -139,7 +146,6 @@
                         "clusterType": clusterInfo.clusterType,
                         "description": document.getElementById('clusterDetailDescription').value
                     };
-                    console.log("updateAccount: " + JSON.stringify(updateAccount));
                     //FIXME!!
                     func.saveData('PUT', `${func.url}clusters`, JSON.stringify(updateAccount), true, 'application/json', clusterDetail.returnPage());
                 },

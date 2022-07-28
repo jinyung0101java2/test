@@ -105,7 +105,6 @@
                         "provider": document.getElementById('provider').value,
                         "hclScript": document.getElementById('code').value
                     };
-                    console.log(JSON.stringify(updateTemplate));
                     func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', instanceCodeDetail.returnPage);
                 },
 
