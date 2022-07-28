@@ -70,9 +70,7 @@
                 },
 
                 draw(data) {
-                    console.log(data);
                     info = new Map(Object.entries(data));
-                    console.log(info);
                     let html = ``;
                     for (let key of info.keys()) {
                         html += `<option value="${key}"`;
@@ -96,12 +94,11 @@
 
                     createName = {
                         "resourceName": document.getElementById('name').value,
-                        "provider": providerType,
+                        "providerType": providerType,
                         "hclScript": document.getElementById('code').value
                     };
 
                     //check FILE
-                    console.log("createName: " + JSON.stringify(createName));
                     func.saveData('POST', `${func.url}templates`, JSON.stringify(createName), true, 'application/json', createCodeTemplates.returnPage());
                     //FIXME!!, 확인 버튼 클릭 전 이동하는 이슈
                 },

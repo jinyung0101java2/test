@@ -89,8 +89,7 @@
 				},
 
 				draw(data){
-					console.log(data);
-					if(cluster.offset == 0) cluster.allItemCount = data.items.length;
+					if(cluster.offset == 0) cluster.allItemCount = data.itemMetaData.allItemCount;
                     let html;
 					if(data.httpStatusCode == 200){
 						if(data.items.length > 0){
@@ -100,7 +99,7 @@
 											<td></td>
 											<td></td>
 											<td></td>
-											<td></td>
+											<td>${data.items[i].isActive}</td>
 											</tr>`;
 								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 							}

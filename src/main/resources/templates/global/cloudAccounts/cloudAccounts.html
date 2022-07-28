@@ -85,8 +85,7 @@
 				},
 
 				draw(data){
-					console.log(data);
-					if(account.offset == 0) account.allItemCount = data.items.length;
+					if(account.offset == 0) account.allItemCount = data.itemMetaData.allItemCount;
                     let html;
 					if(data.httpStatusCode == 200){
 						if(data.items.length > 0){

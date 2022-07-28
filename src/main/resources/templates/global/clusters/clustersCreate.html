@@ -27,7 +27,7 @@
                     <dl>
                         <dt><label for="createName">Cluster Name</label></dt>
                         <dd>
-                            <input id="createName" type="text" placeholder="Test-Name" disabled/>
+                            <input id="createName" type="text" placeholder="Cluster-Name" disabled/>
                         </dd>
                     </dl>
                     <dl>
@@ -35,6 +35,7 @@
                         <dd>
                             <fieldset>
                                 <select id="createProvider" onchange="changeProviderSelect()">
+                                    <option selected>Select Option</option>
                                 </select>
                             </fieldset>
                         </dd>
@@ -58,6 +59,7 @@
                         </dd>
                     </dl>
                     <dl>
+                        <dt><label>Template Detail</label></dt>
                         <dd>
                             <textarea id="createTemplatesDetail" rows="30"></textarea>
                         </dd>
@@ -130,17 +132,14 @@
                 },
 
                 draw(data) {
-                    console.log(data);
                     info = new Map(Object.entries(data));
-                    console.log(info);
                     let html = ``;
                     for (let key of info.keys()) {
                         html += `<option value="${key}"`;
-                        if (key == 'AWS') html += ` selected`;
                         html += `>${key}</option>`;
                     }
-                    func.appendHtml(document.getElementById('createProvider'), html, 'select');
-                    func.appendHtml(document.getElementById('registerProvider'), html, 'select');
+                    func.appendHtml(document.getElementById('createProvider'), html);
+                    func.appendHtml(document.getElementById('registerProvider'), html);
 
                     createClusters.event();
                 },
@@ -152,7 +151,6 @@
                     document.getElementById('register').addEventListener('click', () => {
                         func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createClusters.save);
                     }, false);
-                    changeProviderSelect();
                 },
 
                 save() {
@@ -194,27 +192,27 @@
 
             let html = ``;
             let provider = document.querySelector('#createProvider > option:checked').value;
-            func.loadData('GET', `${func.url}accounts/provider/${provider}`, 'application/json', (e) => {
-                for (let item of e.items) {
-                    html += `<option value="${item.name}" data-id="${item.id}"`;
-                    html += `>${item.name}</option>`;
-                }
+            if(provider != 'Select Option') {
+                func.loadData('GET', `${func.url}accounts/provider/${provider}`, 'application/json', (e) => {
+                    for (let item of e.items) {
+                        html += `<option value="${item.name}" data-id="${item.id}"`;
+                        html += `>${item.name}</option>`;
+                    }
 
-                func.appendHtml(document.getElementById('createCloudAccount'), html, 'dl');
-            });
+                    func.appendHtml(document.getElementById('createCloudAccount'), html, 'dl');
+                });
 
-            func.loadData('GET', `${func.url}templates/provider/${provider}`, 'application/json', (e) => {
-                // console.log('itemList : ' + JSON.stringify(itemList));
-                html = ``;
-                for (let item of e.items) { //FIXME!, 없는 경우
-                    // console.log('item : ' + JSON.stringify(item));
+                func.loadData('GET', `${func.url}templates/provider/${provider}`, 'application/json', (e) => {
+                    html = ``;
+                    for (let item of e.items) { //FIXME!, 없는 경우
 
-                    html += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-                }
+                        html += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+                    }
 
-                func.appendHtml(document.getElementById('createTemplates'), html, 'dl');
-                changeTemplateSelect();
-            });
+                    func.appendHtml(document.getElementById('createTemplates'), html, 'dl');
+                    changeTemplateSelect();
+                });
+            }
 
 
         }

@@ -54,7 +54,6 @@
 
 			func.init(1, 2);
 			callbackFuncNameLoad();
-
 			const template = {
 				offset : 0, // 로드 페이지 넘버
 				limit : 10, // 로드 게시물 개수
@@ -85,8 +84,7 @@
 				},
 
 				draw(data){
-					console.log(data);
-					if(template.offset == 0) template.allItemCount = data.items.length;
+					if(template.offset == 0) template.allItemCount = data.itemMetaData.allItemCount;
 					let html;
 					if(data.httpStatusCode == 200){
 						if(data.items.length > 0){
@@ -142,14 +140,12 @@
 					for(var i=template.offset*10; i<=listAll.length-1; i++){
 						listAll[i].addEventListener('click', (e) => {
 							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
-						// sessionStorage.setItem('nameSpace', e.target.getAttribute('data-spac'));
 
 						document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
 					}, true);
 					}
 				},
 			};
-
 			template.init();
 		}
 	</script>
