@@ -233,6 +233,12 @@ public class TerramanService {
         }
         LOGGER.info("ssh connection :: " + cResult);
 
+        try {
+            Thread.sleep(60000);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         /*************************************************************************************************************************************/
 
@@ -265,6 +271,8 @@ public class TerramanService {
             sb.append(line);
         }
 
+        sb.append("\\n\\n" + "export WORKER_NODE_CNT=" + workerCnt + "\\n");
+
         for(InstanceModel obj : instanceList) {
             String line = "";
             if( obj.getResourceName().contains("worker") ) {
@@ -278,8 +286,6 @@ public class TerramanService {
             }
             sb.append(line);
         }
-
-        sb.append("\\n\\n" + "export WORKER_NODE_CNT=" + workerCnt + "\\n");
 
         cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -351,12 +357,12 @@ public class TerramanService {
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("terraform 삭제 중 오류가 발생하였습니다." + cResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
-        }
-
-        cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER);
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
-            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        } else {
+            cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER);
+            if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                LOGGER.info("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
+                return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+            }
         }
 
         return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
