@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{layouts/global}">
+	  layout:decorate="~{layouts/layout}">
 <div layout:fragment="content">
 	<div id="content" class="sub-page">
 		<article class="location">
@@ -52,8 +52,9 @@
 	<script type="text/javascript">
 		window.onload = () => {
 
-			func.init(1, 2);
-			callbackFuncNameLoad();
+			IS_GLOBAL = true;
+			func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.INSTANCE_CODE_TEMPLATE);
+
 			const template = {
 				offset : 0, // 로드 페이지 넘버
 				limit : 10, // 로드 게시물 개수

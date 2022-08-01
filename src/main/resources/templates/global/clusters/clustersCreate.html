@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/global}">
+      layout:decorate="~{layouts/layout}">
 
 <div layout:fragment="content">
     <div id="content" class="sub-page clusters">
@@ -122,7 +122,8 @@
 
         window.onload = () => {
             let info;
-            func.init(1, 0);
+            IS_GLOBAL = true;
+            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.CLUSTERS);
 
 
             const createClusters = {
