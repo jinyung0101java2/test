@@ -31,7 +31,7 @@
                             </fieldset>
                         </dd>
                     </dl>
-                    <div class="check-quotas">
+                    <div class="check-quotas" style="margin-top: 40px;">
                         <p>Resource Quotas</p>
                         <a href="javascript:;" class="resAdd" th:text="#{M0027}"></a>
                     </div>
@@ -109,7 +109,7 @@
     <script type="text/javascript">
         window.onload = () => {
 
-            func.init(0, 0);
+            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.NAMESPACES);
 
             const createNamespaces = {
                 init() {
