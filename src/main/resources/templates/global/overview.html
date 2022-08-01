@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/global}">
+      layout:decorate="~{layouts/layout}">
 <th:block layout:fragment="style">
 </th:block>
 <div layout:fragment="content">
@@ -90,30 +90,23 @@
 <script type="text/javascript">
         window.onload = () => {
             IS_GLOBAL = true;
-            IS_OVERVIEW = true;
-            var overviewData = null;
-            func.init();
-            callbackFuncNameLoad();
-
+            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.G_OVERVIEW);
 
             const overview = {
                 init() {
                     func.nameLoad = overview.load;
+                     overview.load();
                 },
 
                 load() {
                     func.loading();
-
-                    // nameSpace 정보 조회
+                    // global overview 정보 조회
                    func.loadData('GET', `${func.url}global/overview`, 'application/json', overview.draw);
-                    IS_OVERVIEW = false;
                 },
 
                 draw(data) {
 
                     if(data.httpStatusCode == 200){
-
-                        overviewData = data;
                         // all count status
                         func.countUp(document.getElementById('clusterStatus'), data.clusterStatus);
                         func.countUp(document.getElementById('namespaceStatus'), data.namespaceStatus);

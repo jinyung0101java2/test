@@ -4,17 +4,27 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
 import org.paasta.container.platform.web.admin.common.CustomIntercepterService;
+import org.paasta.container.platform.web.admin.login.model.Users;
 import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
+import org.paasta.container.platform.web.admin.security.DashboardAuthenticationDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 /**
@@ -129,6 +139,30 @@ public class LoginController {
         }
 
         return ConstantsUrl.LANG_EN;
+    }
+
+
+
+    /**
+     * User 클러스터 권한 설정 (Setting User Cluster Authority)
+     */
+    @ApiOperation(value = "User 클러스터 권한 설정 (Setting User Cluster Authority)", nickname = "setUserClusterAuthority")
+    @PutMapping(value = ConstantsUrl.URI_API_SET_CLUSTER_AUTHORITY)
+    @ResponseBody
+    public void setUserClusterAuthority(@RequestBody String userType) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UsersLoginMetaData usersLoginMetaData = ((DashboardAuthenticationDetails) authentication.getDetails()).getUsersLoginMetaData();
+
+        List<GrantedAuthority> updatedAuthorities  =
+                Arrays.asList(new SimpleGrantedAuthority(usersLoginMetaData.getUserType()),new SimpleGrantedAuthority(userType));
+
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication,
+                "N/A", updatedAuthorities);
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        System.out.println("auth:" + SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
     }
 
 }

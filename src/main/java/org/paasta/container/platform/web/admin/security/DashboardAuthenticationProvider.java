@@ -18,11 +18,11 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -96,6 +96,7 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
 
 
         // 3. CP-API 로그인 처리
+        List<SimpleGrantedAuthority> roles = null;
         try {
             AuthenticationResponse authenticationResponse = providerService.loginUsers(users);
 
@@ -105,6 +106,7 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
                 LOGGER.info("###############################################################");
                 UsersLoginMetaData usersLoginMetaData = loginService.setAuthDetailsLoginMetaData(authenticationResponse);
                 dashboardAuthenticationDetails.setUsersLoginMetaData(usersLoginMetaData);
+                roles =  Arrays.asList(new SimpleGrantedAuthority(usersLoginMetaData.getUserType()));
             } else {
                 throw new InternalAuthenticationServiceException(authenticationResponse.getResultMessage());
             }
@@ -113,11 +115,8 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
         }
 
         try {
-
-            List authorities = new ArrayList();
-
-            //이상없으면 세션
-            authentication = new OAuth2Authentication(((OAuth2Authentication) authentication).getOAuth2Request(), new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), "N/A", authorities));
+           //이상없으면 세션
+            authentication = new OAuth2Authentication(((OAuth2Authentication) authentication).getOAuth2Request(), new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), "N/A", roles));
             ((OAuth2Authentication) authentication).setDetails(dashboardAuthenticationDetails);
 
         } catch (Exception e) {

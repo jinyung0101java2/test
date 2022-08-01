@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <aside th:fragment="asideFragment">
     <nav>
         <ul>
-            <li class="plus">
+            <li class="plus" aside_d1="global" sec:authorize="hasAnyAuthority('SUPER_ADMIN', 'CLUSTER_ADMIN')">
+                <a href="javascript:" class="dep01">Global</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_BASE_URL)" aside_d2="g_overview">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)" aside_d2="clusters">Clusters</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)" aside_d2="cloud_account">Cloud Account</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" aside_d2="instance_code_template">Instance Code Template</a></li>
+                </ul>
+            </li>
+            <li class="plus" aside_d1="clusters">
                 <a href="javascript:" class="dep01">Clusters</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)">Nodes</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)" aside_d2="nodes">Nodes</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)" aside_d2="namespaces">Namespaces</a></li>
                 </ul>
             </li>
             <li class="plus">

@@ -53,6 +53,7 @@ public class ConstantsUrl {
     public static final String URI_AUTHENTICATION_FAILED = "/error/authenticationFailed";
     public static final String URI_CP_LOGOUT ="/logout";
 
+    public static final String URI_API_SET_CLUSTER_AUTHORITY="/setAuthority";
 
     //CP-API REQUEST URI
     public static final String URL_API_LOGIN = "/login";
