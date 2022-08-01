@@ -38,7 +38,7 @@ public class TerramanConstant {
         return "cat /home/ubuntu/.ssh/" + clusterId + "_id_rsa.pub";
     }
 
-    public static final String SSH_KEY_COMMAND = "ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -N '' -m PEM";
+    public static final String SSH_KEY_COMMAND = "ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -N ''";
     public static final String SSH_KEY_RSA_COMMAND = "cat /home/ubuntu/.ssh/id_rsa.pub";
 
 
@@ -102,7 +102,7 @@ public class TerramanConstant {
     public static final String TERRAFORM_INIT_COMMAND = "terraform init";
     public static final String TERRAFORM_PLAN_COMMAND = "terraform plan";
     public static final String TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve";
-    public static final String TERRAFORM_DESTROY_COMMAND = "terraform destroy -auto-approve";
+    public static final String TERRAFORM_DESTROY_COMMAND = "terraform destroy";
 
 
 
