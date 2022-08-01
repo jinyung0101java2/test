@@ -1,54 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <aside th:fragment="asideFragment">
     <nav>
         <ul>
-            <li class="plus">
+            <li class="plus" aside_d1="global" sec:authorize="hasAnyAuthority('SUPER_ADMIN', 'CLUSTER_ADMIN')">
+                <a href="javascript:" class="dep01">Global</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_BASE_URL)" aside_d2="g_overview">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)" aside_d2="clusters">Clusters</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)" aside_d2="cloud_account">Cloud Account</a></li>
+                    <li><a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" aside_d2="instance_code_template">Instance Code Template</a></li>
+                </ul>
+            </li>
+            <li class="plus" aside_d1="clusters">
                 <a href="javascript:" class="dep01">Clusters</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)">Nodes</a></li>
+                    <li><a onclick="movePage(URI_CP_INDEX_URL)" aside_d2="c_overview">Overview</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)" aside_d2="nodes">Nodes</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)" aside_d2="namespaces">Namespaces</a></li>
                 </ul>
             </li>
-            <li class="plus">
+            <li class="plus" aside_d1="workloads">
                 <a href="javascript:" class="dep01">Workloads</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)">Deployments</a></li>
-                    <li><a onclick="movePage(URI_CP_WORKLOADS_PODS)">Pods</a></li>
-                    <li><a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)">Replica Sets</a></li>
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_DEPLOYMENTS)" aside_d2="deployments">Deployments</a></li>
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_PODS)" aside_d2="pods">Pods</a></li>
+                    <li><a onclick="movePage(URI_CP_WORKLOADS_REPLICASETS)" aside_d2="replicasets">Replica Sets</a></li>
                 </ul>
             </li>
-            <li class="plus">
+            <li class="plus" aside_d1="services">
                 <a href="javascript:" class="dep01">Services</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)">Services</a></li>
-                    <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)">Ingresses</a></li>
+                    <li><a onclick="movePage(URI_CP_SERVICES_SERVICES)" aside_d2="services">Services</a></li>
+                    <li><a onclick="movePage(URI_CP_SERVICES_INGRESSES)" aside_d2="ingresses">Ingresses</a></li>
                 </ul>
             </li>
-            <li class="plus">
+            <li class="plus" aside_d1="storages">
                 <a href="javascript:" class="dep01">Storages</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)">Persistent Volumes</a></li>
-                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS)">Persistent Volume Claims</a></li>
-                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)">Storage Classes</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)" aside_d2="persistent_volumes">Persistent Volumes</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS)" aside_d2="persistent_volume_claims">Persistent Volume Claims</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)" aside_d2="storage_classes">Storage Classes</a></li>
                 </ul>
             </li>
-            <li class="plus">
+            <li class="plus" aside_d1="managements">
                 <a href="javascript:" class="dep01">Managements</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)">Users</a></li>
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)">Roles</a></li>
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)">Resource Quotas</a></li>
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_LIMITRANGES)">Limit Ranges</a></li>
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)">ConfigMaps</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)" aside_d2="users">Users</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)" aside_d2="roles">Roles</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)" aside_d2="resource_quotas">Resource Quotas</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_LIMITRANGES)" aside_d2="limit_ranges">Limit Ranges</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)" aside_d2="configmaps">ConfigMaps</a></li>
                 </ul>
             </li>
-            <li class="plus">
+            <li class="plus" aside_d1="info">
                 <a href="javascript:" class="dep01">Info</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_INFO_ACCESS)">Access</a></li>
-                    <li><a onclick="movePage(URI_CP_INFO_PRIVATE_REPOSITORY)">Private Repository</a></li>
+                    <li><a onclick="movePage(URI_CP_INFO_ACCESS)" aside_d2="access">Access</a></li>
+                    <li><a onclick="movePage(URI_CP_INFO_PRIVATE_REPOSITORY)" aside_d2="private_repository">Private Repository</a></li>
                 </ul>
             </li>
         </ul>

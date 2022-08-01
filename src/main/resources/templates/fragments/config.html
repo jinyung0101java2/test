@@ -56,6 +56,8 @@
      var LANG_KO = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_KO}]];
      var LANG_EN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_EN}]];
 
+     var URI_API_SET_CLUSTER_AUTHORITY = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_API_SET_CLUSTER_AUTHORITY}]];
+
      // VALUE
      var NAMESPACE_ALL_VALUE ='ALL';
      var AUTH_SUPER_ADMIN = "SUPER_ADMIN";
@@ -121,9 +123,46 @@
      var CPU_UNIT = "m";
      var MEMORY_UNIT = "Mi";
 
+
+     var ASIDE_DP1 = {
+         GLOBAL : 'global',
+         CLUSTERS: 'clusters',
+         WORKLOADS: 'workloads',
+         SERVICES: 'services',
+         STORAGES: 'storages',
+         MANAGEMENTS: 'managements',
+         INFO: 'info'
+     }
+
+     var ASIDE_DP2 = {
+         G_OVERVIEW : 'g_overview',
+         CLUSTERS: 'clusters',
+         CLOUD_ACCOUNT: 'cloud_account',
+         INSTANCE_CODE_TEMPLATE : 'instance_code_template',
+         C_OVERVIEW : 'c_overview',
+         NODES: 'nodes',
+         NAMESPACES: 'namespaces',
+         DEPLOYMENTS: 'deployments',
+         PODS: 'pods',
+         REPLICASETS: 'replicasets',
+         SERVICES: 'services',
+         INGRESSES: 'ingresses',
+         PERSISTENT_VOLUMES: 'persistent_volumes',
+         PERSISTENT_VOLUME_CLAIMS: 'persistent_volume_claims',
+         STORAGE_CLASSES: 'storage_classes',
+         USERS: 'users',
+         ROLES: 'roles',
+         RESOURCE_QUOTAS: 'resource_quotas',
+         LIMIT_RANGES: 'limit_ranges',
+         CONFIGMAPS: 'configmaps',
+         ACCESS: 'access',
+         PRIVATE_REPOSITORY: 'private_repository'
+     }
 </script>
+
+
 <script>
-function movePage(locationName) {
+ function movePage(locationName) {
     location.href = locationName;
 }
 

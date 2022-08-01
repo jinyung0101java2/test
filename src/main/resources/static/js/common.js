@@ -12,35 +12,30 @@ const func = {
 
 		// Locale Language 조회
 		func.getLocaleLang();
-		func.loadData('GET', `${func.url}users/clustersList?isGlobal=${IS_GLOBAL}`, 'application/json', func.clusters);
+
+
+		if(IS_GLOBAL == false) {
+			func.loadData('GET', `${func.url}users/clustersList?isGlobal=${IS_GLOBAL}`, 'application/json', func.clusters);
+		}
+		else {
+			document.getElementById('clusterTitleDiv').style.display="none";
+			document.getElementById('nameSpaceTitleDiv').style.display="none";
+		}
+
 
 		// navigation 초기 선택 설정
-		if(depth1 >= 0){
-			var nav1d = document.querySelector('nav').querySelectorAll('.dep01');
-			var nav2b = document.querySelectorAll('.sub');
+		if(depth1.length >= 0){
+			//depth1 toggle on
+			document.querySelector('[aside_d1='+depth1+']').classList.toggle('on', true);
+			// depth2 toggle on
+			document.querySelector('[aside_d2='+depth2+']').classList.toggle('on', true);
 
-			nav1d[depth1].parentNode.classList.toggle('on', true);
-
-			if(depth2 >= 0){
-				if(depth1 >= 6) depth1--;
-
-				var nav2d = nav2b[depth1].querySelectorAll('a');
-
-				nav2d[depth2].classList.toggle('on', true);
-			} else {
-				var nav2d = nav2b[depth1].querySelectorAll('a');
-
-				nav1d[depth1].classList.toggle('on', true);
-
-			};
 		}
 
 		// navigation height 설정
 		var navSub = document.querySelector('nav').querySelectorAll('.sub');
-
 		for(var i=0; i<=navSub.length-1; i++){
 			var childSum = navSub[i].childElementCount;
-
 			navSub[i].style.height = (childSum*35+30)+((childSum-1)*10)+'px';
 		};
 
@@ -134,6 +129,8 @@ const func = {
 				document.querySelector('.clusterTop').innerText = e.target.innerText;
 				sessionStorage.removeItem('nameSpace');
 				userType = e.target.getAttribute('data-auth');
+
+				///func.setAuthority(userType);
 				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList?userType=${userType}`, 'application/json', func.namespaces);
 			}, false);
 			};
@@ -394,7 +391,19 @@ const func = {
 		request.send();
 	},
 
+	setAuthority(data){
+		var request = new XMLHttpRequest();
+		request.open('PUT', URI_API_SET_CLUSTER_AUTHORITY, false);
+		request.setRequestHeader('Content-type', 'application/json');
 
+		request.onreadystatechange = () => {
+			if (request.readyState === XMLHttpRequest.DONE){
+				if(request.status === 200){
+				}
+			};
+		};
+		request.send(data);
+	},
 	/////////////////////////////////////////////////////////////////////////////////////
 	// 데이터 로드 - loadData(method, url, callbackFunction)
 	// (전송타입, url, 콜백함수)
