@@ -3,15 +3,79 @@ package org.paasta.container.terraman.api.common.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.bcel.Const;
+import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
+import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
+import org.paasta.container.terraman.api.common.model.VaultModel;
+import org.paasta.container.terraman.api.common.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 
+@Service
 public class CommonFileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonFileUtils.class);
+
+    private final VaultService vaultService;
+    private final AccountService accountService;
+    private final CommandService commandService;
+
+    @Autowired
+    public CommonFileUtils(
+            VaultService vaultService
+            , CommandService commandService
+            , AccountService accountService
+    ) {
+        this.vaultService = vaultService;
+        this.commandService = commandService;
+        this.accountService = accountService;
+    }
+
+    public String createProviderFile(String clusterId, String provider, int seq) {
+        String resultCode = Constants.RESULT_STATUS_FAIL;
+        try {
+            if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
+
+            } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
+
+            } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
+                String path = "secret/" + provider.toUpperCase() + "/" + seq;
+                VaultModel res = vaultService.read(path, new VaultModel().getClass());
+
+                if(res != null) {
+                    AccountModel account = accountService.getAccountInfo(seq);
+                    // 파일 생성 및 쓰기
+                    FileModel fileModel = new FileModel();
+                    fileModel.setTenant_name(account.getProject());
+                    fileModel.setPassword(res.getPassword());
+                    fileModel.setAuth_url(res.getAuth_url());
+                    fileModel.setUser_name(res.getUser_name());
+                    fileModel.setRegion(account.getRegion());
+                    String resultFile = this.tfCreateWithWriteOpenstack(fileModel, clusterId);
+
+                    if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
+                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
+                        if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                            resultCode = Constants.RESULT_STATUS_SUCCESS;
+                            LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + cResult);
+                        }
+                    }
+                }
+            } else {
+                LOGGER.error(provider + " is Cloud not supported.");
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return resultCode;
+    }
 
     /**
      * terraform 파일 생성 및 작성 (String)
@@ -21,7 +85,7 @@ public class CommonFileUtils {
      * @return void
      */
     public String createWithWrite(String path, String contents) {
-        String resultCode = "200";
+        String resultCode = Constants.RESULT_STATUS_SUCCESS;
         try {
             File file = new File(path); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
@@ -39,7 +103,7 @@ public class CommonFileUtils {
             writer.close(); // 스트림 종료
         }
         catch (IOException e) {
-            resultCode = "500";
+            resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage());
         }
 
@@ -52,10 +116,10 @@ public class CommonFileUtils {
      * @param fileModel
      * @return void
      */
-    public String tfCreateWithWrite(FileModel fileModel) {
-        String resultCode = "200";
+    public String tfCreateWithWriteOpenstack(FileModel fileModel, String clusterId) {
+        String resultCode = Constants.RESULT_STATUS_SUCCESS;
         try {
-            File file = new File(TerramanConstant.FILE_PATH); // File객체 생성
+            File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
                 file.createNewFile(); // 신규생성
             }
@@ -66,16 +130,21 @@ public class CommonFileUtils {
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
-            jsonString = jsonString.replaceAll(":", " =");
             jsonString = jsonString.replaceAll(",", "");
-            writer.write("provider \"openstack\" " + jsonString);
+            jsonString = jsonString.replaceAll("\"tenant_name\":", "tenant_name =");
+            jsonString = jsonString.replaceAll("\"password\":", "password =");
+            jsonString = jsonString.replaceAll("\"auth_url\":", "auth_url =");
+            jsonString = jsonString.replaceAll("\"user_name\":", "user_name=");
+            jsonString = jsonString.replaceAll("\"region\":", "region =");
+
+            writer.write(TerramanConstant.PREFIX_PROVIDER_OPENSTACK + "\n\n" + "provider \"openstack\" " + jsonString);
 
             // 버퍼 및 스트림 뒷정리
             writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
             writer.close(); // 스트림 종료
         }
         catch (IOException e) {
-            resultCode = "500";
+            resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage());
         }
         return resultCode;
@@ -110,19 +179,57 @@ public class CommonFileUtils {
      * @return JsonObject
      */
     public String tfFileDelete(String fName){
-        String resultCode = "500";
+        String resultCode = Constants.RESULT_STATUS_FAIL;
         File file = new File(fName);
 
         try{
             if( file.exists() ){
                 boolean result = file.delete();
                 if(result){
-                    resultCode = "200";
+                    resultCode = Constants.RESULT_STATUS_SUCCESS;
                 }
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
         return resultCode;
+    }
+
+    public String sshFileDelete(String dirName) {
+        String resultCode = Constants.RESULT_STATUS_FAIL;
+        try{
+            File rootDir = new File(dirName);
+            deleteFilesRecursively(rootDir);
+            resultCode = Constants.RESULT_STATUS_SUCCESS;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return resultCode;
+    }
+
+    public String textAddToFIle(String dirName, String content) {
+        String resultCode = Constants.RESULT_STATUS_FAIL;
+        try {
+            FileWriter fw = new FileWriter(dirName, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("\r\n" + content);
+            bw.close();
+            resultCode = Constants.RESULT_STATUS_SUCCESS;
+        }
+        catch(Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        return resultCode;
+    }
+
+    private void deleteFilesRecursively(File rootFile) {
+        File[] allFiles = rootFile.listFiles();
+        if (allFiles.length > 1) {
+            for (File file : allFiles) {
+                if(!StringUtils.equals(file.getName(), "authorized_keys")) {
+                    file.delete();
+                }
+            }
+        }
     }
 }

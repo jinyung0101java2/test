@@ -36,6 +36,7 @@ ext {
     jjwtVersion = '0.9.1'
     jsonpathVersion = '2.4.0'
     springCloudVersion = 'Hoxton.SR10'
+    jschVersion = '0.1.55'
 }
 jar {
     archivesBaseName = 'paas-ta-container-terraman-api'
@@ -66,6 +67,7 @@ dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     testCompile "org.springframework.boot:spring-boot-starter-test"
+    implementation "com.jcraft:jsch:${jschVersion}"
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'

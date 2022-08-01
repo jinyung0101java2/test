@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Common Utils 클래스
@@ -165,12 +166,11 @@ public class CommonUtils {
      * @return String the replaced string
      */
     public static String hostName(String str) {
-        String result = "";
-        if(!StringUtils.isEmpty(str)) {
-            result = str.replaceAll(".","-");
-            result = "ip-" + result;
+        if( StringUtils.hasText(str) && (str != "null") ) {
+            str = str.trim().replaceAll("[.]","-");
+            str = "ip-" + str;
         }
-        return result;
+        return str;
     }
 
 }
