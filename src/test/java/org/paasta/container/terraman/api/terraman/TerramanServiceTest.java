@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 public class TerramanServiceTest {
     private static final String DEFAULT_PATH = "secret";
     private static final String PROVIDER = "openstack";
-    private static final String CLUSTER_ID = "111";
+    private static final String CLUSTER_ID = "test_cluster";
     private static final String SEQ = "13";
     private static final int INT_SEQ = 13;
     private static final String PATH = "secret/OPENSTACK/1";
@@ -94,12 +94,12 @@ public class TerramanServiceTest {
     @Test
     public void createTerramanTest() {
         // when
-        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND)).thenReturn(RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "")).thenReturn(RESULT_CODE);
         doNothing().when(clusterLogService).saveClusterLog(CLUSTER_ID, INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(PROVIDER));
         //when(terramanService.createProviderFile(PROVIDER, INT_SEQ)).thenReturn(RESULT_CODE);
-        when(instanceService.getInstansceInfo()).thenReturn(gInstanceModel);
+        when(instanceService.getInstansce(CLUSTER_ID, PROVIDER)).thenReturn(gInstanceModel);
         when(commonFileUtils.tfFileDelete(FILE_NAME)).thenReturn(RESULT_CODE);
-        when(instanceService.getTotalInstance()).thenReturn(gInstanceList);
+        when(instanceService.getInstances(CLUSTER_ID, PROVIDER)).thenReturn(gInstanceList);
         when(commonFileUtils.createWithWrite(FILE_NAME, FILE_DATA)).thenReturn(RESULT_CODE);
         //doReturn(gFinalResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
@@ -119,9 +119,9 @@ public class TerramanServiceTest {
     public void deleteTerramanTest() {
         // when
 //        doReturn(gResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
-       // when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn();
+        // when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn();
 
-        ResultStatusModel result = terramanService.deleteTerraman(gParams);
+        ResultStatusModel result = terramanService.deleteTerraman(CLUSTER_ID);
 
         // then
         assertThat(result).isNotNull();
