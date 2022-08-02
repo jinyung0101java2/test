@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraman-api-deployment
+  labels:
+    app: terraman-api
+  namespace: cp-terraman
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terraman-api
+  template:
+    metadata:
+      labels:
+        app: terraman-api
+    spec:
+      containers:
+        - name: terraman-api
+          image: $REGISTRY_HARBOR_URL/container-platform-new-dev/container-platform-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: K8S_API_SERVER
+              value: "https://${K8S_MASTER_NODE_IP}:${K8S_API_SERVER_PORT}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: terraman-api-deployment
+  labels:
+    app: terraman-api
+  namespace: cp-terraman
+spec:
+  ports:
+    - nodePort: 32721
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: terraman-api
+  type: NodePort

@@ -93,8 +93,10 @@ public class TerramanConstant {
     /**
      * .tf 파일 복사 명령어
      * */
-    public static final String INSTANCE_COPY_COMMAND = "cp ~/terraman_jar/tf-source/aws/terraman-opt02/opt02-resource.tf ./instance.tf";
-    public static final String NETWORK_COPY_COMMAND = "cp ~/terraman_jar/tf-source/aws/terraman-network/network.tf ./network.tf";
+//    public static final String INSTANCE_COPY_COMMAND =  "kubectl cp -n cp-portal cp-portal-api-deployment-6b94d6945d-jzvfh:tmp/test/ /home/ubuntu/tmp/instance.tf"
+//    public static final String NETWORK_COPY_COMMAND =  "kubectl cp -n cp-portal cp-portal-api-deployment-6b94d6945d-jzvfh:tmp/test/ /home/ubuntu/tmp/network.tf"
+    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-instance/instance-resource.tf ./instance.tf";
+    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
 
     /**
      * terraform 실행 명령어
