@@ -80,7 +80,7 @@ docker build:
     entrypoint: [""]
   script:
     - export
-    - chmod u+w /kaniko/.docker
+    - chmod u+w /kaniko
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
     #- cat /kaniko/.docker/config.json config.json 확인
