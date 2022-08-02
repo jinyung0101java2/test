@@ -16,6 +16,21 @@ image: gradle:alpine
 # isolated from any previous builds.
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE
+  REPOSITORY_USERNAME: ${PORTAL_TOKEN_NAME}
+  REPOSITORY_PASSWORD: ${GROUP_CP_TOKEN}
+
+  APP_NAME: $PROJECT_NAME-$PROJECT_SUBNAME-api
+  APP_VERSION: "1.3"
+  IMAGE_TAGS: $CI_COMMIT_SHA
+
+  SERVICE_PORT: "8081"
+  SERVICE_TARGET_PORT: "8081"
+  SERVICE_NODEPORT: "32721"
+
+  ENV_SCOPE: dev_aws
+
+  CHART_NAME: cp-terraman-app
 
 before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradle"
@@ -57,3 +72,34 @@ test:
       - .gradle
   tags:
   - deploy
+
+docker build:
+  stage: docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug # kaniko image 사용
+    entrypoint: [""]
+  script:
+    - export
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    #- cat /kaniko/.docker/config.json config.json 확인
+    - | # ssl cert key 입력
+      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
+    - >- # build image
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - build
+
+deploy:
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  script:
+    - echo $ENV_SCOPE
+    - kubectl apply -f yaml/Deployment.yaml
