@@ -136,3 +136,10 @@ deploy:
 #    - helm upgrade --install "$APP_NAME" $CHART_NAME-$APP_VERSION.tgz -f $APP_CHART_PATH/values.yaml -n "$NAMESPACE"
 #  environment:
 #    name: $ENV_SCOPE
+
+stages:
+  - build
+  - test
+  - docker
+  - pre-deploy
+  - deploy
