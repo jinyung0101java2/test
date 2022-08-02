@@ -80,6 +80,7 @@ docker build:
     entrypoint: [""]
   script:
     - export
+    - ~
     - pwd
     - cd ..
     - ls -al
