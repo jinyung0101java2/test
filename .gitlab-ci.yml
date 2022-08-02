@@ -38,7 +38,7 @@ before_script:
 
 build:
   stage: build
-  script: 
+  script:
     - export
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - |
@@ -50,11 +50,11 @@ build:
     - ./gradlew build -x test
 
   tags:
-  - deploy
+    - deploy
 
 test:
   stage: test
-  script: 
+  script:
     - export
     - export GRADLE_USER_HOME=`pwd`/.gradle
     - |
@@ -71,29 +71,29 @@ test:
       - build
       - .gradle
   tags:
-  - deploy
+    - deploy
 
-docker build:
-  stage: docker
-  image:
-    name: gcr.io/kaniko-project/executor:debug # kaniko image 사용
-    entrypoint: [""]
-  script:
-    - export
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    #- cat /kaniko/.docker/config.json config.json 확인
-    - | # ssl cert key 입력
-      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
-    - >- # build image
-      /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - build
+#docker build:
+#  stage: docker
+#  image:
+#    name: gcr.io/kaniko-project/executor:debug # kaniko image 사용
+#    entrypoint: [""]
+#  script:
+#    - export
+#    - mkdir -p /kaniko/.docker
+#    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+#    #- cat /kaniko/.docker/config.json config.json 확인
+#    - | # ssl cert key 입력
+#      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
+#    - >- # build image
+#      /kaniko/executor
+#      --context "${CI_PROJECT_DIR}"
+#      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+#      --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    paths:
+#      - build
 
 deploy:
   stage: deploy
@@ -140,6 +140,5 @@ deploy:
 stages:
   - build
   - test
-  - docker
-  - pre-deploy
+#  - docker
   - deploy
