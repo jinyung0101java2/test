@@ -22,11 +22,11 @@ variables:
 
   APP_NAME: $PROJECT_NAME-$PROJECT_SUBNAME-api
   APP_VERSION: "1.3"
-  IMAGE_TAGS: $CI_COMMIT_SHA
+  IMAGE_TAGS: latest
 
   SERVICE_PORT: "8081"
   SERVICE_TARGET_PORT: "8081"
-  SERVICE_NODEPORT: "32721"
+  SERVICE_NODEPORT: "32707"
 
   ENV_SCOPE: dev_aws
 
@@ -52,26 +52,26 @@ build:
   tags:
     - deploy
 
-test:
-  stage: test
-  script:
-    - export
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - |
-      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
-      then
-        gradle wrapper
-      fi
-    - chmod +x gradlew
-    - ./gradlew check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradle
-  tags:
-    - deploy
+#test:
+#  stage: test
+#  script:
+#    - export
+#    - export GRADLE_USER_HOME=`pwd`/.gradle
+#    - |
+#      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
+#      then
+#        gradle wrapper
+#      fi
+#    - chmod +x gradlew
+#    - ./gradlew check
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    policy: pull
+#    paths:
+#      - build
+#      - .gradle
+#  tags:
+#    - deploy
 
 docker build:
   stage: docker
@@ -80,6 +80,7 @@ docker build:
     entrypoint: [""]
   script:
     - export
+    - chmod u+w /kaniko/.docker
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
     #- cat /kaniko/.docker/config.json config.json 확인
@@ -101,7 +102,6 @@ deploy:
     name: bitnami/kubectl:latest
     entrypoint: [""]
   script:
-    - echo $ENV_SCOPE
     - kubectl apply -f yaml/Deployment.yaml
 
 #app deploy:
