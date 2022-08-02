@@ -80,10 +80,7 @@ docker build:
     entrypoint: [""]
   script:
     - export
-    - cat /etc/sudoers
-    - pwd
-    - chmod 777 /home/gitlab-runner/builds/ZwXUVPXd/0/container-platform-v2/backend/terraman
-    - mkdir -p /kaniko/.docker
+    - mkdir /kaniko
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
     #- cat /kaniko/.docker/config.json config.json 확인
     - | # ssl cert key 입력
