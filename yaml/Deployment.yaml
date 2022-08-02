@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: terraman-api-deployment
+  name: cp-terraman-api-deployment
   labels:
     app: terraman-api
   namespace: cp-terraman
@@ -9,15 +9,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: terraman-api
+      app: cp-terraman-api
   template:
     metadata:
       labels:
-        app: terraman-api
+        app: cp-terraman-api
     spec:
       containers:
-        - name: terraman-api
-          image: $REGISTRY_HARBOR_URL/container-platform-new-dev/container-platform-api:latest
+        - name: cp-terraman-api
+#          image: $REGISTRY_HARBOR_URL/container-platform-new-dev/container-platform-api:latest
+          imange: registry.3.38.65.248.nip.io:5005/container-platform-v2/backend/terraman:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -28,16 +29,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: terraman-api-deployment
+  name: cp-terraman-api-deployment
   labels:
     app: terraman-api
-  namespace: cp-terraman
+  namespace: cp-terraman-api
 spec:
   ports:
-    - nodePort: 32721
+    - nodePort: 32707
       port: 8081
       protocol: TCP
       targetPort: 8081
   selector:
-    app: terraman-api
+    app: cp-terraman-api
   type: NodePort
