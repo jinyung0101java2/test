@@ -80,6 +80,7 @@ docker build:
     entrypoint: [""]
   script:
     - export
+    - cd ..
     - ls -al
     #- chmod u+w /home/gitlab-runner/builds/ZwXUVPXd/0/container-platform-v2/backend/terraman
     - mkdir -p /kaniko/.docker
