@@ -26,11 +26,11 @@ spec:
             - name: K8S_API_SERVER
               value: "https://{K8S_MASTER_NODE_IP}:{K8S_API_SERVER_PORT}"
             - name: DATABASE_URL
-              value: "${DATABASE_URL}"
+              value: "{DATABASE_URL}"
             - name: DATABASE_USER_ID
-              value: "${DATABASE_USER_ID}"
+              value: "{DATABASE_USER_ID}"
             - name: DATABASE_USER_PASSWORD
-              value: "${DATABASE_USER_PASSWORD}"
+              value: "{DATABASE_USER_PASSWORD}"
             - name: VAULT_IP
               value: "{VAULT_IP}"
             - name: VAULT_PORT
