@@ -110,6 +110,10 @@ deploy:
     - sed -i "s/{K8S_MASTER_NODE_IP}/$K8S_MASTER_NODE_IP/g" yaml/Deployment.yaml
     - sed -i "s/{K8S_API_SERVER_PORT}/$K8S_API_SERVER_PORT/g" yaml/Deployment.yaml
     - sed -i "s/{IMAGE_PULL_SECRET}/$IMAGE_PULL_SECRET/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_IP}/$VAULT_IP/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_PORT}/$VAULT_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_ROLE_ID}/$VAULT_ROLE_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_SECRET_ID}/$VAULT_SECRET_ID/g" yaml/Deployment.yaml
     - cat yaml/Deployment.yaml
     - kubectl version
     - kubectl create secret docker-registry "$IMAGE_PULL_SECRET" --docker-server="$CI_REGISTRY" --docker-username="$REPOSITORY_USERNAME" --docker-password="$REPOSITORY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" --namespace="cp-terraman" -o yaml --dry-run=client | kubectl apply -f -; # gitlab registry 사용을 위한 secret 생성
