@@ -2,14 +2,18 @@ spring:
   cloud:
     vault:
       scheme: http
-      host: ${VAULT_IP}
-      port: ${VAULT_PORT}
+#      host: ${VAULT_IP}
+#      port: ${VAULT_PORT}
+      host: 3.38.254.89
+      port: 8200
       authentication: APPROLE
       kv:
         enabled: true
         backend: secret
       app-role:
-        role-id: ${VAULT_ROLE_ID}
-        secret-id: ${VAULT_SECRET_ID}
+#        role-id: ${VAULT_ROLE_ID}
+#        secret-id: ${VAULT_SECRET_ID}
+        role-id: 138a9124-14fc-5fbe-4d96-a087961799ad
+        secret-id: 83946912-495a-a92b-1695-bb33c5ec462d
         role: ${VAULT_ROLE_NAME}
         app-role-path: approle
