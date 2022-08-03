@@ -26,6 +26,11 @@ variables:
   SERVICE_TARGET_PORT: "8081"
   SERVICE_NODEPORT: "32707"
 
+  DATABASE_URL: "cp-mariadb.mariadb.svc.cluster.local:3306"
+  DATABASE_USER_ID: cp-admin
+  DATABASE_USER_PASSWORD: Paasta!2022
+
+
   ENV_SCOPE: dev_aws
 
   CHART_NAME: cp-terraman-app
