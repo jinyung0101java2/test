@@ -37,7 +37,16 @@ public class CommonFileUtils {
         this.accountService = accountService;
     }
 
-    public String createProviderFile(String clusterId, String provider, int seq) {
+    /**
+     * terraform provider.tf 파일 생성 및 작성 (String)
+     *
+     * @param clusterId
+     * @param provider
+     * @param seq
+     * @param pod
+     * @return String
+     */
+    public String createProviderFile(String clusterId, String provider, int seq, String pod) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try {
             if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
@@ -60,7 +69,7 @@ public class CommonFileUtils {
                     String resultFile = this.tfCreateWithWriteOpenstack(fileModel, clusterId);
 
                     if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
-                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
+                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
                         if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                             resultCode = Constants.RESULT_STATUS_SUCCESS;
                             LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + cResult);
@@ -82,7 +91,7 @@ public class CommonFileUtils {
      *
      * @param path
      * @param contents
-     * @return void
+     * @return String
      */
     public String createWithWrite(String path, String contents) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
@@ -114,7 +123,8 @@ public class CommonFileUtils {
      * terraform 파일 생성 및 작성 (String)
      *
      * @param fileModel
-     * @return void
+     * @param clusterId
+     * @return String
      */
     public String tfCreateWithWriteOpenstack(FileModel fileModel, String clusterId) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
@@ -176,7 +186,7 @@ public class CommonFileUtils {
      * terraform 파일 읽기 (String)
      *
      * @param fName
-     * @return JsonObject
+     * @return String
      */
     public String tfFileDelete(String fName){
         String resultCode = Constants.RESULT_STATUS_FAIL;
@@ -195,6 +205,12 @@ public class CommonFileUtils {
         return resultCode;
     }
 
+    /**
+     * ssh파일 삭제 (String)
+     *
+     * @param dirName
+     * @return String
+     */
     public String sshFileDelete(String dirName) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try{
@@ -207,6 +223,13 @@ public class CommonFileUtils {
         return resultCode;
     }
 
+    /**
+     * 파일에 내용 추가 (String)
+     *
+     * @param dirName
+     * @param content
+     * @return String
+     */
     public String textAddToFIle(String dirName, String content) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try {
@@ -222,6 +245,12 @@ public class CommonFileUtils {
         return resultCode;
     }
 
+    /**
+     * ssh 파일 삭제 (String)
+     *
+     * @param rootFile
+     * @return void
+     */
     private void deleteFilesRecursively(File rootFile) {
         File[] allFiles = rootFile.listFiles();
         if (allFiles.length > 1) {

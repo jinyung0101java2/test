@@ -27,6 +27,7 @@ public class TerramanService {
     private final InstanceService instanceService;
     private final AccountService accountService;
     private final CommonFileUtils fileUtil;
+    private final ClusterService clusterService;
 
     @Autowired
     public TerramanService(
@@ -37,6 +38,7 @@ public class TerramanService {
             , InstanceService instanceService
             , AccountService accountService
             , CommonFileUtils fileUtil
+            , ClusterService clusterService
     ) {
         this.vaultService = vaultService;
         this.commonService = commonService;
@@ -45,6 +47,7 @@ public class TerramanService {
         this.instanceService = instanceService;
         this.accountService = accountService;
         this.fileUtil = fileUtil;
+        this.clusterService = clusterService;
     }
 
     /**
@@ -113,7 +116,7 @@ public class TerramanService {
          * 3-1. IaaS에 따라 provider.tf 파일 정의 (Vault, Database)
          *
          * - command
-         * INSTANCE_COPY_COMMAND = "cp tf-source/aws/terraman-opt02/opt02-resource.tf ./instance.tf";
+         * INSTANCE_COPY_COMMAND = "kubectl cp -n cp-portal cp-portal-api-deployment-6b94d6945d-jzvfh:tmp/test/ /home/ubuntu/tmp/instance.tf"
          *
          * - log
          * TERRAFORM_TF_ERROR_LOG = "Provider file creation error, cluster creation aborted. errCode ::";
@@ -121,14 +124,16 @@ public class TerramanService {
          * */
         LOGGER.info("3. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
-        fResult = fileUtil.createProviderFile(clusterId, provider, seq);
+        cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "");
+
+        fResult = fileUtil.createProviderFile(clusterId, provider, seq, cResult);
         if(StringUtils.equals(fResult, Constants.RESULT_STATUS_FAIL)) {
             // log 저장
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_ERROR_LOG + fResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, fResult);
         }
 
-        commandService.execCommandOutput(TerramanConstant.NETWORK_COPY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
+        commandService.execCommandOutput(TerramanConstant.NETWORK_COPY_COMMAND(cResult), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
 
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_LOG);
@@ -336,7 +341,7 @@ public class TerramanService {
          */
 
         /*************************************************************************************************************************************/
-
+        clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
         /**
          * 11. 완료 후 프로세스 종료
          */

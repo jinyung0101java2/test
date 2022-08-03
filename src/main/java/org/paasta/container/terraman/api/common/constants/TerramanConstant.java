@@ -93,10 +93,15 @@ public class TerramanConstant {
     /**
      * .tf 파일 복사 명령어
      * */
-//    public static final String INSTANCE_COPY_COMMAND =  "kubectl cp -n cp-portal cp-portal-api-deployment-6b94d6945d-jzvfh:tmp/test/ /home/ubuntu/tmp/instance.tf"
-//    public static final String NETWORK_COPY_COMMAND =  "kubectl cp -n cp-portal cp-portal-api-deployment-6b94d6945d-jzvfh:tmp/test/ /home/ubuntu/tmp/network.tf"
-    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-instance/instance-resource.tf ./instance.tf";
-    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
+    public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name";
+    public static final String INSTANCE_COPY_COMMAND(String pod) {
+        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ /home/ubuntu/tmp/instance.tf";
+    }
+    public static final String NETWORK_COPY_COMMAND(String pod) {
+        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ /home/ubuntu/tmp/network.tf";
+    }
+//    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-instance/instance-resource.tf ./instance.tf";
+//    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
 
     /**
      * terraform 실행 명령어
@@ -124,4 +129,9 @@ public class TerramanConstant {
     public static final String TERRAFORM_SUCCESS_LOG = "It succeeded in loading the configuration information of the newly created instance.";
     public static final String KUBESPRAY_CONFIG_LOG = "Configuration information update for cluster configuration has been completed.";
     public static final String KUBESPRAY_DEPLOY_LOG = "The provisioning of the cluster is complete.";
+
+    /**
+     * cluster 생성 상태값
+     * */
+    public static final String CLUSTER_COMPLETE_STATUS = "A";
 }

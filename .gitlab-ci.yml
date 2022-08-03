@@ -27,8 +27,8 @@ variables:
   SERVICE_NODEPORT: "32707"
 
   DATABASE_URL: "cp-mariadb.mariadb.svc.cluster.local:3306"
-  DATABASE_USER_ID: cp-admin
-  DATABASE_USER_PASSWORD: Paasta!2022
+  DATABASE_USER_ID: "cp-admin"
+  DATABASE_USER_PASSWORD: "Paasta!2022"
 
 
   ENV_SCOPE: dev_aws
@@ -114,6 +114,9 @@ deploy:
     - sed -i "s/{VAULT_PORT}/$VAULT_PORT/g" yaml/Deployment.yaml
     - sed -i "s/{VAULT_ROLE_ID}/$VAULT_ROLE_ID/g" yaml/Deployment.yaml
     - sed -i "s/{VAULT_SECRET_ID}/$VAULT_SECRET_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_URL}/$DATABASE_URL/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_USER_ID}/$DATABASE_USER_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" yaml/Deployment.yaml
     - cat yaml/Deployment.yaml
     - kubectl version
     - kubectl create secret docker-registry "$IMAGE_PULL_SECRET" --docker-server="$CI_REGISTRY" --docker-username="$REPOSITORY_USERNAME" --docker-password="$REPOSITORY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" --namespace="cp-terraman" -o yaml --dry-run=client | kubectl apply -f -; # gitlab registry 사용을 위한 secret 생성
