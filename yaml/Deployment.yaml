@@ -19,6 +19,7 @@ spec:
         - name: cp-terraman-api
 #          image: $REGISTRY_HARBOR_URL/container-platform-new-dev/container-platform-api:latest
           image: registry.3.38.65.248.nip.io:5005/container-platform-v2/backend/terraman:{IMAGE_TAGS}
+#          command: ['']
           imagePullPolicy: Always
           ports:
             - containerPort: 8081

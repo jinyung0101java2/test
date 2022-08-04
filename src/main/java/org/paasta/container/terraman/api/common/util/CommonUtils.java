@@ -6,6 +6,9 @@ import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -51,6 +54,13 @@ public class CommonUtils {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
         return sdf.format(timestamp);
+    }
+
+    public static String getSysString() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatedNow = now.format(formatter);
+        return formatedNow;
     }
 
     /**

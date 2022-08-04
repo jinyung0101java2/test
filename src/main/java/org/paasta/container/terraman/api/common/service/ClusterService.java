@@ -8,6 +8,12 @@ import org.paasta.container.terraman.api.common.repository.ClusterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
+import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysString;
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
 
 @Service
@@ -20,9 +26,11 @@ public class ClusterService {
         this.clusterRepository = clusterRepository;
     }
 
-    public void updateCluster(String clusterId, String status) {
-        ClusterModel clusterModel = clusterRepository.getOne(clusterId);
+    @Transactional
+    public ClusterModel updateCluster(String clusterId, String status) {
+        ClusterModel clusterModel = clusterRepository.findById(clusterId).get();
         clusterModel.setStatus(status);
-        clusterRepository.save(clusterModel);
+        clusterModel.setLastModified(getSysString());
+        return clusterRepository.save(clusterModel);
     }
 }

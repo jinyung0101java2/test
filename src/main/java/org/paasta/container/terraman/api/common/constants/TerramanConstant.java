@@ -72,17 +72,18 @@ public class TerramanConstant {
      * change directory 명령어
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
-        return "mkdir -p -v $HOME/terraman/clusters/cluster_"+clusterId;
+        return "mkdir -p -v /tmp/terraform/cluster_"+clusterId;
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId) {
-        return "/home/ubuntu/terraman/clusters/cluster_"+clusterId;
+        return "/tmp/terraform/cluster_"+clusterId;
     }
-    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/terraman/clusters";
+    public static final String DELETE_DIR_CLUSTER = "/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r cluster_"+clusterId;
     }
     public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane";
+
 
     /**
      * etc linux 명령어
@@ -95,13 +96,27 @@ public class TerramanConstant {
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name";
     public static final String INSTANCE_COPY_COMMAND(String pod) {
-        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ /home/ubuntu/tmp/instance.tf";
+        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./instance.tf";
     }
     public static final String NETWORK_COPY_COMMAND(String pod) {
-        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ /home/ubuntu/tmp/network.tf";
+        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./network.tf";
     }
-//    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-instance/instance-resource.tf ./instance.tf";
-//    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
+
+    /********************************************************************************************************************************
+     * local
+     * ******************************************************************************************************************************/
+    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-resource/openstack-resource.tf ./instance.tf";
+    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
+
+//    public static final String CREATE_DIR_CLUSTER(String clusterId) {
+//        return "mkdir -p -v /home/ubuntu/tmp/terraform/cluster_"+clusterId;
+//    }
+//
+//    public static final String MOVE_DIR_CLUSTER(String clusterId) {
+//        return "/home/ubuntu/tmp/terraform/cluster_"+clusterId;
+//    }
+//    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
+    /********************************************************************************************************************************/
 
     /**
      * terraform 실행 명령어

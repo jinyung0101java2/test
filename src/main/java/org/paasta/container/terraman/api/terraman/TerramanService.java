@@ -58,9 +58,9 @@ public class TerramanService {
      */
     @Async
     public ResultStatusModel createTerraman(TerramanRequest terramanRequest) {
-        /**
+        /**************************************************************************************************************************************
          * 변수 정의
-         */
+         * ************************************************************************************************************************************/
         ResultStatusModel resultStatus = new ResultStatusModel();
         String clusterId = terramanRequest.getClusterId();
 
@@ -78,13 +78,13 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        /**
+        /**************************************************************************************************************************************
          *  1. 대상 Container 명 알아내기
          * */
         LOGGER.info("1. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 2. 대상 Container 에서 kubectl cp 로 파일 복사해오기
          * kubectl cp -n mariadb paas-ta-container-platform-mariadb-0:var/lib/apt/extended_status /home/ubuntu/aa  --> 파일복사
          * kubectl cp -n mariadb paas-ta-container-platform-mariadb-0:bitnami/ /home/ubuntu/bitnami --> 폴더복사*
@@ -95,7 +95,7 @@ public class TerramanService {
          * - log
          * TERRAFORM_IAC_LOG = "Upload of requested IaC information is complete.";
          * TERRAFORM_START_LOG = "Start creating cluster(Provider : "+provider+")";
-         * */
+         * ***********************************************************************************************************************************/
         LOGGER.info("execute terraform!!");
         LOGGER.info("2. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
@@ -112,7 +112,7 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_IAC_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 3-1. IaaS에 따라 provider.tf 파일 정의 (Vault, Database)
          *
          * - command
@@ -121,7 +121,7 @@ public class TerramanService {
          * - log
          * TERRAFORM_TF_ERROR_LOG = "Provider file creation error, cluster creation aborted. errCode ::";
          * TERRAFORM_TF_LOG = "Tf file for instance configuration is complete.";
-         * */
+         * ************************************************************************************************************************************/
         LOGGER.info("3. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
         cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "");
@@ -133,13 +133,13 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, fResult);
         }
 
-        commandService.execCommandOutput(TerramanConstant.NETWORK_COPY_COMMAND(cResult), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
+        //commandService.execCommandOutput(TerramanConstant.NETWORK_COPY_COMMAND(cResult), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
 
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 4. terraform init 실행
          *
          * - command
@@ -147,7 +147,7 @@ public class TerramanService {
          *
          * - log
          * TERRAFORM_INIT_LOG = "Terraform initialization is complete.";
-         * */
+         * ************************************************************************************************************************************/
         LOGGER.info("4. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
         // command line 실행
@@ -163,7 +163,7 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_INIT_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 5. terraform plan 실행
          *
          * - command
@@ -171,7 +171,7 @@ public class TerramanService {
          *
          * - log
          * TERRAFORM_PLAN_LOG = "The system has confirmed that there are no problems with the terraform plan.";
-         */
+         * ************************************************************************************************************************************/
         LOGGER.info("5. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
         // command line 실행
@@ -186,7 +186,7 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_PLAN_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 6. terraform apply 실행
          *
          * - command
@@ -194,7 +194,7 @@ public class TerramanService {
          *
          * - log
          * TERRAFORM_APPLY_LOG = "The system has finished configuring the instances for cluster creation.";
-         */
+         * ************************************************************************************************************************************/
         LOGGER.info("6. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
         // command line 실행
@@ -209,12 +209,12 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_APPLY_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 7. Infra 생성 후 생성된 Instance IP 알아오기
          *
          * - log
          * TERRAFORM_SUCCESS_LOG = "It succeeded in loading the configuration information of the newly created instance.";
-         */
+         * ************************************************************************************************************************************/
         LOGGER.info("7. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
 
         instanceInfo = instanceService.getInstansce(clusterId, provider);
@@ -247,7 +247,7 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 8-1. Kubespray 다운로드 및 kubespray_var.sh 파일 작성하기
          *
          * - command
@@ -256,7 +256,7 @@ public class TerramanService {
          *
          * - log
          * KUBESPRAY_CONFIG_LOG = "Configuration information update for cluster configuration has been completed.";
-         */
+         * ************************************************************************************************************************************/
         LOGGER.info("8. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY));
         List<InstanceModel> instanceList = instanceService.getInstances(clusterId, provider);
 
@@ -302,7 +302,7 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_CONFIG_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 9. source deploy_kubespray.sh 실행하기
          *
          * - command
@@ -311,7 +311,7 @@ public class TerramanService {
          *
          * - log
          * KUBESPRAY_DEPLOY_LOG = "The provisioning of the cluster is complete.";
-         */
+         * ************************************************************************************************************************************/
         LOGGER.info("9. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY));
 
         cResult = commandService.execCommandOutput(TerramanConstant.KUBESPRAY_CHMOD_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY);
@@ -331,20 +331,19 @@ public class TerramanService {
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_DEPLOY_LOG);
         /*************************************************************************************************************************************/
 
-        /**
+        /**************************************************************************************************************************************
          * 10. 클러스터 생성 상태 전송 --> DB 업데이트
-         *
-         * - command
-         *
-         *
-         * - log
-         */
-
+         * ************************************************************************************************************************************/
+        ClusterModel updateResult = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
+        if(updateResult == null) {
+            LOGGER.info("cluster 생성 완료 업데이트 중 오류가 발생하였습니다.");
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
         /*************************************************************************************************************************************/
-        clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
-        /**
+
+        /**************************************************************************************************************************************
          * 11. 완료 후 프로세스 종료
-         */
+         * ************************************************************************************************************************************/
         return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_SUCCESS);
         /*************************************************************************************************************************************/
     }

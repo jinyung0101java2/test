@@ -6,6 +6,7 @@ import org.paasta.container.terraman.api.common.repository.ClusterLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysString;
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
 
 @Service
@@ -25,7 +26,7 @@ public class ClusterLogService {
         logEmbededModel.setProcessNo(processNo);
         logModel.setLogId(logEmbededModel);
         logModel.setLogMessage(logMessage);
-        logModel.setRegTimestamp(getSysTimestamp());
+        logModel.setRegTimestamp(getSysString());
         clusterLogRepository.save(logModel);
     }
 }

@@ -69,7 +69,7 @@ public class CommonFileUtils {
                     String resultFile = this.tfCreateWithWriteOpenstack(fileModel, clusterId);
 
                     if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
-                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
+                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(clusterId), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
                         if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                             resultCode = Constants.RESULT_STATUS_SUCCESS;
                             LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + cResult);

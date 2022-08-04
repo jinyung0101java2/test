@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "cp_clusters")
@@ -16,6 +13,7 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ClusterModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cluster_id")
     private String clusterId;
 
