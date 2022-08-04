@@ -77,6 +77,8 @@ test:
     paths:
       - build
       - .gradlew
+  tags:
+    - deploy
 
 docker build:
   stage: docker
@@ -118,6 +120,9 @@ deploy:
     - sed -i "s/{DATABASE_URL}/$DATABASE_URL/g" yaml/Deployment.yaml
     - sed -i "s/{DATABASE_USER_ID}/$DATABASE_USER_ID/g" yaml/Deployment.yaml
     - sed -i "s/{DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_PORT}/$SERVICE_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_TARGET_PORT}/$SERVICE_TARGET_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_NODEPORT}/$SERVICE_NODEPORT/g" yaml/Deployment.yaml
     - cat yaml/Deployment.yaml
     - kubectl version
     - kubectl create secret docker-registry "$IMAGE_PULL_SECRET" --docker-server="$CI_REGISTRY" --docker-username="$REPOSITORY_USERNAME" --docker-password="$REPOSITORY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" --namespace="cp-terraman" -o yaml --dry-run=client | kubectl apply -f -; # gitlab registry 사용을 위한 secret 생성

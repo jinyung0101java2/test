@@ -52,10 +52,10 @@ metadata:
   namespace: cp-terraman
 spec:
   ports:
-    - nodePort: 32707
-      port: 8081
+    - nodePort: {SERVICE_NODEPORT}
+      port: {SERVICE_PORT}
       protocol: TCP
-      targetPort: 8081
+      targetPort: {SERVICE_TARGET_PORT}
   selector:
     app: cp-terraman-api
   type: NodePort
