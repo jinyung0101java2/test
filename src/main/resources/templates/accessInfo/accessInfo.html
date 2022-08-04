@@ -265,9 +265,6 @@
     window.onload = () => {
 
         func.init(ASIDE_DP1.INFO, ASIDE_DP2.ACCESS);
-        //callbackFuncNameLoad();
-        document.getElementById('nameSpaceTitleDiv').style.display="none";
-        document.getElementById('clusterTitleDiv').style.display="none";
 
         const accessInfo = {
 
@@ -278,11 +275,8 @@
                     copy[i].setAttribute('id', 'copy_'+`${i}`);
                 }
 
-
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/accessesInfo`, 'application/json', accessInfo.drawUser);
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/secrets`, 'application/json', accessInfo.drawSecrets);
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/testuser`, 'application/json', accessInfo.drawUser);
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/userAuthIds/c88862c2-c63b-408f-87f9-4407502787c7`, 'application/json', accessInfo.drawUser2);
-
             },
 
             drawSecrets(data){
@@ -298,15 +292,13 @@
 
             drawUser(data){
 
-                document.getElementById('user_name').value = data.userId;
+                document.getElementById('user_name').value = data.items[0].userId;
                 document.getElementById('role').value = data.items[0].roleSetCode;
 
                 var cpEnvironments = document.getElementsByClassName('cpEnvironments');
                 for (var i = 0; i <= cpEnvironments.length-1; i++) {
-                    //document.getElementsByClassName('cpClusterName')[i].innerText = data.clusterName;
-                    //document.getElementsByClassName('cpClusterServer')[i].innerText = data.clusterApiUrl;
-                    document.getElementsByClassName('cpUserName')[i].innerText = data.userId;
-                    document.getElementsByClassName('cpContextName')[i].innerText = data.userId + "-context";
+                    document.getElementsByClassName('cpUserName')[i].innerText = data.items[0].userId;
+                    document.getElementsByClassName('cpContextName')[i].innerText = data.items[0].userId + "-context";
 
                     for (var j = 0; j <= data.items.length-1; j++) {
                         if (data.items[j].cpNamespace === sessionStorage.getItem('nameSpace')) {
@@ -316,10 +308,6 @@
                 }
 
             },
-
-            drawUser2(data){
-
-            }
 
         };
 
