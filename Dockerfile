@@ -54,4 +54,5 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 #CMD ["/usr/sbin/sshd", "--D"]
 #CMD ["java", "-version"]
 #ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/home/ubuntu/paas-ta-container-terraman-api.jar"]
-CMD ["pwd"]
+#CMD ["pwd"]
+ENTRYPOINT pwd
