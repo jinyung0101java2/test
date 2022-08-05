@@ -53,5 +53,5 @@ EXPOSE 22
 COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 
 CMD ["/usr/sbin/sshd", "-D"]
-CMD ["java", "-version"]
+#CMD ["java", "-version"]
 #ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
