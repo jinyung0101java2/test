@@ -17,7 +17,6 @@ RUN apt update \
     && apt install -qq -y openssh-server \
         aptitude sudo ssh vim curl \
         net-tools iputils-ping traceroute netcat telnet dnsutils \
-    && apt-get install openjdk-8-jdk \
     && mkdir /var/run/sshd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -46,6 +45,10 @@ RUN useradd -c "System Administrator" -m -d /home/$SSH_USER -s /bin/bash $SSH_US
 
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
     && sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
+
+RUN cd ~ \
+    && sudo apt update \
+    && sudo apt-get install openjdk-8-jdk \
 
 EXPOSE 22
 
