@@ -1,4 +1,5 @@
-FROM openjdk:8-jdk-alpine
+#FROM openjdk:8-jdk-alpine
+FROM ubuntu:20.04
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
