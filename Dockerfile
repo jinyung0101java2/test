@@ -3,6 +3,7 @@ FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG SSH_USER=${SSH_USER:-ubuntu}
 ARG SSH_PASSWORD=${SSH_PASSWORD:-ubuntu}
+ARG JAR_FILE=build/libs/*.jar
 
 ENV TZ=Asia/Seoul
 ENV SSH_USER=${SSH_USER}
@@ -46,6 +47,8 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
     && sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 EXPOSE 22
+
+COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 
 CMD ["/usr/sbin/sshd", "-D"]
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
