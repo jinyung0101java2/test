@@ -51,8 +51,8 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 #RUN sudo apt update \
 #    && sudo apt-get install openjdk-8-jdk \
 
-#EXPOSE 22
+EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd", "--D"]
 #CMD ["java", "-version"]
 #ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
