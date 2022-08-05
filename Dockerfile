@@ -44,11 +44,14 @@ RUN useradd -c "System Administrator" -m -d /home/$SSH_USER -s /bin/bash $SSH_US
     && echo "$SSH_USER:$SSH_PASSWORD" | chpasswd
 
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
-    && sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    && sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
+
+RUN sudo apt-get install openjdk-8-jdk
 
 EXPOSE 22
 
 COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 
 CMD ["/usr/sbin/sshd", "-D"]
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
+CMD ["java", "-version"]
+#ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/paas-ta-container-terraman-api.jar"]
