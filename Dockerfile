@@ -46,7 +46,7 @@ RUN useradd -c "System Administrator" -m -d /home/$SSH_USER -s /bin/bash $SSH_US
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
     && sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
 
-RUN sudo apt-get install openjdk-8-jdk
+RUN apt-get install -y openjdk-8-jdk
 
 EXPOSE 22
 
