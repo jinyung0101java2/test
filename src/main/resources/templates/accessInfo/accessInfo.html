@@ -57,17 +57,11 @@
                         </div>
                         <div class="custom-access-contents">
                             <div id="cpEnvironmentsForLinux" class="cpEnvironments">
-                                <!--export CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"<br>
-                                export CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"<br>
-                                export CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"<br>
-                                export CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"<br>
-                                export CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"<br>
-                                export CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"<br>-->
                                 <p>export CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"</p>
                                 <p>export CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"</p>
                                 <p>export CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"</p>
                                 <p>export CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"</p>
-                                <p>export CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
+                                <p class="xNamespace">export CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
                                 <p>export CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
                             </div>
                             <div class="fa-pull-right">
@@ -79,17 +73,11 @@
                         </div>
                         <div class="custom-access-contents">
                             <div id="cpEnvironmentsForWindows" class="cpEnvironments">
-                                <!--set CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"<br>
-                                set CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"<br>
-                                set CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"<br>
-                                set CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"<br>
-                                set CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"<br>
-                                set CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"-->
                                 <p>set CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"</p>
                                 <p>set CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"</p>
                                 <p>set CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"</p>
                                 <p>set CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"</p>
-                                <p>set CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
+                                <p class="xNamespace">set CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
                                 <p>set CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
                             </div>
                             <div class="fa-pull-right">
@@ -173,7 +161,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForLinux">
-                                    <p>kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} --namespace=${CP_SERVICE_NAMESPACE_NAME} --cluster=${CP_SERVICE_CLUSTER_NAME}</p>
+                                    <p>kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} <span class="optNamespace">--namespace=${CP_SERVICE_NAMESPACE_NAME}</span> --cluster=${CP_SERVICE_CLUSTER_NAME}</p>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-copy-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
@@ -184,7 +172,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForWindows">
-                                    <p>kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --namespace=%CP_SERVICE_NAMESPACE_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%</p>
+                                    <p>kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% <span class="optNamespace">--namespace=%CP_SERVICE_NAMESPACE_NAME%</span> --cluster=%CP_SERVICE_CLUSTER_NAME%</p>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-copy-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
@@ -296,15 +284,40 @@
                 document.getElementById('role').value = data.items[0].roleSetCode;
 
                 var cpEnvironments = document.getElementsByClassName('cpEnvironments');
-                for (var i = 0; i <= cpEnvironments.length-1; i++) {
+                for (var i = 0; i <= cpEnvironments.length - 1; i++) {
                     document.getElementsByClassName('cpUserName')[i].innerText = data.items[0].userId;
                     document.getElementsByClassName('cpContextName')[i].innerText = data.items[0].userId + "-context";
 
-                    for (var j = 0; j <= data.items.length-1; j++) {
-                        if (data.items[j].cpNamespace === sessionStorage.getItem('nameSpace')) {
-                            document.getElementsByClassName('cpNamespace')[i].innerText = data.items[j].cpNamespace;
+                    if (data.items[0].userType === 'USER') {
+                        for (var j = 0; j <= data.items.length - 1; j++) {
+                            if (data.items[j].cpNamespace === sessionStorage.getItem('nameSpace')) {
+                                document.getElementsByClassName('cpNamespace')[i].innerText = data.items[j].cpNamespace;
+                            }
                         }
+                    } else if (data.items[0].userType === 'SUPER_ADMIN' || data.items[0].userType === 'CLUSTER_ADMIN') {
+                        let xNamespace = document.getElementsByClassName('xNamespace');
+                        let optNamespace = document.getElementsByClassName('optNamespace');
+                        /* for (var k = 0 ; k < xNamespace.length; k++) {
+                             xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
+                         }
+                         for (var l = 0 ; l < xNamespace.length; l++) {
+                             document.getElementById('xNamespace_'+`${l}`).style.display = "none";
+                         }*/
+                        for (var k = 0 ; k < xNamespace.length; k++) {
+                            xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
+                            optNamespace[k].setAttribute('id', 'optNamespace'+`${k}`);
+                            document.getElementById('xNamespace_'+`${k}`).style.display = "none";
+                            document.getElementById('optNamespace'+`${k}`).style.display = "none";
+                        }
+
+                        /*for (var l = 0 ; l < optNamespace.length; l++) {
+                            optNamespace[l].setAttribute('id', 'optNamespace'+`${l}`);
+                            document.getElementById('optNamespace'+`${l}`).style.display = "none";
+                        }*/
+
+//
                     }
+
                 }
 
             },
