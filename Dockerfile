@@ -1,5 +1,5 @@
 FROM openjdk:8-alpine
-ARG JAR_FILE=*.jar
+ARG JAR_FILE=/build/lobs/*.jar
 RUN apk add --no-cache \
   openssh-client \
   ca-certificates \
