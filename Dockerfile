@@ -16,7 +16,7 @@ RUN apt update \
     && apt install -qq -y openssh-server \
         aptitude sudo ssh vim curl \
         net-tools iputils-ping traceroute netcat telnet dnsutils \
-    && sudo apt-get install openjdk-8-jdk \
+    && sudo apt-get install openjdk-8-jdk -y \
     && mkdir /var/run/sshd \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
