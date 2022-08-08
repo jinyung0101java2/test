@@ -2,9 +2,7 @@ FROM openjdk:8-alpine
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories \
-   && apk update \
-   && apk add --no-cache \
+RUN apk add --no-cache \
   openssh-client \
   ca-certificates \
   curl \
