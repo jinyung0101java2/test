@@ -3,6 +3,9 @@ FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG SSH_USER=${SSH_USER:-ubuntu}
 ARG SSH_PASSWORD=${SSH_PASSWORD:-ubuntu}
+ARG JAR_FILE=build/libs/*.jar
+
+COPY ${JAR_FILE} paas-ta-container-terraman-api.jar
 
 ENV TZ=Asia/Seoul
 ENV SSH_USER=${SSH_USER}
