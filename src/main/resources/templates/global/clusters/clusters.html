@@ -7,7 +7,6 @@
 		<article class="location">
 			<ul>
 				<li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
-				<li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Managements</a></li>
 				<li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
 			</ul>
 			<!-- Click event class="on" -->
@@ -25,20 +24,20 @@
 					<table>
 						<caption>clusters List</caption>
 						<colgroup >
-							<col width="42%" />
+							<col width="70%" />
 							<col width="15%" />
 							<col width="15%" />
-							<col width="10%" />
-							<col width="10%" />
-							<col width="8%" />
+<!--							<col width="10%" />-->
+<!--							<col width="10%" />-->
+<!--							<col width="8%" />-->
 						</colgroup>
 						<thead>
 						<tr>
 							<th scope="col">Name</th>
 							<th scope="col">Provider</th>
-							<th scope="col">k8s version</th>
-							<th scope="col">node</th>
-							<th scope="col">pods</th>
+<!--							<th scope="col">k8s version</th>-->
+<!--							<th scope="col">node</th>-->
+<!--							<th scope="col">pods</th>-->
 							<th scope="col">status</th>
 						</tr>
 						</thead>
@@ -94,12 +93,10 @@
 					if(data.httpStatusCode == 200){
 						if(data.items.length > 0){
 							for(var i=0; i<=data.items.length-1; i++){
-								html = `<tr><td class="left"><a href="javascript:;" data-id="${data.items[i].clusterId}">${data.items[i].name}</a></td>
+								if(data.items[i].status === 'A' && !data.items[i].isActive) data.items[i].status = 'B';
+								html = `<tr><td class="left"><a class="name" href="javascript:;" data-id="${data.items[i].clusterId}">${data.items[i].name}</a></td>
 											<td>${data.items[i].providerType}</td>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td>${data.items[i].isActive}</td>
+											<td><button type="button" class="button_status_${data.items[i].status}" onclick="javascript:;" data-id="${data.items[i].clusterId}"></button></td>
 											</tr>`;
 								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 							}
@@ -141,15 +138,27 @@
 					document.querySelector('.create').addEventListener('click', () => {
 						document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_CREATE;
 					}, false);
+
+					// logs 버튼 event
+
 				},
 
 				listEvent(){
-					var listAll = document.querySelector('.listTable').querySelectorAll('a');
+					var listAll = document.querySelector('.listTable').querySelectorAll('a.name');
 					for(var i=cluster.offset*10; i<=listAll.length-1; i++){
 						listAll[i].addEventListener('click', (e) => {
 							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
 							document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_DETAILS;
 						}, true);
+					}
+					listAll = document.querySelectorAll('[class="button_status_D"]');
+
+					for(var i=cluster.offset*10; i<=listAll.length-1; i++) {
+						listAll[i].addEventListener('click', (e) => {
+							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
+							document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_LOGS;
+						}, true);
+
 					}
 				},
 			};

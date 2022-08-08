@@ -42,6 +42,7 @@
      var URI_CP_DETAILS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_DETAILS}]];
      var URI_CP_CREATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CREATE}]];
      var URI_CP_UPDATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_UPDATE}]];
+     var URI_CP_LOGS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LOGS}]];
      var URI_CP_POPUP = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_POPUP}]];
 
      var URI_REQUEST_CP_API = [[${@environment.getProperty('cpApi.url')}]] + '/';
@@ -122,6 +123,12 @@
 
      var CPU_UNIT = "m";
      var MEMORY_UNIT = "Mi";
+
+     const TIMES = {
+         MIN : 60,
+         HOUR : 60*60,
+         DAY : 60*60*24
+     }
 
 
      var ASIDE_DP1 = {

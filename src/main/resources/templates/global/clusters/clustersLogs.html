@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+	<div id="content" class="sub-page">
+		<article class="location">
+			<ul>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+				<li><a onclick="movePage(URI_CP_GLOBAL_CLUSTER)">Clusters</a></li>
+			</ul>
+			<!-- Click event class="on" -->
+			<fieldset>
+				<input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+				<button type="submit" id="search" th:text="#{M0031}"></button>
+			</fieldset>
+		</article>
+		<article class="base">
+			<div class="notice">
+				<h3>Cluster Logs</h3>
+				<div class="log_style01">
+				<div>
+					<dl>
+						<dt>Cluster</dt>
+						<dd id="clusterName"></dd>
+						<dt style="margin-left: 40px;">Provider</dt>
+						<dd id="providerName"></dd>
+					</dl>
+				</div>
+				<div><dl><dt class="button_status_D" style="padding: 8px 8px 8px 8px; margin-top: 3px;"></dt><dd id="clusterStatus"></dd></dl></div>
+				</div>
+				<!-- User -->
+				<div class="table_style01">
+					<!-- board -->
+					<table>
+						<colgroup >
+							<col width="10%" />
+							<col width="60%" />
+							<col width="30%" />
+						</colgroup>
+						<thead>
+						<tr>
+							<th scope="col">No.</th>
+							<th scope="col">상태 로그</th>
+							<th scope="col">경과시간</th>
+						</tr>
+						</thead>
+						<tbody class="listTable">
+						</tbody>
+					</table>
+				</div>
+				<!-- btn -->
+				<div class="btn02">
+					<div>
+						<a onclick="movePage(URI_CP_GLOBAL_CLUSTER)" th:text="#{M0028}"></a>
+					</div>
+				</div>
+			</div>
+		</article>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		window.onload = () => {
+
+			IS_GLOBAL = true;
+			func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.CLUSTERS);
+			callbackFuncNameLoad();
+
+
+			const clusterLog = {
+
+				init(){
+					// func.nameLoad = clusterLog.reset;
+					clusterLog.load();
+					// clusterLog.event();
+				},
+
+				reset(){
+					func.removeHtml(document.querySelector('.listTable'));
+					clusterLog.offset = 0;
+					clusterLog.load();
+				},
+
+				load(){
+					// logs 정보 조회
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('commonName')}`, 'application/json', clusterLog.drawDetail);
+					func.loadData('GET', `${func.url}clusters/logs/${sessionStorage.getItem('commonName')}`, 'application/json', clusterLog.drawTable);
+				},
+
+				drawDetail(data){
+					document.getElementById('clusterName').innerText = data.name;
+					document.getElementById('providerName').innerText = data.providerType;
+				},
+
+				drawTable(data){
+					let html = ``;
+					let statusString = '';
+					statusString += '클러스터 ';
+
+
+
+					if (data.resultCode === 'FAIL') {
+						html = `<tr><td colspan="3">No Data.</td></tr>`;
+						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+						statusString += '상태 확인 불가';
+					}
+					else {
+						let now = Date.now();
+						let reg;
+						for (let i = 0; i < data.items.length; i++) {
+							reg = new Date(data.items[i].regTimestamp);
+							let sec = Math.floor((now - reg) / 1000);
+							let days = sec / TIMES.DAY;
+							let hours = sec / TIMES.HOUR;
+							let mins = sec / TIMES.MIN;
+							let time = days > 0 ? days : hours > 0 ? hours : mins > 0 ? mins : sec;
+							let timeString = days > 0 ? '일' : hours > 0 ? '시간' : mins > 0 ? '분' : '초';
+							html = `<tr>
+								<td>${data.items[i].processNo}</td>
+								<td>${data.items[i].logMessage}</td>
+								<td>${Math.floor(time)}${timeString} 전 </td>
+							</tr>`;
+							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+						}
+						if (data.items.length === 9) {
+							statusString += '생성 완료.';
+						} else {
+							statusString += '생성 중..';
+						}
+					}
+					document.getElementById('clusterStatus').innerText = statusString;
+				},
+
+				event(){
+					document.querySelector('.create').addEventListener('click', () => {
+						document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_CREATE;
+					}, false);
+				},
+
+				listEvent(){
+					var listAll = document.querySelector('.listTable').querySelectorAll('a');
+					for(var i=cluster.offset*10; i<=listAll.length-1; i++){
+						listAll[i].addEventListener('click', (e) => {
+							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
+							document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_DETAILS;
+						}, true);
+					}
+				},
+			};
+
+			clusterLog.init();
+		}
+	</script>
+</th:block>
+</html>
