@@ -45,6 +45,7 @@ public class ConstantsUrl {
     public static final String URI_CP_CREATE = "/create";
     public static final String URI_CP_UPDATE = "/update";
     public static final String URI_CP_POPUP = "/popup";
+    public static final String URI_CP_LOGS = "/logs";
 
     public static final String URI_CP_GET_USER_LOGIN_DATA = "/container-platform/userLoginData";
     public static final String URI_CP_REFRESH_TOKEN = "/container-platform/refreshToken";

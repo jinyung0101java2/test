@@ -51,4 +51,15 @@ public class ClustersController {
     public String getClustersCreate() {
         return BASE_URL + "clustersCreate";
     }
+
+    /**
+     * Clusters 로그 페이지 이동(Go to the clusters logs page)
+     *
+     * @return the view
+     */
+    @ApiOperation(value = "Clusters 로그 페이지 이동(Go to the clusters logs page)", nickname = "getClustersLogs")
+    @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_CLUSTERS + ConstantsUrl.URI_CP_LOGS)
+    public String getClustersLog() {
+        return BASE_URL + "clustersLogs";
+    }
 }

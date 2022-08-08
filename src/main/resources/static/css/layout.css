@@ -244,6 +244,17 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .selectbox ul li a {display:block;padding:0 18px;}
 .selectbox ul li a:focus {background-color:#ff7a0f; color:#ffffff;}
 
+.log_style01 {background-color: #f7f7f7; margin-top: 10px; margin-bottom: 10px; height: auto; border-top: 2px solid #333333; vertical-align: top; display: flex; flex-direction: column;}
+.log_style01 div {text-align: left; font-size:22px; display:flex; flex-direction: column-reverse; height:auto; margin-top: 20px;}
+.log_style01 div dl {position:relative; float:left; margin-right:5px; margin-bottom:5px; padding:0 8px; line-height:28px; }
+.log_style01 div dl dt {float:left; padding-right:4px; color:#666; font-weight:bold; margin-left:5px; }
+.log_style01 div dl dd:before {content:' :: ';}
+.log_style01 div dl dd {float:left; }
+.button_status_A {background-color: #80d038; border: none; color: #80d038; padding: 6px; text-align: center; text-decoration: none; display: inline-block; border-radius: 50%;}
+.button_status_B {background-color: #feb615; border: none; color: #feb615; padding: 6px; text-align: center; text-decoration: none; display: inline-block; border-radius: 50%;}
+.button_status_D {background-color: #d81502; border: none; color: #d81502; padding: 6px; text-align: center; text-decoration: none; display: inline-block; border-radius: 50%;}
+
+
 /* table */
 .table_style01 {margin-bottom:57px; border-top:2px solid #333333;}
 .notice h4 {text-align:left; font-size:22px; line-height:30px; font-family:'Apple SD Gothic Neo B', sans-serif; font-weight:500; margin-bottom:6px;}
@@ -353,6 +364,9 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .creat > div > dl {margin-top:30px;}
 .creat > div > dl dt {font-size:16px; color:#47494d; margin-bottom:7px; font-family:'Apple SD Gothic Neo B', sans-serif; font-weight:400;}
 .creat > div > dl dd {position:relative;}
+.creat > div > dl dl {margin-top:30px;}
+.creat > div > dl dl dt {font-size:16px; color:#47494d; margin-bottom:7px; font-family:'Apple SD Gothic Neo B', sans-serif; font-weight:400;}
+.creat > div > dl dl dd {position:relative;}
 .creat > div > dl dd input {width:100%; border:1px solid #ebebeb; height:50px; line-height:48px; padding-left:18px; margin-left:1px; font-size:18px;}
 .creat > div > dl dd input:disabled::placeholder {color:#a6a6a6;}
 .creat > div > dl dd input:disabled {background-color:#fafafa;}
