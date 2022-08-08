@@ -48,4 +48,4 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 
 EXPOSE 22
 
-ENTRYPOINT ["pwd"]
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","paas-ta-container-terraman-api.jar"]
