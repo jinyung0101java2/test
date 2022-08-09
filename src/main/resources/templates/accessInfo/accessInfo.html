@@ -264,18 +264,6 @@
                 }
 
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/accessesInfo`, 'application/json', accessInfo.drawUser);
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/secrets`, 'application/json', accessInfo.drawSecrets);
-            },
-
-            drawSecrets(data){
-
-                var cpEnvironments = document.getElementsByClassName('cpEnvironments');
-                for (var i = 0; i <= cpEnvironments.length-1; i++) {
-                    document.getElementsByClassName('cpClusterServer')[i].innerText = data.clusterApiUrl;
-                    document.getElementsByClassName('cpClusterName')[i].innerText = data.clusterId;
-                    document.getElementsByClassName('cpCredentialsToken')[i].innerText = data.clusterToken;
-                }
-
             },
 
             drawUser(data){
@@ -287,6 +275,9 @@
                 for (var i = 0; i <= cpEnvironments.length - 1; i++) {
                     document.getElementsByClassName('cpUserName')[i].innerText = data.items[0].userId;
                     document.getElementsByClassName('cpContextName')[i].innerText = data.items[0].userId + "-context";
+                    document.getElementsByClassName('cpClusterServer')[i].innerText = data.clusterApiUrl;
+                    document.getElementsByClassName('cpClusterName')[i].innerText = data.clusterName;
+                    document.getElementsByClassName('cpCredentialsToken')[i].innerText = data.clusterToken;
 
                     if (data.items[0].userType === 'USER') {
                         for (var j = 0; j <= data.items.length - 1; j++) {
@@ -297,12 +288,7 @@
                     } else if (data.items[0].userType === 'SUPER_ADMIN' || data.items[0].userType === 'CLUSTER_ADMIN') {
                         let xNamespace = document.getElementsByClassName('xNamespace');
                         let optNamespace = document.getElementsByClassName('optNamespace');
-                        /* for (var k = 0 ; k < xNamespace.length; k++) {
-                             xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
-                         }
-                         for (var l = 0 ; l < xNamespace.length; l++) {
-                             document.getElementById('xNamespace_'+`${l}`).style.display = "none";
-                         }*/
+
                         for (var k = 0 ; k < xNamespace.length; k++) {
                             xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
                             optNamespace[k].setAttribute('id', 'optNamespace'+`${k}`);
@@ -310,12 +296,6 @@
                             document.getElementById('optNamespace'+`${k}`).style.display = "none";
                         }
 
-                        /*for (var l = 0 ; l < optNamespace.length; l++) {
-                            optNamespace[l].setAttribute('id', 'optNamespace'+`${l}`);
-                            document.getElementById('optNamespace'+`${l}`).style.display = "none";
-                        }*/
-
-//
                     }
 
                 }
