@@ -40,6 +40,8 @@ spec:
               value: "{VAULT_ROLE_ID}"
             - name: VAULT_SECRET_ID
               value: "{VAULT_SECRET_ID}"
+            - name: K8S_MASTER_NODE_IP
+              value: "{K8S_MASTER_NODE_IP}"
       imagePullSecrets:
         - name: {IMAGE_PULL_SECRET}
 ---
