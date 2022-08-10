@@ -46,7 +46,7 @@ public class CommonFileUtils {
      * @param pod
      * @return String
      */
-    public String createProviderFile(String clusterId, String provider, int seq, String pod) {
+    public String createProviderFile(String clusterId, String provider, int seq, String pod, String host, String idRsa) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try {
             if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
@@ -59,6 +59,7 @@ public class CommonFileUtils {
 
                 if(res != null) {
                     AccountModel account = accountService.getAccountInfo(seq);
+
                     // 파일 생성 및 쓰기
                     FileModel fileModel = new FileModel();
                     fileModel.setTenant_name(account.getProject());
@@ -69,10 +70,15 @@ public class CommonFileUtils {
                     String resultFile = this.tfCreateWithWriteOpenstack(fileModel, clusterId);
 
                     if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
-                        String cResult = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(clusterId), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
-                        if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                        if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
+                            File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)) ); // 파일 객체 생성
+                            resultCode = commandService.SSHFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile);
+                            LOGGER.info("resultTest :: " + resultCode);
+                        }
+                        resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
+                        if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
                             resultCode = Constants.RESULT_STATUS_SUCCESS;
-                            LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + cResult);
+                            LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + resultCode);
                         }
                     }
                 }
@@ -144,7 +150,7 @@ public class CommonFileUtils {
             jsonString = jsonString.replaceAll("\"tenant_name\":", "tenant_name =");
             jsonString = jsonString.replaceAll("\"password\":", "password =");
             jsonString = jsonString.replaceAll("\"auth_url\":", "auth_url =");
-            jsonString = jsonString.replaceAll("\"user_name\":", "user_name=");
+            jsonString = jsonString.replaceAll("\"user_name\":", "user_name =");
             jsonString = jsonString.replaceAll("\"region\":", "region =");
 
             writer.write(TerramanConstant.PREFIX_PROVIDER_OPENSTACK + "\n\n" + "provider \"openstack\" " + jsonString);

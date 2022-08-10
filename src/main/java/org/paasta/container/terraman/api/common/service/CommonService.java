@@ -27,8 +27,6 @@ import java.util.Map;
 public class CommonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonService.class);
     private final Gson gson;
-    private final PropertyService propertyService;
-    private final HttpServletRequest request;
 
 
     /**
@@ -37,10 +35,8 @@ public class CommonService {
      * @param gson the gson
      */
     @Autowired
-    public CommonService(Gson gson, PropertyService propertyService, HttpServletRequest request) {
+    public CommonService(Gson gson) {
         this.gson = gson;
-        this.propertyService = propertyService;
-        this.request = request;
     }
 
 

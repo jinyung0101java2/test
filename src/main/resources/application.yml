@@ -11,6 +11,9 @@ management:
   security:
     enabled: false
 
+master:
+  host: ${K8S_MASTER_NODE_IP}
+
 ---
 spring:
   profiles: local

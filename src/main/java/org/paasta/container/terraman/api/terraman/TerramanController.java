@@ -1,30 +1,18 @@
 package org.paasta.container.terraman.api.terraman;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.constants.TerramanConstant;
-import org.paasta.container.terraman.api.common.model.ClusterModel;
-import org.paasta.container.terraman.api.common.model.InstanceModel;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
 import org.paasta.container.terraman.api.common.service.ClusterService;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
-import org.paasta.container.terraman.api.common.util.SSHUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.paasta.container.terraman.api.common.util.CommonUtils.hostName;
 
 /**
  * Terraman Controller 클래스
@@ -43,7 +31,8 @@ public class TerramanController {
     private final CommonFileUtils commonFileUtils;
     private final ClusterService clusterService;
     private final ClusterLogService clusterLogService;
-
+    @Value("${master.host}")
+    private String MASTER_HOST;
 
     @Autowired
     public TerramanController(TerramanService terramanService, CommonFileUtils commonFileUtils, ClusterService clusterService, ClusterLogService clusterLogService) {
@@ -83,20 +72,22 @@ public class TerramanController {
         return terramanService.deleteTerraman(clusterId);
     }
 
-//    /**
-//     * Terraman 삭제(Delete Terraman)
-//     *
-//     * @return the resultStatus
-//     */
-//    @ApiOperation(value = "Terraman 삭제(Delete Terraman)", nickname = "deleteTerraman")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "test_cluster")
-//    })
-//    @PostMapping(value = "/test/{clusterId:.+}")
-//    public void test(@PathVariable String clusterId) {
-//        //clusterLogService.saveClusterLog("test", 0, "test");
+    /**
+     * Terraman 삭제(Delete Terraman)
+     *
+     * @return the resultStatus
+     */
+    @ApiOperation(value = "Terraman 삭제(Delete Terraman)", nickname = "deleteTerraman")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "test_cluster")
+    })
+    @PostMapping(value = "/test/{clusterId:.+}")
+    public void test(@PathVariable String clusterId) {
+        //clusterLogService.saveClusterLog("test", 0, "test");
 //        ClusterModel aa = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
 //        System.out.println(aa);
-//
-//    }
+//        String sysProp = System.getProperty("CP_PORTAL_DB_SCHEMA");
+        LOGGER.info("system env :: " + System.getenv("MASTER_HOST"));
+        LOGGER.info("test yml value :: " + MASTER_HOST);
+    }
 }

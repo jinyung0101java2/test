@@ -25,24 +25,26 @@ public class InstanceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceService.class);
 
     private final CommonFileUtils commonFileUtils;
+    private final CommandService commandService;
 
     @Autowired
-    public InstanceService(CommonFileUtils commonFileUtils) {
+    public InstanceService(CommonFileUtils commonFileUtils, CommandService commandService) {
         this.commonFileUtils = commonFileUtils;
+        this.commandService = commandService;
     }
     /**
      * Instance 정보 조회 (Get Instance Info)
      *
      * @return the InstanceModel
      */
-    public InstanceModel getInstansce(String clusterId, String provider) {
+    public InstanceModel getInstansce(String clusterId, String provider, String host, String idRsa) {
         InstanceModel resultModel = null;
         if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
             resultModel = new InstanceModel("", "", "", "");
         } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
             resultModel = new InstanceModel("", "", "", "");
         } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
-            resultModel = getInstanceInfo(clusterId);
+            resultModel = getInstanceInfo(clusterId, host, idRsa);
         } else {
             LOGGER.error(provider + " is Cloud not supported.");
             resultModel = new InstanceModel("", "", "", "");
@@ -55,12 +57,12 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    public List<InstanceModel> getInstances(String clusterId, String provider) {
+    public List<InstanceModel> getInstances(String clusterId, String provider, String host, String idRsa) {
         List<InstanceModel> resultList = new ArrayList<InstanceModel>();
         if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
         } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
         } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
-            resultList = getInstancesInfo(clusterId);
+            resultList = getInstancesInfo(clusterId, host, idRsa);
         } else {
             LOGGER.error(provider + " is Cloud not supported.");
         }
@@ -72,8 +74,13 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfo(String clusterId) {
+    private InstanceModel getInstanceInfo(String clusterId, String host, String idRsa) {
         InstanceModel resultModel = null;
+        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                ,TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                , host
+                , idRsa);
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 
@@ -110,8 +117,13 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfo(String clusterId) {
+    private List<InstanceModel> getInstancesInfo(String clusterId, String host, String idRsa) {
         List<InstanceModel> modelList = new ArrayList<>();
+        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                ,TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                , host
+                , idRsa);
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 

@@ -26,23 +26,26 @@ import static org.mockito.Mockito.*;
 @TestPropertySource("classpath:application.yml")
 @TestPropertySource("classpath:bootstrap.yml")
 public class TerramanServiceTest {
-    private static final String DEFAULT_PATH = "secret";
-    private static final String PROVIDER = "openstack";
-    private static final String CLUSTER_ID = "test_cluster";
-    private static final String SEQ = "13";
-    private static final int INT_SEQ = 13;
-    private static final String PATH = "secret/OPENSTACK/1";
-    private static final String STR = "terraman";
-    private static final String RESULT_STR = "SUCCESS";
-    private static final String RESULT_CODE = "200";
+    private static final String TEST_DEFAULT_PATH = "secret";
+    private static final String TEST_PROVIDER = "openstack";
+    private static final String TEST_CLUSTER_ID = "test_cluster";
+    private static final String TEST_SEQ = "13";
+    private static final int TEST_INT_SEQ = 13;
+    private static final String TEST_PATH = "secret/OPENSTACK/1";
+    private static final String TEST_STR = "terraman";
+    private static final String TEST_RESULT_STR = "SUCCESS";
+    private static final String TEST_RESULT_CODE = "200";
 
-    private static final String RESOURCE_NAME = "resourceName";
-    private static final String INSTANCE_NAME = "instanceName";
-    private static final String PRIVATE_IP = "privateIp";
-    private static final String PUBLIC_IP = "publicIp";
+    private static final String TEST_RESOURCE_NAME = "resourceName";
+    private static final String TEST_INSTANCE_NAME = "instanceName";
+    private static final String TEST_PRIVATE_IP = "privateIp";
+    private static final String TEST_PUBLIC_IP = "publicIp";
 
-    private static final String FILE_NAME = "kubespray_var.sh";
-    private static final String FILE_DATA = "{test : test}";
+    private static final String TEST_FILE_NAME = "kubespray_var.sh";
+    private static final String TEST_FILE_DATA = "{test : test}";
+
+    private static final String TEST_HOST = "1.1.1.1";
+    private static final String TEST_IDRSA = "id_rsa";
 
     private static TerramanRequest gParams = null;
     private static ResultStatusModel gResultModel = null;
@@ -78,11 +81,11 @@ public class TerramanServiceTest {
 
         gResultModel = new ResultStatusModel();
         gParams = new TerramanRequest();
-        gParams.setProvider(PROVIDER);
-        gParams.setClusterId(CLUSTER_ID);
-        gParams.setSeq(SEQ);
+        gParams.setProvider(TEST_PROVIDER);
+        gParams.setClusterId(TEST_CLUSTER_ID);
+        gParams.setSeq(TEST_SEQ);
 
-        gInstanceModel = new InstanceModel(RESOURCE_NAME, INSTANCE_NAME, PRIVATE_IP, PUBLIC_IP);
+        gInstanceModel = new InstanceModel(TEST_RESOURCE_NAME, TEST_INSTANCE_NAME, TEST_PRIVATE_IP, TEST_PUBLIC_IP);
         gInstanceList = new ArrayList<>();
         gInstanceList.add(gInstanceModel);
     }
@@ -94,13 +97,13 @@ public class TerramanServiceTest {
     @Test
     public void createTerramanTest() {
         // when
-        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "")).thenReturn(RESULT_CODE);
-        doNothing().when(clusterLogService).saveClusterLog(CLUSTER_ID, INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(PROVIDER));
+        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+        doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         //when(terramanService.createProviderFile(PROVIDER, INT_SEQ)).thenReturn(RESULT_CODE);
-        when(instanceService.getInstansce(CLUSTER_ID, PROVIDER)).thenReturn(gInstanceModel);
-        when(commonFileUtils.tfFileDelete(FILE_NAME)).thenReturn(RESULT_CODE);
-        when(instanceService.getInstances(CLUSTER_ID, PROVIDER)).thenReturn(gInstanceList);
-        when(commonFileUtils.createWithWrite(FILE_NAME, FILE_DATA)).thenReturn(RESULT_CODE);
+        when(instanceService.getInstansce(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceModel);
+        when(commonFileUtils.tfFileDelete(TEST_FILE_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceList);
+        when(commonFileUtils.createWithWrite(TEST_FILE_NAME, TEST_FILE_DATA)).thenReturn(TEST_RESULT_CODE);
         //doReturn(gFinalResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_FAIL)).thenReturn(gResultStatusModelModel);
@@ -118,10 +121,11 @@ public class TerramanServiceTest {
     @Test
     public void deleteTerramanTest() {
         // when
-//        doReturn(gResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
-        // when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn();
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(TEST_CLUSTER_ID), TerramanConstant.DELETE_DIR_CLUSTER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+        when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
 
-        ResultStatusModel result = terramanService.deleteTerraman(CLUSTER_ID);
+        ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID);
 
         // then
         assertThat(result).isNotNull();

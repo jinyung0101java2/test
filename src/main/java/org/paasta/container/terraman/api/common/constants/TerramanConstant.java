@@ -3,16 +3,19 @@ package org.paasta.container.terraman.api.common.constants;
 public class TerramanConstant {
 
     /**
+     * ssh conn key
+     * */
+    public static final String MASTER_ID_RSA = "/root/.ssh/id_rsa";
+
+    /**
      * file name & directory
      * */
+    public static final String TERRAFORM_STATE_FILE_NAME = "terraform.tfstate";
     public static final String TERRAFORM_STATE_FILE_PATH(String clusterPath) {
-        return clusterPath + "//terraform.tfstate";
+        return clusterPath + "/terraform.tfstate";
     }
     public static final String FILE_PATH(String clusterPath) {
         return clusterPath + "/provider.tf";
-    }
-    public static final String KEYPAIR_TF_FILE_PATH(String clusterPath) {
-        return clusterPath + "/keypair.tf";
     }
 
     /**
@@ -29,37 +32,10 @@ public class TerramanConstant {
 
 
     /**
-     * vm create key-pair ssh key 생성
-     * */
-    public static final String SSH_KEY_COMMAND(String clusterId) {
-        return "ssh-keygen -f /home/ubuntu/.ssh/" + clusterId + "_id_rsa -t rsa -N ''";
-    }
-    public static final String SSH_KEY_RSA_COMMAND(String clusterId) {
-        return "cat /home/ubuntu/.ssh/" + clusterId + "_id_rsa.pub";
-    }
-
-    public static final String SSH_KEY_COMMAND = "ssh-keygen -f /home/ubuntu/.ssh/id_rsa -t rsa -N '' -m PEM";
-    public static final String SSH_KEY_RSA_COMMAND = "cat /home/ubuntu/.ssh/id_rsa.pub";
-
-
-    /**
-     * terraman keyPair 생성
-     * */
-
-    public static final String DELETE_KEYPAIR_ALL = "/home/ubuntu/.ssh";
-    public static final String KEYPAIR_TF_FILE(String sshKey) {
-        return "resource \"openstack_compute_keypair_v2\" \"paasta-cp-keypair\" {\n" +
-                "  name       = \"paasta-cp-keypair\"\n" +
-                "  public_key = \"" + sshKey.trim() + "\"\n" +
-                "}";
-    }
-
-
-    /**
      * kubespray cluster cp-cluster-vars.sh 변경 및 실행 명령어
      * */
     public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
-        return "echo -e \"" + contents + "\" > /home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-vars.sh";
+        return "echo -e \"" + contents + "\" > paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-vars.sh";
     }
     public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster.sh";
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster.sh";
@@ -72,17 +48,17 @@ public class TerramanConstant {
      * change directory 명령어
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
-        return "mkdir -p -v /tmp/terraform/cluster_"+clusterId;
+        return "mkdir -p -v tmp/terraform/"+clusterId;
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId) {
-        return "/tmp/terraform/cluster_"+clusterId;
+        return "tmp/terraform/"+clusterId;
     }
-    public static final String DELETE_DIR_CLUSTER = "/tmp/terraform";
+    public static final String DELETE_DIR_CLUSTER = "tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r cluster_"+clusterId;
     }
-    public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane";
+    public static final String MOVE_DIR_KUBESPRAY = "paas-ta-container-platform-deployment/standalone/single_control_plane";
 
 
     /**
@@ -95,12 +71,13 @@ public class TerramanConstant {
      * .tf 파일 복사 명령어
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name";
-    public static final String INSTANCE_COPY_COMMAND(String pod) {
-        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./instance.tf";
+    public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
+        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " tmp/terraform/"+clusterId;
     }
-    public static final String NETWORK_COPY_COMMAND(String pod) {
-        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./network.tf";
-    }
+//    public static final String INSTANCE_COPY_COMMAND = "sudo docker cp a44ddef5e883:openstack-resource.tf instance.tf";
+//    public static final String NETWORK_COPY_COMMAND(String pod) {
+//        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./network.tf";
+//    }
 
     /********************************************************************************************************************************
      * local

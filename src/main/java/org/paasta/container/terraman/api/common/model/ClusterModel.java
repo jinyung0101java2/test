@@ -17,9 +17,6 @@ public class ClusterModel {
     @Column(name = "cluster_id")
     private String clusterId;
 
-    @Column(name = "cluster_api_url")
-    private String clusterApiUrl;
-
     @Column(name = "name")
     private String name;
 
