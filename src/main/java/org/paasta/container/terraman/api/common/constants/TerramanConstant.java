@@ -5,7 +5,7 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/id_rsa";
+    public static final String MASTER_ID_RSA = "id_rsa.pem";
 
     /**
      * file name & directory
