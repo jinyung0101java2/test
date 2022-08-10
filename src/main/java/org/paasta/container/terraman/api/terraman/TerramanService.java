@@ -138,7 +138,7 @@ public class TerramanService {
         LOGGER.info("3. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa));
 
         cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "", host, idRsa);
-        fResult = fileUtil.createProviderFile(clusterId, provider, seq, cResult, host, idRsa);
+        fResult = fileUtil.createProviderFile(clusterId, provider, seq, cResult.trim(), host, idRsa);
 
         if(StringUtils.equals(fResult, Constants.RESULT_STATUS_FAIL)) {
             // log 저장
