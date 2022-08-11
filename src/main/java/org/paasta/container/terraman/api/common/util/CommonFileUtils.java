@@ -75,7 +75,7 @@ public class CommonFileUtils {
                             resultCode = commandService.SSHFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile);
                             LOGGER.info("resultTest :: " + resultCode);
                         }
-                        resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
+                        resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa);
                         if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
                             resultCode = Constants.RESULT_STATUS_SUCCESS;
                             LOGGER.info("인스턴스 파일 복사가 완료되었습니다. " + resultCode);
