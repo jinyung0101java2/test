@@ -70,7 +70,7 @@ public class TerramanConstant {
     /**
      * .tf 파일 복사 명령어
      * */
-    public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name";
+    public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " tmp/terraform/"+clusterId;
     }
