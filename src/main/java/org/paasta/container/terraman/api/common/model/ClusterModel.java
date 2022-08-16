@@ -20,9 +20,6 @@ public class ClusterModel {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "cluster_token")
-    private String clusterToken;
-
     @Column(name = "cluster_type")
     private String clusterType;
 

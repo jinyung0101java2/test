@@ -69,7 +69,6 @@ public class CommandService {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         SftpATTRS attrs;
         FileInputStream in = null;
-        LOGGER.info("uploadFile :: " + uploadFile.getName());
         try {
             SSHConnect(host, idRsa);
             channel = session.openChannel("sftp");
@@ -78,12 +77,10 @@ public class CommandService {
             in = new FileInputStream(uploadFile);
             channelSftp.cd(dir);
             channelSftp.put(in, uploadFile.getName());
-            LOGGER.info("resultCommand1 :: " + resultCommand);
             // 업로드했는지 확인
             if (this.exists(dir +"/"+uploadFile.getName())) {
                 resultCommand = Constants.RESULT_STATUS_SUCCESS;
             }
-            LOGGER.info("resultCommand2 :: " + resultCommand);
         } catch (SftpException | JSchException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -148,7 +145,6 @@ public class CommandService {
             if(!StringUtils.equals(dir, "")) {
                 command = "cd " + dir + " && " + command;
             }
-            LOGGER.info("cmdInputSSH :: " + command);
             channelExec.setCommand(command);
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
@@ -159,7 +155,6 @@ public class CommandService {
                 response.append(new String(buffer, 0, decodedLength));
             }
             resultCommand = response.toString();
-            LOGGER.info("cmdOutputSSH :: " + response.toString());
 
         } catch (Exception e) {
             LOGGER.error("JSchException : " + e.getMessage());
@@ -187,7 +182,6 @@ public class CommandService {
             if(!StringUtils.equals(dir, "")) {
                 prsbld.directory(new File(dir));
             }
-            LOGGER.info("cmdIn :: " + prsbld.command());
 
             // 프로세스 수행시작
             prs = prsbld.start();
@@ -198,7 +192,6 @@ public class CommandService {
                 sb.append(s + System.getProperty("line.separator"));
             }
             resultOutput = sb.toString();
-            LOGGER.info("cmdOut :: " + resultOutput);
             prs.getErrorStream().close();
             prs.getInputStream().close();
             prs.getOutputStream().close();

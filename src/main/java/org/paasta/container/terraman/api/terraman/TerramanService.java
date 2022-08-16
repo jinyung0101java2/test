@@ -80,11 +80,11 @@ public class TerramanService {
             host = MASTER_HOST;
             idRsa = TerramanConstant.MASTER_ID_RSA;
             cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa);
+            if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+            }
         }
 
-
-        LOGGER.info("host :: " + host);
-        LOGGER.info("idRsa :: " + idRsa);
         // 해당 클러스터 디렉토리 생성
         cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -213,7 +213,6 @@ public class TerramanService {
         // command line 실행
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_APPLY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info(cResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
@@ -236,19 +235,6 @@ public class TerramanService {
             LOGGER.info("Instance is not exists");
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
-        LOGGER.info("instanceInfo :: " + instanceInfo.toString());
-//        Loop : for(int i = 0; i<100; i++) {
-//            try {
-//                Thread.sleep(5000);
-//            } catch (Exception e) {
-//                LOGGER.error(e.getMessage());
-//            }
-//            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), idRsa);
-//            LOGGER.info("ssh connection loop :: " + cResult);
-//            if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-//                break Loop;
-//            }
-//        }
 
         try {
             Thread.sleep(300000);

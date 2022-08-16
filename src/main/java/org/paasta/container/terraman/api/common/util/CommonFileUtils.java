@@ -73,7 +73,6 @@ public class CommonFileUtils {
                         if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
                             File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)) ); // 파일 객체 생성
                             resultCode = commandService.SSHFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile);
-                            LOGGER.info("resultTest :: " + resultCode);
                         }
                         resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa);
                         if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
