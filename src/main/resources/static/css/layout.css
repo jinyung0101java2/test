@@ -375,7 +375,7 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .creat > div > dl dd fieldset:after {content:""; width:10px; height:10px; border-bottom:2px solid #666666; border-left:2px solid #666666; transform:rotate(-45deg); position:absolute; top:19px; right:22px;cursor:pointer;}
 .creat > div > dl dd fieldset select {height:50px; line-height:50px; width:100%; padding-left:18px; font-size:18px; color:#47494d; cursor:pointer;}
 .creat > div > div:not(.btn02) {overflow:hidden; margin-top:8px;}
-.creat div .check-quotas {margin-top:35px;}
+.creat div .check-quotas {margin-top:35px !important;}
 .creat div .check-quotas a {padding:3px 7px 3px 6px; background:linear-gradient( to bottom, #ffffff, #ffffff, #fafafa); border:1px solid #cccccc; border-radius:2px; font-size:14px; line-height:30px; margin-left:10px;}
 .creat > div > div p {float:left; margin-left:9px; font-weight:600; letter-spacing:0.5px; line-height:30px;}
 .creat div .quotas-list {margin-top:10px; padding-bottom:8px;}

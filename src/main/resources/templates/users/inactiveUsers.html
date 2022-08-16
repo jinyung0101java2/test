@@ -72,7 +72,7 @@
         window.onload = () => {
 
             func.init(ASIDE_DP1.MANAGEMENTS, ASIDE_DP2.USERS);
-            document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+            callbackFuncNameLoad();
 
             const user = {
                 offset : 0, // 로드 페이지 넘버
@@ -99,10 +99,11 @@
                     func.loading();
 
                     // user 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users?isActive=false&userType=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/usersList?isActive=false&userType=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
                     },
 
                 draw(data){
+                    console.log(data);
 
                     if(user.offset == 0) user.allItemCount = data.itemMetaData.allItemCount;
 
@@ -115,7 +116,7 @@
                                 var users = data.items[i];
 
                                 var html =
-                                    `<tr><td class="left"><a href="javascript:;" data-name="${users.userId}" data-spac="ALL">${users.userId}</td>`+
+                                    `<tr><td class="left"><a href="javascript:;" data-name="${users.userAuthId}">${users.userId}</td>`+
                                     `<td class="left">${users.serviceAccountName}</td>`+
                                     `<td class="left">-</td>`+
                                     `<td class="left">-</td>`+
@@ -170,8 +171,6 @@
                     for(var i=0; i<=listAll.length-1; i++){
                         listAll[i].addEventListener('click', (e) => {
                             sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
-                        sessionStorage.setItem('nameSpace', e.target.getAttribute('data-spac'));
-
                         document.location.href = URI_CP_MANAGEMENTS_USERS + URI_CP_DETAILS;
                     }, true);
                     };

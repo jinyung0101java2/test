@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 
@@ -28,29 +28,39 @@
                                 <input disabled="disabled" id="account" type="text" />
                             </dd>
                         </dl>
-
-                        <div class="check-quotas">
-                            <p>Namespaces &frasl; Roles</p>
-                            <a href="javascript:;" class="resAdd" th:text="#{M0027}"></a>
-                        </div>
-                        <div class="table_style01 limitTable">
-                            <table>
-                                <caption>Namespaces &frasl; Roles</caption>
-                                <colgroup >
-                                    <col width="50%" />
-                                    <col width="50%" />
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">Namespaces</th>
-                                    <th scope="col">Roles</th>
-                                </tr>
-                                </thead>
-                                <tbody class="resourceQuotas">
-                                </tbody>
-                            </table>
-                        </div>
+                        <dl>
+                            <dt><label for="authorityFieldset">Authority</label></dt>
+                            <dd>
+                                <fieldset id="authorityFieldset">
+                                </fieldset>
+                            </dd>
+                        </dl>
+                        <dl id="nsRoleContent" style="display: none;">
+                            <dt style="height: 40px; line-height: 40px;"><label for="nsRoleTable">Namespaces &frasl; Roles</label>
+                                <button style="border: 1px solid  #f7f7f7; border-radius: 5px; padding: 5px 15px; margin-left: 10px;" href="javascript:;" class="resAdd" th:text="#{M0027}"></button>
+                            </dt>
+                            <dd>
+                                <div class="table_style01 limitTable" id="nsRoleTable">
+                                    <table>
+                                        <caption>Namespaces &frasl; Roles</caption>
+                                        <colgroup >
+                                            <col width="50%" />
+                                            <col width="50%" />
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Namespaces</th>
+                                            <th scope="col">Roles</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id ='namespaceRoleList' class="resourceQuotas">
+                                        <tr><td></td><td colspan="2">No Data.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
                 <!-- btn -->
@@ -61,18 +71,19 @@
                     </div>
                 </div>
             </article>
-        </div>
+    </div>
     <input type="hidden" id="userType" th:value="${userType}"/>
     <input type="hidden" id="userAuthId" th:value="${userAuthId}"/>
 </div>
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
-    window.onload = () => {
 
+    window.onload = () => {
+     var userAuthority = '';
         func.init(ASIDE_DP1.MANAGEMENTS, ASIDE_DP2.USERS);
-        document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
-        
+
+
         const userUpdate = {
             init(){
                 var sendUserType = document.getElementById('userType').value;
@@ -89,17 +100,30 @@
                 document.getElementById('account').value = data.serviceAccountName;
                 document.getElementById('userAuthId').value = data.userAuthId;
 
-                if(data.items.length > 0){
-                    for(var i=0; i<=data.items.length-1; i++){
-                        var html = `<tr><td><input type="checkbox" data-name="${data.items[i].cpNamespace}" data-comp="${data.items[i].cpNamespace}${data.items[i].roleSetCode}" data-stat="${data.items[i].roleSetCode}"></td><td class="left">${data.items[i].cpNamespace}</td><td class="left">${data.items[i].roleSetCode}</td></tr>`;
 
-                        func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
+                ////userAuth
+                userAuthority = data.userType;
+
+                var authSelectHTML =
+                    '<select id="authority" onchange="javascript:selectAuthority(this);">' +
+                    '<option value='+ AUTH_CLUSTER_ADMIN+'>Cluster Admin</option><option value=' + AUTH_USER+ '>User</option>' +
+                    '</select>';
+
+                document.getElementById('authorityFieldset').innerHTML = authSelectHTML;
+                document.getElementById('authority').value = userAuthority;
+
+                if(userAuthority === AUTH_USER) {
+                    document.getElementById('nsRoleContent').style.display="";
+
+                    if(data.items.length > 0){
+                        var html = '';
+                        for(var i=0; i<=data.items.length-1; i++){
+                           html += `<tr><td><input type="checkbox" data-name="${data.items[i].cpNamespace}" data-comp="${data.items[i].cpNamespace}${data.items[i].roleSetCode}" data-stat="${data.items[i].roleSetCode}"></td><td class="left">${data.items[i].cpNamespace}</td><td class="left">${data.items[i].roleSetCode}</td></tr>`;
+                        };
+                        document.getElementById('namespaceRoleList').innerHTML = html;
                     };
-                } else {
-                    var html = '<tr><td></td><td colspan="2">No Data.</td></tr>';
+                }
 
-                    func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
-                };
 
                 userUpdate.event();
             },
@@ -115,18 +139,21 @@
                 var resourceQuotasList = [];
 
                 for(var i=0; i<=resourceName.length-1; i++){
-                    resourceQuotasList.push({"namespace":resourceName[i].getAttribute('data-name'),"role":resourceName[i].getAttribute('data-stat')});
+                    resourceQuotasList.push({"namespace":resourceName[i].getAttribute('data-name'),"role":resourceName[i].
+                        getAttribute('data-stat')});
                 };
 
                 var createName = {
+                    "oldUserType" : userAuthority,
+                    "userType" : document.getElementById('authority').value,
                     "userId": document.getElementById('userId').value,
                     "userAuthId" : document.getElementById('userAuthId').value,
                     "serviceAccountName": document.getElementById('account').value,
                     "selectValues": resourceQuotasList,
                 };
 
-
-                func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, JSON.stringify(createName), true, 'application/json', func.historyBack);
+                console.log(createName);
+              //  func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, JSON.stringify(createName), true, 'application/json', func.historyBack);
             }, false);
             },
 
@@ -241,6 +268,16 @@
         }
 
         userUpdate.init();
+    }
+</script>
+<script>
+    function selectAuthority(obj){
+        if(obj.value == AUTH_CLUSTER_ADMIN){
+            document.getElementById('nsRoleContent').style.display="none";
+        }
+        else if(obj.value == AUTH_USER){
+            document.getElementById('nsRoleContent').style.display="";
+        }
     }
 </script>
 </th:block>

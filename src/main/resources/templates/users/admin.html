@@ -63,7 +63,6 @@
 
             func.init(ASIDE_DP1.MANAGEMENTS, ASIDE_DP2.USERS);
             callbackFuncNameLoad();
-            document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
 
             const user = {
                 offset : 0, // 로드 페이지 넘버
@@ -94,7 +93,7 @@
                     func.loading();
 
                     // nameSpace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users?userType=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/usersList?type=${user.type}&searchName=${document.getElementById('searchText').value}&limit=${user.limit}&offset=${user.offset}`, 'application/json', user.draw);
                 },
 
                 draw(data){
@@ -108,7 +107,7 @@
                                 user.trSum = 1;
 
                                 var html = `<tr>
-									<td class="left ${user.trID}" data-class="${user.trID}"><a href="javascript:;" data-name="${data.items[i].userId}" data-spac="ALL">${data.items[i].userId}</a></td>
+									<td class="left ${user.trID}" data-class="${user.trID}"><a href="javascript:;" data-name="${data.items[i].userAuthId}">${data.items[i].userId}</a></td>
 									<td class="left">${convertUserTypeString(data.items[i].userType)}</td>
 									<td class="left">${data.items[i].roleSetCode}</td>
 									<td class="${user.trID}" data-class="${user.trID}">${data.items[i].created}</td>
@@ -118,7 +117,7 @@
                             func.appendHtml(document.querySelector('.adminList'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="6">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="4">No Data.</td></tr>`;
 
                         func.removeHtml(document.querySelector('.adminList'));
 
@@ -167,7 +166,6 @@
 
                     for(var i=0; i<=listAll.length-1; i++){
                         listAll[i].addEventListener('click', (e) => {
-                            sessionStorage.setItem('nameSpace', e.target.getAttribute('data-spac'));
                         sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
 
                         document.location.href = URI_CP_MANAGEMENTS_USERS_ADMIN + URI_CP_DETAILS;
