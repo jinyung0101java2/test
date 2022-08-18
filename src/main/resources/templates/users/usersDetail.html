@@ -93,7 +93,7 @@
 
                 func.loading();
 
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}?userType=` + SELECTED_USER, 'application/json', userDetail.draw);
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, 'application/json', userDetail.draw);
             },
 
             draw(data){

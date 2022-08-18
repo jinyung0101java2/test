@@ -35,17 +35,21 @@ public class UsersController {
         return BASE_URL + "admin";
     }
 
+/*
 
-    /**
+    */
+/**
      * Admin 상세 페이지 이동(Go to the admin details page)
      *
      * @return the view
-     */
+     *//*
+
     @ApiOperation(value = "Admin 상세 페이지 이동(Go to the admin details page)", nickname = "getAdminDetails")
     @GetMapping(value = ConstantsUrl.URI_CP_MANAGEMENTS_USERS_ADMIN + ConstantsUrl.URI_CP_DETAILS)
     public String getAdminDetails() {
         return BASE_URL + "adminDetail";
     }
+*/
 
 
 
@@ -93,11 +97,7 @@ public class UsersController {
      */
     @ApiOperation(value = "Users 수정 페이지 이동(Go to the users update page)", nickname = "updateUsers")
     @GetMapping(value = ConstantsUrl.URI_CP_MANAGEMENTS_USERS + ConstantsUrl.URI_CP_UPDATE)
-    public String updateUsers(@RequestParam(required = false, defaultValue = Constants.SELECTED_USER) String userType,
-                              Model model) {
-        model.addAttribute("userType", userType);
-        return BASE_URL + "usersUpdate";
-    }
+    public String updateUsers() { return BASE_URL + "usersUpdate"; }
 
 
 }

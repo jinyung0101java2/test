@@ -72,8 +72,6 @@
                 </div>
             </article>
     </div>
-    <input type="hidden" id="userType" th:value="${userType}"/>
-    <input type="hidden" id="userAuthId" th:value="${userAuthId}"/>
 </div>
 
 <th:block layout:fragment="script">
@@ -81,16 +79,14 @@
 
     window.onload = () => {
      var userAuthority = '';
+     var userAuthId = '';
         func.init(ASIDE_DP1.MANAGEMENTS, ASIDE_DP2.USERS);
 
 
         const userUpdate = {
             init(){
-                var sendUserType = document.getElementById('userType').value;
-                var params = "?userType=" + sendUserType;
-
                 // nameSpace 정보 조회
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`+ params, 'application/json', userUpdate.draw);
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, 'application/json', userUpdate.draw);
             },
 
             draw(data){
@@ -98,11 +94,9 @@
                 // Details data
                 document.getElementById('userId').value = data.userId;
                 document.getElementById('account').value = data.serviceAccountName;
-                document.getElementById('userAuthId').value = data.userAuthId;
-
-
                 ////userAuth
                 userAuthority = data.userType;
+                userAuthId  = data.userAuthId;
 
                 var authSelectHTML =
                     '<select id="authority" onchange="javascript:selectAuthority(this);">' +
@@ -144,16 +138,15 @@
                 };
 
                 var createName = {
-                    "oldUserType" : userAuthority,
                     "userType" : document.getElementById('authority').value,
                     "userId": document.getElementById('userId').value,
-                    "userAuthId" : document.getElementById('userAuthId').value,
                     "serviceAccountName": document.getElementById('account').value,
+                    "userAuthId" : userAuthId,
                     "selectValues": resourceQuotasList,
                 };
 
                 console.log(createName);
-              //  func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, JSON.stringify(createName), true, 'application/json', func.historyBack);
+               func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, JSON.stringify(createName), true, 'application/json', func.historyBack);
             }, false);
             },
 
