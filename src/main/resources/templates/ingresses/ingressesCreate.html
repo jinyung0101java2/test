@@ -17,10 +17,6 @@
                 <div>
                     <h3 th:text="|Ingresses #{M0024}|"></h3>
                     <div class="g-select-wrap">
-                        <div class="g-select">
-                            <select id="namespace">
-                            </select>
-                        </div>
                         <input id="metadataName" type="text" th:placeholder="Name">
                         <input type="text" placeholder="Desc" class="long">
                     </div>
@@ -63,11 +59,11 @@
                             </div>
                         </dd>
                     </dl>
-                    <button type="button" name="pathCreate" id="pathCreate_0" class="add-btn pathCreate" onclick="pathCreate()">경로 추가</button>
+                    <button type="button" name="pathCreate" id="pathCreate_0" class="add-btn pathCreate" onclick="pathCreate()" th:text="#{M0817}"></button>
                 </div>
                 <!-- // Rule -->
                 <div class="flex-e rule-add-btn">
-                    <button type="button" id="ruleCreate" class="add-btn" onclick="ruleCreate()">룰 추가</button>
+                    <button type="button" id="ruleCreate" class="add-btn" onclick="ruleCreate()" th:text="#{M0818}"></button>
                 </div>
             </div>
             <!-- btn -->
@@ -86,19 +82,18 @@
         window.onload = () => {
 
             func.init(ASIDE_DP1.SERVICES, ASIDE_DP2.INGRESSES);
-            document.getElementById('nameSpaceTitleDiv').innerText = NAMESPACE_ALL_VALUE;
+            callbackFuncNameLoad();
+
             var order = "";
             const createIngresses = {
 
                 init(){
 
-                    sessionStorage.setItem('nameSpace', 'ALL');
-
                     //namespace 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', createIngresses.drawName);
 
                     //service 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/services`, 'application/json', createIngresses.drawServ);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
 
                     createIngresses.reset;
 
@@ -111,37 +106,53 @@
                     createIngresses.init();
                 },
 
-                drawName(data){
-                    func.nameData = data;
-
-                    for (var i=0; i <= data.items.length-1; i++){
-                        var html = `<option value="${data.items[i].cpNamespace}">${data.items[i].cpNamespace}</option>`;
-
-                        func.appendHtml(document.getElementById('namespace'), html, 'select');
-                    };
-
-                    document.getElementById('namespace').querySelector('option').setAttribute('selected', 'selected');
-
-                },
-
                 drawServ(data) {
-
-                    var target = document.getElementsByName('target');
-
-                    for (var i = 0; i <= target.length-1; i++) {
-                        func.removeHtml(document.getElementById(`${target[i].getAttribute('id')}`));
-                    }
-
-                    for (var i = 0; i <= target.length-1; i++) {
-                        for (var j = 0; j <= data.items.length-1; j++) {
-                            var services = data.items[j];
-                            var html = `<option value="${services.name}">${services.name}</option>`;
-                            func.appendHtml(document.getElementById(`${target[i].getAttribute('id')}`),html,'select')
+                    if (sessionStorage.getItem('nameSpace') ==='ALL') {
+                        var target = document.getElementsByName('target');
+                        for (var i = 0; i <= target.length-1; i++) {
+                            func.removeHtml(document.getElementById('target_'+`${i}`));
                         }
-                    };
-
-                    for (var i = 0; i <= target.length-1; i++) {
-                        document.getElementById(`${target[i].getAttribute('id')}`).querySelector('option').setAttribute('selected', 'selected');
+                            var port = document.getElementsByName('port');
+                        for (var i = 0; i <= port.length-1; i++) {
+                            (document.getElementById('port_'+`${i}`)).value ='';
+                        }
+                        func.alertPopup('ERROR', MSG_NO_NAMESPACE, true, MSG_CLOSE, 'closed');
+                    } else {
+                        if (data.items.length == 0) {
+                            var target = document.getElementsByName('target');
+                            //target.length=1
+                            for (var i = 0; i <= target.length-1; i++) {
+                                func.removeHtml(document.getElementById('target_'+`${i}`));
+                            }
+                            var port = document.getElementsByName('port');
+                            for (var i = 0; i <= port.length-1; i++) {
+                                if ((document.getElementById('port_'+`${i}`)).value != null) {
+                                    (document.getElementById('port_' + `${i}`)).value = '';
+                                }
+                            }
+                        } else {
+                            if (data.items.length > 0) {
+                                var target = document.getElementsByName('target');
+                                for (var i = 0; i <= target.length-1; i++) {
+                                    func.removeHtml(document.getElementById('target_'+`${i}`));
+                                }
+                                for (var i = 0; i <= target.length-1; i++) {
+                                    for (var j = 0; j <= data.items.length-1; j++) {
+                                        var services = data.items[j];
+                                        var html = `<option value="${services.name}">${services.name}</option>`;
+                                        func.appendHtml(document.getElementById(`${target[i].getAttribute('id')}`),html,'select');
+                                    }
+                                };
+                            } else {
+                                for (var i = 0; i <= target.length-1; i++) {
+                                    func.removeHtml(document.getElementById(`${target[i].getAttribute('id')}`));
+                                }
+                                var port = document.getElementsByName('port');
+                                for (var i = 0; i <= port.length-1; i++) {
+                                    (document.getElementById('port_'+`${i}`)).value='';
+                                }
+                            }
+                        }
                     }
                 },
 
@@ -151,47 +162,25 @@
                     }
                 },
 
-                checkName(data) {
-                    if (document.getElementById('namespace').value !== 'ALL') {
-                        if (Array.isArray(data.items) && data.items.length != 0) {
-                            func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
-                        } else {
-                            func.alertPopup('ERROR', '해당 Namespace는 Service가 존재하지 않습니다. 해당 Namespace에 Service를 생성해 주세요.', true, MSG_CLOSE, 'closed');
-                            document.getElementById('namespace').options[0].selected = true;
-                        }
-                    } else if (document.getElementById('namespace').value === 'ALL') {
-                        func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
-                    }
-                },
-
                 checkTarget(data){
-                    if (document.getElementById('namespace').value === 'ALL'){
-                        func.alertPopup('ERROR', 'Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
-                    } else {
+
                         if (Array.isArray(data.items) && data.items.length != 0) {
 
                             sessionStorage.setItem('commonName', document.getElementById('target_'+`${order}`).value);
                             func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services/${sessionStorage.getItem('commonName')}`, 'application/json', createIngresses.drawPort);
-                        } else {
-                            createIngresses.alertPopup('ERROR', 'Service가 존재하는 Namespace를 선택해 주세요.', true, MSG_CLOSE, 'closed');
                         }
-                    }
                 },
 
                 event(){
-
-                    document.getElementById('namespace').addEventListener('change', (e) => {
-                        sessionStorage.setItem('nameSpace', document.getElementById('namespace').value);
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.checkName);
-
-                }, false);
+                    document.getElementById('nameSpaceTitleDiv').addEventListener('click', (e) => {
+                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
+                    }, false);
 
                     document.getElementById('save').addEventListener('click', (e) => {
                         func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createIngresses.save);
                 }, false);
 
                     document.getElementById('ruleCreate').addEventListener('click', (e) => {
-                        sessionStorage.setItem('nameSpace', document.getElementById('namespace').value);
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
                 }, false);
 
@@ -199,7 +188,6 @@
                     document.addEventListener('click', (e) => {
                         for (var i = 0; i <= pathCreate.length-1; i++) {
                         if (e.target && e.target.id == 'pathCreate_' + `${i}`) {
-                            sessionStorage.setItem('nameSpace', document.getElementById('namespace').value);
                             func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
                         }
                     }
@@ -210,7 +198,6 @@
                         for (var i = 0; i <= target.length-1; i++) {
                         if (e.target && e.target.id == 'target_' + `${i}`) {
                             order =`${i}`;
-                            sessionStorage.setItem('nameSpace', document.getElementById('namespace').value);
                             func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.checkTarget);
                         }
                     }
@@ -229,7 +216,7 @@
                     var createIngresses = {
 
                         "cluster": sessionStorage.getItem('cluster'),
-                        "namespace": document.getElementById('namespace').value,
+                        "namespace": sessionStorage.getItem('nameSpace'),
                         "resourceName": "ingresses",
                         "metadataName": document.getElementById('metadataName').value,
                         "rules": rulesList
@@ -265,7 +252,7 @@
                     </select>
                 </div>
                 <input name="path" type="text" class="rules" placeholder="e.g. /example" />
-                <button class="delete-btn" onclick="deleteBtn()">삭제</button>
+                <button class="delete-btn" onclick="deleteBtn()">` + MSG_DELETE + `</button>
             </dd>`;
 
             newTarget.innerHTML = `
@@ -279,7 +266,7 @@
                     <p><label>Port</label></p>
                     <input name="port" class="rules port" type="text" placeholder="e.g. 80"/>
                 </div>
-                <button class="delete-btn" onclick="deleteBtn()">삭제</button>
+                <button class="delete-btn" onclick="deleteBtn()">` + MSG_DELETE + `</button>
             </dd>`;
 
             currentPath.insertAdjacentElement('afterend', newTarget);
@@ -295,8 +282,8 @@
             newRule.classList.add('con-section');
             newRule.innerHTML = `
                 <div class="flex-e">
-                    <button title="룰 삭제" onclick="deleteBtn()">&#10006;</button>
-                    <span class="blind">룰 삭제</span>
+                    <button onclick="deleteBtn()">&#10006;</button>
+                    <span class="blind">` + DELETE_RULE + `</span>
                 </div>
                 <dl>
                     <dt><label">Host</label></dt>
@@ -331,7 +318,7 @@
                         </div>
                     </dd>
                 </dl>
-                <button type="button" name="pathCreate" id="pathCreate" class="add-btn pathCreate" onclick="pathCreate()">경로 추가</button>`
+                <button type="button" name="pathCreate" id="pathCreate" class="add-btn pathCreate" onclick="pathCreate()">`+ ADD_PATH +`</button>`;
             conSection.insertAdjacentElement('beforebegin', newRule);
 
             btnSynch();

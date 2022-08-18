@@ -53,6 +53,7 @@
         window.onload = () => {
 
             func.init(ASIDE_DP1.SERVICES, ASIDE_DP2.INGRESSES);
+            callbackFuncNameLoad();
 
             const ingresses = {
                 offset : 0, // 로드 페이지 넘버
@@ -80,7 +81,7 @@
                     func.loading();
 
                     // nameSpace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses?searchName=${document.getElementById('searchText').value}&limit=${ingresses.limit}&offset=${ingresses.offset}`, 'application/json', ingresses.draw);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/ingresses/ingressControllerInfo?searchName=${document.getElementById('searchText').value}&limit=${ingresses.limit}&offset=${ingresses.offset}`, 'application/json', ingresses.draw);
                 },
 
                 draw(data){
@@ -88,13 +89,21 @@
                     if(ingresses.offset == 0) ingresses.allItemCount = data.itemMetaData.allItemCount;
 
                     if(data.httpStatusCode == 200){
+                        var nodePort='';
                         if(data.items.length > 0){
+                            if (data.ingressControllerPort.length > 0){
+                                for (var i = 0; i <= data.ingressControllerPort.length-1; i++) {
+                                    if (data.ingressControllerPort[i].name === 'http') {
+                                        nodePort = data.ingressControllerPort[i].nodePort;
+                                    }
+                                }
+                            }
 
                             var link = [''];
                             for(var i = 0; i <= data.items.length-1; i++) {
                                 for (var j = 0; j <= data.items[i].spec.rules.length-1; j++) {
                                     for (var k = 0; k <= data.items[i].spec.rules[j].http.paths.length-1; k++) {
-                                        link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
+                                        link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}:${nodePort}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
                                         link[i+1] = '';
                                     }
                                 }
