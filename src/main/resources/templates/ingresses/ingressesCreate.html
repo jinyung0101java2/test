@@ -116,7 +116,7 @@
                         for (var i = 0; i <= port.length-1; i++) {
                             (document.getElementById('port_'+`${i}`)).value ='';
                         }
-                        func.alertPopup('ERROR', MSG_NO_NAMESPACE, true, MSG_CLOSE, 'closed');
+                        func.alertPopup(ALERT, MSG_NO_NAMESPACE, true, MSG_CLOSE, 'closed');
                     } else {
                         if (data.items.length == 0) {
                             var target = document.getElementsByName('target');
@@ -127,7 +127,7 @@
                             var port = document.getElementsByName('port');
                             for (var i = 0; i <= port.length-1; i++) {
                                 if ((document.getElementById('port_'+`${i}`)).value != null) {
-                                    (document.getElementById('port_' + `${i}`)).value = '';
+                                    (document.getElementById('port_'+`${i}`)).value = '';
                                 }
                             }
                         } else {
