@@ -111,10 +111,11 @@
 						for (let i = 0; i < data.items.length; i++) {
 							reg = new Date(data.items[i].regTimestamp);
 							let sec = Math.floor((now - reg) / 1000);
-							let days = sec / TIMES.DAY;
-							let hours = sec / TIMES.HOUR;
-							let mins = sec / TIMES.MIN;
-							let time = days > 0 ? days : hours > 0 ? hours : mins > 0 ? mins : sec;
+							let days = Math.floor(sec / TIMES.DAY);
+							let hours = Math.floor(sec / TIMES.HOUR);
+							let mins = Math.floor(sec / TIMES.MIN);
+							let time = days > 0 ? days : hours > 0 ? hours : mins >= 0 ? mins : sec;
+
 							let timeString = days > 0 ? '일' : hours > 0 ? '시간' : mins > 0 ? '분' : '초';
 							html = `<tr>
 								<td>${data.items[i].processNo}</td>
