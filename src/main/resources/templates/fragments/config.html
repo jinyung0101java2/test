@@ -61,16 +61,19 @@
 
      // VALUE
      var NAMESPACE_ALL_VALUE ='ALL';
+
      var AUTH_SUPER_ADMIN = "SUPER_ADMIN";
      var AUTH_CLUSTER_ADMIN = "CLUSTER_ADMIN";
-     var AUTH_NAMESPACE_ADMIN = "NAMESPACE_ADMIN";
      var AUTH_USER = "USER";
+
+     var AUTH_SUPER_ADMIN_CG = "Super Admin";
+     var AUTH_CLUSTER_ADMIN_CG = "Cluster Admin";
+     var AUTH_USER_CG = "User";
+
 
      var AUTH_ADMIN_LST =[AUTH_SUPER_ADMIN, AUTH_CLUSTER_ADMIN];
 
-     var AUTH_CLUSTER_ADMIN_CG = "CLUSTER ADMIN";
-     var AUTH_NAMESPACE_ADMIN_CG = "NAMESPACE ADMIN";
-     var AUTH_USER_CG = "USER";
+
 
 
      var SELECTED_ADMINISTRATOR = "administrator";
@@ -185,11 +188,11 @@ function historyBack() {
 }
 
 function convertUserTypeString(userType) {
-    if(userType == AUTH_CLUSTER_ADMIN) {
-        return AUTH_CLUSTER_ADMIN_CG;
+    if(userType == AUTH_SUPER_ADMIN) {
+        return AUTH_SUPER_ADMIN_CG;
     }
-    else if(userType == AUTH_NAMESPACE_ADMIN) {
-        return AUTH_NAMESPACE_ADMIN_CG;
+    else if(userType == AUTH_CLUSTER_ADMIN) {
+        return AUTH_CLUSTER_ADMIN_CG;
     }
     else {
         return AUTH_USER_CG;

@@ -124,7 +124,7 @@
 
             event(){
                 document.querySelector('.resAdd').addEventListener('click', (e) => {
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/popup/users/${document.getElementById('userId').value}/namespacesRolesList`, 'application/json', userUpdate.resource);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/popup/users/${userAuthId}/namespacesRolesList`, 'application/json', userUpdate.resource);
             }, false);
 
                 document.getElementById('modify').addEventListener('click', (e) => {
