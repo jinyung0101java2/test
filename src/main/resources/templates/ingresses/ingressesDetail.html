@@ -102,23 +102,23 @@
                             <th scope="row" class="left"></th></thead></tr><tbody class="tbody">`;
                         for (var j = 0; j <= data.spec.rules[i].http.paths.length-1; j++) {
                             html += `<tr>
-                            <td class="left host"><input class="editHost" value="${data.spec.rules[i].host}" disabled="true"/><button type="button" class="editHostBtn">Edit</button></td>
+                            <td class="left host"><input class="editHost" value="${data.spec.rules[i].host}" disabled="true"/><i class="fa-solid fa-pen-to-square editHostBtn custom-access-button" ></i></button></td>
                             <td class="left pathType"><input class="editPathType" type="hidden" value="${data.spec.rules[i].http.paths[j].pathType}" />
                                 <select class="selectPathType" disabled>
                                     <option value="Prefix">Prefix</option>
                                     <option value="ImplementationSpecific">ImplementationSpecific</option>
                                     <option value="Exact">Exact</option>
                                 </select>
-                                <button type="button" class="editPathTypeBtn">Edit</button>
+                                <i class="fa-solid fa-pen-to-square editPathTypeBtn custom-access-button" ></i>
                             </td>
-                            <td class="left path"><input class="editPath" value="${data.spec.rules[i].http.paths[j].path}" disabled="true"/><button type="button" class="editPathBtn">Edit</button></td>
+                            <td class="left path"><input class="editPath" value="${data.spec.rules[i].http.paths[j].path}" disabled="true"/><i class="fa-solid fa-pen-to-square editPathBtn custom-access-button" ></i></button></td>
                             <td class="left tdTarget"><input class="editTarget" type="hidden" value="${data.spec.rules[i].http.paths[j].backend.service.name}"/>
                             <select class="selectTarget" name="selectTarget" disabled>
                             </select>
-                            <button type="button" class="editTargetBtn">Edit</button>
+                            <i class="fa-solid fa-pen-to-square editTargetBtn custom-access-button" ></i>
                             </td>
                             <td class="left port tdPort">${data.spec.rules[i].http.paths[j].backend.service.port.number}</td>
-                            <td class="left"><button type="button" class="deleteRow">Del</button></td>
+                            <td class="left"><i class="fa-solid fa-trash-can deleteRow custom-access-button" ></i></button></td>
                             </tr>`;
                         }
                         html += `</tbody></table><div style="height: 20px"></div>`;
