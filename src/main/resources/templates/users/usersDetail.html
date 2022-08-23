@@ -100,7 +100,7 @@
 
                 // Details data
                 document.getElementById('uid').innerText = data.userId;
-                document.getElementById('userType').innerText = data.userType;
+                document.getElementById('userType').innerText = convertUserTypeString(data.userType);
                 document.getElementById('account').innerText = data.serviceAccountName;
                 document.getElementById('time').innerText = data.created;
 
