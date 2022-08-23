@@ -65,7 +65,7 @@
                                 <p>export CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
                             </div>
                             <div class="fa-pull-right">
-                                <i class="fas fa-copy custom-access-copy-button" about="cpEnvironmentsForLinux" onclick="btnCopy(this.id)"></i>
+                                <i class="fas fa-copy custom-access-button" about="cpEnvironmentsForLinux" onclick="btnCopy(this.id)"></i>
                             </div>
                         </div>
                         <div class="maT10">
@@ -81,7 +81,7 @@
                                 <p>set CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
                             </div>
                             <div class="fa-pull-right">
-                                <i class="fas fa-copy custom-access-copy-button" about="cpEnvironmentsForWindows" onclick="btnCopy(this.id)"></i>
+                                <i class="fas fa-copy custom-access-button" about="cpEnvironmentsForWindows" onclick="btnCopy(this.id)"></i>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                                     <p>kubectl config set-cluster ${CP_SERVICE_CLUSTER_NAME} --server=${CP_SERVICE_CLUSTER_SERVER} --insecure-skip-tls-verify</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpClusterForLinux" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpClusterForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                             <div class="maT10">
@@ -112,7 +112,7 @@
                                     <p>kubectl config set-cluster %CP_SERVICE_CLUSTER_NAME% --server=%CP_SERVICE_CLUSTER_SERVER% --insecure-skip-tls-verify</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpClusterForWindows" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpClusterForWindows" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                                     <p>kubectl config set-credentials ${CP_SERVICE_USER_NAME} --token=${CP_SERVICE_CREDENTIALS_TOKEN}</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpCredentialForLinux" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpCredentialForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                             <div class="maT10">
@@ -146,7 +146,7 @@
                                     <p>kubectl config set-credentials %CP_SERVICE_USER_NAME% --token=%CP_SERVICE_CREDENTIALS_TOKEN%</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpCredentialForWindows" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpCredentialForWindows" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                                     <p>kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} <span class="optNamespace">--namespace=${CP_SERVICE_NAMESPACE_NAME}</span> --cluster=${CP_SERVICE_CLUSTER_NAME}</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                             <div class="maT10">
@@ -175,7 +175,7 @@
                                     <p>kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% <span class="optNamespace">--namespace=%CP_SERVICE_NAMESPACE_NAME%</span> --cluster=%CP_SERVICE_CLUSTER_NAME%</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -193,7 +193,7 @@
                                     <p>kubectl config use-context ${CP_SERVICE_CONTEXT_NAME}</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpContextUseForLinux" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpContextUseForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                             <div class="maT10">
@@ -204,7 +204,7 @@
                                     <p>kubectl config use-context %CP_SERVICE_CONTEXT_NAME%</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpContextUseForWindows" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpContextUseForWindows" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -219,7 +219,7 @@
                                     <p>kubectl config view</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpConfigCheck" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpConfigCheck" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -234,7 +234,7 @@
                                     <p>kubectl get all</p>
                                 </div>
                                 <div class="fa-pull-right">
-                                    <i class="fas fa-copy custom-access-copy-button" about="cpResourceCheck" onclick="btnCopy(this.id)"></i>
+                                    <i class="fas fa-copy custom-access-button" about="cpResourceCheck" onclick="btnCopy(this.id)"></i>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +258,7 @@
 
             init(){
 
-                let copy = document.getElementsByClassName('custom-access-copy-button');
+                let copy = document.getElementsByClassName('custom-access-button');
                 for (var i = 0 ; i < copy.length; i++) {
                     copy[i].setAttribute('id', 'copy_'+`${i}`);
                 }
