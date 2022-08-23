@@ -75,7 +75,7 @@
                 <div class="btn02">
                     <div>
                         <a href="javascript:;" id="modify" th:text="#{M0025}"></a>
-                        <a class="beforeBtn" onclick="movePage(URI_CP_MANAGEMENTS_USERS)" th:text="#{M0028}"></a>
+                        <a class="beforeBtn" onclick="moveUserPrePage()" th:text="#{M0028}"></a>
                     </div>
                 </div>
             </article>
@@ -84,8 +84,8 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
+        var userAuthority = '';
     window.onload = () => {
-
         func.init(ASIDE_DP1.MANAGEMENTS, ASIDE_DP2.USERS);
 
         const userDetail = {
@@ -103,6 +103,7 @@
                 document.getElementById('userType').innerText = convertUserTypeString(data.userType);
                 document.getElementById('account').innerText = data.serviceAccountName;
                 document.getElementById('time').innerText = data.created;
+                userAuthority = data.userType;
 
                 if(data.items.length > 0){
                     for(var i=0; i<=data.items.length-1; i++){
@@ -152,6 +153,14 @@
         }
 
         userDetail.init();
+    }
+    function moveUserPrePage(){
+      if(userAuthority == AUTH_CLUSTER_ADMIN) {
+          movePage(URI_CP_MANAGEMENTS_USERS_ADMIN);
+      }
+      else {
+          movePage(URI_CP_MANAGEMENTS_USERS);
+      }
     }
 </script>
 </th:block>
