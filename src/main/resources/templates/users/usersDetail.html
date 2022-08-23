@@ -46,12 +46,12 @@
                         <table>
                             <caption>Details</caption>
                             <colgroup >
-                                <col width="13%" />
-                                <col width="14%" />
-                                <col width="14%" />
-                                <col width="13%" />
-                                <col width="13%" />
-                                <col width="13%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="16%" />
+                                <col width="18%" />
+                                <col width="18%" />
+                                <col width="16%" />
                             </colgroup>
                             <thead>
                             <tr>
@@ -62,8 +62,8 @@
                             </tr>
                             <tr>
                                 <th scope="col">Name</th>
-                                <th scope="col">Label</th>
-                                <th scope="col">Type</th>
+                                <th scope="col">UID</th>
+                                <th scope="col">Created time</th>
                             </tr>
                             </thead>
                             <tbody class="detailList">
@@ -111,24 +111,9 @@
 								<td class="left">${data.items[i].cpNamespace}</td>
 								<td class="left">${convertUserTypeString(data.items[i].userType)}</td>
 								<td class="left">${data.items[i].roleSetCode}</td>
-								<td class="left">${data.items[i].secretName}</td>`;
-
-                        var label = '';
-
-                        if(data.items[i].secretLabels != '-'){
-                            for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].secretLabels).length-1; j++){
-                                label += `<dl>
-										<dt>${Object.getOwnPropertyNames(data.items[i].secretLabels)[j]}</dt>
-										<dd>${data.items[i].secretLabels[Object.keys(data.items[i].secretLabels)[j]]}</dd>
-									</dl>`;
-                            };
-                        } else {
-                            label = `<dl><dt>-</dt></dl>`;
-                        }
-
-                        html += `<td class="left box">${label}</td>`;
-
-                        html += `<td class="left">${data.items[i].secretType}</td></tr>`;
+								<td class="left">${data.items[i].secretName}</td>
+                                <td class="left">${data.items[i].secretUid}</td>
+                                <td class="left">${data.items[i].secretCreationTimestamp}</td>`;
 
                         func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
                     };
