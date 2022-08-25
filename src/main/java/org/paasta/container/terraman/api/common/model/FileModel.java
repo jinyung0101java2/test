@@ -19,6 +19,7 @@ public class FileModel {
      * */
     private String awsAccessKey;
     private String awsSecretKey;
+    private String awsregion;
 
     /*
      * VSPHERE FOR TERRAFORM

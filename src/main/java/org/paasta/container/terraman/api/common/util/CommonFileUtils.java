@@ -56,7 +56,9 @@ public class CommonFileUtils {
             String resultFile = "";
             if(res != null) {
                 if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
-
+                    fileModel.setAwsAccessKey(res.getAccessKey());
+                    fileModel.setAwsSecretKey(res.getSecretKey());
+                    resultFile = this.tfCreateWithWriteAws(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
 
                 } else if(StringUtils.equals(Constants.UPPER_VSPHERE, provider.toUpperCase())) {
@@ -125,6 +127,45 @@ public class CommonFileUtils {
             LOGGER.error(e.getMessage());
         }
 
+        return resultCode;
+    }
+
+    /**
+     * terraform 파일 생성 및 작성 (String)
+     *
+     * @param fileModel
+     * @param clusterId
+     * @return String
+     */
+    private String tfCreateWithWriteAws(FileModel fileModel, String clusterId) {
+        String resultCode = Constants.RESULT_STATUS_SUCCESS;
+        try {
+            File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))); // File객체 생성
+            if(!file.exists()){ // 파일이 존재하지 않으면
+                file.createNewFile(); // 신규생성
+            }
+
+            // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+
+            // 파일 쓰기
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonString = gson.toJson(fileModel);
+            jsonString = jsonString.replaceAll(",", "");
+            jsonString = jsonString.replaceAll("\"awsregion \":", "region =");
+            jsonString = jsonString.replaceAll("\"awsAccessKey \":", "access_key =");
+            jsonString = jsonString.replaceAll("\"awsSecretKey \":", "secret_key =");
+
+            writer.write("provider \"aws\" " + jsonString);
+
+            // 버퍼 및 스트림 뒷정리
+            writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
+            writer.close(); // 스트림 종료
+        }
+        catch (IOException e) {
+            resultCode = Constants.RESULT_STATUS_FAIL;
+            LOGGER.error(e.getMessage());
+        }
         return resultCode;
     }
 
