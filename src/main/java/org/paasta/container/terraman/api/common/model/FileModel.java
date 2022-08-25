@@ -8,15 +8,22 @@ public class FileModel {
     /*
     * OPENSTACK FOR TERRAFORM
     * */
-    private String tenant_name;
-    private String password;
-    private String auth_url;
-    private String user_name;
-    private String region;
+    private String openstackTenantName;
+    private String openstackPassword;
+    private String openstackAuthUrl;
+    private String openstackUserName;
+    private String openstackRegion;
 
     /*
      * AWS FOR TERRAFORM
      * */
-    private String access_key;
-    private String secret_key;
+    private String awsAccessKey;
+    private String awsSecretKey;
+
+    /*
+     * VSPHERE FOR TERRAFORM
+     * */
+    private String vSphereUser;
+    private String vSpherePassword;
+    private String vSphereServer;
 }

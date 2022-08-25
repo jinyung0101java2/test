@@ -1,9 +1,14 @@
 package org.paasta.container.terraman.api.terraman;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
 import org.paasta.container.terraman.api.common.service.ClusterService;
@@ -13,6 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 
 /**
  * Terraman Controller 클래스
@@ -89,5 +98,39 @@ public class TerramanController {
 //        String sysProp = System.getProperty("CP_PORTAL_DB_SCHEMA");
         LOGGER.info("system env :: " + System.getenv("MASTER_HOST"));
         LOGGER.info("test yml value :: " + MASTER_HOST);
+    }
+
+    /**
+     * Terraman 삭제(Delete Terraman)
+     *
+     * @return the resultStatus
+     */
+    @ApiOperation(value = "Terraman 삭제(Delete Terraman)", nickname = "deleteTerraman")
+    @PostMapping(value = "/test2")
+    public void test2() {
+        try{
+            Reader reader = new FileReader("C:\\terraman_dev\\terraform_test.tfstate");
+
+            // Json 파일 읽어서, Lecture 객체로 변환
+            Gson gson = new Gson();
+            JsonObject obj = gson.fromJson(reader, JsonObject.class);
+            JsonArray modules = obj.getAsJsonArray("modules");
+            for(JsonElement module : modules) {
+                JsonObject resources = (JsonObject) module.getAsJsonObject().get("resources");
+                resources.keySet().forEach(key -> {
+                    JsonObject resource = (JsonObject) resources.get(key);
+                    if(!StringUtils.equals("data.vsphere_virtual_machine.template", key)) {
+                        if(StringUtils.equals(resource.get("type").getAsString(), "vsphere_virtual_machine") ) {
+                            JsonObject primary = (JsonObject) resource.get("primary");
+                            JsonObject attributes = (JsonObject) primary.get("attributes");
+                            String ip = attributes.get("default_ip_address").getAsString();
+                            LOGGER.info("{ " + key + " } ip :: " + ip);
+                        }
+                    }
+                });
+            }
+        } catch (Exception e) {
+
+        }
     }
 }

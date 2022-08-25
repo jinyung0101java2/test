@@ -33,6 +33,12 @@ public class VaultModel {
     private String type;
 
     /*
+     * VSPHERE response data
+     * */
+    private String user;
+    private String vsphere_server;
+
+    /*
      * cluster response data
      * */
     private String clusterApiUrl;

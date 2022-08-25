@@ -18,6 +18,7 @@ public class Constants {
     public static final String UPPER_AWS = "AWS";
     public static final String UPPER_GCP = "GCP";
     public static final String UPPER_OPENSTACK = "OPENSTACK";
+    public static final String UPPER_VSPHERE = "VSPHERE";
 
     public Constants() {
         throw new IllegalStateException();
