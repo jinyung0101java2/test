@@ -38,17 +38,15 @@
                     <table>
                         <caption>User List</caption>
                         <colgroup >
-                            <col width="16%" />
-                            <col width="16%" />
-                            <col width="16%" />
-                            <col width="16%" />
-                            <col width="16%" />
+                            <col width="20%" />
+                            <col width="23%" />
+                            <col width="15%" />
+                            <col width="22%" />
                             <col width="20%" />
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col" style="border-top: none !important;">User ID</th>
-                            <th scope="col">Services Account</th>
                             <th scope="col">Namespaces</th>
                             <th scope="col">Authority</th>
                             <th scope="col">Roles</th>
@@ -118,7 +116,6 @@
                                 var html =
                                     `<tr><td class="left" rowspan="${rowspanCount}">`+
                                     `<a href="javascript:;" data-name="${users.userAuthId}">${users.userId}</td>`+
-                                    `<td class="left" rowspan="${rowspanCount}">${users.serviceAccountName}</td>`+
                                     `<td class="left">${users.items[0].cpNamespace}</td>`+
                                     `<td class="left">${convertUserTypeString(users.items[0].userType)}</td>`+
                                     `<td class="left">${users.items[0].roleSetCode}</td>`+
@@ -142,12 +139,12 @@
 
                         }
                         else {
-                            var html = `<tr><td colspan="6">No Data.</td></tr>`;
+                            var html = `<tr><td colspan="5">No Data.</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="6">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="5">No Data.</td></tr>`;
 
                         func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                     };
