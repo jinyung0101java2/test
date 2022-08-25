@@ -26,6 +26,8 @@ public class CommandService {
         String userName = "ubuntu";
         int port = 22;
         JSch jsch = new JSch();
+        LOGGER.info("host :: " + host);
+        LOGGER.info("idRsa :: " + idRsa);
         jsch.addIdentity(idRsa);
         session = jsch.getSession(userName, host, port);
         session.setConfig("StrictHostKeyChecking", "no");       // 호스트 정보를 검사하지 않도록 설정
