@@ -57,12 +57,12 @@
                         </div>
                         <div class="custom-access-contents">
                             <div id="cpEnvironmentsForLinux" class="cpEnvironments">
-                                <p>export CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"</p>
-                                <p>export CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"</p>
-                                <p>export CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"</p>
-                                <p>export CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"</p>
-                                <p class="xNamespace">export CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
-                                <p>export CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
+                                <pre><code class="bash">export CP_SERVICE_CLUSTER_NAME=""</code></pre>
+                                <pre><code class="bash">export CP_SERVICE_CLUSTER_SERVER=""</code></pre>
+                                <pre><code class="bash">export CP_SERVICE_USER_NAME=""</code></pre>
+                                <pre><code class="bash">export CP_SERVICE_CONTEXT_NAME=""</code></pre>
+                                <pre><code class="bash xNamespace">export CP_SERVICE_NAMESPACE_NAME=""</code></pre>
+                                <pre><code class="bash" style="white-space: normal">export CP_SERVICE_CREDENTIALS_TOKEN=""</code></pre>
                             </div>
                             <div class="fa-pull-right">
                                 <i class="fas fa-copy custom-access-button" about="cpEnvironmentsForLinux" onclick="btnCopy(this.id)"></i>
@@ -73,12 +73,12 @@
                         </div>
                         <div class="custom-access-contents">
                             <div id="cpEnvironmentsForWindows" class="cpEnvironments">
-                                <p>set CP_SERVICE_CLUSTER_NAME="<span class="cpClusterName"></span>"</p>
-                                <p>set CP_SERVICE_CLUSTER_SERVER="<span class="cpClusterServer"></span>"</p>
-                                <p>set CP_SERVICE_USER_NAME="<span class="cpUserName"></span>"</p>
-                                <p>set CP_SERVICE_CONTEXT_NAME="<span class="cpContextName"></span>"</p>
-                                <p class="xNamespace">set CP_SERVICE_NAMESPACE_NAME="<span class="cpNamespace"></span>"</p>
-                                <p>set CP_SERVICE_CREDENTIALS_TOKEN="<span class="cpCredentialsToken"></span>"</p>
+                                <pre><code class="bash">set CP_SERVICE_CLUSTER_NAME=""</code></pre>
+                                <pre><code class="bash">set CP_SERVICE_CLUSTER_SERVER=""</code></pre>
+                                <pre><code class="bash">set CP_SERVICE_USER_NAME=""</code></pre>
+                                <pre><code class="bash">set CP_SERVICE_CONTEXT_NAME=""</code></pre>
+                                <pre><code class="bash xNamespace">set CP_SERVICE_NAMESPACE_NAME=""</code></pre>
+                                <pre><code class="bash" style="white-space: normal">set CP_SERVICE_CREDENTIALS_TOKEN=""</code></pre>
                             </div>
                             <div class="fa-pull-right">
                                 <i class="fas fa-copy custom-access-button" about="cpEnvironmentsForWindows" onclick="btnCopy(this.id)"></i>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpClusterForLinux">
-                                    <p>kubectl config set-cluster ${CP_SERVICE_CLUSTER_NAME} --server=${CP_SERVICE_CLUSTER_SERVER} --insecure-skip-tls-verify</p>
+                                    <pre><code class="bash">kubectl config set-cluster ${CP_SERVICE_CLUSTER_NAME} --server=${CP_SERVICE_CLUSTER_SERVER} --insecure-skip-tls-verify</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpClusterForLinux" onclick="btnCopy(this.id)"></i>
@@ -109,7 +109,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpClusterForWindows">
-                                    <p>kubectl config set-cluster %CP_SERVICE_CLUSTER_NAME% --server=%CP_SERVICE_CLUSTER_SERVER% --insecure-skip-tls-verify</p>
+                                    <pre><code class="bash">kubectl config set-cluster %CP_SERVICE_CLUSTER_NAME% --server=%CP_SERVICE_CLUSTER_SERVER% --insecure-skip-tls-verify</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpClusterForWindows" onclick="btnCopy(this.id)"></i>
@@ -132,7 +132,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpCredentialForLinux">
-                                    <p>kubectl config set-credentials ${CP_SERVICE_USER_NAME} --token=${CP_SERVICE_CREDENTIALS_TOKEN}</p>
+                                    <pre><code class="bash">kubectl config set-credentials <span class="hljs-variable"> ${CP_SERVICE_USER_NAME}</span> --token=${CP_SERVICE_CREDENTIALS_TOKEN}</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpCredentialForLinux" onclick="btnCopy(this.id)"></i>
@@ -143,7 +143,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpCredentialForWindows">
-                                    <p>kubectl config set-credentials %CP_SERVICE_USER_NAME% --token=%CP_SERVICE_CREDENTIALS_TOKEN%</p>
+                                    <pre><code class="bash">kubectl config set-credentials <span class="hljs-variable">%CP_SERVICE_USER_NAME%</span> --token=%CP_SERVICE_CREDENTIALS_TOKEN%</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpCredentialForWindows" onclick="btnCopy(this.id)"></i>
@@ -161,7 +161,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForLinux">
-                                    <p>kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} <span class="optNamespace">--namespace=${CP_SERVICE_NAMESPACE_NAME}</span> --cluster=${CP_SERVICE_CLUSTER_NAME}</p>
+                                    <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} --namespace=${CP_SERVICE_NAMESPACE_NAME} --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForWindows">
-                                    <p>kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% <span class="optNamespace">--namespace=%CP_SERVICE_NAMESPACE_NAME%</span> --cluster=%CP_SERVICE_CLUSTER_NAME%</p>
+                                    <pre><code class="bash" style="white-space: normal">kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --namespace=%CP_SERVICE_NAMESPACE_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
@@ -190,7 +190,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextUseForLinux">
-                                    <p>kubectl config use-context ${CP_SERVICE_CONTEXT_NAME}</p>
+                                    <pre><code class="bash">kubectl config use-context ${CP_SERVICE_CONTEXT_NAME}</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextUseForLinux" onclick="btnCopy(this.id)"></i>
@@ -201,7 +201,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextUseForWindows">
-                                    <p>kubectl config use-context %CP_SERVICE_CONTEXT_NAME%</p>
+                                    <pre><code class="bash">kubectl config use-context %CP_SERVICE_CONTEXT_NAME%</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextUseForWindows" onclick="btnCopy(this.id)"></i>
@@ -216,7 +216,7 @@
                         <div class="custom-access-contents-wrap">
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpConfigCheck">
-                                    <p>kubectl config view</p>
+                                    <pre><code class="bash">kubectl config view</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpConfigCheck" onclick="btnCopy(this.id)"></i>
@@ -231,7 +231,7 @@
                         <div class="custom-access-contents-wrap">
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpResourceCheck">
-                                    <p>kubectl get all</p>
+                                    <pre><code class="bash">kubectl get all</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpResourceCheck" onclick="btnCopy(this.id)"></i>
@@ -261,6 +261,23 @@
                 let copy = document.getElementsByClassName('custom-access-button');
                 for (var i = 0 ; i < copy.length; i++) {
                     copy[i].setAttribute('id', 'copy_'+`${i}`);
+                }
+
+                var hljsString=document.getElementsByClassName('hljs-string');
+                for (let i = 0 ; i <= 11; i++) {
+                    if (i == 0 || i == 6) {
+                        hljsString[i].setAttribute('class','hljs-string cpClusterName');
+                    } else if (i == 1 || i == 7) {
+                        hljsString[i].setAttribute('class','hljs-string cpClusterServer');
+                    } else if (i == 2 || i == 8) {
+                        hljsString[i].setAttribute('class','hljs-string cpUserName');
+                    } else if (i == 3 || i == 9) {
+                        hljsString[i].setAttribute('class','hljs-string cpContextName');
+                    } else if (i == 4 || i == 10) {
+                        hljsString[i].setAttribute('class','hljs-string cpNamespace');
+                    } else if (i == 5 || i == 11) {
+                        hljsString[i].setAttribute('class','hljs-string cpCredentialsToken');
+                    }
                 }
 
                 func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/accessesInfo`, 'application/json', accessInfo.drawUser);
@@ -325,3 +342,6 @@
 
     }
 </script>
+<style>
+    pre code.hljs {padding: 0; background: #eeeeee;}
+</style>
