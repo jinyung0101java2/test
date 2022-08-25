@@ -120,6 +120,7 @@
                         if(data.items.length > 0){
                             for(var i=0; i<=data.items.length-1; i++){
                                    var item = data.items[i];
+                                   if(item.resultCode == RESULT_STATUS_SUCCESS) {
                                    clusterListTableHTML += `<tr><td class="left" style=" white-space: normal;"><a data-id="${item.clusterId}" data-name="${item.clusterName}">${item.clusterName}</a></td>` +
                                     `<td class="center"><span class="slabel">${item.clusterProviderType}</span></td>`+
                                     `<td class="center"><span class="slabel">${item.version}</span></td>`+
@@ -128,7 +129,19 @@
                                     `<td class="center">${item.podCount.count} / ${item.podCount.all}</td>`+
                                     `<td class="center"><input data-readonly="true" type="text" class="knob" value="${item.usage.cpu}" data-width="90" data-height="90" data-fgColor="#39CCCC" data-thickness="0.1"></td>`+
                                     `<td class="center"><input data-readonly="true" type="text" class="knob" value="${item.usage.memory}" data-width="90" data-height="90" data-fgColor="#00c0ef" data-thickness="0.1"></td></tr>`;
-                            };
+                                   }
+                                   else {
+                                       clusterListTableHTML += `<tr><td class="left" style=" white-space: normal;">${item.clusterName}</td>` +
+                                           `<td class="center"><span class="slabel">${item.clusterProviderType}</span></td>`+
+                                           `<td class="center"><span class="slabel">-</span></td>`+
+                                           `<td class="center">-</td>`+
+                                           `<td class="center">-</td>`+
+                                           `<td class="center">-</td>`+
+                                           `<td class="center"></td>`+
+                                           `<td class="center"></td></tr>`;
+                                   }
+
+                                   };
                         } else {
                             clusterListTableHTML = '<tr><td colspan="8">No Data.</td></tr>';
                         };
