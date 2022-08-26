@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{layouts/layout}">
 <div layout:fragment="content">
@@ -42,7 +43,7 @@
 					<a class="more" href="javascript:">more</a>
 				</div>
 				<!-- btn -->
-				<a href="javascript:" class="create" th:text="#{M0024}"></a>
+				<a href="javascript:" class="create" th:text="#{M0024}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
 			</div>
 		</article>
 	</div>
