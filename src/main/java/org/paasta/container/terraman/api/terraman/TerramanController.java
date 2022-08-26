@@ -13,6 +13,7 @@ import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.model.VaultModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
 import org.paasta.container.terraman.api.common.service.ClusterService;
+import org.paasta.container.terraman.api.common.service.PropertyService;
 import org.paasta.container.terraman.api.common.service.VaultService;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class TerramanController {
     private final ClusterService clusterService;
     private final ClusterLogService clusterLogService;
     private final VaultService vaultService;
+    private final PropertyService propertyService;
     @Value("${master.host}")
     private String MASTER_HOST;
 
@@ -52,12 +54,14 @@ public class TerramanController {
             , CommonFileUtils commonFileUtils
             , ClusterService clusterService
             , ClusterLogService clusterLogService
-            , VaultService vaultService) {
+            , VaultService vaultService
+            , PropertyService propertyService) {
         this.terramanService = terramanService;
         this.commonFileUtils = commonFileUtils;
         this.clusterService = clusterService;
         this.clusterLogService = clusterLogService;
         this.vaultService = vaultService;
+        this.propertyService = propertyService;
     }
 
     /**
@@ -117,13 +121,12 @@ public class TerramanController {
 //            LOGGER.info("Error from getProviderInfoFromVault!");
 //        }
 
-
-        String path = "secret/AWS/10";
-        HashMap res = vaultService.read(path, new HashMap().getClass());
-        LOGGER.info("valut key :: " + res.toString());
-        String path2 = "secret/OPENSTACK/13";
-        HashMap res2 = vaultService.read(path2, new HashMap().getClass());
-        LOGGER.info("valut key2 :: " + res2.toString());
+//        String path = "secret/AWS/10";
+//        HashMap res = vaultService.read(path, new HashMap().getClass());
+//        LOGGER.info("valut key :: " + res.toString());
+//        String path2 = "secret/OPENSTACK/13";
+//        HashMap res2 = vaultService.read(path2, new HashMap().getClass());
+//        LOGGER.info("valut key2 :: " + res2.toString());
     }
 
     /**

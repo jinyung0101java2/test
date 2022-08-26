@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class PropertyService {
     @Value("${vault.path.base}")
     private String vaultBase;
+
 //    @Value("${vault.path.cluster-token}")
 //    private String vaultClusterTokenPath;
 

@@ -61,9 +61,8 @@ public class CommonFileUtils {
             if(res != null) {
                 if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
                     fileModel.setAwsAccessKey(String.valueOf(res.get("access_key")));
-                    fileModel.setAwsSecretKey(String.valueOf(res.get("access_key")));
+                    fileModel.setAwsSecretKey(String.valueOf(res.get("secret_key")));
                     fileModel.setAwsregion(account.getRegion());
-                    LOGGER.info("fileModel :: " + fileModel.toString());
                     resultFile = this.tfCreateWithWriteAws(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
 
