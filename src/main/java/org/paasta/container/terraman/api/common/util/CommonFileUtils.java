@@ -51,6 +51,7 @@ public class CommonFileUtils {
         try {
             String path = "secret/" + provider.toUpperCase() + "/" + seq;
             VaultModel res = vaultService.read(path, new VaultModel().getClass());
+            LOGGER.info("valut key :: " + res.toString());
             AccountModel account = accountService.getAccountInfo(seq);
             FileModel fileModel = new FileModel();
             String resultFile = "";
