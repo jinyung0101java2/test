@@ -10,8 +10,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
+import org.paasta.container.terraman.api.common.model.VaultModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
 import org.paasta.container.terraman.api.common.service.ClusterService;
+import org.paasta.container.terraman.api.common.service.VaultService;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.HashMap;
 
 /**
  * Terraman Controller 클래스
@@ -40,15 +43,21 @@ public class TerramanController {
     private final CommonFileUtils commonFileUtils;
     private final ClusterService clusterService;
     private final ClusterLogService clusterLogService;
+    private final VaultService vaultService;
     @Value("${master.host}")
     private String MASTER_HOST;
 
     @Autowired
-    public TerramanController(TerramanService terramanService, CommonFileUtils commonFileUtils, ClusterService clusterService, ClusterLogService clusterLogService) {
+    public TerramanController(TerramanService terramanService
+            , CommonFileUtils commonFileUtils
+            , ClusterService clusterService
+            , ClusterLogService clusterLogService
+            , VaultService vaultService) {
         this.terramanService = terramanService;
         this.commonFileUtils = commonFileUtils;
         this.clusterService = clusterService;
         this.clusterLogService = clusterLogService;
+        this.vaultService = vaultService;
     }
 
     /**
@@ -96,8 +105,25 @@ public class TerramanController {
 //        ClusterModel aa = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
 //        System.out.println(aa);
 //        String sysProp = System.getProperty("CP_PORTAL_DB_SCHEMA");
-        LOGGER.info("system env :: " + System.getenv("MASTER_HOST"));
-        LOGGER.info("test yml value :: " + MASTER_HOST);
+//        LOGGER.info("system env :: " + System.getenv("MASTER_HOST"));
+//        LOGGER.info("test yml value :: " + MASTER_HOST);
+
+//        Object ret;
+//        String path = propertyService.getCpVaultPathProviderCredential()
+//                .replace("{iaas}", params.getProviderType().name()).replace("{id}", params.getResourceUid());
+//        try {
+//            ret = vaultService.read(path, ((Map)(getProviderInfoList(params))).get(params.getProviderType().name()).getClass());
+//        } catch (Exception e) {
+//            LOGGER.info("Error from getProviderInfoFromVault!");
+//        }
+
+
+        String path = "secret/AWS/10";
+        HashMap res = vaultService.read(path, new HashMap().getClass());
+        LOGGER.info("valut key :: " + res.toString());
+        String path2 = "secret/OPENSTACK/13";
+        HashMap res2 = vaultService.read(path2, new HashMap().getClass());
+        LOGGER.info("valut key2 :: " + res2.toString());
     }
 
     /**

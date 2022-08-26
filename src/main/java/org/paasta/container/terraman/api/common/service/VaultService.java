@@ -1,5 +1,6 @@
 package org.paasta.container.terraman.api.common.service;
 
+import com.google.gson.Gson;
 import org.paasta.container.terraman.api.common.config.TrackExecutionTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,11 @@ public class VaultService {
                 .filter(x -> x.keySet().contains("data"))
                 .orElseGet(HashMap::new)
                 .getOrDefault("data", null);
-
+        logger.info("vault object :: " + response.toString());
+        Gson gson = new Gson();
+        String aa = gson.toJson(response);
+        logger.info("aa :: " + aa);
+        logger.info("bb :: " + gson.fromJson(aa, requestClass).toString());
         return commonService.setResultObject(response, requestClass);
     }
 

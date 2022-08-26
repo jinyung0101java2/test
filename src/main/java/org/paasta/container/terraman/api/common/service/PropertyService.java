@@ -1,6 +1,7 @@
 package org.paasta.container.terraman.api.common.service;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Data
 public class PropertyService {
-
+    @Value("${vault.path.base}")
+    private String vaultBase;
 //    @Value("${vault.path.cluster-token}")
 //    private String vaultClusterTokenPath;
 

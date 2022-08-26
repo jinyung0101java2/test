@@ -14,6 +14,10 @@ management:
 master:
   host: ${K8S_MASTER_NODE_IP}
 
+vault:
+  path:
+    base: "secret/"
+
 ---
 spring:
   profiles: local

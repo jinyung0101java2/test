@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.HashMap;
 
 @Service
 public class CommonFileUtils {
@@ -25,16 +26,19 @@ public class CommonFileUtils {
     private final VaultService vaultService;
     private final AccountService accountService;
     private final CommandService commandService;
+    private final PropertyService propertyService;
 
     @Autowired
     public CommonFileUtils(
             VaultService vaultService
             , CommandService commandService
             , AccountService accountService
+            , PropertyService propertyService
     ) {
         this.vaultService = vaultService;
         this.commandService = commandService;
         this.accountService = accountService;
+        this.propertyService = propertyService;
     }
 
     /**
@@ -49,35 +53,31 @@ public class CommonFileUtils {
     public String createProviderFile(String clusterId, String provider, int seq, String pod, String host, String idRsa) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try {
-            LOGGER.info("provider :: " + provider);
-            LOGGER.info("seq :: " + seq);
-            String path = "secret/" + provider.toUpperCase() + "/" + seq;
-            LOGGER.info("path :: " + path);
-            VaultModel res = vaultService.read(path, new VaultModel().getClass());
-            LOGGER.info("valut key :: " + res.toString());
+            String path = propertyService.getVaultBase() + provider.toUpperCase() + "/" + seq;
+            HashMap res = vaultService.read(path, new HashMap().getClass());
             AccountModel account = accountService.getAccountInfo(seq);
             FileModel fileModel = new FileModel();
             String resultFile = "";
             if(res != null) {
                 if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
-                    fileModel.setAwsAccessKey(res.getAccess_Key());
-                    fileModel.setAwsSecretKey(res.getSecret_Key());
+                    fileModel.setAwsAccessKey(String.valueOf(res.get("access_key")));
+                    fileModel.setAwsSecretKey(String.valueOf(res.get("access_key")));
                     fileModel.setAwsregion(account.getRegion());
                     LOGGER.info("fileModel :: " + fileModel.toString());
                     resultFile = this.tfCreateWithWriteAws(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
 
                 } else if(StringUtils.equals(Constants.UPPER_VSPHERE, provider.toUpperCase())) {
-                    fileModel.setVSphereUser(res.getUser());
-                    fileModel.setVSpherePassword(res.getPassword());
-                    fileModel.setVSphereServer(res.getVsphere_server());
+                    fileModel.setVSphereUser(String.valueOf(res.get("uesr")));
+                    fileModel.setVSpherePassword(String.valueOf(res.get("password")));
+                    fileModel.setVSphereServer(String.valueOf(res.get("vsphere_server")));
                     resultFile = this.tfCreateWithWriteVSphere(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
                     // 파일 생성 및 쓰기
                     fileModel.setOpenstackTenantName(account.getProject());
-                    fileModel.setOpenstackPassword(res.getPassword());
-                    fileModel.setOpenstackAuthUrl(res.getAuth_url());
-                    fileModel.setOpenstackUserName(res.getUser_name());
+                    fileModel.setOpenstackPassword(String.valueOf(res.get("password")));
+                    fileModel.setOpenstackAuthUrl(String.valueOf(res.get("auth_url")));
+                    fileModel.setOpenstackUserName(String.valueOf(res.get("user_name")));
                     fileModel.setOpenstackRegion(account.getRegion());
                     resultFile = this.tfCreateWithWriteOpenstack(fileModel, clusterId);
                 } else {
