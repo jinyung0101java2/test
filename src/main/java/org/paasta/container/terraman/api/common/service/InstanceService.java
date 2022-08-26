@@ -82,6 +82,33 @@ public class InstanceService {
      */
     private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa) {
         InstanceModel resultModel = null;
+        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                , host
+                , idRsa);
+        JsonObject jsonObject = readStateFile(clusterId);
+        String rName = "", privateIp = "", publicIp = "", hostName = "";
+        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            for(JsonElement resource : resources) {
+                if(StringUtils.equals(resource.getAsJsonObject().get("type").getAsString(), "aws_instance")) {
+                    rName = resource.getAsJsonObject().get("name").getAsString();
+                    if(StringUtils.equals(rName, "master")) {
+                        JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                        if(instances != null) {
+                            for(JsonElement instance : instances) {
+                                JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
+                                privateIp = attributes.get("private_ip").isJsonNull() ? "" : attributes.get("private_ip").getAsString();
+                                publicIp = attributes.get("public_ip").isJsonNull() ? "" : attributes.get("public_ip").getAsString();
+                                hostName = getAWSHostName(privateIp);
+                            }
+                        }
+                    }
+                }
+            }
+            resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
+        }
         return resultModel;
     }
 
@@ -155,6 +182,31 @@ public class InstanceService {
      */
     private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa) {
         List<InstanceModel> modelList = new ArrayList<>();
+        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                , host
+                , idRsa);
+        JsonObject jsonObject = readStateFile(clusterId);
+        String rName = "", privateIp = "", publicIp = "", hostName = "";
+        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            for(JsonElement resource : resources) {
+                if(StringUtils.equals(resource.getAsJsonObject().get("type").getAsString(), "aws_instance")) {
+                    rName = resource.getAsJsonObject().get("name").getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                    if(instances != null) {
+                        for(JsonElement instance : instances) {
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
+                            privateIp = attributes.get("private_ip").isJsonNull() ? "" : attributes.get("private_ip").getAsString();
+                            publicIp = attributes.get("public_ip").isJsonNull() ? "" : attributes.get("public_ip").getAsString();
+                            hostName = getAWSHostName(privateIp);
+                        }
+                        modelList.add(new InstanceModel(rName, hostName, privateIp, publicIp));
+                    }
+                }
+            }
+        }
         return modelList;
     }
 
@@ -233,7 +285,7 @@ public class InstanceService {
      * @return the String
      */
     private String getPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
-        String publicIp = "";
+        String publicIp = privateIp;
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get("resources");
             for (JsonElement resource : resources) {
@@ -254,5 +306,12 @@ public class InstanceService {
             }
         }
         return publicIp;
+    }
+
+    private String getAWSHostName(String ipAddr) {
+        String rst = "ip-";
+        String ipString = ipAddr.replaceAll(".","-");
+        rst += ipString;
+        return rst;
     }
 }

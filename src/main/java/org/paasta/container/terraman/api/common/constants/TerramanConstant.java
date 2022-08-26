@@ -5,7 +5,7 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/id_rsa";
+    public static final String MASTER_ID_RSA = "/root/id_rsa";
 
     /**
      * file name & directory
@@ -125,5 +125,7 @@ public class TerramanConstant {
     /**
      * cluster 생성 상태값
      * */
+    public static final String CLUSTER_CREATE_STATUS = "C";
     public static final String CLUSTER_COMPLETE_STATUS = "A";
+    public static final String CLUSTER_FAIL_STATUS = "D";
 }
