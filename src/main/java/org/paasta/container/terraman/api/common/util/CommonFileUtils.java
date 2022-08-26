@@ -58,6 +58,8 @@ public class CommonFileUtils {
                 if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
                     fileModel.setAwsAccessKey(res.getAccessKey());
                     fileModel.setAwsSecretKey(res.getSecretKey());
+                    fileModel.setAwsregion(account.getRegion());
+                    LOGGER.info("fileModel :: " + fileModel.toString());
                     resultFile = this.tfCreateWithWriteAws(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
 
@@ -151,6 +153,7 @@ public class CommonFileUtils {
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
+            LOGGER.info("provider - aws :: " + jsonString.toString());
             jsonString = jsonString.replaceAll(",", "");
             jsonString = jsonString.replaceAll("\"awsregion \":", "region =");
             jsonString = jsonString.replaceAll("\"awsAccessKey \":", "access_key =");
