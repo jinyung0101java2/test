@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.paasta.container.terraman.api.common.model.ClusterInfo;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.model.VaultModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
@@ -127,6 +128,24 @@ public class TerramanController {
 //        String path2 = "secret/OPENSTACK/13";
 //        HashMap res2 = vaultService.read(path2, new HashMap().getClass());
 //        LOGGER.info("valut key2 :: " + res2.toString());
+//        String cluster = "terraform-aws";
+//        String clusterApiUrl = "";
+//        String clusterToken = "";
+//
+//        ClusterInfo clusterInfo = new ClusterInfo();
+//        clusterInfo.setClusterId(cluster);
+//        clusterInfo.setClusterApiUrl(clusterApiUrl);
+//        clusterInfo.setClusterToken(clusterToken);
+//
+//        try {
+//            vaultService.write(propertyService.getVaultClusterTokenPath().replace("{id}", cluster), clusterInfo);
+//        } catch (Exception e) {
+//            LOGGER.info("Vault Write failed in createClusterInfoToVault");
+//        }
+        String rst = "ip-";
+        String ipString = "172.10.0.133".replaceAll("[.]","-");
+        rst += ipString;
+        LOGGER.info(rst);
     }
 
     /**

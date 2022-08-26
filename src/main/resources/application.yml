@@ -17,6 +17,7 @@ master:
 vault:
   path:
     base: "secret/"
+    cluster-token: "secret/cluster/{id}"
 
 ---
 spring:

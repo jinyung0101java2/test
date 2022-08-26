@@ -310,7 +310,7 @@ public class InstanceService {
 
     private String getAWSHostName(String ipAddr) {
         String rst = "ip-";
-        String ipString = ipAddr.replaceAll(".","-");
+        String ipString = ipAddr.replaceAll("[.]","-");
         rst += ipString;
         return rst;
     }
