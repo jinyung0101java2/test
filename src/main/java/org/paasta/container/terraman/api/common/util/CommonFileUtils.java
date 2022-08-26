@@ -62,7 +62,7 @@ public class CommonFileUtils {
                 if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
                     fileModel.setAwsAccessKey(String.valueOf(res.get("access_key")));
                     fileModel.setAwsSecretKey(String.valueOf(res.get("secret_key")));
-                    fileModel.setAwsregion(account.getRegion());
+                    fileModel.setAwsRegion(account.getRegion());
                     resultFile = this.tfCreateWithWriteAws(fileModel, clusterId);
                 } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
 
@@ -158,9 +158,9 @@ public class CommonFileUtils {
             String jsonString = gson.toJson(fileModel);
             LOGGER.info("provider - aws :: " + jsonString.toString());
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll("\"awsregion \":", "region =");
-            jsonString = jsonString.replaceAll("\"awsAccessKey \":", "access_key =");
-            jsonString = jsonString.replaceAll("\"awsSecretKey \":", "secret_key =");
+            jsonString = jsonString.replaceAll("\"awsRegion\":", "region =");
+            jsonString = jsonString.replaceAll("\"awsAccessKey\":", "access_key =");
+            jsonString = jsonString.replaceAll("\"awsSecretKey\":", "secret_key =");
 
             writer.write("provider \"aws\" " + jsonString);
 
