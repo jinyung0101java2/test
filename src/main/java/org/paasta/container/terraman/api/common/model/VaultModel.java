@@ -14,8 +14,8 @@ public class VaultModel {
     /*
      * AWS response data
      * */
-    private String accessKey;
-    private String secretKey;
+    private String access_Key;
+    private String secret_Key;
 
     /*
      * GCP response data
