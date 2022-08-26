@@ -49,6 +49,8 @@ public class CommonFileUtils {
     public String createProviderFile(String clusterId, String provider, int seq, String pod, String host, String idRsa) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         try {
+            LOGGER.info("provider :: " + provider);
+            LOGGER.info("seq :: " + seq);
             String path = "secret/" + provider.toUpperCase() + "/" + seq;
             VaultModel res = vaultService.read(path, new VaultModel().getClass());
             LOGGER.info("valut key :: " + res.toString());
