@@ -52,6 +52,7 @@ public class CommonFileUtils {
             LOGGER.info("provider :: " + provider);
             LOGGER.info("seq :: " + seq);
             String path = "secret/" + provider.toUpperCase() + "/" + seq;
+            LOGGER.info("path :: " + path);
             VaultModel res = vaultService.read(path, new VaultModel().getClass());
             LOGGER.info("valut key :: " + res.toString());
             AccountModel account = accountService.getAccountInfo(seq);

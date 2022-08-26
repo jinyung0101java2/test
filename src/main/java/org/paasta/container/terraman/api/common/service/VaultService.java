@@ -1,5 +1,6 @@
 package org.paasta.container.terraman.api.common.service;
 
+import org.paasta.container.terraman.api.common.config.TrackExecutionTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.vault.support.VaultResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class VaultService {
@@ -29,20 +31,17 @@ public class VaultService {
      * @param path the path
      * @return the object
      */
+    @TrackExecutionTime
     public <T> T read(String path,  Class<T> requestClass) {
-        VaultResponse vaultResponse;
-
         path = setPath(path);
 
-        try {
-            vaultResponse = vaultTemplate.read(path);
-        }
-        catch (Exception e){
-            logger.info("Invalid path");
-            return null;
-        }
-        HashMap responseMap = (HashMap) vaultResponse.getData().get("data");
-        return  commonService.setResultObject(responseMap, requestClass);
+        Object response = Optional.ofNullable(vaultTemplate.read(path))
+                .map(VaultResponse::getData)
+                .filter(x -> x.keySet().contains("data"))
+                .orElseGet(HashMap::new)
+                .getOrDefault("data", null);
+
+        return commonService.setResultObject(response, requestClass);
     }
 
     /**
@@ -51,6 +50,7 @@ public class VaultService {
      * @param path the path
      * @return the object
      */
+    @TrackExecutionTime
     public Object write(String path, Object body){
         path = setPath(path);
 
@@ -81,15 +81,5 @@ public class VaultService {
         return new StringBuilder(path).insert(path.indexOf("/") + 1, "data/").toString();
     }
 
-
-    /**
-     * Vault를 통한 Cluster 정보 조회
-     *
-     * @param clusterId the clusterId
-     * @return the String
-     */
-//    public Clusters getClusterDetails(String clusterId){
-//        return read(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId), Clusters.class);
-//    }
 
 }
