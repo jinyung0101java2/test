@@ -58,6 +58,12 @@
                         </dd>
                     </dl>
                     <dl>
+                        <dt><label>Description</label></dt>
+                        <dd>
+                            <input id="createDescription" type="text" placeholder="Description"/>
+                        </dd>
+                    </dl>
+                    <dl>
                         <dt><label>Template Detail</label></dt>
                         <dd>
                             <textarea id="createTemplatesDetail" rows="30"></textarea>
@@ -92,7 +98,13 @@
                         <dt><label>Cluster IP</label></dt>
                         <!-- 파일첨부 -->
                         <dd>
-                            <input id="registerIP" type="text" placeholder="e.g) http://0.0.0.0:6443"/>
+                            <input id="registerIP" type="text" placeholder="e.g) https://0.0.0.0:6443"/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label>Description</label></dt>
+                        <dd>
+                            <input id="registerDescription" type="text" placeholder="Description"/>
                         </dd>
                     </dl>
                     <dl>
@@ -165,6 +177,7 @@
                                 "providerType": document.getElementById('createProvider').value,
                                 "cloudAccountId": document.querySelector('#createCloudAccount > option:checked').getAttribute('data-id'),
                                 "hclScript": document.getElementById('createTemplatesDetail').value,
+                                "description": document.getElementById('createDescription').value,
                                 "isClusterRegister": false
                                 }
                                 break;
@@ -173,8 +186,9 @@
                                 "cluster": document.getElementById('registerName').value,
                                 "resourceName": document.getElementById('registerName').value,
                                 "clusterApiUrl": document.getElementById('registerIP').value,
-                                "ProviderType": document.getElementById('registerProvider').value,
+                                "providerType": document.getElementById('registerProvider').value,
                                 "clusterToken": document.getElementById('registerCredentials').value,
+                                "description": document.getElementById('registerDescription').value,
                                 "isClusterRegister": true
                                 }
                     }

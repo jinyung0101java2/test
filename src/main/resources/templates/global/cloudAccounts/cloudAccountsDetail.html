@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
 <div layout:fragment="content">
@@ -25,7 +26,7 @@
                             <th scope="row" class="left">Name</th>
                             <td class="left">
                                 <input class="left" id="cloudAccountDetailName" type="text" readonly>
-                                <button type="button" class="right" id="cloudAccountDetailNameButton" onclick="activeEdit('cloudAccountDetailName', this.id)">Edit</button>
+                                <button type="button" class="right" id="cloudAccountDetailNameButton" onclick="activeEdit('cloudAccountDetailName', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
                             </td>
 
                         </tr>

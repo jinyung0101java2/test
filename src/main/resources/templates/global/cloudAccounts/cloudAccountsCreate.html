@@ -94,6 +94,7 @@
                             createName = {
                                 "resourceName": document.getElementById('name').value,
                                 "providerType": providerType,
+                                "region": document.getElementById('region').value,
                                 "providerInfo": {
                                     "accessKey": document.getElementById('accessKey').value,
                                     "secretKey": document.getElementById('secretKey').value
@@ -115,6 +116,7 @@
                             createName = {
                                 "resourceName": document.getElementById('name').value,
                                 "providerType": providerType,
+                                "region": document.getElementById('region').value,
                                 "providerInfo": {
                                     "auth_url": document.getElementById('auth_url').value,
                                     "password": document.getElementById('password').value,
@@ -142,13 +144,13 @@
         if (provider === 'GCP') {
             html += `<dl><dt><label for="jsonKey">jsonKey</label></dt><dd><input id="jsonKey" type="file" accept="application/json" /></dd></dl>`;
             html += `<dl><dt><label for="projectName">projectName</label></dt><dd><input id="projectName" type="text" /></dd></dl>`;
-            html += `<dl><dt><label for="region">region</label></dt><dd><input id="region" type="text" /></dd></dl>`;
         }
         else {
             for (let key of Object.keys(values)) {
                 html += `<dl><dt><label for="${key}">${key}</label></dt><dd><input id="${key}" type="text" /></dd></dl>`;
             }
         }
+        html += `<dl><dt><label for="region">region</label></dt><dd><input id="region" type="text" /></dd></dl>`;
         func.appendHtml(document.getElementById('providerInfo'), html, 'dl');
         if (provider === 'GCP') {
             document.getElementById('jsonKey').addEventListener('change', onChange);
