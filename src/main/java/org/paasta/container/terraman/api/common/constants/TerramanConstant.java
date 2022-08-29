@@ -56,7 +56,7 @@ public class TerramanConstant {
     }
     public static final String DELETE_DIR_CLUSTER = "tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
-        return "rm -r cluster_"+clusterId;
+        return "rm -r "+clusterId;
     }
     public static final String MOVE_DIR_KUBESPRAY = "paas-ta-container-platform-deployment/standalone/single_control_plane";
 
