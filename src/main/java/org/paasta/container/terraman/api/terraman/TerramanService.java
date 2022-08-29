@@ -366,8 +366,8 @@ public class TerramanService {
      * @return the resultStatus
      */
     public ResultStatusModel deleteTerraman(String clusterId) {
-        String host = "";
-        String idRsa = "";
+        String host = MASTER_HOST;
+        String idRsa = TerramanConstant.MASTER_ID_RSA;
         ResultStatusModel resultStatus = new ResultStatusModel();
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
