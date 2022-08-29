@@ -142,10 +142,20 @@ public class TerramanController {
 //        } catch (Exception e) {
 //            LOGGER.info("Vault Write failed in createClusterInfoToVault");
 //        }
-        String rst = "ip-";
-        String ipString = "172.10.0.133".replaceAll("[.]","-");
-        rst += ipString;
-        LOGGER.info(rst);
+//        String rst = "ip-";
+//        String ipString = "172.10.0.133".replaceAll("[.]","-");
+//        rst += ipString;
+//        LOGGER.info(rst);
+//        ClusterInfo clusterInfo = new ClusterInfo();
+//        clusterInfo.setClusterId("test1");
+//        clusterInfo.setClusterToken("test2");
+//        clusterInfo.setClusterApiUrl("test3");
+//        vaultService.write("secret/cluster/terraform-test", clusterInfo);
+        String aa = "Mountable secrets:   k8sadmin-token-gtpwb";
+        int index = aa.indexOf("k8sadmin");
+        LOGGER.info("11 :: " + index);
+        aa = aa.substring(index);
+        LOGGER.info(aa);
     }
 
     /**

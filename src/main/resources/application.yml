@@ -18,6 +18,7 @@ vault:
   path:
     base: "secret/"
     cluster-token: "secret/cluster/{id}"
+    cluster_api_url: "https://{ip}:6443"
 
 ---
 spring:

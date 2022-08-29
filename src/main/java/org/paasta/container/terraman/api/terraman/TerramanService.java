@@ -27,8 +27,7 @@ public class TerramanService {
     private final AccountService accountService;
     private final CommonFileUtils fileUtil;
     private final ClusterService clusterService;
-    @Value("${master.host}")
-    private String MASTER_HOST;
+    private final PropertyService propertyService;
 
     @Autowired
     public TerramanService(
@@ -40,6 +39,7 @@ public class TerramanService {
             , AccountService accountService
             , CommonFileUtils fileUtil
             , ClusterService clusterService
+            , PropertyService propertyService
     ) {
         this.vaultService = vaultService;
         this.commonService = commonService;
@@ -49,6 +49,7 @@ public class TerramanService {
         this.accountService = accountService;
         this.fileUtil = fileUtil;
         this.clusterService = clusterService;
+        this.propertyService = propertyService;
     }
 
     /**
@@ -80,7 +81,7 @@ public class TerramanService {
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
         if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "DAEMON")) {
-            host = MASTER_HOST;
+            host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
             cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -173,6 +174,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_INIT_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
         if(StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
             LOGGER.info("terraform init 확인하십시오. " + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_INIT_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -198,6 +200,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_PLAN_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("terraform plan을 확인하십시오. " + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_PLAN_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -221,6 +224,7 @@ public class TerramanService {
         // command line 실행
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_APPLY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_APPLY_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -343,7 +347,35 @@ public class TerramanService {
         /*************************************************************************************************************************************/
 
         /**************************************************************************************************************************************
-         * 10. 클러스터 생성 상태 전송 --> DB 업데이트
+         * 10. 클러스터 정보 vault 생성성
+         * clusterId = clusterId
+         * clusterApiUrl = https://{ publicIp }:6443
+         * clusterToken =
+         *  - kubectl create serviceaccount k8sadmin -n kube-system
+         *  - kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin
+         *  - kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'      -->     SECRET_NAME 값 추출
+         *  - kubectl describe secret {SECRET_NAME} -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d " "
+        * ************************************************************************************************************************************/
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        LOGGER.info("service_name :: " + cResult);
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim()), "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        LOGGER.info("cluster_token :: " + cResult);
+
+        Object resultClusterInfo = vaultService.write(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
+                , new ClusterInfo(clusterId,propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp()),cResult)
+        );
+
+        LOGGER.info("resultClusterInfo :: " + resultClusterInfo);
+        if(resultClusterInfo == null) {
+            LOGGER.info("cluster token 생성 중 오류가 발생하였습니다.");
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
+        /*************************************************************************************************************************************/
+
+        /**************************************************************************************************************************************
+         * 11. 클러스터 생성 상태 전송 --> DB 업데이트
          * ************************************************************************************************************************************/
         ClusterModel updateResult = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
         if(updateResult == null) {
@@ -353,7 +385,7 @@ public class TerramanService {
         /*************************************************************************************************************************************/
 
         /**************************************************************************************************************************************
-         * 11. 완료 후 프로세스 종료
+         * 12. 완료 후 프로세스 종료
          * ************************************************************************************************************************************/
         return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_SUCCESS);
         /*************************************************************************************************************************************/
@@ -366,7 +398,7 @@ public class TerramanService {
      * @return the resultStatus
      */
     public ResultStatusModel deleteTerraman(String clusterId) {
-        String host = MASTER_HOST;
+        String host = propertyService.getMASTER_HOST();
         String idRsa = TerramanConstant.MASTER_ID_RSA;
         ResultStatusModel resultStatus = new ResultStatusModel();
         String cResult = Constants.RESULT_STATUS_SUCCESS;
