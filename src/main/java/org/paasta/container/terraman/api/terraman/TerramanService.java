@@ -122,11 +122,11 @@ public class TerramanService {
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_START_LOG(provider));
         /*
-        * terraform 생성을 위한 각종 tf파일 가져오기
-        * */
+         * terraform 생성을 위한 각종 tf파일 가져오기
+         * */
 
         /*
-        * ************************************************************************************************************************************/
+         * ************************************************************************************************************************************/
 
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_IAC_LOG);
@@ -364,8 +364,11 @@ public class TerramanService {
          *  - kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin
          *  - kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'      -->     SECRET_NAME 값 추출
          *  - kubectl describe secret {SECRET_NAME} -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d " "
-        * ************************************************************************************************************************************/
-        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE, "", instanceInfo.getPrivateIp(), idRsa);
+         * ************************************************************************************************************************************/
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
+                , ""
+                , instanceInfo.getPrivateIp()
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, "service account create failed");
@@ -373,14 +376,20 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING, "", instanceInfo.getPrivateIp(), idRsa);
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
+                , ""
+                , instanceInfo.getPrivateIp()
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, "role binding create failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME, "", instanceInfo.getPrivateIp(), idRsa);
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
+                , ""
+                , instanceInfo.getPrivateIp()
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
         LOGGER.info("service_name :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
@@ -389,7 +398,10 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim()), "", instanceInfo.getPrivateIp(), idRsa);
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim())
+                , ""
+                , instanceInfo.getPrivateIp()
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
         LOGGER.info("cluster_token :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
@@ -453,5 +465,14 @@ public class TerramanService {
 
         return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
 
+    }
+
+    private String commandResult(String cResult, String logMessage, String clusterId, int mpSeq, ResultStatusModel resultStatus) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            LOGGER.info(logMessage + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq, logMessage);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+        }
+        return cResult;
     }
 }
