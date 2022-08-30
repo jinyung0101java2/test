@@ -356,12 +356,34 @@ public class TerramanService {
          *  - kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'      -->     SECRET_NAME 값 추출
          *  - kubectl describe secret {SECRET_NAME} -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d " "
         * ************************************************************************************************************************************/
-        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
-        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE, "", instanceInfo.getPrivateIp(), idRsa);
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        }
+
+        commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING, "", instanceInfo.getPrivateIp(), idRsa);
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        }
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME, "", instanceInfo.getPrivateIp(), idRsa);
         LOGGER.info("service_name :: " + cResult);
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim()), "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY);
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        }
+
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim()), "", instanceInfo.getPrivateIp(), idRsa);
         LOGGER.info("cluster_token :: " + cResult);
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        }
 
         Object resultClusterInfo = vaultService.write(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
                 , new ClusterInfo(clusterId,propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp()),cResult)
