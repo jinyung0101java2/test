@@ -94,6 +94,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "cluster directory create failed");
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
@@ -246,6 +247,7 @@ public class TerramanService {
 
         if(instanceInfo == null) {
             LOGGER.info("Instance is not exists");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "Instance is not exists");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
@@ -271,46 +273,52 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         LOGGER.info("8. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa));
         List<InstanceModel> instanceList = instanceService.getInstances(clusterId, provider, host, idRsa);
-
-        int workerCnt = instanceList.size()-1;
-        int workerSeq = 1;
-        StringBuffer sb = new StringBuffer();
-        sb.append(TerramanConstant.TERRAFORM_KUBESPRAY_COMMAND);
-        for(InstanceModel obj : instanceList) {
-            String line = "";
-            if( obj.getResourceName().contains("master") ) {
-                line = "export MASTER_NODE_HOSTNAME=" + obj.getInstanceName()
-                        + "\\n"
-                        + "export MASTER_NODE_PUBLIC_IP=" + obj.getPublicIp()
-                        + "\\n"
-                        + "export MASTER_NODE_PRIVATE_IP=" + obj.getPrivateIp();
+        if(instanceList.size() > 0) {
+            int workerCnt = instanceList.size()-1;
+            int workerSeq = 1;
+            StringBuffer sb = new StringBuffer();
+            sb.append(TerramanConstant.TERRAFORM_KUBESPRAY_COMMAND);
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                if( obj.getResourceName().contains("master") ) {
+                    line = "export MASTER_NODE_HOSTNAME=" + obj.getInstanceName()
+                            + "\\n"
+                            + "export MASTER_NODE_PUBLIC_IP=" + obj.getPublicIp()
+                            + "\\n"
+                            + "export MASTER_NODE_PRIVATE_IP=" + obj.getPrivateIp();
+                }
+                sb.append(line);
             }
-            sb.append(line);
-        }
 
-        sb.append("\\n\\n" + "export WORKER_NODE_CNT=" + workerCnt + "\\n");
+            sb.append("\\n\\n" + "export WORKER_NODE_CNT=" + workerCnt + "\\n");
 
-        for(InstanceModel obj : instanceList) {
-            String line = "";
-            if( !obj.getResourceName().contains("master") ) {
-                line = "\\n"
-                        + "export WORKER" + workerSeq
-                        + "_NODE_HOSTNAME=" + obj.getInstanceName()
-                        + "\\n"
-                        + "export WORKER" + workerSeq
-                        + "_NODE_PRIVATE_IP=" + obj.getPrivateIp();
-                workerSeq++;
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                if( !obj.getResourceName().contains("master") ) {
+                    line = "\\n"
+                            + "export WORKER" + workerSeq
+                            + "_NODE_HOSTNAME=" + obj.getInstanceName()
+                            + "\\n"
+                            + "export WORKER" + workerSeq
+                            + "_NODE_PRIVATE_IP=" + obj.getPrivateIp();
+                    workerSeq++;
+                }
+                sb.append(line);
             }
-            sb.append(line);
-        }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa);
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Kubespray 파일 생성 중 오류가 발생하였습니다. " + cResult);
+            cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa);
+            if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                LOGGER.info("Kubespray 파일 생성 중 오류가 발생하였습니다. " + cResult);
+                clusterLogService.saveClusterLog(clusterId, mpSeq++, "cluster file create failed");
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+            }
+        } else {
+            LOGGER.info("Instances are not exists");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "Instances are not exists");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
-
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_CONFIG_LOG);
         /*************************************************************************************************************************************/
@@ -337,6 +345,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_DEPLOY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. " + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "cluster deploy failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -359,6 +368,7 @@ public class TerramanService {
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE, "", instanceInfo.getPrivateIp(), idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "service account create failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -366,13 +376,15 @@ public class TerramanService {
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING, "", instanceInfo.getPrivateIp(), idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "role binding create failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME, "", instanceInfo.getPrivateIp(), idRsa);
         LOGGER.info("service_name :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
+            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "get secret name failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -380,7 +392,8 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim()), "", instanceInfo.getPrivateIp(), idRsa);
         LOGGER.info("cluster_token :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
+            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "get cluster token failed");
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
@@ -392,6 +405,7 @@ public class TerramanService {
         LOGGER.info("resultClusterInfo :: " + resultClusterInfo);
         if(resultClusterInfo == null) {
             LOGGER.info("cluster token 생성 중 오류가 발생하였습니다.");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "token create failed");
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
         /*************************************************************************************************************************************/
@@ -402,6 +416,7 @@ public class TerramanService {
         ClusterModel updateResult = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
         if(updateResult == null) {
             LOGGER.info("cluster 생성 완료 업데이트 중 오류가 발생하였습니다.");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, "cluster update failed");
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
         /*************************************************************************************************************************************/
