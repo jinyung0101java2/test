@@ -465,6 +465,7 @@ public class TerramanService {
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
         }
+        vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
 
         return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
 
