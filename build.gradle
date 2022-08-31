@@ -99,6 +99,3 @@ jacocoTestReport {
         xml.enabled true
     }
 }
-tasks.named("jar") {
-    enabled = false
-}

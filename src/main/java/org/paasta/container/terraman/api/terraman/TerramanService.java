@@ -145,8 +145,13 @@ public class TerramanService {
         LOGGER.info("3. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa));
 
         cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "", host, idRsa);
-        fResult = fileUtil.createProviderFile(clusterId, provider, seq, cResult.trim(), host, idRsa);
-
+        try {
+            fResult = fileUtil.createProviderFile(clusterId, provider, seq, cResult.trim(), host, idRsa);
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_ERROR_LOG + fResult);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+        }
         if(StringUtils.equals(fResult, Constants.RESULT_STATUS_FAIL)) {
             // log 저장
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_ERROR_LOG + fResult);
@@ -252,11 +257,31 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
 
+        Loop : for(int i = 0; i<100; i++) {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage());
+            }
+            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+            if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+                break Loop;
+            }
+        }
+
+        LOGGER.info("ssh connection :: " + cResult);
+
         try {
-            Thread.sleep(300000);
+            Thread.sleep(5000);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
+
+//        try {
+//            Thread.sleep(300000);
+//        } catch (Exception e) {
+//            LOGGER.error(e.getMessage());
+//        }
 
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         /*************************************************************************************************************************************/
@@ -357,7 +382,7 @@ public class TerramanService {
         /*************************************************************************************************************************************/
 
         /**************************************************************************************************************************************
-         * 10. 클러스터 정보 vault 생성성
+         * 10. 클러스터 정보 vault 생성
          * clusterId = clusterId
          * clusterApiUrl = https://{ publicIp }:6443
          * clusterToken =
@@ -387,11 +412,11 @@ public class TerramanService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
+
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
                 , ""
                 , instanceInfo.getPrivateIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
-        LOGGER.info("service_name :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
@@ -403,7 +428,6 @@ public class TerramanService {
                 , ""
                 , instanceInfo.getPrivateIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
-        LOGGER.info("cluster_token :: " + cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
@@ -415,7 +439,6 @@ public class TerramanService {
                 , new ClusterInfo(clusterId,propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp()),cResult)
         );
 
-        LOGGER.info("resultClusterInfo :: " + resultClusterInfo);
         if(resultClusterInfo == null) {
             LOGGER.info("cluster token 생성 중 오류가 발생하였습니다.");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_TOKEN_ERROR);
@@ -439,6 +462,7 @@ public class TerramanService {
         /**************************************************************************************************************************************
          * 12. 완료 후 프로세스 종료
          * ************************************************************************************************************************************/
+        LOGGER.info("cluster 생성이 완료되었습니다.");
         return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_SUCCESS);
         /*************************************************************************************************************************************/
     }
@@ -464,6 +488,7 @@ public class TerramanService {
                 LOGGER.info("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
+            cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER, "", "");
         }
         vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
 

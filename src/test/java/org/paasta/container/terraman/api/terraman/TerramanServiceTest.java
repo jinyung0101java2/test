@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.paasta.container.terraman.api.common.constants.CommonStatusCode;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
+import org.paasta.container.terraman.api.common.model.AccountModel;
+import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.model.InstanceModel;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.service.*;
@@ -16,7 +18,9 @@ import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +35,10 @@ public class TerramanServiceTest {
     private static final String TEST_CLUSTER_ID = "test_cluster";
     private static final String TEST_SEQ = "13";
     private static final int TEST_INT_SEQ = 13;
+
+    private static final String TEST_DIR = "/home";
+    private static final String TEST_FILE_PATH = "/file";
+
     private static final String TEST_PATH = "secret/OPENSTACK/1";
     private static final String TEST_STR = "terraman";
     private static final String TEST_RESULT_STR = "SUCCESS";
@@ -47,11 +55,22 @@ public class TerramanServiceTest {
     private static final String TEST_HOST = "1.1.1.1";
     private static final String TEST_IDRSA = "id_rsa";
 
+    private static final String TEST_CLUSTER_TOKEN_PATH = "123123";
+    private static final String TEST_CLUSTER_API_URL = "https://1.1.1.1:6443";
+    private static final String TEST_VAULT_BASE = "/";
+
+    private static final String TEST_STRING = "test";
+    private static final String TEST_ID_RSA_PATH = "/root/.ssh/id_rsa";
+
     private static TerramanRequest gParams = null;
     private static ResultStatusModel gResultModel = null;
     private static ResultStatusModel gResultStatusModelModel = null;
     private static InstanceModel gInstanceModel = null;
     private static List<InstanceModel> gInstanceList = null;
+    private static ClusterModel clusterModel = null;
+    private static HashMap hashMap = null;
+    private static AccountModel accountModel = null;
+    private File uploadFile = null;
 
 
 
@@ -66,8 +85,13 @@ public class TerramanServiceTest {
     @Mock
     private CommonFileUtils commonFileUtils;
     @Mock
+    private ClusterService clusterService;
+    @Mock
+    private PropertyService propertyService;
+    @Mock
     private VaultService vaultService;
-
+    @Mock
+    private AccountService accountService;
     @InjectMocks
     private TerramanService terramanService;
 
@@ -88,6 +112,12 @@ public class TerramanServiceTest {
         gInstanceModel = new InstanceModel(TEST_RESOURCE_NAME, TEST_INSTANCE_NAME, TEST_PRIVATE_IP, TEST_PUBLIC_IP);
         gInstanceList = new ArrayList<>();
         gInstanceList.add(gInstanceModel);
+
+        clusterModel = new ClusterModel();
+        accountModel = new AccountModel(1,"2","3","4","5","6","7");
+        hashMap = new HashMap();
+        hashMap.put("test", "test");
+        uploadFile = new File(TEST_FILE_PATH);
     }
 
 
@@ -97,9 +127,22 @@ public class TerramanServiceTest {
     @Test
     public void createTerramanTest() {
         // when
-        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+        when(propertyService.getMASTER_HOST()).thenReturn(TEST_HOST);
+        when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
+        when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
+        when(propertyService.getVaultBase()).thenReturn(TEST_VAULT_BASE);
+
+//        doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
+        //doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
+        when(commonFileUtils.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH)).thenReturn(TEST_RESULT_CODE);
+//        doReturn(hashMap).when(vaultService).read(TEST_PATH, hashMap.getClass());
+//        when(accountService.getAccountInfo(TEST_INT_SEQ)).thenReturn(accountModel);
+//        when(commandService.SSHFileUpload(TEST_DIR, TEST_HOST, TEST_IDRSA, uploadFile)).thenReturn(TEST_RESULT_CODE);
+//        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+
+
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
-        //when(terramanService.createProviderFile(PROVIDER, INT_SEQ)).thenReturn(RESULT_CODE);
+        doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(instanceService.getInstansce(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceModel);
         when(commonFileUtils.tfFileDelete(TEST_FILE_NAME)).thenReturn(TEST_RESULT_CODE);
         when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceList);
@@ -124,6 +167,8 @@ public class TerramanServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(TEST_CLUSTER_ID), TerramanConstant.DELETE_DIR_CLUSTER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
+        when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
+        doNothing().when(vaultService).delete(TEST_PATH);
 
         ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID);
 
