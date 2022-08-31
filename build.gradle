@@ -40,6 +40,7 @@ ext {
     mariaDbVersion = '3.0.4'
 }
 jar {
+    enabled = false
     archivesBaseName = 'paas-ta-container-terraman-api'
 }
 dependencies {

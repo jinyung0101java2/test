@@ -35,7 +35,8 @@ vault:
 
 ---
 spring:
-  profiles: local
+  profiles:
+    active: local
   cp:
     datasource:
       jdbc-url: jdbc:mariadb://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
