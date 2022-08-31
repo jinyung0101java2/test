@@ -1,5 +1,6 @@
 package org.paasta.container.terraman.api.terraman;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,6 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:application.yml")
-@TestPropertySource("classpath:bootstrap.yml")
 public class TerramanServiceTest {
     private static final String TEST_DEFAULT_PATH = "secret";
     private static final String TEST_PROVIDER = "openstack";

@@ -19,13 +19,26 @@ vault:
     base: "secret/"
     cluster-token: "secret/cluster/{id}"
     cluster_api_url: "https://{ip}:6443"
+  props:
+    scheme: http
+    host: ${VAULT_IP}
+    port: ${VAULT_PORT}
+    authentication: APPROLE
+    kv:
+      enabled: true
+      backend: secret
+    app-role:
+      role-id: ${VAULT_ROLE_ID}
+      secret-id: ${VAULT_SECRET_ID}
+      role: ${VAULT_ROLE_NAME}
+      app-role-path: approle
 
 ---
 spring:
   profiles: local
   cp:
     datasource:
-      jdbc-url: jdbc:mysql://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mariadb://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       driver-class-name: org.mariadb.jdbc.Driver
       validationQuery: SELECT 1
       username: ${DATABASE_USER_ID}
@@ -66,7 +79,7 @@ spring:
     active: prod
   cp:
     datasource:
-      jdbc-url: jdbc:mysql://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mariadb://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       driver-class-name: org.mariadb.jdbc.Driver
       validationQuery: SELECT 1
       username: ${DATABASE_USER_ID}

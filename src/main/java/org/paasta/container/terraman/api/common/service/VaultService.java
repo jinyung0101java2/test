@@ -1,7 +1,5 @@
 package org.paasta.container.terraman.api.common.service;
 
-import com.google.gson.Gson;
-import org.paasta.container.terraman.api.common.config.TrackExecutionTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ public class VaultService {
      * @param path the path
      * @return the object
      */
-    @TrackExecutionTime
     public <T> T read(String path,  Class<T> requestClass) {
         path = setPath(path);
 
@@ -51,7 +48,6 @@ public class VaultService {
      * @param path the path
      * @return the object
      */
-    @TrackExecutionTime
     public Object write(String path, Object body){
         path = setPath(path);
 

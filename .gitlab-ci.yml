@@ -38,7 +38,7 @@ variables:
 build:
   stage: build
   image:
-    name: docker.io/gradle:6.5.1-jdk8 # kaniko image 사용
+    name: docker.io/gradle:7.5-jdk8 # kaniko image 사용
     entrypoint: [""]
   script:
     - export
@@ -59,7 +59,7 @@ build:
 #test:
 #  stage: test
 #  image:
-#    name: docker.io/gradle:6.5.1-jdk8 # kaniko image 사용
+#    name: docker.io/gradle:7.5-jdk8 # kaniko image 사용
 #    entrypoint: [ "" ]
 #  script:
 #    - export

@@ -138,9 +138,26 @@ public class TerramanConstant {
     /**
      * TERRAFORM LOG MESSAGE - FAIL
      * */
-    public static final String TERRAFORM_INIT_FAIL_LOG = "Terraform init is failed.";
-    public static final String TERRAFORM_PLAN_FAIL_LOG = "Terraform plan is failed.";
-    public static final String TERRAFORM_APPLY_FAIL_LOG = "Terraform apply is failed.";
+    public static final String TERRAFORM_INIT_FAIL_LOG = "ERROR - Terraform init is failed.";
+    public static final String TERRAFORM_PLAN_FAIL_LOG = "ERROR - Terraform plan is failed.";
+    public static final String TERRAFORM_APPLY_FAIL_LOG = "ERROR - Terraform apply is failed.";
+
+    /**
+     * TERRAFORM LOG MESSAGE - ERROR
+     * */
+
+    public static final String TERRAFORM_CREATE_CLUSTER_DIRECTORY = "ERROR - cluster directory create failed";
+    public static final String TERRAFORM_NOT_EXISTS_INSTANCE_ERROR = "ERROR - Instance is not exists";
+    public static final String TERRAFORM_CREATE_CLUSTER_FILE_ERROR = "ERROR - cluster file create failed";
+    public static final String TERRAFORM_NOT_EXISTS_INSTANCES_ERROR = "ERROR - Instances are not exists";
+    public static final String TERRAFORM_CHANGE_MODE_ERROR = "ERROR - mode change failed";
+    public static final String TERRAFORM_DEPLOY_CLUSTER_ERROR = "ERROR - cluster deploy failed";
+    public static final String TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR = "ERROR - service account create failed";
+    public static final String TERRAFORM_BIND_ROLE_ERROR = "ERROR - role binding create failed";
+    public static final String TERRAFORM_GET_SECRET_NAME_ERROR = "ERROR - get secret name failed";
+    public static final String TERRAFORM_GET_CLUSTER_TOKEN_ERROR = "ERROR - get cluster token failed";
+    public static final String TERRAFORM_CREATE_TOKEN_ERROR = "ERROR - token create failed";
+    public static final String TERRAFORM_COMPLETE_CLUSTER_ERROR = "ERROR - complete cluster update failed";
 
 
     /**

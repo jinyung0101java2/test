@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.model.ClusterInfo;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
-import org.paasta.container.terraman.api.common.model.VaultModel;
 import org.paasta.container.terraman.api.common.service.ClusterLogService;
 import org.paasta.container.terraman.api.common.service.ClusterService;
 import org.paasta.container.terraman.api.common.service.PropertyService;
@@ -21,12 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.vault.core.VaultTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.HashMap;
 
 /**
  * Terraman Controller 클래스
@@ -41,6 +38,7 @@ import java.util.HashMap;
 public class TerramanController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanController.class);
 
+    private final VaultTemplate vaultTemplate;
     private final TerramanService terramanService;
     private final CommonFileUtils commonFileUtils;
     private final ClusterService clusterService;
@@ -56,13 +54,15 @@ public class TerramanController {
             , ClusterService clusterService
             , ClusterLogService clusterLogService
             , VaultService vaultService
-            , PropertyService propertyService) {
+            , PropertyService propertyService
+            , VaultTemplate vaultTemplate) {
         this.terramanService = terramanService;
         this.commonFileUtils = commonFileUtils;
         this.clusterService = clusterService;
         this.clusterLogService = clusterLogService;
         this.vaultService = vaultService;
         this.propertyService = propertyService;
+        this.vaultTemplate = vaultTemplate;
     }
 
     /**
@@ -151,11 +151,13 @@ public class TerramanController {
 //        clusterInfo.setClusterToken("test2");
 //        clusterInfo.setClusterApiUrl("test3");
 //        vaultService.write("secret/cluster/terraform-test", clusterInfo);
-        String aa = "Mountable secrets:   k8sadmin-token-gtpwb";
-        int index = aa.indexOf("k8sadmin");
-        LOGGER.info("11 :: " + index);
-        aa = aa.substring(index);
-        LOGGER.info(aa);
+//        String aa = "Mountable secrets:   k8sadmin-token-gtpwb";
+//        int index = aa.indexOf("k8sadmin");
+//        LOGGER.info("11 :: " + index);
+//        aa = aa.substring(index);
+//        LOGGER.info(aa);
+        JsonObject vaultResponse = vaultService.read("secret/cluster/terraform-aws", JsonObject.class);
+        LOGGER.info(vaultResponse.toString());
     }
 
     /**
