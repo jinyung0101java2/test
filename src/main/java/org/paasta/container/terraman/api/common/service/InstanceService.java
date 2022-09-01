@@ -83,13 +83,13 @@ public class InstanceService {
     private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
                     , idRsa);
         }
-        JsonObject jsonObject = readStateFile(clusterId);
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
         String rName = "", privateIp = "", publicIp = "", hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get("resources");
@@ -142,14 +142,14 @@ public class InstanceService {
     private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
                     , idRsa);
         }
 
-        JsonObject jsonObject = readStateFile(clusterId);
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
@@ -188,14 +188,14 @@ public class InstanceService {
     private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
                     , idRsa);
         }
 
-        JsonObject jsonObject = readStateFile(clusterId);
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
         String rName = "", privateIp = "", publicIp = "", hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get("resources");
@@ -246,13 +246,13 @@ public class InstanceService {
     private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
                     , idRsa);
         }
-        JsonObject jsonObject = readStateFile(clusterId);
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
@@ -285,8 +285,8 @@ public class InstanceService {
      *
      * @return the JsonObject
      */
-    private JsonObject readStateFile(String clusterId) {
-        return commonFileUtils.tfFileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
+    private JsonObject readStateFile(String clusterId, String processGb) {
+        return commonFileUtils.tfFileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)));
     }
 
     /**
