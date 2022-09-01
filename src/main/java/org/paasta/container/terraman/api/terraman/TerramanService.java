@@ -92,12 +92,13 @@ public class TerramanService {
         }
 
         // 해당 클러스터 디렉토리 생성
-        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", "", "");
+        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "/home/ubuntu", "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
+
 
         /**************************************************************************************************************************************
          *  1. 대상 Container 명 알아내기
@@ -474,9 +475,14 @@ public class TerramanService {
      * @param clusterId
      * @return the resultStatus
      */
-    public ResultStatusModel deleteTerraman(String clusterId) {
-        String host = propertyService.getMASTER_HOST();
-        String idRsa = TerramanConstant.MASTER_ID_RSA;
+    public ResultStatusModel deleteTerraman(String clusterId, String processGb) {
+        String host = "";
+        String idRsa = "";
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            host = propertyService.getMASTER_HOST();
+            idRsa = TerramanConstant.MASTER_ID_RSA;
+        }
+
         ResultStatusModel resultStatus = new ResultStatusModel();
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa);

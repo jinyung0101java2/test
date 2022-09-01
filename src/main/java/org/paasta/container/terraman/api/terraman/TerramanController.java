@@ -87,12 +87,14 @@ public class TerramanController {
      */
     @ApiOperation(value = "Terraman 삭제(Delete Terraman)", nickname = "deleteTerraman")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "test_cluster")
+            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster"),
+            @ApiImplicitParam(name = "processGb", value = "Terraman 삭제 구분", required = false, dataType = "string", paramType = "path")
     })
-    @DeleteMapping(value = "/remove/{clusterId:.+}")
+    @DeleteMapping(value = "/remove/{clusterId:.+}/{processGb:.+}")
     public ResultStatusModel deleteTerraman(
-            @PathVariable String clusterId) {
-        return terramanService.deleteTerraman(clusterId);
+            @PathVariable String clusterId
+            , @PathVariable String processGb) {
+        return terramanService.deleteTerraman(clusterId, processGb);
     }
 
     /**

@@ -54,9 +54,9 @@ public class TerramanConstant {
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId) {
-        return "tmp/terraform/"+clusterId;
+        return "/home/ubuntu/tmp/terraform/"+clusterId;
     }
-    public static final String DELETE_DIR_CLUSTER = "tmp/terraform";
+    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r "+clusterId;
     }
@@ -70,7 +70,7 @@ public class TerramanConstant {
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             path = "/root/" + path;
         } else {
-            path = "~/" + path;
+            path = "/home/ubuntu/" + path;
         }
         return path;
     }
@@ -93,7 +93,7 @@ public class TerramanConstant {
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
-        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " tmp/terraform/"+clusterId;
+        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
 //    public static final String INSTANCE_COPY_COMMAND = "sudo docker cp a44ddef5e883:openstack-resource.tf instance.tf";
 //    public static final String NETWORK_COPY_COMMAND(String pod) {
