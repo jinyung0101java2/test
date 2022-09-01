@@ -77,6 +77,7 @@ public class TerramanService {
 
         String host = "";
         String idRsa = "";
+        String hostDir = "/home/ubuntu";
 
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
@@ -89,10 +90,11 @@ public class TerramanService {
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
+            hostDir = "";
         }
 
         // 해당 클러스터 디렉토리 생성
-        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "/home/ubuntu", "", "");
+        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY);
