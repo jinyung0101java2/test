@@ -158,10 +158,9 @@ public class CommonFileUtils {
             String jsonString = gson.toJson(fileModel);
             LOGGER.info("provider - aws :: " + jsonString.toString());
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll(":", " =");
-            jsonString = jsonString.replaceAll("\"awsRegion\"", "region ");
-            jsonString = jsonString.replaceAll("\"awsAccessKey\"", "access_key ");
-            jsonString = jsonString.replaceAll("\"awsSecretKey\"", "secret_key ");
+            jsonString = jsonString.replaceAll("\"awsRegion\":", "region =");
+            jsonString = jsonString.replaceAll("\"awsAccessKey\":", "access_key =");
+            jsonString = jsonString.replaceAll("\"awsSecretKey\":", "secret_key =");
 
             writer.write("provider \"aws\" " + jsonString);
 
@@ -198,12 +197,11 @@ public class CommonFileUtils {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll(":", " =");
-            jsonString = jsonString.replaceAll("\"openstackTenantName\"", "tenant_name ");
-            jsonString = jsonString.replaceAll("\"openstackPassword\"", "password ");
-            jsonString = jsonString.replaceAll("\"openstackAuthUrl\"", "auth_url ");
-            jsonString = jsonString.replaceAll("\"openstackUserName\"", "user_name ");
-            jsonString = jsonString.replaceAll("\"openstackRegion\"", "region ");
+            jsonString = jsonString.replaceAll("\"openstackTenantName\":", "tenant_name =");
+            jsonString = jsonString.replaceAll("\"openstackPassword\":", "password =");
+            jsonString = jsonString.replaceAll("\"openstackAuthUrl\":", "auth_url =");
+            jsonString = jsonString.replaceAll("\"openstackUserName\":", "user_name =");
+            jsonString = jsonString.replaceAll("\"openstackRegion\":", "region =");
 
             writer.write(TerramanConstant.PREFIX_PROVIDER_OPENSTACK + "\n\n" + "provider \"openstack\" " + jsonString);
 
@@ -240,10 +238,9 @@ public class CommonFileUtils {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll(":", " =");
-            jsonString = jsonString.replaceAll("\"vSphereUser\"", "user ");
-            jsonString = jsonString.replaceAll("\"vSpherePassword\"", "password ");
-            jsonString = jsonString.replaceAll("\"vSphereServer\"", "vsphere_server ");
+            jsonString = jsonString.replaceAll("\"vSphereUser\":", "user =");
+            jsonString = jsonString.replaceAll("\"vSpherePassword\":", "password =");
+            jsonString = jsonString.replaceAll("\"vSphereServer\":", "vsphere_server =");
 
             writer.write("provider \"vsphere\" " + jsonString);
 
