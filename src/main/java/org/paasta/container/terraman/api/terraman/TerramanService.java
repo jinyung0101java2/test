@@ -252,7 +252,7 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         LOGGER.info("7. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa));
 
-        instanceInfo = instanceService.getInstansce(clusterId, provider, host, idRsa);
+        instanceInfo = instanceService.getInstansce(clusterId, provider, host, idRsa, processGb);
 
         if(instanceInfo == null) {
             LOGGER.info("Instance is not exists");
@@ -301,7 +301,7 @@ public class TerramanService {
          * KUBESPRAY_CONFIG_LOG = "Configuration information update for cluster configuration has been completed.";
          * ************************************************************************************************************************************/
         LOGGER.info("8. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa));
-        List<InstanceModel> instanceList = instanceService.getInstances(clusterId, provider, host, idRsa);
+        List<InstanceModel> instanceList = instanceService.getInstances(clusterId, provider, host, idRsa, processGb);
         if(instanceList.size() > 0) {
             int workerCnt = instanceList.size()-1;
             int workerSeq = 1;

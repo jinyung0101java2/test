@@ -37,16 +37,16 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    public InstanceModel getInstansce(String clusterId, String provider, String host, String idRsa) {
+    public InstanceModel getInstansce(String clusterId, String provider, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
-            resultModel = getInstanceInfoAws(clusterId, host, idRsa);
+            resultModel = getInstanceInfoAws(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
-            resultModel = getInstanceInfoGcp(clusterId, host, idRsa);
+            resultModel = getInstanceInfoGcp(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_VSPHERE, provider.toUpperCase())) {
-            resultModel = getInstanceInfoVSphere(clusterId, host, idRsa);
+            resultModel = getInstanceInfoVSphere(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
-            resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa);
+            resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa, processGb);
         } else {
             LOGGER.error(provider + " is Cloud not supported.");
             resultModel = new InstanceModel("", "", "", "");
@@ -59,16 +59,16 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    public List<InstanceModel> getInstances(String clusterId, String provider, String host, String idRsa) {
+    public List<InstanceModel> getInstances(String clusterId, String provider, String host, String idRsa, String processGb) {
         List<InstanceModel> resultList = new ArrayList<InstanceModel>();
         if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
-            resultList = getInstancesInfoAws(clusterId, host, idRsa);
+            resultList = getInstancesInfoAws(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_GCP, provider.toUpperCase())) {
-            resultList = getInstancesInfoGcp(clusterId, host, idRsa);
+            resultList = getInstancesInfoGcp(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_VSPHERE, provider.toUpperCase())) {
-            resultList = getInstancesInfoVSphere(clusterId, host, idRsa);
+            resultList = getInstancesInfoVSphere(clusterId, host, idRsa, processGb);
         } else if(StringUtils.equals(Constants.UPPER_OPENSTACK, provider.toUpperCase())) {
-            resultList = getInstancesInfoOpenstack(clusterId, host, idRsa);
+            resultList = getInstancesInfoOpenstack(clusterId, host, idRsa, processGb);
         } else {
             LOGGER.error(provider + " is Cloud not supported.");
         }
@@ -80,13 +80,15 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa) {
+    private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
-        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
-                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
-                , host
-                , idRsa);
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa);
+        }
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
@@ -117,7 +119,7 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoGcp(String clusterId, String host, String idRsa) {
+    private InstanceModel getInstanceInfoGcp(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         return resultModel;
     }
@@ -127,7 +129,7 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoVSphere(String clusterId, String host, String idRsa) {
+    private InstanceModel getInstanceInfoVSphere(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         return resultModel;
     }
@@ -137,13 +139,16 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa) {
+    private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
-        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
-                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
-                , host
-                , idRsa);
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa);
+        }
+
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 
@@ -180,13 +185,16 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa) {
+    private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
-        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
-                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
-                , host
-                , idRsa);
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa);
+        }
+
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
@@ -215,7 +223,7 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoGcp(String clusterId, String host, String idRsa) {
+    private List<InstanceModel> getInstancesInfoGcp(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         return modelList;
     }
@@ -225,7 +233,7 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoVSphere(String clusterId, String host, String idRsa) {
+    private List<InstanceModel> getInstancesInfoVSphere(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         return modelList;
     }
@@ -235,13 +243,15 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa) {
+    private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
-        commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
-                , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
-                , TerramanConstant.TERRAFORM_STATE_FILE_NAME
-                , host
-                , idRsa);
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            commandService.fileDownload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa);
+        }
         JsonObject jsonObject = readStateFile(clusterId);
         String rName = "", privateIp = "", publicIp = "", hostName = "", compInstanceId = "";
 

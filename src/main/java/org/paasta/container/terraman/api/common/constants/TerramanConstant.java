@@ -53,8 +53,12 @@ public class TerramanConstant {
         return "mkdir -p -v tmp/terraform/"+clusterId;
     }
 
-    public static final String MOVE_DIR_CLUSTER(String clusterId) {
-        return "/home/ubuntu/tmp/terraform/"+clusterId;
+    public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
+        String dir = "tmp/terraform/"+clusterId;;
+        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            dir = "/home/ubuntu/" + dir;
+        }
+        return dir;
     }
     public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
