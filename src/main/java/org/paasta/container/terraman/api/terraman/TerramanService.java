@@ -80,7 +80,8 @@ public class TerramanService {
 
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
-        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "DAEMON")) {
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            LOGGER.info("container conn");
             host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
             cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa);
@@ -263,7 +264,7 @@ public class TerramanService {
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }
-            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
             }
@@ -272,7 +273,7 @@ public class TerramanService {
         LOGGER.info("ssh connection :: " + cResult);
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(30000);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
@@ -394,7 +395,7 @@ public class TerramanService {
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
                 , ""
                 , instanceInfo.getPrivateIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
@@ -405,7 +406,7 @@ public class TerramanService {
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
                 , ""
                 , instanceInfo.getPrivateIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
@@ -416,7 +417,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
                 , ""
                 , instanceInfo.getPrivateIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
@@ -427,7 +428,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim())
                 , ""
                 , instanceInfo.getPrivateIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
