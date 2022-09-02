@@ -497,7 +497,6 @@ public class TerramanService {
                 LOGGER.info("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
-            cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER, "", "");
         }
         vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
 
