@@ -130,6 +130,6 @@ deploy:
 
 stages:
   - build
-#  - test
+  - test
   - docker
   - deploy
