@@ -59,7 +59,7 @@ public class TerramanService {
      * @return the resultStatus
      */
     @Async
-    public ResultStatusModel createTerraman(TerramanRequest terramanRequest) {
+    public ResultStatusModel createTerraman(TerramanRequest terramanRequest, String processGb) {
         /**************************************************************************************************************************************
          * 변수 정의
          * ************************************************************************************************************************************/
@@ -68,7 +68,7 @@ public class TerramanService {
 
         int seq = Integer.parseInt(terramanRequest.getSeq());
         String provider = terramanRequest.getProvider();
-        String processGb = terramanRequest.getProcessGb();
+        //String processGb = terramanRequest.getProcessGb();
         String cResult = "";
         String fResult = "";
         int mpSeq = 0;
