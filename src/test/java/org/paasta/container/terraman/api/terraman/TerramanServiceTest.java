@@ -62,6 +62,8 @@ public class TerramanServiceTest {
     private static final String TEST_STRING = "test";
     private static final String TEST_ID_RSA_PATH = "/root/.ssh/id_rsa";
 
+    private static final String TEST_PROCESS_GB = "";
+
     private static TerramanRequest gParams = null;
     private static ResultStatusModel gResultModel = null;
     private static ResultStatusModel gResultStatusModelModel = null;
@@ -134,7 +136,7 @@ public class TerramanServiceTest {
 
 //        doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
         //doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
-        when(commonFileUtils.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH)).thenReturn(TEST_RESULT_CODE);
+        when(commonFileUtils.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH, TEST_PROCESS_GB)).thenReturn(TEST_RESULT_CODE);
 //        doReturn(hashMap).when(vaultService).read(TEST_PATH, hashMap.getClass());
 //        when(accountService.getAccountInfo(TEST_INT_SEQ)).thenReturn(accountModel);
 //        when(commandService.SSHFileUpload(TEST_DIR, TEST_HOST, TEST_IDRSA, uploadFile)).thenReturn(TEST_RESULT_CODE);
@@ -143,15 +145,15 @@ public class TerramanServiceTest {
 
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
-        when(instanceService.getInstansce(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceModel);
+        when(instanceService.getInstansce(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
         when(commonFileUtils.tfFileDelete(TEST_FILE_NAME)).thenReturn(TEST_RESULT_CODE);
-        when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA)).thenReturn(gInstanceList);
+        when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceList);
         when(commonFileUtils.createWithWrite(TEST_FILE_NAME, TEST_FILE_DATA)).thenReturn(TEST_RESULT_CODE);
         //doReturn(gFinalResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_FAIL)).thenReturn(gResultStatusModelModel);
 
-        ResultStatusModel result = terramanService.createTerraman(gParams);
+        ResultStatusModel result = terramanService.createTerraman(gParams, TEST_PROCESS_GB);
 
         // then
         assertThat(result).isNotNull();
@@ -164,13 +166,13 @@ public class TerramanServiceTest {
     @Test
     public void deleteTerramanTest() {
         // when
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(TEST_CLUSTER_ID), TerramanConstant.DELETE_DIR_CLUSTER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
         doNothing().when(vaultService).delete(TEST_PATH);
 
-        ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID);
+        ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID, TEST_PROCESS_GB);
 
         // then
         assertThat(result).isNotNull();
