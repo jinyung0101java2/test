@@ -484,7 +484,8 @@ public class TerramanService {
             host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
         }
-
+        LOGGER.info("host :: " + host);
+        LOGGER.info("idRsa :: " + idRsa);
         ResultStatusModel resultStatus = new ResultStatusModel();
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
