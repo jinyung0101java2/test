@@ -267,6 +267,7 @@ public class TerramanService {
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }
+            LOGGER.info("ssh connection checked");
             cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
