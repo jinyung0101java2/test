@@ -72,6 +72,7 @@ public class TerramanService {
         String cResult = "";
         String fResult = "";
         int mpSeq = 0;
+        int sshChk = 0;
 
         InstanceModel instanceInfo = null;
 
@@ -273,9 +274,22 @@ public class TerramanService {
             cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
+            } else if (StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+                break Loop;
             }
         }
 
+        if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+            LOGGER.info("ERROR - SSH CONNECTION FAILED");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SSH_CONNECTION_FAIL);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        } else if (StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+            LOGGER.info("ERROR - SSH CONNECTION TIME OUT");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
         LOGGER.info("ssh connection :: " + cResult);
 
         try {
@@ -515,5 +529,9 @@ public class TerramanService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
         }
         return cResult;
+    }
+
+    private String sshConnChecked(String privateIp, String clusterId, String processGb) {
+        return commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", privateIp, TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
     }
 }

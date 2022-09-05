@@ -172,6 +172,8 @@ public class TerramanConstant {
     public static final String TERRAFORM_GET_CLUSTER_TOKEN_ERROR = "ERROR - get cluster token failed";
     public static final String TERRAFORM_CREATE_TOKEN_ERROR = "ERROR - token create failed";
     public static final String TERRAFORM_COMPLETE_CLUSTER_ERROR = "ERROR - complete cluster update failed";
+    public static final String TERRAFORM_SSH_CONNECTION_FAIL = "ERROR - SSH CONNECTION FAILED";
+    public static final String TERRAFORM_SSH_CONNECTION_TIME_OUT = "ERROR - SSH CONNECTION TIME OUT";
 
 
     /**

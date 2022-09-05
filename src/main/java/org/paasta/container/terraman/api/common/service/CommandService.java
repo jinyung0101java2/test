@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class CommandService {
@@ -201,8 +202,13 @@ public class CommandService {
             // 종료까지 대기
             prs.waitFor();
 
-        }catch (Exception e1) {
-            resultOutput = Constants.RESULT_STATUS_FAIL;
+        }
+        catch (Exception e1) {
+            if(e1.getMessage().contains("timed out")) {
+                resultOutput = Constants.RESULT_STATUS_TIME_OUT;
+            } else {
+                resultOutput = Constants.RESULT_STATUS_FAIL;
+            }
             LOGGER.error(e1.getMessage());
         }
         finally
