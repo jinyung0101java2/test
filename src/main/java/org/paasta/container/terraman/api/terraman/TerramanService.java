@@ -274,7 +274,7 @@ public class TerramanService {
             cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
-            } else if (StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+            } else if (StringUtils.isNotBlank(cResult) && StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
                 break Loop;
             }
         }
