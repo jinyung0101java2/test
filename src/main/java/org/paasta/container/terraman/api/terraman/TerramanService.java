@@ -92,7 +92,9 @@ public class TerramanService {
             }
             hostDir = "";
         }
-
+        LOGGER.info("host :: " + host);
+        LOGGER.info("idRsa :: " + idRsa);
+        LOGGER.info("processGb :: " + processGb);
         // 해당 클러스터 디렉토리 생성
         cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -263,7 +265,7 @@ public class TerramanService {
 
         Loop : for(int i = 0; i<100; i++) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }
@@ -277,7 +279,7 @@ public class TerramanService {
         LOGGER.info("ssh connection :: " + cResult);
 
         try {
-            Thread.sleep(30000);
+            Thread.sleep(10000);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

@@ -58,7 +58,7 @@ public class TerramanConstant {
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
-        String dir = "tmp/terraform/"+clusterId;
+        String dir = CLUSTER_STATE_DIR(clusterId);
         if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             dir = "/home/ubuntu/" + dir;
         }
@@ -97,7 +97,7 @@ public class TerramanConstant {
     /**
      * .tf 파일 복사 명령어
      * */
-    public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
+    public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api --field-selector=status.phase=Running -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }

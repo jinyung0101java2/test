@@ -7,5 +7,4 @@ public class TerramanRequest {
     private String clusterId;
     private String seq;
     private String provider;
-    private String processGb;
 }

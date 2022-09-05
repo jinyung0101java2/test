@@ -79,6 +79,7 @@ public class TerramanController {
     @PostMapping(value = "/create/{processGb:.+}")
     public ResultStatusModel initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) {
         LOGGER.info("terraman parameter :: " + terramanRequest.toString());
+        LOGGER.info("terraman processGb :: " + processGb);
         return terramanService.createTerraman(terramanRequest, processGb);
     }
 
