@@ -7,7 +7,7 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/root/.ssh/id_rsa";
+    public static final String MASTER_ID_RSA = "/paasta-master-key";
 
     /**
      * file name & directory
@@ -74,11 +74,9 @@ public class TerramanConstant {
      * get cluster info
      * */
     public static final String CLUSTER_PRIVATE_KEY(String clusterId, String processGb) {
-        String path = ".ssh/cluster-key";
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            path = "/root/" + path;
-        } else {
-            path = "/home/ubuntu/" + path;
+        String path = "/cluster-key";
+        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            path = "/home/ubuntu/.ssh" + path;
         }
         return path;
     }
