@@ -271,7 +271,7 @@ public class TerramanService {
                 LOGGER.error(e.getMessage());
             }
             LOGGER.info("ssh connection checked");
-            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             LOGGER.info("ssh connection result :: " + cResult);
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
@@ -410,7 +410,7 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
                 , ""
-                , instanceInfo.getPrivateIp()
+                , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
@@ -421,7 +421,7 @@ public class TerramanService {
 
         commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
                 , ""
-                , instanceInfo.getPrivateIp()
+                , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
@@ -432,7 +432,7 @@ public class TerramanService {
 
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
                 , ""
-                , instanceInfo.getPrivateIp()
+                , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
@@ -443,7 +443,7 @@ public class TerramanService {
 
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim())
                 , ""
-                , instanceInfo.getPrivateIp()
+                , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);

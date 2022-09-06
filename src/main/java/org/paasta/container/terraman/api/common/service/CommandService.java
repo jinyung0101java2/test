@@ -158,6 +158,9 @@ public class CommandService {
             resultCommand = response.toString();
 
         } catch (Exception e) {
+            if(e.getMessage().contains("timed out")) {
+                resultCommand = Constants.RESULT_STATUS_TIME_OUT;
+            }
             LOGGER.error("JSchException : " + e.getMessage());
         } finally {
             this.disConnectSSH();
