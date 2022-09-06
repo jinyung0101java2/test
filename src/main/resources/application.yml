@@ -1,6 +1,9 @@
 spring:
   application:
     name: cp-portal-webadmin
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
 
 management:
   security:
@@ -31,7 +34,9 @@ keycloak:
 
 ---
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   freemarker:
     template-loader-path: classpath:/templates/
 
@@ -62,8 +67,9 @@ commonApi:
 
 ---
 spring:
-  profiles:
-    active: prod
+  config:
+    activate:
+      on-profile: prod
   freemarker:
     template-loader-path: classpath:/templates/
 

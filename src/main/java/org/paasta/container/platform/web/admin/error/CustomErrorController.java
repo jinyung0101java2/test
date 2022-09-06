@@ -23,11 +23,6 @@ public class CustomErrorController implements ErrorController {
 
     private static final String BASE_URL = "errors/";
 
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
     @NoAuth
     @GetMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {

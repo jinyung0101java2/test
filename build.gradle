@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.3.10.RELEASE'
+		springBootVersion = '2.7.3'
 		springBootManagementPlugin = '1.0.11.RELEASE'
 	}
 	repositories {
@@ -56,7 +56,6 @@ war {
 }
 
 dependencies {
-
 	compile("org.sitemesh:sitemesh:${sitemeshVersion}")
 	compile("org.apache.httpcomponents:httpclient:${httpclientVersion}")
 	compile("org.apache.httpcomponents:httpcore:${httpcoreVersion}")
@@ -71,13 +70,6 @@ dependencies {
 	implementation("org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauthVersion}")
 	compile "org.springframework.security:spring-security-taglibs:${springSecurityTagLibsVersion}"
 	compile group: 'org.json', name: 'json', version: '20210307'
-	compile("io.springfox:springfox-swagger2:${swaggerVersion}") {
-		exclude module: 'swagger-annotations'
-		exclude module: 'swagger-models'
-	}
-	compile("io.swagger:swagger-annotations:1.5.21")
-	compile("io.swagger:swagger-models:1.5.21")
-	compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
 	compile "javax.servlet:jstl:${jstlVersion}"
 	compile "com.google.code.gson:gson:${gsonVersion}"
 	compile group: 'org.apache.tiles', name: 'tiles-jsp', version: '3.0.5'
@@ -86,6 +78,8 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 	testCompile "org.springframework.boot:spring-boot-starter-test"
 
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
 	implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
