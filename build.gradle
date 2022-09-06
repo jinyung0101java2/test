@@ -52,7 +52,7 @@ ext {
 
 
 war {
-	archivesBaseName = 'paas-ta-container-platform-webadmin'
+	archivesBaseName = 'paas-ta-container-platform-webui'
 }
 
 dependencies {
