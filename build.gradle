@@ -53,6 +53,7 @@ ext {
 
 war {
 	archivesBaseName = 'paas-ta-container-platform-webui'
+	enabled = false
 }
 
 dependencies {
