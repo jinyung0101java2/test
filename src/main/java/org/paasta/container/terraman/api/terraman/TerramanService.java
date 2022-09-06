@@ -272,19 +272,15 @@ public class TerramanService {
             }
             LOGGER.info("ssh connection checked");
             cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPrivateIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+            LOGGER.info("ssh connection result :: " + cResult);
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break Loop;
-            } else if (StringUtils.isNotBlank(cResult) && StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+            } else if (StringUtils.isNotBlank(cResult) && StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
                 break Loop;
             }
         }
 
-        if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-            LOGGER.info("ERROR - SSH CONNECTION FAILED");
-            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SSH_CONNECTION_FAIL);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
-        } else if (StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+        if (StringUtils.isNotBlank(cResult) && StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
             LOGGER.info("ERROR - SSH CONNECTION TIME OUT");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
