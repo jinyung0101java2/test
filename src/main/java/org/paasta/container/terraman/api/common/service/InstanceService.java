@@ -286,7 +286,7 @@ public class InstanceService {
      * @return the JsonObject
      */
     private JsonObject readStateFile(String clusterId, String processGb) {
-        return commonFileUtils.tfFileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)));
+        return commonFileUtils.fileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)));
     }
 
     /**

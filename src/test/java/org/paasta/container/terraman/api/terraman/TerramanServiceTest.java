@@ -94,6 +94,8 @@ public class TerramanServiceTest {
     private VaultService vaultService;
     @Mock
     private AccountService accountService;
+    @Mock
+    private TfFileService tfFileService;
     @InjectMocks
     private TerramanService terramanService;
 
@@ -136,7 +138,7 @@ public class TerramanServiceTest {
 
 //        doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
         //doReturn(TEST_RESULT_CODE).when(commonFileUtils).createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH);
-        when(commonFileUtils.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH, TEST_PROCESS_GB)).thenReturn(TEST_RESULT_CODE);
+        when(tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH, TEST_PROCESS_GB)).thenReturn(TEST_RESULT_CODE);
 //        doReturn(hashMap).when(vaultService).read(TEST_PATH, hashMap.getClass());
 //        when(accountService.getAccountInfo(TEST_INT_SEQ)).thenReturn(accountModel);
 //        when(commandService.SSHFileUpload(TEST_DIR, TEST_HOST, TEST_IDRSA, uploadFile)).thenReturn(TEST_RESULT_CODE);
@@ -146,7 +148,7 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(instanceService.getInstansce(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commonFileUtils.tfFileDelete(TEST_FILE_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(commonFileUtils.fileDelete(TEST_FILE_NAME)).thenReturn(TEST_RESULT_CODE);
         when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceList);
         when(commonFileUtils.createWithWrite(TEST_FILE_NAME, TEST_FILE_DATA)).thenReturn(TEST_RESULT_CODE);
         //doReturn(gFinalResultModel).when(vaultService).read(PATH, new TerramanResponse().getClass());
