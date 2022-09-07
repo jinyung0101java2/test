@@ -77,10 +77,10 @@ public class TerramanController {
             @ApiImplicitParam(name = "processGb", value = "Terraman 생성 구분", required = false, dataType = "string", paramType = "path")
     })
     @PostMapping(value = "/create/{processGb:.+}")
-    public ResultStatusModel initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) {
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) {
         LOGGER.info("terraman parameter :: " + terramanRequest.toString());
         LOGGER.info("terraman processGb :: " + processGb);
-        return terramanService.createTerraman(terramanRequest, processGb);
+        terramanService.createTerraman(terramanRequest, processGb);
     }
 
     /**
