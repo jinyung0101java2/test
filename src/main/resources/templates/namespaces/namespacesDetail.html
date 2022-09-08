@@ -116,30 +116,6 @@
                         </tbody>
                     </table>
                 </div>
-                <h4>Users</h4>
-                <div class="table_style01">
-                    <table>
-                        <caption>Users</caption>
-                        <colgroup>
-                            <col width="10%"/>
-                            <col width="20%"/>
-                            <col width="25%"/>
-                            <col width="25%"/>
-                            <col width="20%"/>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="col">Admin</th>
-                            <th scope="col">Authority</th>
-                            <th scope="col">User ID</th>
-                            <th scope="col">Services Account</th>
-                            <th scope="col">Created time</th>
-                        </tr>
-                        </thead>
-                        <tbody class="usersList">
-                        </tbody>
-                    </table>
-                </div>
             </div>
             <!-- btn -->
             <div class="btn02">
@@ -186,9 +162,6 @@
 
                     // events 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/events`, 'application/json', nameDetail.events);
-
-                    // users 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/users/namespace`, 'application/json', nameDetail.users);
 
                     nameDetail.event();
                 },
@@ -335,43 +308,7 @@
                         func.appendHtml(document.querySelector('.eventsList'), html, 'tbody');
                     }
                     ;
-                },
-
-                users(data) {
-
-                    if (data.items.length > 0) {
-                        for (var i = 0; i <= data.items.length - 1; i++) {
-                            var html = `<td>${data.items[i].isAdmin}</td>
-                            <td>${convertUserTypeString(data.items[i].userType)}</td>
-							<td>${data.items[i].userId}</td>
-							<td>${data.items[i].serviceAccountName}</td>
-							<td>${data.items[i].created}</td>`;
-
-                            func.appendHtml(document.querySelector('.usersList'), html, 'tbody');
-                        }
-                        ;
-                    } else {
-                        var html = `<tr><td colspan="5">No Data.<td></tr>`;
-
-                        func.appendHtml(document.querySelector('.usersList'), html, 'tbody');
-                    }
-                    ;
-
-                    nameDetail.userEvent();
-                },
-
-                userEvent() {
-                    var listAll = document.querySelector('.usersList').querySelectorAll('a');
-
-                    for (var i = 0; i <= listAll.length - 1; i++) {
-                        listAll[i].addEventListener('click', (e) => {
-                            sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));
-
-                            document.location.href = URI_CP_MANAGEMENTS_USERS + URI_CP_DETAILS;
-                        }, true);
-                    }
-                    ;
-                },
+                }
             }
 
             nameDetail.init();

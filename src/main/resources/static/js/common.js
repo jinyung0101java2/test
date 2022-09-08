@@ -433,15 +433,23 @@ const func = {
 			request.onreadystatechange = () => {
 				if (request.readyState === XMLHttpRequest.DONE){
 					if(request.status === 200 && request.responseText != ''){
-
+						var resultMessage = JSON.parse(request.responseText).resultMessage;
+						var resultCode =  JSON.parse(request.responseText).resultCode;
+						var detailMessage = JSON.parse(request.responseText).detailMessage;
 						//토큰 만료 검사
-						if(JSON.parse(request.responseText).resultMessage == 'TOKEN_EXPIRED') {
+						if( resultMessage == 'TOKEN_EXPIRED') {
 							func.refreshToken();
 							return func.loadData(method, url, header, callbackFunction, list);
 						}
-						else if(JSON.parse(request.responseText).resultMessage == 'TOKEN_FAILED') {
+						else if(resultMessage == 'TOKEN_FAILED') {
 							func.loginCheck();
 							return func.loadData(method, url, header, callbackFunction, list);
+						}
+						else if(resultCode != RESULT_STATUS_SUCCESS) {
+							if(document.getElementById('loading')){
+								document.getElementById('wrap').removeChild(document.getElementById('loading'));
+							};
+							func.alertPopup('ERROR', detailMessage, true, MSG_CONFIRM, 'closed');
 						}
 						else {
 							callbackFunction(JSON.parse(request.responseText), list);
@@ -491,24 +499,19 @@ const func = {
 						}
 						else {
 							document.getElementById('wrap').removeChild(document.getElementById('loading'));
+							var response = JSON.parse(request.responseText);
+								if (response.httpStatusCode == 200) {
+									if(response.resultCode == RESULT_STATUS_SUCCESS) {
+										func.alertPopup('SUCCESS', response.detailMessage, true, MSG_CONFIRM, callFunc);
+									}
+									else {
+										func.alertPopup('ERROR', response.detailMessage, true, MSG_CONFIRM, 'closed');
+									}
+								}
+								else {
+									func.alertPopup('ERROR', response.detailMessage, true, MSG_CONFIRM, 'closed');
+								}
 
-							if (method == 'POST') {
-								if (JSON.parse(request.responseText).httpStatusCode == 200) {
-									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-								} else {
-									func.alertPopup('ERROR', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, 'closed');
-								}
-							} else if (method == 'PATCH') {
-								func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-							} else if (method == 'PUT') {
-								if (JSON.parse(request.responseText).httpStatusCode != 400) {
-									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-								} else {
-									func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, func.refresh);
-								}
-							} else if (method == 'DELETE') {
-								func.alertPopup('SUCCESS', JSON.parse(request.responseText).detailMessage, true, MSG_CONFIRM, callFunc);
-							};
 						}
 					} else {
 						/*
@@ -531,6 +534,39 @@ const func = {
 	/////////////////////////////////////////////////////////////////////////////////////
 	alertPopup(title, text, bull, name, callback){
 		var html = `<div class='modal-wrap' id='modal'><div class='modal'><h5>${title}</h5><p>${text}</p>`;
+		if(bull){
+			html += `<a class='confirm' href='javascript:;'>${name}</a>`;
+		};
+		html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
+
+		func.appendHtml(document.getElementById('wrap'), html, 'div');
+
+		document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
+
+			document.getElementById('wrap').removeChild(document.getElementById('modal'));
+	}, false);
+
+		if(callback){
+			document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
+				if(callback != 'closed'){
+				callback();
+			};
+
+			document.getElementById('wrap').removeChild(document.getElementById('modal'));
+		}, false);
+		};
+	},
+
+	errorPopup(title, message, detailMessage, bull, name, callback){
+		var isDetail = false;
+         if(!isEmpty(detailMessage) && message != detailMessage) {
+         	isDetail = true;
+		 };
+
+         var html = `<div class='modal-wrap' id='modal'><div class='modal' style="word-break:break-all;"><h5>${title}</h5><p>${message}</p>`;
+			if(isDetail) {
+				html += `<p style="margin-top :10px; width: 300px; height: 200px; overflow: auto;">${detailMessage}</p>`; }
+
 		if(bull){
 			html += `<a class='confirm' href='javascript:;'>${name}</a>`;
 		};
