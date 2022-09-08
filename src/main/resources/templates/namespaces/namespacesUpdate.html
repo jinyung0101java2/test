@@ -7,9 +7,9 @@
     <div id="content" class="sub-page clusters">
         <article class="location">
             <ul>
-                <li><a href="javascript:;">Overview</a></li>
-                <li><a href="javascript:;">Clusters</a></li>
-                <li>Namespaces</li>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Overview</a></li>
+                <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Clusters</a></li>
+                <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
             </ul>
         </article>
         <article class="base">
@@ -22,83 +22,73 @@
                             <input id="name" type="text" placeholder="Test-Name" disabled/>
                         </dd>
                     </dl>
-                    <dl>
-                        <dt><label for="user">Admin User</label></dt>
+                    <dl style="margin-top: 50px;">
+                        <dt style="height: 40px; line-height: 40px;"><label>Resource Quotas</label>
+                            <button style="border: 1px solid  #f7f7f7; border-radius: 5px; padding: 5px 15px; margin-left: 10px;" href="javascript:;" class="resAdd" th:text="#{M0027}"></button>
+                        </dt>
                         <dd>
-                            <fieldset>
-                                <select id="user">
-                                </select>
-                            </fieldset>
+                            <div class="table_style01 limitTable">
+                                <table>
+                                    <caption>Resource Quotas</caption>
+                                    <colgroup>
+                                        <col width="30%"/>
+                                        <col width="70%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="resourceQuotas">
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="2">No Data.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </dd>
                     </dl>
-                    <div class="check-quotas"  style="margin-top: 40px;">
-                        <p>Resource Quotas</p>
-                        <a href="javascript:;" class="resAdd" th:text="#{M0027}"></a>
-                    </div>
-                    <div class="table_style01 limitTable ">
-                        <table>
-                            <caption class="blind">Resource Quotas</caption>
-                            <colgroup>
-                                <col width="30%"/>
-                                <col width="70%"/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody class="resourceQuotas">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="check-quotas">
-                        <p>Limit Ranges</p>
-                        <a href="javascript:;" class="limAdd" th:text="#{M0027}"></a>
-                    </div>
-                    <div class="table_style01 limitTable">
-                        <table>
-                            <colgroup>
-                                <col width="35%"/>
-                                <col width="12%"/>
-                                <col width="14%"/>
-                                <col width="7%"/>
-                                <col width="7%"/>
-                                <col width="13%"/>
-                                <col width="12%"/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Resource</th>
-                                <th scope="col">Min</th>
-                                <th scope="col">Max</th>
-                                <th scope="col">Default Request</th>
-                                <th scope="col">Default Limit</th>
-                            </tr>
-                            </thead>
-                            <tbody class="limitQuotas">
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <dl style="margin-top: 50px;">
+                        <dt style="height: 40px; line-height: 40px;"><label>Limit Ranges</label>
+                            <button style="border: 1px solid  #f7f7f7; border-radius: 5px; padding: 5px 15px; margin-left: 10px;" href="javascript:;" class="limAdd" th:text="#{M0027}"></button>
+                        </dt>
+                        <dd>
+                            <div class="table_style01 limitTable">
+                                <table>
+                                    <colgroup>
+                                        <col width="35%"/>
+                                        <col width="12%"/>
+                                        <col width="14%"/>
+                                        <col width="7%"/>
+                                        <col width="7%"/>
+                                        <col width="13%"/>
+                                        <col width="12%"/>
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Resource</th>
+                                        <th scope="col">Min</th>
+                                        <th scope="col">Max</th>
+                                        <th scope="col">Default Request</th>
+                                        <th scope="col">Default Limit</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="limitQuotas">
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="7">No Data.</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </dd>
+                    </dl>
                 </div>
             </div>
             <!-- btn -->
@@ -121,45 +111,18 @@
             const modifyNamespaces = {
                 init() {
 
-                    // nameSpace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/users/adminCheck`, 'application/json', modifyNamespaces.draw);
 
                     // resource 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/resourceQuotas/template?offset=0&limit=0`, 'application/json', modifyNamespaces.resource);
 
                     // limit 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/popup/limitRanges/template?offset=0&limit=0`, 'application/json', modifyNamespaces.limit);
+
+                    document.getElementById('name').value = sessionStorage.getItem('nameSpace');
+                    modifyNamespaces.event();
                 },
 
                 draw(data) {
-
-                    document.getElementById('name').value = data.namespace;
-
-                    var select = '';
-
-                    func.appendHtml(document.getElementById('user'), `<option value="" disabled="disabled">`+ MSG_NO_NAMESPACE_ADMINISTRATOR + `</option>`, 'select');
-
-                    for (var i = 0; i <= data.items.length - 1; i++) {
-
-                        var users = data.items[i];
-
-                        if (users.isNsAdmin == 'Y') {
-                            select = users.userId;
-                        };
-
-                        var html = `<option value="${users.userId}">${users.userId}</option>`;
-
-                        func.appendHtml(document.getElementById('user'), html, 'select');
-                    }
-                    ;
-
-                    if (select) {
-                        document.getElementById('user').value = select;
-                    } else {
-                        document.getElementById('user').value = '';
-                    }
-
-                    modifyNamespaces.event();
                 },
 
                 event() {
@@ -195,7 +158,6 @@
 
                     var createName = {
                         "name": document.getElementById('name').value,
-                        "nsAdminUserId": document.getElementById('user').value,
                         "resourceQuotasList": resourceQuotasList,
                         "limitRangesList": limitRangesList,
                     };
@@ -209,14 +171,11 @@
 
                 resource(data) {
 
-
                     func.removeHtml(document.querySelector('.resourceQuotas'));
-
 
                     for (var i = 0; i <= data.items.length - 1; i++) {
                         if (data.items[i].checkYn == 'Y') {
                             var html = `<tr><td><input type="checkbox" data-name="${data.items[i].name}"></td><td class="left">${data.items[i].name}</td><td class="left">${data.items[i].status}</td></tr>`;
-
                             func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
                         }
                         ;
@@ -225,7 +184,6 @@
 
                     if (document.querySelector('.resourceQuotas').querySelectorAll('tbody tr').length == 0) {
                         var html = `<tr><td></td><td colspan="2">No Data.</td></tr>`;
-
                         func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
                     }
                     ;
@@ -234,7 +192,6 @@
                 limit(data) {
 
                     func.removeHtml(document.querySelector('.limitQuotas'));
-
 
                     for (var i = 0; i <= data.items.length - 1; i++) {
                         if (data.items[i].checkYn == 'Y') {
