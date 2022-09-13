@@ -104,6 +104,7 @@ build:
 deploy:
   stage: deploy
   script:
+    - cd src
     - ls -al
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107 'cd ~'
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107 'pwd'
