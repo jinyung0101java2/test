@@ -330,8 +330,8 @@ public class TerramanService {
                             + "\\n"
                             + "export MASTER_NODE_PUBLIC_IP=" + obj.getPublicIp()
                             + "\\n"
-                            + "export MASTER_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
-                    //+ "export MASTER_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
+                            //+ "export MASTER_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
+                            + "export MASTER_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
 
                 }
                 sb.append(line);
@@ -347,8 +347,8 @@ public class TerramanService {
                             + "_NODE_HOSTNAME=" + obj.getInstanceName()
                             + "\\n"
                             + "export WORKER" + workerSeq
-                            + "_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
-                    //+ "_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
+                            //+ "_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
+                            + "_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
                     workerSeq++;
                 }
                 sb.append(line);
@@ -440,7 +440,7 @@ public class TerramanService {
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {
             LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -503,8 +503,6 @@ public class TerramanService {
             host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
         }
-        LOGGER.info("host :: " + host);
-        LOGGER.info("idRsa :: " + idRsa);
         ResultStatusModel resultStatus = new ResultStatusModel();
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
@@ -524,16 +522,4 @@ public class TerramanService {
 
     }
 
-    private String commandResult(String cResult, String logMessage, String clusterId, int mpSeq, ResultStatusModel resultStatus) {
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info(logMessage + cResult);
-            clusterLogService.saveClusterLog(clusterId, mpSeq, logMessage);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-        }
-        return cResult;
-    }
-
-    private String sshConnChecked(String privateIp, String clusterId, String processGb) {
-        return commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", privateIp, TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
-    }
 }

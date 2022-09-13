@@ -10,5 +10,5 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface AccountRepository extends JpaRepository<AccountModel, Long> {
-    AccountModel findById(@Param("id") int id);
+    AccountModel findById(@Param("id") int id) throws Exception;
 }

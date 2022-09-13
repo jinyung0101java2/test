@@ -66,12 +66,12 @@ public class TerramanController {
     }
 
     /**
-     * Terraman 생성(Create Terraman)
+     * Terraman 생성(Create Terraman) - Container 실행
      *
      * @param terramanRequest the terramanRequest
      * @return the resultStatus
      */
-    @ApiOperation(value = "Terraman 생성(Create Terraman)", nickname = "initTerraman")
+    @ApiOperation(value = "Terraman 생성(Create Terraman) - Container 실행", nickname = "initTerraman")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body"),
             @ApiImplicitParam(name = "processGb", value = "Terraman 생성 구분", required = false, dataType = "string", paramType = "path")
@@ -82,22 +82,7 @@ public class TerramanController {
     }
 
     /**
-     * Terraman 생성(Create Terraman)
-     *
-     * @param terramanRequest the terramanRequest
-     * @return the resultStatus
-     */
-    @ApiOperation(value = "Terraman 생성(Create Terraman) - ", nickname = "initTerraman")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
-    })
-    @PostMapping(value = "/create")
-    public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
-        terramanService.createTerraman(terramanRequest, "Daemon");
-    }
-
-    /**
-     * Terraman 삭제(Delete Terraman)
+     * Terraman 삭제(Delete Terraman) - Container 실행
      *
      * @return the resultStatus
      */
@@ -114,7 +99,22 @@ public class TerramanController {
     }
 
     /**
-     * Terraman 삭제(Delete Terraman)
+     * Terraman 생성(Create Terraman) - Daemon 실행
+     *
+     * @param terramanRequest the terramanRequest
+     * @return the resultStatus
+     */
+    @ApiOperation(value = "Terraman 생성(Create Terraman) - Daemon 실행", nickname = "initTerraman")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
+    })
+    @PostMapping(value = "/create")
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
+        terramanService.createTerraman(terramanRequest, "Daemon");
+    }
+
+    /**
+     * Terraman 삭제(Delete Terraman) - Daemon 실행
      *
      * @return the resultStatus
      */
