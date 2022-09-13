@@ -297,12 +297,6 @@ public class TerramanService {
             LOGGER.error(e.getMessage());
         }
 
-//        try {
-//            Thread.sleep(300000);
-//        } catch (Exception e) {
-//            LOGGER.error(e.getMessage());
-//        }
-
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         /*************************************************************************************************************************************/
 
