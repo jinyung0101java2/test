@@ -441,7 +441,7 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult.trim())
+        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult)
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));

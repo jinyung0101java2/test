@@ -84,7 +84,12 @@ public class TerramanConstant {
     public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
     public static final String SERVICE_ACCOUNT_SECRET_NAME = "kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
     public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
-        return "kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
+        String resultString = "";
+        try {
+            secrets = secrets.trim();
+            resultString = "kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
+        } catch (Exception e) {}
+        return resultString;
     }
 
 
