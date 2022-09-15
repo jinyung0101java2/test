@@ -123,7 +123,6 @@ public class TfFileService {
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
-            LOGGER.info("provider - aws :: " + jsonString.toString());
             jsonString = jsonString.replaceAll(",", "");
             jsonString = jsonString.replaceAll("\"awsRegion\":", "region =");
             jsonString = jsonString.replaceAll("\"awsAccessKey\":", "access_key =");

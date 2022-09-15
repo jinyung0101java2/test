@@ -174,9 +174,7 @@ public class CommandService {
         cmd.add("/bin/bash");
         cmd.add("-c");
         cmd.add(command);
-        LOGGER.info("cmd :: " + command);
-        LOGGER.info("dir :: " + dir);
-        LOGGER.info("path :: " + System.getProperty("user.dir"));
+
         StringBuilder sb = new StringBuilder(1024);
         String s = null;
         ProcessBuilder prsbld = null;

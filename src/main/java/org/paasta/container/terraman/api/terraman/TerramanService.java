@@ -83,7 +83,7 @@ public class TerramanService {
         String idRsa = "";
         String hostDir = "/home/ubuntu";
 
-        clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
+        //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
@@ -96,9 +96,7 @@ public class TerramanService {
             }
             hostDir = "";
         }
-        LOGGER.info("host :: " + host);
-        LOGGER.info("idRsa :: " + idRsa);
-        LOGGER.info("processGb :: " + processGb);
+
         // 해당 클러스터 디렉토리 생성
         cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -158,7 +156,7 @@ public class TerramanService {
         try {
             fResult = tfFileService.createProviderFile(clusterId, provider, seq, cResult.trim(), host, idRsa, processGb);
         } catch (Exception e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getMessage());
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_ERROR_LOG + fResult);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
         }
@@ -189,7 +187,7 @@ public class TerramanService {
         // command line 실행
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_INIT_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
         if(StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-            LOGGER.info("terraform init 확인하십시오. " + cResult);
+            LOGGER.error("terraform init 확인하십시오. " + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_INIT_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -215,7 +213,7 @@ public class TerramanService {
         // command line 실행
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_PLAN_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("terraform plan을 확인하십시오. " + cResult);
+            LOGGER.error("terraform plan을 확인하십시오. " + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_PLAN_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -261,7 +259,7 @@ public class TerramanService {
         instanceInfo = instanceService.getInstansce(clusterId, provider, host, idRsa, processGb);
 
         if(instanceInfo == null) {
-            LOGGER.info("Instance is not exists");
+            LOGGER.error("Instance is not exists");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
@@ -284,7 +282,7 @@ public class TerramanService {
         }
 
         if (StringUtils.isNotBlank(cResult) && StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
-            LOGGER.info("ERROR - SSH CONNECTION TIME OUT");
+            LOGGER.error("ERROR - SSH CONNECTION TIME OUT");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
@@ -350,13 +348,13 @@ public class TerramanService {
 
             cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-                LOGGER.info("Kubespray 파일 생성 중 오류가 발생하였습니다. " + cResult);
+                LOGGER.error("Kubespray 파일 생성 중 오류가 발생하였습니다. " + cResult);
                 clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_FILE_ERROR);
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
         } else {
-            LOGGER.info("Instances are not exists");
+            LOGGER.error("Instances are not exists");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCES_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -379,7 +377,7 @@ public class TerramanService {
 
         cResult = commandService.execCommandOutput(TerramanConstant.KUBESPRAY_CHMOD_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Kubespray 모드 변경 중 오류가 발생하였습니다. " + cResult);
+            LOGGER.error("Kubespray 모드 변경 중 오류가 발생하였습니다. " + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CHANGE_MODE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -387,7 +385,7 @@ public class TerramanService {
 
         cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_DEPLOY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Kubespray 실행 중 오류가 발생하였습니다. " + cResult);
+            LOGGER.error("Kubespray 실행 중 오류가 발생하였습니다. " + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -413,7 +411,7 @@ public class TerramanService {
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
+            LOGGER.error("Token 생성 중 오류가 발생하였습니다. - serviceAccount 생성 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -424,7 +422,7 @@ public class TerramanService {
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
+            LOGGER.error("Token 생성 중 오류가 발생하였습니다. - roleBinding 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -435,7 +433,7 @@ public class TerramanService {
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {
-            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
+            LOGGER.error("Token 생성 중 오류가 발생하였습니다. - secretName 값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -446,7 +444,7 @@ public class TerramanService {
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
+            LOGGER.error("Token 생성 중 오류가 발생하였습니다. - Token값 추출 오류" + cResult);
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
@@ -457,7 +455,7 @@ public class TerramanService {
         );
 
         if(resultClusterInfo == null) {
-            LOGGER.info("cluster token 생성 중 오류가 발생하였습니다.");
+            LOGGER.error("cluster token 생성 중 오류가 발생하였습니다.");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_TOKEN_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
@@ -469,7 +467,7 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         ClusterModel updateResult = clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_COMPLETE_STATUS);
         if(updateResult == null) {
-            LOGGER.info("cluster 생성 완료 업데이트 중 오류가 발생하였습니다.");
+            LOGGER.error("cluster 생성 완료 업데이트 중 오류가 발생하였습니다.");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_COMPLETE_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
@@ -501,12 +499,12 @@ public class TerramanService {
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.info("terraform 삭제 중 오류가 발생하였습니다." + cResult);
+            LOGGER.error("terraform 삭제 중 오류가 발생하였습니다." + cResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         } else {
             cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER, host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-                LOGGER.info("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
+                LOGGER.error("Cluster 삭제 중 오류가 발생하였습니다. " + cResult);
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
         }
