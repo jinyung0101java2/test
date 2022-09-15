@@ -133,11 +133,8 @@ deploy:
   script:
     - pwd
     - ls -al
-    - cd gradlew
-    - ls -al
-    - cd
-    - cd gradle
-    - ls -al
+    - ssh -o StrictHostKeyChecking=no -i /home/ubuntu/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107 'mkdir -p ~/test-terraman-jar'
+    - scp build/libs/paas-ta-container-terraman-api.jar -i /home/ubuntu/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107:~/test-terraman-jar/paas-ta-container-terraman-api.jar
   environment:
     name: $ENV_SCOPE
 
