@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
 import org.paasta.container.platform.web.admin.common.CustomIntercepterService;
-import org.paasta.container.platform.web.admin.login.model.Users;
 import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
 import org.paasta.container.platform.web.admin.security.DashboardAuthenticationDetails;
 import org.slf4j.Logger;
@@ -16,15 +15,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 
 /**
@@ -150,19 +149,23 @@ public class LoginController {
     @PutMapping(value = ConstantsUrl.URI_API_SET_CLUSTER_AUTHORITY)
     @ResponseBody
     public void setUserClusterAuthority(@RequestBody String userType) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UsersLoginMetaData usersLoginMetaData = ((DashboardAuthenticationDetails) authentication.getDetails()).getUsersLoginMetaData();
-
-        List<GrantedAuthority> updatedAuthorities  =
-                Arrays.asList(new SimpleGrantedAuthority(usersLoginMetaData.getUserType()),new SimpleGrantedAuthority(userType));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UsersLoginMetaData metaData = ((DashboardAuthenticationDetails) auth.getDetails()).getUsersLoginMetaData();
 
 
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication,
-                "N/A", updatedAuthorities);
+        List<GrantedAuthority> updatedAuthorities = new ArrayList<>();
+        updatedAuthorities.add(new SimpleGrantedAuthority(metaData.getUserType()));
+        updatedAuthorities.add(new SimpleGrantedAuthority(userType));
+
+        Authentication newAuth = new OAuth2Authentication(((OAuth2Authentication) auth).getOAuth2Request(), new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getPrincipal(), updatedAuthorities));
+        ((OAuth2Authentication) newAuth).setDetails(auth.getDetails());
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        System.out.println("auth:" + SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+
+        LOGGER.info("old: auth.getAuthorities():" + auth.getAuthorities());
+        LOGGER.info("new: auth.getAuthorities():" + currentAuth.getAuthorities());
     }
 
 }
