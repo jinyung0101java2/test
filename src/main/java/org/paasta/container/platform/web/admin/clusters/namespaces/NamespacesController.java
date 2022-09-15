@@ -2,7 +2,11 @@ package org.paasta.container.platform.web.admin.clusters.namespaces;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.paasta.container.platform.web.admin.common.Constants;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -27,6 +31,10 @@ public class NamespacesController {
     @ApiOperation(value = "Namespaces 목록 페이지 이동(Go to the namespaces list page)", nickname = "getNamespacesList")
     @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_NAMESPACES )
     public String getNamespacesList() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_USER))) {
+            return BASE_URL + "namespacesDetail";
+        }
         return BASE_URL + "namespaces";
     }
 

@@ -97,13 +97,9 @@ const func = {
 	},
 
 	clusters(data){
-		func.clusterData = data;
-
 		 var html ='';
-		 var userType = '';
-
 		  for(var i=0; i<=data.items.length-1; i++){
-			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}" data-auth="${data.items[i].userType}">${data.items[i].clusterName}</a></li>`;
+			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}">${data.items[i].clusterName}</a></li>`;
 			};
 
 		     document.getElementById("clusterListUl").innerHTML = html;
@@ -111,8 +107,6 @@ const func = {
 		     /////////////////////
 			if(sessionStorage.getItem('cluster') != null){
 				document.querySelector('.clusterTop').innerText = sessionStorage.getItem('clusterName');
-
-
 			} else {
 				document.querySelector('.clusterTop').innerText = data.items[0].clusterName;
 				sessionStorage.setItem('cluster', data.items[0].clusterId);
@@ -120,25 +114,22 @@ const func = {
 			};
 
 			var name = document.querySelector('.clusterUl').querySelectorAll('a');
+			func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
 
+			//cluster click event
 			for(var i=0 ; i<name.length; i++){
-				if(name[i].getAttribute('data-name') === sessionStorage.getItem('cluster')) {
-					userType = name[i].getAttribute('data-auth');
-				}
-
 				name[i].addEventListener('click', (e) => {
 				sessionStorage.setItem('cluster' , e.target.getAttribute('data-name'));
 				sessionStorage.setItem('clusterName', e.target.innerText);
 				document.querySelector('.clusterTop').innerText = e.target.innerText;
 				sessionStorage.removeItem('nameSpace');
-				userType = e.target.getAttribute('data-auth');
-
+				func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
 				///func.setAuthority(userType);
-				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList?userType=${userType}`, 'application/json', func.namespaces);
+				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
 			}, false);
 			};
 
-		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList?userType=${userType}`, 'application/json', func.namespaces);
+		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
 
 	},
 
@@ -394,7 +385,15 @@ const func = {
 		request.send();
 	},
 
-	setAuthority(data){
+	setUserAuthority(cluster, usersList){
+	 var authority ='';
+		for(var i= 0; i < usersList.length; i++) {
+			var users = usersList[i];
+			if(users.clusterId === cluster) {
+              authority = users.userType;
+              break;
+			}
+		}
 		var request = new XMLHttpRequest();
 		request.open('PUT', URI_API_SET_CLUSTER_AUTHORITY, false);
 		request.setRequestHeader('Content-type', 'application/json');
@@ -405,7 +404,7 @@ const func = {
 				}
 			};
 		};
-		request.send(data);
+		request.send(authority);
 	},
 	/////////////////////////////////////////////////////////////////////////////////////
 	// 데이터 로드 - loadData(method, url, callbackFunction)
