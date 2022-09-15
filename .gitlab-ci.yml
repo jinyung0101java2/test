@@ -56,90 +56,80 @@ build:
       - build
       - .gradlew
 
-#test:
-#  stage: test
-#  image:
-#    name: docker.io/gradle:7.5-jdk8 # kaniko image 사용
-#    entrypoint: [ "" ]
-#  script:
-#    - export
-#    - export GRADLE_USER_HOME=`pwd`/.gradle
-#    - |
-#      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
-#      then
-#        gradle wrapper
-#      fi
-#    - chmod +x gradlew
-#    - ./gradlew check
-#  cache:
-#    key: "$CI_COMMIT_REF_NAME"
-#    policy: pull
-#    paths:
-#      - build
-#      - .gradlew
-#
-#docker build:
-#  stage: docker
-#  image:
-#    name: gcr.io/kaniko-project/executor:debug # kaniko image 사용
-#    entrypoint: [""]
-#  script:
-#    - export
-#    - pwd
-#    - mkdir -p /kaniko/.docker
-#    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-#    #- cat /kaniko/.docker/config.json config.json 확인
-#    - | # ssl cert key 입력
-#      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
-#    - >- # build image
-#      /kaniko/executor
-#      --context "${CI_PROJECT_DIR}"
-#      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-#      --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
-#  cache:
-#    key: "$CI_COMMIT_REF_NAME"
-#    paths:
-#      - build
-#
-#deploy:
-#  stage: deploy
-#  image:
-#    name: bitnami/kubectl:latest
-#    entrypoint: [""]
-#  script:
-#    - sed -i "s/{IMAGE_TAGS}/$IMAGE_TAGS/g" yaml/Deployment.yaml
-#    - sed -i "s/{K8S_MASTER_NODE_IP}/$K8S_MASTER_NODE_IP/g" yaml/Deployment.yaml
-#    - sed -i "s/{K8S_API_SERVER_PORT}/$K8S_API_SERVER_PORT/g" yaml/Deployment.yaml
-#    - sed -i "s/{IMAGE_PULL_SECRET}/$IMAGE_PULL_SECRET/g" yaml/Deployment.yaml
-#    - sed -i "s/{VAULT_IP}/$VAULT_IP/g" yaml/Deployment.yaml
-#    - sed -i "s/{VAULT_PORT}/$VAULT_PORT/g" yaml/Deployment.yaml
-#    - sed -i "s/{VAULT_ROLE_ID}/$VAULT_ROLE_ID/g" yaml/Deployment.yaml
-#    - sed -i "s/{VAULT_SECRET_ID}/$VAULT_SECRET_ID/g" yaml/Deployment.yaml
-#    - sed -i "s/{DATABASE_URL}/$DATABASE_URL/g" yaml/Deployment.yaml
-#    - sed -i "s/{DATABASE_USER_ID}/$DATABASE_USER_ID/g" yaml/Deployment.yaml
-#    - sed -i "s/{DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" yaml/Deployment.yaml
-#    - sed -i "s/{SERVICE_PORT}/$SERVICE_PORT/g" yaml/Deployment.yaml
-#    - sed -i "s/{SERVICE_TARGET_PORT}/$SERVICE_TARGET_PORT/g" yaml/Deployment.yaml
-#    - sed -i "s/{SERVICE_NODEPORT}/$SERVICE_NODEPORT/g" yaml/Deployment.yaml
-#    - cat yaml/Deployment.yaml
-#    - kubectl version
-#    - kubectl create secret docker-registry "$IMAGE_PULL_SECRET" --docker-server="$CI_REGISTRY" --docker-username="$REPOSITORY_USERNAME" --docker-password="$REPOSITORY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" --namespace="cp-terraman" -o yaml --dry-run=client | kubectl apply -f -; # gitlab registry 사용을 위한 secret 생성
-#    - kubectl apply -f yaml/Deployment.yaml
-#  environment:
-#    name: $ENV_SCOPE
+test:
+  stage: test
+  image:
+    name: docker.io/gradle:7.5-jdk8 # kaniko image 사용
+    entrypoint: [ "" ]
+  script:
+    - export
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - |
+      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
+      then
+        gradle wrapper
+      fi
+    - chmod +x gradlew
+    - ./gradlew check
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradlew
+
+docker build:
+  stage: docker
+  image:
+    name: gcr.io/kaniko-project/executor:debug # kaniko image 사용
+    entrypoint: [""]
+  script:
+    - export
+    - pwd
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    #- cat /kaniko/.docker/config.json config.json 확인
+    - | # ssl cert key 입력
+      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
+    - >- # build image
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - build
 
 deploy:
   stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
   script:
-    - pwd
-    - ls -al
-    - ssh -o StrictHostKeyChecking=no -i /home/ubuntu/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107 'mkdir -p ~/test-terraman-jar'
-    - scp build/libs/paas-ta-container-terraman-api.jar -i /home/ubuntu/.ssh/paasta-cp-key.pem  ubuntu@15.164.195.107:~/test-terraman-jar/paas-ta-container-terraman-api.jar
+    - sed -i "s/{IMAGE_TAGS}/$IMAGE_TAGS/g" yaml/Deployment.yaml
+    - sed -i "s/{K8S_MASTER_NODE_IP}/$K8S_MASTER_NODE_IP/g" yaml/Deployment.yaml
+    - sed -i "s/{K8S_API_SERVER_PORT}/$K8S_API_SERVER_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{IMAGE_PULL_SECRET}/$IMAGE_PULL_SECRET/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_IP}/$VAULT_IP/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_PORT}/$VAULT_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_ROLE_ID}/$VAULT_ROLE_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{VAULT_SECRET_ID}/$VAULT_SECRET_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_URL}/$DATABASE_URL/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_USER_ID}/$DATABASE_USER_ID/g" yaml/Deployment.yaml
+    - sed -i "s/{DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_PORT}/$SERVICE_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_TARGET_PORT}/$SERVICE_TARGET_PORT/g" yaml/Deployment.yaml
+    - sed -i "s/{SERVICE_NODEPORT}/$SERVICE_NODEPORT/g" yaml/Deployment.yaml
+    - cat yaml/Deployment.yaml
+    - kubectl version
+    - kubectl create secret docker-registry "$IMAGE_PULL_SECRET" --docker-server="$CI_REGISTRY" --docker-username="$REPOSITORY_USERNAME" --docker-password="$REPOSITORY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" --namespace="cp-terraman" -o yaml --dry-run=client | kubectl apply -f -; # gitlab registry 사용을 위한 secret 생성
+    - kubectl apply -f yaml/Deployment.yaml
   environment:
     name: $ENV_SCOPE
 
 stages:
   - build
-#  - test
-#  - docker
+  - test
+  - docker
   - deploy
