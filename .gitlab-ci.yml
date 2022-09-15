@@ -133,6 +133,11 @@ deploy:
   script:
     - pwd
     - ls -al
+    - cd gradlew
+    - ls -al
+    - cd
+    - cd gradle
+    - ls -al
   environment:
     name: $ENV_SCOPE
 
