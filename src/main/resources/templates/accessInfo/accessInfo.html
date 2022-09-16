@@ -160,9 +160,9 @@
                                 <p>※ For Linux</p>
                             </div>
                             <div class="custom-access-contents">
-                                <div class="fa-pull-left" id="cpContextForLinux">
-                                    <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} --namespace=${CP_SERVICE_NAMESPACE_NAME} --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre>
-                                </div>
+                                    <div class="fa-pull-left" id="cpContextForLinux">
+                                        <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME}</code></pre><pre class="123"><code class="bash context" style="white-space: normal"> --namespace=${CP_SERVICE_NAMESPACE_NAME}</code></pre><pre><code class="bash context" style="white-space: normal"> --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre>
+                                    </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
@@ -274,7 +274,7 @@
                     } else if (i == 3 || i == 9) {
                         hljsString[i].setAttribute('class','hljs-string cpContextName');
                     } else if (i == 4 || i == 10) {
-                        hljsString[i].setAttribute('class','hljs-string cpNamespace');
+                        hljsString[i].setAttribute('class','hljs-string cpNamespace xNamespace');
                     } else if (i == 5 || i == 11) {
                         hljsString[i].setAttribute('class','hljs-string cpCredentialsToken');
                     }
@@ -285,36 +285,41 @@
 
             drawUser(data){
 
-                document.getElementById('user_name').value = data.items[0].userId;
-                document.getElementById('role').value = data.items[0].roleSetCode;
+                document.getElementById('user_name').value = data.userId;
+                document.getElementById('role').value = data.roleSetCode;
 
                 var cpEnvironments = document.getElementsByClassName('cpEnvironments');
                 for (var i = 0; i <= cpEnvironments.length - 1; i++) {
-                    document.getElementsByClassName('cpUserName')[i].innerText = data.items[0].userId;
-                    document.getElementsByClassName('cpContextName')[i].innerText = data.items[0].userId + "-context";
+                    document.getElementsByClassName('cpUserName')[i].innerText = data.userId;
+                    document.getElementsByClassName('cpContextName')[i].innerText = data.userId + "-context";
                     document.getElementsByClassName('cpClusterServer')[i].innerText = data.clusterApiUrl;
                     document.getElementsByClassName('cpClusterName')[i].innerText = data.clusterName;
                     document.getElementsByClassName('cpCredentialsToken')[i].innerText = data.clusterToken;
 
-                    if (data.items[0].userType === 'USER') {
-                        for (var j = 0; j <= data.items.length - 1; j++) {
-                            if (data.items[j].cpNamespace === sessionStorage.getItem('nameSpace')) {
-                                document.getElementsByClassName('cpNamespace')[i].innerText = data.items[j].cpNamespace;
-                            }
+                    if (data.userType === 'USER') {
+                        //for (var j = 0; j <= data.length - 1; j++) {
+                        if (data.cpNamespace === sessionStorage.getItem('nameSpace')) {
+                            document.getElementsByClassName('cpNamespace')[i].innerText = data.cpNamespace;
                         }
-                    } else if (data.items[0].userType === 'SUPER_ADMIN' || data.items[0].userType === 'CLUSTER_ADMIN') {
+                        //}
+                    } else if (data.userType === 'SUPER_ADMIN' || data.userType === 'CLUSTER_ADMIN') {
+                        //document.getElementsByClassName('xNamespace').style.display= "none";
                         let xNamespace = document.getElementsByClassName('xNamespace');
+                        //let optNamespace = document.getElementsByClassName('optNamespace');
                         let optNamespace = document.getElementsByClassName('optNamespace');
 
-                        for (var k = 0 ; k < xNamespace.length; k++) {
-                            xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
+                        for (var j = 0; j < xNamespace.length; j++) {
+                            xNamespace[j].style.display = 'none';
+
+                            /*xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
                             optNamespace[k].setAttribute('id', 'optNamespace'+`${k}`);
                             document.getElementById('xNamespace_'+`${k}`).style.display = "none";
-                            document.getElementById('optNamespace'+`${k}`).style.display = "none";
+                            document.getElementById('optNamespace'+`${k}`).style.display = "none";*/
                         }
-
+                        for (var k = 0; k < optNamespace.length; k++) {
+                            optNamespace[k].style.display = 'none';
+                        }
                     }
-
                 }
 
             },
