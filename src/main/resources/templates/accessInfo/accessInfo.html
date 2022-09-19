@@ -160,9 +160,9 @@
                                 <p>※ For Linux</p>
                             </div>
                             <div class="custom-access-contents">
-                                    <div class="fa-pull-left" id="cpContextForLinux">
-                                        <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME}</code></pre><pre class="123"><code class="bash context" style="white-space: normal"> --namespace=${CP_SERVICE_NAMESPACE_NAME}</code></pre><pre><code class="bash context" style="white-space: normal"> --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre>
-                                    </div>
+                                <div class="fa-pull-left" id="cpContextForLinux">
+                                    <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre><pre><code class="bash context optNamespace" style="white-space: normal">--namespace=${CP_SERVICE_NAMESPACE_NAME}</code></pre>
+                                </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
                                 </div>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForWindows">
-                                    <pre><code class="bash" style="white-space: normal">kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --namespace=%CP_SERVICE_NAMESPACE_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%</code></pre>
+                                    <pre><code class="bash" style="white-space: normal">kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%</code></pre><pre><code class="bash optNamespace" style="white-space: normal">--namespace=%CP_SERVICE_NAMESPACE_NAME%</code></pre>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
@@ -297,24 +297,15 @@
                     document.getElementsByClassName('cpCredentialsToken')[i].innerText = data.clusterToken;
 
                     if (data.userType === 'USER') {
-                        //for (var j = 0; j <= data.length - 1; j++) {
                         if (data.cpNamespace === sessionStorage.getItem('nameSpace')) {
                             document.getElementsByClassName('cpNamespace')[i].innerText = data.cpNamespace;
                         }
-                        //}
                     } else if (data.userType === 'SUPER_ADMIN' || data.userType === 'CLUSTER_ADMIN') {
-                        //document.getElementsByClassName('xNamespace').style.display= "none";
                         let xNamespace = document.getElementsByClassName('xNamespace');
-                        //let optNamespace = document.getElementsByClassName('optNamespace');
                         let optNamespace = document.getElementsByClassName('optNamespace');
 
                         for (var j = 0; j < xNamespace.length; j++) {
                             xNamespace[j].style.display = 'none';
-
-                            /*xNamespace[k].setAttribute('id', 'xNamespace_'+`${k}`);
-                            optNamespace[k].setAttribute('id', 'optNamespace'+`${k}`);
-                            document.getElementById('xNamespace_'+`${k}`).style.display = "none";
-                            document.getElementById('optNamespace'+`${k}`).style.display = "none";*/
                         }
                         for (var k = 0; k < optNamespace.length; k++) {
                             optNamespace[k].style.display = 'none';
