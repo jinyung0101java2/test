@@ -6,6 +6,9 @@ import org.paasta.container.terraman.api.common.repository.ClusterLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Optional;
+
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysString;
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
 
@@ -21,12 +24,14 @@ public class ClusterLogService {
 
     public void saveClusterLog(String clusterId, int processNo, String logMessage) {
         ClusterLogModel logModel = new ClusterLogModel();
-        ClusterLogEmbededModel logEmbededModel= new ClusterLogEmbededModel();
-        logEmbededModel.setClusterId(clusterId);
-        logEmbededModel.setProcessNo(processNo);
-        logModel.setLogId(logEmbededModel);
+        logModel.setClusterId(clusterId);
+        logModel.setProcessNo(processNo);
         logModel.setLogMessage(logMessage);
-        logModel.setRegTimestamp(getSysString());
+        logModel.setRegTimestamp(getSysTimestamp());
         clusterLogRepository.save(logModel);
+    }
+
+    public void deleteClusterLogByClusterId(String clusterId) {
+        clusterLogRepository.deleteClusterLog(clusterId);
     }
 }

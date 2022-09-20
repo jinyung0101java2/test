@@ -51,9 +51,11 @@ public class CommonUtils {
     }
 
     public static String getSysTimestamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(timestamp);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        long parseDateTime = timestamp.getTime();
+        int offset = TimeZone.getTimeZone(Constants.STRING_TIME_ZONE_ID).getOffset(parseDateTime);
+        return sdf.format(parseDateTime + offset);
     }
 
     public static String getSysString() {

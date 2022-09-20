@@ -30,7 +30,7 @@ public class ClusterService {
     public ClusterModel updateCluster(String clusterId, String status) {
         ClusterModel clusterModel = clusterRepository.findById(clusterId).get();
         clusterModel.setStatus(status);
-        clusterModel.setLastModified(getSysString());
+        clusterModel.setLastModified(getSysTimestamp());
         return clusterRepository.save(clusterModel);
     }
 }

@@ -34,13 +34,13 @@ public class TerramanConstant {
 
 
     /**
-     * kubespray cluster cp-cluster-vars.sh 변경 및 실행 명령어
+     * kubespray cluster cp-cluster-terraman-vars.sh 변경 및 실행 명령어
      * */
     public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
-        return "echo -e \"" + contents + "\" > /home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-vars.sh";
+        return "echo -e \"" + contents + "\" > /home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
     }
-    public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster.sh";
-    public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster.sh";
+    public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster-terraman.sh";
+    public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
 
     /**
      * TERRAFORM COMMAND 명령어

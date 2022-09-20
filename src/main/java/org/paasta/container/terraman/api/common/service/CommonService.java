@@ -60,9 +60,9 @@ public class CommonService {
 
             if (Constants.RESULT_STATUS_FAIL.equals(resultCode)) {
                 methodSetResultCode.invoke(reqObject, resultCode);
-                methodSetResultMessage.invoke(reqObject, CommonStatusCode.CONFLICT.getMsg());
-                methodSetHttpStatusCode.invoke(reqObject, CommonStatusCode.CONFLICT.getCode());
-                methodSetDetailMessage.invoke(reqObject, CommonStatusCode.CONFLICT.getMsg());
+                methodSetResultMessage.invoke(reqObject, CommonStatusCode.INTERNAL_SERVER_ERROR.getMsg());
+                methodSetHttpStatusCode.invoke(reqObject, CommonStatusCode.INTERNAL_SERVER_ERROR.getCode());
+                methodSetDetailMessage.invoke(reqObject, CommonStatusCode.INTERNAL_SERVER_ERROR.getMsg());
             } else {
                 methodSetResultCode.invoke(reqObject, resultCode);
                 methodSetResultMessage.invoke(reqObject, CommonStatusCode.OK.getMsg());

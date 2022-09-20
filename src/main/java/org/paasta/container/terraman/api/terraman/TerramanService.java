@@ -84,6 +84,8 @@ public class TerramanService {
         String hostDir = "/home/ubuntu";
 
         //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
+        // cluster log 삭제
+        clusterLogService.deleteClusterLogByClusterId(clusterId);
 
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
@@ -193,7 +195,8 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        LOGGER.info("Processing terraform init. " + cResult);
+        LOGGER.info("Processing terraform init.");
+        //LOGGER.info("Processing terraform init. " + cResult);
 
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_INIT_LOG);
@@ -218,8 +221,8 @@ public class TerramanService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
-
-        LOGGER.info("Processing terraform plan " + cResult);
+        LOGGER.info("Processing terraform plan.");
+//        LOGGER.info("Processing terraform plan " + cResult);
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_PLAN_LOG);
         /*************************************************************************************************************************************/
@@ -242,8 +245,8 @@ public class TerramanService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
-
-        LOGGER.info("Instance 생성이 완료되었습니다. " + cResult);
+        LOGGER.info("Instance 생성이 완료되었습니다.");
+        
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_APPLY_LOG);
         /*************************************************************************************************************************************/
@@ -322,8 +325,8 @@ public class TerramanService {
                             + "\\n"
                             + "export MASTER_NODE_PUBLIC_IP=" + obj.getPublicIp()
                             + "\\n"
-                            //+ "export MASTER_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
-                            + "export MASTER_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
+                            + "export MASTER_NODE_PRIVATE_IP=" + obj.getPrivateIp(); // kubespray를 배포하기 위해서 publicIp로 대체
+//                            + "export MASTER_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
 
                 }
                 sb.append(line);
@@ -339,8 +342,11 @@ public class TerramanService {
                             + "_NODE_HOSTNAME=" + obj.getInstanceName()
                             + "\\n"
                             + "export WORKER" + workerSeq
-                            //+ "_NODE_PRIVATE_IP=" + obj.getPublicIp(); // kubespray를 배포하기 위해서 publicIp로 대체
-                            + "_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
+                            + "_NODE_PUBLIC_IP=" + obj.getPublicIp() // kubespray를 배포하기 위해서 publicIp로 대체
+                            + "\\n"
+                            + "export WORKER" + workerSeq
+                            + "_NODE_PRIVATE_IP=" + obj.getPrivateIp(); // kubespray를 배포하기 위해서 publicIp로 대체
+//                            + "_NODE_PRIVATE_IP=" + (StringUtils.equals(provider.toUpperCase(), Constants.UPPER_OPENSTACK) ? obj.getPublicIp() : obj.getPrivateIp()); // kubespray를 배포하기 위해서 publicIp로 대체
                     workerSeq++;
                 }
                 sb.append(line);
@@ -391,7 +397,8 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        LOGGER.info("클러스터 배포가 완료되었습니다. " + cResult);
+        LOGGER.info("클러스터 배포가 완료되었습니다.");
+//        LOGGER.info("클러스터 배포가 완료되었습니다. " + cResult);
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_DEPLOY_LOG);
         /*************************************************************************************************************************************/
@@ -450,8 +457,13 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        Object resultClusterInfo = vaultService.write(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
-                , new ClusterInfo(clusterId,propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp()),cResult)
+        Object resultClusterInfo = vaultService.write(
+                propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
+                , new ClusterInfo(
+                        clusterId
+                        , propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp())
+                        , ( StringUtils.isNotBlank(cResult) ? cResult.trim() : cResult )
+                )
         );
 
         if(resultClusterInfo == null) {
@@ -460,6 +472,7 @@ public class TerramanService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
+        LOGGER.info("cluster token 생성 완료하였습니다.");
         /*************************************************************************************************************************************/
 
         /**************************************************************************************************************************************
@@ -509,6 +522,8 @@ public class TerramanService {
             }
         }
         vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
+        // cluster log 삭제
+        clusterLogService.deleteClusterLogByClusterId(clusterId);
 
         return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
 

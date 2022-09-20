@@ -7,7 +7,6 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Data
-@Embeddable
 public class ClusterLogEmbededModel implements Serializable {
 
     @Column(name = "cluster_id")
