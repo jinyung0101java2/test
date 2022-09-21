@@ -504,15 +504,17 @@ public class TerramanService {
     public ResultStatusModel deleteTerraman(String clusterId, String processGb) {
         String host = "";
         String idRsa = "";
+        ResultStatusModel resultStatus = new ResultStatusModel();
+
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
         }
-        ResultStatusModel resultStatus = new ResultStatusModel();
+
         String cResult = Constants.RESULT_STATUS_SUCCESS;
         cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.error("terraform 삭제 중 오류가 발생하였습니다." + cResult);
+            LOGGER.error("terraform 삭제 중 오류가 발생하였습니다. " + cResult);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         } else {
             cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER, host, idRsa);
@@ -521,11 +523,12 @@ public class TerramanService {
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
         }
+
         vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
         // cluster log 삭제
         clusterLogService.deleteClusterLogByClusterId(clusterId);
 
-        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
+        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), cResult);
 
     }
 
