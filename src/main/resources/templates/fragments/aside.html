@@ -17,8 +17,9 @@
                 <a href="javascript:" class="dep01">Clusters</a>
                 <ul class="sub">
                     <li><a onclick="movePage(URI_CP_INDEX_URL)" aside_d2="c_overview">Overview</a></li>
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)" aside_d2="nodes">Nodes</a></li>
-                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)" aside_d2="namespaces">Namespaces</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NODES)" sec:authorize="!hasAnyAuthority('USER')" aside_d2="nodes">Nodes</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)" sec:authorize="!hasAnyAuthority('USER')" aside_d2="namespaces">Namespaces</a></li>
+                    <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES + URI_CP_DETAILS)" sec:authorize="hasAnyAuthority('USER')" aside_d2="namespaces">Namespaces</a></li>
                 </ul>
             </li>
             <li class="plus" aside_d1="workloads">
