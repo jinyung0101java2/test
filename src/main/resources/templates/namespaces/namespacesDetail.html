@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout}">
 
 <div layout:fragment="content">
@@ -119,10 +120,10 @@
             </div>
             <!-- btn -->
             <div class="btn02">
-                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="!hasAnyAuthority('USER')"></button>
                 <div>
-                    <a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES);" th:text="#{M0028}"></a>
-                    <a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES + URI_CP_UPDATE);" th:text="#{M0025}"></a>
+                    <a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES);" th:text="#{M0028}" sec:authorize="!hasAnyAuthority('USER')"></a>
+                    <a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES + URI_CP_UPDATE);" th:text="#{M0025}" sec:authorize="!hasAnyAuthority('USER')"></a>
                 </div>
             </div>
         </article>
@@ -214,9 +215,12 @@
                 },
 
                 event() {
-                    document.getElementById('delete').addEventListener('click', (e) => {
-                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM , nameDetail.delete);
-                    }, false);
+                     var delBtnCheck = document.getElementById('delete') !== null;
+                     if(delBtnCheck) {
+                         document.getElementById('delete').addEventListener('click', (e) => {
+                             func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM , nameDetail.delete);
+                     }, false);
+                      }
                 },
 
                 delete() {
