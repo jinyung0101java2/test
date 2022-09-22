@@ -41,11 +41,10 @@ vault:
 
 ---
 spring:
-  config:
-    activate:
-      on-profile: local
+  profiles:
+    active: local
   datasource:
-    jdbc-url: jdbc:mariadb://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
     driver-class-name: org.mariadb.jdbc.Driver
     validationQuery: SELECT 1
     username: ${DATABASE_USER_ID}
@@ -76,11 +75,10 @@ server:
 
 ---
 spring:
-  config:
-    activate:
-      on-profile: prod
+  profiles:
+    active: prod
   datasource:
-    jdbc-url: jdbc:mariadb://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
     driver-class-name: org.mariadb.jdbc.Driver
     validationQuery: SELECT 1
     username: ${DATABASE_USER_ID}
