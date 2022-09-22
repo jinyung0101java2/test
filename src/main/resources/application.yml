@@ -44,13 +44,12 @@ spring:
   config:
     activate:
       on-profile: local
-  cp:
-    datasource:
-      jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
-      driver-class-name: org.mariadb.jdbc.Driver
-      validationQuery: SELECT 1
-      username: ${DATABASE_USER_ID}
-      password: ${DATABASE_USER_PASSWORD}
+  datasource:
+    jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    driver-class-name: org.mariadb.jdbc.Driver
+    validationQuery: SELECT 1
+    username: ${DATABASE_USER_ID}
+    password: ${DATABASE_USER_PASSWORD}
   jpa:
     database: mysql
     hibernate:
@@ -80,13 +79,12 @@ spring:
   config:
     activate:
       on-profile: prod
-  cp:
-    datasource:
-      jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
-      driver-class-name: org.mariadb.jdbc.Driver
-      validationQuery: SELECT 1
-      username: ${DATABASE_USER_ID}
-      password: ${DATABASE_USER_PASSWORD}
+  datasource:
+    jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    driver-class-name: org.mariadb.jdbc.Driver
+    validationQuery: SELECT 1
+    username: ${DATABASE_USER_ID}
+    password: ${DATABASE_USER_PASSWORD}
   jpa:
     database: mysql
     hibernate:

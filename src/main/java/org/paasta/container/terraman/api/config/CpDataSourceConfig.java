@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 public class CpDataSourceConfig {
     @Primary
     @Bean(name = "dataSource")
-    @ConfigurationProperties(prefix = "spring.cp.datasource")
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
         DataSource ds = DataSourceBuilder.create().build();
         return ds;
