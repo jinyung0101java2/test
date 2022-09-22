@@ -28,6 +28,7 @@ repositories {
     mavenCentral()
 }
 ext {
+    springIoPlatformVersion = 'Cairo-SR8'
     apacheHttpClientVersion = '4.5.12'
     gsonVersion = '2.8.6'
     lombokVersion = '1.18.12'
