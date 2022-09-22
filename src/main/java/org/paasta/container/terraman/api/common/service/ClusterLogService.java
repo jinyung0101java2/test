@@ -22,7 +22,7 @@ public class ClusterLogService {
         this.clusterLogRepository = clusterLogRepository;
     }
 
-    public void saveClusterLog(String clusterId, int processNo, String logMessage) {
+    public void saveClusterLog(String clusterId, int processNo, String logMessage){
         ClusterLogModel logModel = new ClusterLogModel();
         logModel.setClusterId(clusterId);
         logModel.setProcessNo(processNo);
@@ -31,7 +31,7 @@ public class ClusterLogService {
         clusterLogRepository.save(logModel);
     }
 
-    public void deleteClusterLogByClusterId(String clusterId) {
+    public void deleteClusterLogByClusterId(String clusterId) throws Exception {
         clusterLogRepository.deleteClusterLog(clusterId);
     }
 }

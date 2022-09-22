@@ -129,9 +129,10 @@ public class TerramanServiceTest {
      * Terraman 생성(Create Terraman) Test
      */
     @Test
-    public void createTerramanTest() {
+    public void createTerramanTest() throws Exception {
         // when
         when(propertyService.getMASTER_HOST()).thenReturn(TEST_HOST);
+        doNothing().when(clusterLogService).deleteClusterLogByClusterId(TEST_CLUSTER_ID);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultBase()).thenReturn(TEST_VAULT_BASE);
@@ -156,13 +157,14 @@ public class TerramanServiceTest {
      * Terraman 생성(Create Terraman) Test
      */
     @Test
-    public void deleteTerramanTest() {
+    public void deleteTerramanTest() throws Exception {
         // when
         when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(TEST_CLUSTER_ID), TerramanConstant.DELETE_DIR_CLUSTER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
         when(commonService.setResultModel(gResultModel, Constants.RESULT_STATUS_SUCCESS)).thenReturn(gResultStatusModelModel);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
         doNothing().when(vaultService).delete(TEST_PATH);
+        doNothing().when(clusterLogService).deleteClusterLogByClusterId(TEST_CLUSTER_ID);
 
         ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID, TEST_PROCESS_GB);
 

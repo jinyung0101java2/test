@@ -1,6 +1,25 @@
 spring:
   application:
     name: cp-terraman-api
+  cloud:
+    vault:
+      scheme: http
+      host: ${VAULT_IP}
+      port: ${VAULT_PORT}
+      authentication: APPROLE
+      kv:
+        enabled: true
+        backend: secret
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
+        role: ${VAULT_ROLE_NAME}
+        app-role-path: approle
+      config:
+        lifecycle:
+          enabled: true
+          min-renewal: 10s
+          expiry-threshold: 1m
 
 project:
   name: cp-terraman-api
@@ -19,27 +38,15 @@ vault:
     base: "secret/"
     cluster-token: "secret/cluster/{id}"
     cluster_api_url: "https://{ip}:6443"
-  props:
-    scheme: http
-    host: ${VAULT_IP}
-    port: ${VAULT_PORT}
-    authentication: APPROLE
-    kv:
-      enabled: true
-      backend: secret
-    app-role:
-      role-id: ${VAULT_ROLE_ID}
-      secret-id: ${VAULT_SECRET_ID}
-      role: ${VAULT_ROLE_NAME}
-      app-role-path: approle
 
 ---
 spring:
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: local
   cp:
     datasource:
-      jdbc-url: jdbc:mariadb://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       driver-class-name: org.mariadb.jdbc.Driver
       validationQuery: SELECT 1
       username: ${DATABASE_USER_ID}
@@ -68,19 +75,14 @@ server:
   auth:
     valid: N
 
-commonApi:
-  url: http://localhost:3334
-  authorization:
-    id: admin
-    password: PaaS-TA
-
 ---
 spring:
-  profiles:
-    active: prod
+  config:
+    activate:
+      on-profile: prod
   cp:
     datasource:
-      jdbc-url: jdbc:mariadb://${DATABASE_URL}/cpdev?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mysql://${DATABASE_URL}/${CP_PORTAL_DB_SCHEMA}?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       driver-class-name: org.mariadb.jdbc.Driver
       validationQuery: SELECT 1
       username: ${DATABASE_USER_ID}
@@ -108,9 +110,3 @@ server:
   port: ${PORT:8091}
   auth:
     valid: N
-
-commonApi:
-  url: ${CP_PORTAL_COMMON_API_DNS}
-  authorization:
-    id: admin
-    password: PaaS-TA

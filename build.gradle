@@ -44,39 +44,39 @@ jar {
     archivesBaseName = 'paas-ta-container-terraman-api'
 }
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-aop"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.boot:spring-boot-starter-jdbc"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation "org.apache.httpcomponents:httpclient:${apacheHttpClientVersion}"
-    implementation "com.google.code.gson:gson:${gsonVersion}"
-    implementation 'junit:junit:4.13.1'
+    compile 'junit:junit:4.13.1'
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-jdbc"
+    compile "org.apache.httpcomponents:httpclient:${apacheHttpClientVersion}"
+    compile "com.google.code.gson:gson:${gsonVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    implementation "org.mariadb.jdbc:mariadb-java-client:${mariaDbVersion}"
-    implementation "io.jsonwebtoken:jjwt:${jjwtVersion}"
-    implementation("io.springfox:springfox-swagger2:${swaggerVersion}") {
+    compile "io.jsonwebtoken:jjwt:${jjwtVersion}"
+    compile("io.springfox:springfox-swagger2:${swaggerVersion}") {
         exclude module: 'swagger-annotations'
         exclude module: 'swagger-models'
     }
-    implementation("io.swagger:swagger-annotations:1.5.21")
-    implementation("io.swagger:swagger-models:1.5.21")
-    implementation "io.springfox:springfox-swagger-ui:${swaggerVersion}"
-    implementation "com.jayway.jsonpath:json-path:${jsonpathVersion}"
-    implementation 'com.fasterxml.jackson.core:jackson-core'
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    implementation "com.jcraft:jsch:${jschVersion}"
+    compile("io.swagger:swagger-annotations:1.5.21")
+    compile("io.swagger:swagger-models:1.5.21")
+    compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
+    compile "com.jayway.jsonpath:json-path:${jsonpathVersion}"
+    compile 'com.fasterxml.jackson.core:jackson-core'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.5'
+    implementation 'org.springframework.retry:spring-retry'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.9'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.9'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
     implementation group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.32'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.0'
-    implementation group: 'org.springframework.vault', name: 'spring-vault-core', version: '2.2.3.RELEASE'
+    compile( "org.springframework.cloud:spring-cloud-starter-vault-config")
+    implementation "com.jcraft:jsch:${jschVersion}"
 }
 dependencyManagement {
     imports {

@@ -85,7 +85,13 @@ public class TerramanService {
 
         //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
         // cluster log 삭제
-        clusterLogService.deleteClusterLogByClusterId(clusterId);
+        try {
+            clusterLogService.deleteClusterLogByClusterId(clusterId);
+        } catch (Exception e) {
+            LOGGER.error("cluster log 삭제에 실패하였습니다.");
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
 
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
@@ -526,9 +532,15 @@ public class TerramanService {
 
         vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
         // cluster log 삭제
-        clusterLogService.deleteClusterLogByClusterId(clusterId);
+        try {
+            clusterLogService.deleteClusterLogByClusterId(clusterId);
+        } catch (Exception e) {
+            LOGGER.error("cluster log 삭제에 실패하였습니다.");
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
 
-        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), cResult);
+        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
 
     }
 
