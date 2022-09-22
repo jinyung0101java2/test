@@ -84,14 +84,6 @@ public class TerramanService {
         String hostDir = "/home/ubuntu";
 
         //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
-        // cluster log 삭제
-        try {
-            clusterLogService.deleteClusterLogByClusterId(clusterId);
-        } catch (Exception e) {
-            LOGGER.error("cluster log 삭제에 실패하였습니다.");
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
-        }
 
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
@@ -103,6 +95,15 @@ public class TerramanService {
                 return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
             }
             hostDir = "";
+        }
+
+        // cluster log 삭제
+        try {
+            clusterLogService.deleteClusterLogByClusterId(clusterId);
+        } catch (Exception e) {
+            LOGGER.error("cluster log 삭제에 실패하였습니다.");
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
 
         // 해당 클러스터 디렉토리 생성
