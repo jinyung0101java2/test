@@ -29,6 +29,7 @@ variables:
   DATABASE_URL: "cp-mariadb.mariadb.svc.cluster.local:3306"
   DATABASE_USER_ID: "cp-admin"
   DATABASE_USER_PASSWORD: "Paasta!2022"
+  CP_PORTAL_DB_SCHEMA: "cpdev"
 
 
   ENV_SCOPE: dev_aws
@@ -118,6 +119,7 @@ deploy:
     - sed -i "s/{DATABASE_URL}/$DATABASE_URL/g" yaml/Deployment.yaml
     - sed -i "s/{DATABASE_USER_ID}/$DATABASE_USER_ID/g" yaml/Deployment.yaml
     - sed -i "s/{DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" yaml/Deployment.yaml
+    - sed -i "s/{CP_PORTAL_DB_SCHEMA}/$CP_PORTAL_DB_SCHEMA/g" yaml/Deployment.yaml
     - sed -i "s/{SERVICE_PORT}/$SERVICE_PORT/g" yaml/Deployment.yaml
     - sed -i "s/{SERVICE_TARGET_PORT}/$SERVICE_TARGET_PORT/g" yaml/Deployment.yaml
     - sed -i "s/{SERVICE_NODEPORT}/$SERVICE_NODEPORT/g" yaml/Deployment.yaml

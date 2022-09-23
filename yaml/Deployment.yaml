@@ -32,6 +32,8 @@ spec:
               value: "{DATABASE_USER_ID}"
             - name: DATABASE_USER_PASSWORD
               value: "{DATABASE_USER_PASSWORD}"
+            - name: CP_PORTAL_DB_SCHEMA
+              value: "{CP_PORTAL_DB_SCHEMA}"
             - name: VAULT_IP
               value: "{VAULT_IP}"
             - name: VAULT_PORT
