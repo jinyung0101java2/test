@@ -532,59 +532,29 @@ const func = {
 	// (제목, 문구, 버튼유무, 버튼이름, 콜백함수)
 	/////////////////////////////////////////////////////////////////////////////////////
 	alertPopup(title, text, bull, name, callback){
-		var html = `<div class='modal-wrap' id='modal'><div class='modal'><h5>${title}</h5><p>${text}</p>`;
+		var html = `<div class='modal-wrap' id='alertModal'><div class='modal'><h5>${title}</h5><p>${text}</p>`;
 		if(bull){
 			html += `<a class='confirm' href='javascript:;'>${name}</a>`;
 		};
 		html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
 
+		if(document.getElementById('alertModal') !== null) {
+			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
+		}
+
 		func.appendHtml(document.getElementById('wrap'), html, 'div');
 
-		document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
-
-			document.getElementById('wrap').removeChild(document.getElementById('modal'));
+		document.getElementById('alertModal').querySelector('.close').addEventListener('click', (e) => {
+			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
 	}, false);
 
 		if(callback){
-			document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
+			document.getElementById('alertModal').querySelector('.confirm').addEventListener('click', (e) => {
 				if(callback != 'closed'){
 				callback();
 			};
 
-			document.getElementById('wrap').removeChild(document.getElementById('modal'));
-		}, false);
-		};
-	},
-
-	errorPopup(title, message, detailMessage, bull, name, callback){
-		var isDetail = false;
-         if(!isEmpty(detailMessage) && message != detailMessage) {
-         	isDetail = true;
-		 };
-
-         var html = `<div class='modal-wrap' id='modal'><div class='modal' style="word-break:break-all;"><h5>${title}</h5><p>${message}</p>`;
-			if(isDetail) {
-				html += `<p style="margin-top :10px; width: 300px; height: 200px; overflow: auto;">${detailMessage}</p>`; }
-
-		if(bull){
-			html += `<a class='confirm' href='javascript:;'>${name}</a>`;
-		};
-		html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
-
-		func.appendHtml(document.getElementById('wrap'), html, 'div');
-
-		document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
-
-			document.getElementById('wrap').removeChild(document.getElementById('modal'));
-	}, false);
-
-		if(callback){
-			document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
-				if(callback != 'closed'){
-				callback();
-			};
-
-			document.getElementById('wrap').removeChild(document.getElementById('modal'));
+			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
 		}, false);
 		};
 	},
