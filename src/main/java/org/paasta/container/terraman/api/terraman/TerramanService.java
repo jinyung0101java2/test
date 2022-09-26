@@ -68,9 +68,9 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         ResultStatusModel resultStatus = new ResultStatusModel();
         String clusterId = terramanRequest.getClusterId();
-
         int seq = Integer.parseInt(terramanRequest.getSeq());
         String provider = terramanRequest.getProvider();
+
         //String processGb = terramanRequest.getProcessGb();
         String cResult = "";
         String fResult = "";
@@ -82,6 +82,12 @@ public class TerramanService {
         String host = "";
         String idRsa = "";
         String hostDir = "/home/ubuntu";
+
+        if(StringUtils.isBlank(clusterId) || StringUtils.isBlank(String.valueOf(seq)) || StringUtils.isBlank(provider)) {
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_PARAMETER_ERROR);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
+        }
 
         //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
@@ -110,7 +116,7 @@ public class TerramanService {
         cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "");
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY);
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
