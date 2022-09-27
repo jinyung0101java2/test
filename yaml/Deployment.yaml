@@ -22,7 +22,7 @@ spec:
 #          command: ['']
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
+            - containerPort: 8091
           env:
             - name: K8S_API_SERVER
               value: "https://{K8S_MASTER_NODE_IP}:{K8S_API_SERVER_PORT}"
