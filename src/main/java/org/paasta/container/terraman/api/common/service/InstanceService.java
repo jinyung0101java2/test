@@ -83,7 +83,7 @@ public class InstanceService {
     private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
@@ -142,7 +142,7 @@ public class InstanceService {
     private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
@@ -188,7 +188,7 @@ public class InstanceService {
     private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
@@ -246,7 +246,7 @@ public class InstanceService {
     private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            commandService.fileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host

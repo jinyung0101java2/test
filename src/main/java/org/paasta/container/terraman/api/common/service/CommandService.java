@@ -105,7 +105,7 @@ public class CommandService {
      * @param idRsa ssh key
      * @return 업로드 여부
      */
-    public void fileDownload(String dir, String localDir, String fileName, String host, String idRsa){
+    public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
         InputStream is = null;
         FileOutputStream out = null;
         try {
