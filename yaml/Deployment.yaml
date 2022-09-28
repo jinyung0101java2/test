@@ -48,9 +48,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cp-terraman-api-service
+  name: cp-terraman-service
   labels:
-    app: terraman-api
+    app: cp-terraman-service
   namespace: cp-terraman
 spec:
   ports:
@@ -59,5 +59,5 @@ spec:
       protocol: TCP
       targetPort: {SERVICE_TARGET_PORT}
   selector:
-    app: cp-terraman-api-service
+    app: cp-terraman-api
   type: NodePort
