@@ -61,6 +61,8 @@
 </div>
 <th:block layout:fragment="script">
 	<script type="text/javascript">
+		let now;
+		let reg;
 		window.onload = () => {
 
 			IS_GLOBAL = true;
@@ -106,15 +108,15 @@
 						statusString += '상태 확인 불가';
 					}
 					else {
-						let now = Date.now();
-						let reg;
+						now = Date.now();
+						reg;
 						for (let i = 0; i < data.items.length; i++) {
 							reg = new Date(data.items[i].regTimestamp);
 							let sec = Math.floor((now - reg) / 1000);
 							let days = Math.floor(sec / TIMES.DAY);
 							let hours = Math.floor(sec / TIMES.HOUR);
 							let mins = Math.floor(sec / TIMES.MIN);
-							let time = days > 0 ? days : hours > 0 ? hours : mins >= 0 ? mins : sec;
+							let time = days > 0 ? days : hours > 0 ? hours : mins > 0 ? mins : sec;
 
 							let timeString = days > 0 ? '일' : hours > 0 ? '시간' : mins > 0 ? '분' : '초';
 							html = `<tr>

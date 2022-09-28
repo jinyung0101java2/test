@@ -129,8 +129,6 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
-
-
         window.onload = () => {
             let info;
             IS_GLOBAL = true;
@@ -144,7 +142,7 @@
                 },
 
                 draw(data) {
-                    info = new Map(Object.entries(data));
+                    info = new Map(Object.entries(data.items));
                     let html = ``;
                     for (let key of info.keys()) {
                         html += `<option value="${key}"`;
