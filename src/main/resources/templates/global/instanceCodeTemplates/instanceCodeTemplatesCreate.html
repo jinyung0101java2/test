@@ -69,7 +69,7 @@
                 },
 
                 draw(data) {
-                    info = new Map(Object.entries(data));
+                    info = new Map(Object.entries(data.items));
                     let html = ``;
                     for (let key of info.keys()) {
                         html += `<option value="${key}"`;
