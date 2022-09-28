@@ -18,7 +18,6 @@ spec:
       containers:
         - name: cp-terraman-api
           image: {REPOSITORY_URL}/container-platform-v2/backend/terraman:{IMAGE_TAGS}
-#          image: registry.3.38.65.248.nip.io:5005/container-platform-v2/backend/terraman:{IMAGE_TAGS}
           imagePullPolicy: Always
           ports:
             - containerPort: 8091
@@ -49,9 +48,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cp-terraman-service
+  name: cp-terraman-api-service
   labels:
-    app: cp-terraman-service
+    app: terraman-api
   namespace: cp-terraman
 spec:
   ports:
@@ -60,5 +59,5 @@ spec:
       protocol: TCP
       targetPort: {SERVICE_TARGET_PORT}
   selector:
-    app: cp-terraman-service
+    app: cp-terraman-api-service
   type: NodePort
