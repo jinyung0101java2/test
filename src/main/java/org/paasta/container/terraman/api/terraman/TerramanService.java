@@ -519,6 +519,11 @@ public class TerramanService {
         String idRsa = "";
         ResultStatusModel resultStatus = new ResultStatusModel();
 
+        if(StringUtils.isBlank(clusterId)) {
+            LOGGER.error("cluster_id가 없습니다.. " + Constants.RESULT_STATUS_FAIL);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
+
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             host = propertyService.getMASTER_HOST();
             idRsa = TerramanConstant.MASTER_ID_RSA;
