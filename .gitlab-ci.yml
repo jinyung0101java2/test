@@ -109,6 +109,7 @@ deploy:
     entrypoint: [""]
   script:
     - sed -i "s/{IMAGE_TAGS}/$IMAGE_TAGS/g" yaml/Deployment.yaml
+    - sed -i "s/{REPOSITORY_URL}/$CI_REGISTRY/g" yaml/Deployment.yaml
     - sed -i "s/{K8S_MASTER_NODE_IP}/$K8S_MASTER_NODE_IP/g" yaml/Deployment.yaml
     - sed -i "s/{K8S_API_SERVER_PORT}/$K8S_API_SERVER_PORT/g" yaml/Deployment.yaml
     - sed -i "s/{IMAGE_PULL_SECRET}/$IMAGE_PULL_SECRET/g" yaml/Deployment.yaml
