@@ -161,7 +161,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForLinux">
-                                    <pre><code class="bash context" style="white-space: normal">kubectl config set-context ${CP_SERVICE_CONTEXT_NAME} --user=${CP_SERVICE_USER_NAME} --cluster=${CP_SERVICE_CLUSTER_NAME}</code></pre><pre><code class="bash context optNamespace" style="white-space: normal">--namespace=${CP_SERVICE_NAMESPACE_NAME}</code></pre>
+                                    <p>kubectl config set-context <span style="color:#d91e18">${CP_SERVICE_CONTEXT_NAME}</span><span> --user=</span><span style="color:#d91e18">${CP_SERVICE_USER_NAME}</span><span> --cluster=</span><span style="color:#d91e18">${CP_SERVICE_CLUSTER_NAME}</span><span class="optNamespace"> --namespace=</span><span class="optNamespace" style="color:#d91e18">${CP_SERVICE_NAMESPACE_NAME}</span></p>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForLinux" onclick="btnCopy(this.id)"></i>
@@ -172,7 +172,7 @@
                             </div>
                             <div class="custom-access-contents">
                                 <div class="fa-pull-left" id="cpContextForWindows">
-                                    <pre><code class="bash" style="white-space: normal">kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%</code></pre><pre><code class="bash optNamespace" style="white-space: normal">--namespace=%CP_SERVICE_NAMESPACE_NAME%</code></pre>
+                                    <p>kubectl config set-context %CP_SERVICE_CONTEXT_NAME% --user=%CP_SERVICE_USER_NAME% --cluster=%CP_SERVICE_CLUSTER_NAME%<span class="optNamespace"> --namespace=%CP_SERVICE_NAMESPACE_NAME%</span></p>
                                 </div>
                                 <div class="fa-pull-right">
                                     <i class="fas fa-copy custom-access-button" about="cpContextForWindows" onclick="btnCopy(this.id)"></i>
