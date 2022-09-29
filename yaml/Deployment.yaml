@@ -44,7 +44,7 @@ spec:
               value: "{K8S_MASTER_NODE_IP}"
           volumeMounts:
             - name: cluster-key
-              mountPath: '/root/.ssh/'
+              mountPath: '/home/ubuntu/.ssh/'
       imagePullSecrets:
         - name: {IMAGE_PULL_SECRET}
       volumes:
