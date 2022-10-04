@@ -45,7 +45,7 @@ spec:
       imagePullSecrets:
         - name: {IMAGE_PULL_SECRET}
       nodeSelector:
-        terramanFlag: Y
+        terramanFlag: "Y"
 ---
 apiVersion: v1
 kind: Service
