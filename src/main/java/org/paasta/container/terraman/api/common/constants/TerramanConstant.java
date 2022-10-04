@@ -168,6 +168,7 @@ public class TerramanConstant {
     public static final String TERRAFORM_CREATE_CLUSTER_PARAMETER_ERROR = "ERROR - Failed to create cluster. Please check the parameters.";
     public static final String TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR = "ERROR - cluster directory create failed";
     public static final String TERRAFORM_NOT_EXISTS_INSTANCE_ERROR = "ERROR - Instance is not exists";
+    public static final String TERRAFORM_NOT_EXISTS_PRIVATE_IP_ERROR = "ERROR - privateIp is not exists";
     public static final String TERRAFORM_CREATE_CLUSTER_FILE_ERROR = "ERROR - cluster file create failed";
     public static final String TERRAFORM_NOT_EXISTS_INSTANCES_ERROR = "ERROR - Instances are not exists";
     public static final String TERRAFORM_CHANGE_MODE_ERROR = "ERROR - mode change failed";

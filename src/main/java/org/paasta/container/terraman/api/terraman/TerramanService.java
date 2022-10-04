@@ -275,9 +275,16 @@ public class TerramanService {
 
         instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
         LOGGER.info("instanceInfo :: " + instanceInfo);
-        if(instanceInfo == null || StringUtils.isBlank(instanceInfo.getPrivateIp())) {
+        if(instanceInfo == null) {
             LOGGER.error("Instance is not exists");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
+        }
+
+        if(StringUtils.isBlank(instanceInfo.getPrivateIp())) {
+            LOGGER.error("privateIp is not exists");
+            clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_NOT_EXISTS_PRIVATE_IP_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
