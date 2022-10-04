@@ -74,11 +74,12 @@ public class TerramanConstant {
      * get cluster info
      * */
     public static final String CLUSTER_PRIVATE_KEY(String clusterId, String processGb) {
-        String path = "cluster-key";
-        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            path = "/home/ubuntu/.ssh/" + path;
-        }
-        return path;
+//        String path = "cluster-key";
+//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+//            path = "/home/ubuntu/.ssh/" + path;
+//        }
+//        return path;
+        return "/home/ubuntu/.ssh/cluster-key";
     }
     public static final String SERVICE_ACCOUNT_CREATE = "kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
