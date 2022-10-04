@@ -274,7 +274,7 @@ public class TerramanService {
         LOGGER.info("7. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa));
 
         instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
-
+        LOGGER.info("instanceInfo :: " + instanceInfo);
         if(instanceInfo == null) {
             LOGGER.error("Instance is not exists");
             clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
