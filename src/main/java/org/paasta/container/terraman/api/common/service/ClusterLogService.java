@@ -22,6 +22,14 @@ public class ClusterLogService {
         this.clusterLogRepository = clusterLogRepository;
     }
 
+    /**
+     * Account 정보 조회
+     *
+     * @param clusterId the clusterId
+     * @param processNo the processNo
+     * @param logMessage the logMessage
+     * @return the void
+     */
     public void saveClusterLog(String clusterId, int processNo, String logMessage){
         ClusterLogModel logModel = new ClusterLogModel();
         logModel.setClusterId(clusterId);
@@ -31,6 +39,12 @@ public class ClusterLogService {
         clusterLogRepository.save(logModel);
     }
 
+    /**
+     * Account 정보 조회
+     *
+     * @param clusterId the clusterId
+     * @return the AccountModel
+     */
     public void deleteClusterLogByClusterId(String clusterId) throws Exception {
         clusterLogRepository.deleteClusterLog(clusterId);
     }

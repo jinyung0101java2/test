@@ -28,6 +28,7 @@ public class VaultService {
      * Vault read를 위한 method
      *
      * @param path the path
+     * @param requestClass the requestClass
      * @return the object
      */
     public <T> T read(String path,  Class<T> requestClass) {
@@ -46,6 +47,7 @@ public class VaultService {
      * Vault write를 위한 method
      *
      * @param path the path
+     * @param body the body
      * @return the object
      */
     public Object write(String path, Object body){

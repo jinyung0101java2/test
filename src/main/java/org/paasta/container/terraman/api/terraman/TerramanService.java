@@ -59,6 +59,7 @@ public class TerramanService {
      * Terraman 생성(Create Terraman)
      *
      * @param terramanRequest the init terramanRequest
+     * @param processGb the processGb
      * @return the resultStatus
      */
     @Async
@@ -272,7 +273,7 @@ public class TerramanService {
          * ************************************************************************************************************************************/
         LOGGER.info("7. current directory :: " + commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa));
 
-        instanceInfo = instanceService.getInstansce(clusterId, provider, host, idRsa, processGb);
+        instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
 
         if(instanceInfo == null) {
             LOGGER.error("Instance is not exists");
@@ -511,7 +512,8 @@ public class TerramanService {
     /**
      * Terraman 삭제(Delete Terraman)
      *
-     * @param clusterId
+     * @param clusterId the clusterId
+     * @param clusterId the processGb
      * @return the resultStatus
      */
     public ResultStatusModel deleteTerraman(String clusterId, String processGb) {

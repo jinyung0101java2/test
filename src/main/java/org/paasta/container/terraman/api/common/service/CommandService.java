@@ -23,6 +23,12 @@ public class CommandService {
     private ChannelSftp channelSftp;
     private Channel channel;
 
+    /**
+     * SSH Connect
+     *
+     * @param host the host
+     * @return the void
+     */
     private void SSHConnect(String host, String idRsa) throws JSchException {
         String userName = "ubuntu";
         int port = 22;
@@ -33,6 +39,11 @@ public class CommandService {
         session.connect();
     }
 
+    /**
+     * SSH Disconnect
+     *
+     * @return the void
+     */
     private void disConnectSSH() {
         if (session != null) session.disconnect();
         if (channelExec != null) channelExec.disconnect();
@@ -42,8 +53,8 @@ public class CommandService {
 
     /**
      * 디렉토리( or 파일) 존재 여부
-     * @param path 디렉토리 (or 파일)
-     * @return
+     * @param path the path
+     * @return the boolean
      */
     public boolean exists(String path) {
         Vector res = null;
@@ -59,12 +70,13 @@ public class CommandService {
 
 
     /**
-     * 파일 업로드
+     * SSH 파일 업로드
      *
-     * @param dir 저장할 디렉토리
-     * @param host ssh host
-     * @param idRsa ssh key
-     * @return 업로드 여부
+     * @param dir the dir
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param uploadFile the uploadFile
+     * @return the String
      */
     public String SSHFileUpload(String dir, String host, String idRsa, File uploadFile) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
@@ -98,12 +110,14 @@ public class CommandService {
     }
 
     /**
-     * 파일 다운로드
+     * SSH 파일 다운로드
      *
-     * @param dir 저장할 디렉토리
-     * @param host ssh host
-     * @param idRsa ssh key
-     * @return 업로드 여부
+     * @param dir the dir
+     * @param host the localDir
+     * @param fileName the fileName
+     * @param host the host
+     * @param idRsa the idRsa
+     * @return the void
      */
     public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
         InputStream is = null;
@@ -137,6 +151,15 @@ public class CommandService {
         }
     }
 
+    /**
+     * SSH Command Line Response
+     *
+     * @param command the command
+     * @param dir the dir
+     * @param host the host
+     * @param idRsa the idRsa
+     * @return the String
+     */
     private String getSSHResponse(String command, String dir, String host, String idRsa) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
@@ -168,6 +191,13 @@ public class CommandService {
         return resultCommand;
     }
 
+    /**
+     * Command Line Response
+     *
+     * @param command the command
+     * @param dir the dir
+     * @return the String
+     */
     private String getResponse(String command, String dir) {
         String resultOutput = "";
         List<String> cmd = new ArrayList<String>();
@@ -227,10 +257,13 @@ public class CommandService {
     }
 
     /**
-     * Command Line 실행 (String)
+     * Command Line Excute
      *
-     * @param command, dir
-     * @return String
+     * @param command the command
+     * @param dir the dir
+     * @param host the host
+     * @param idRsa the idRsa
+     * @return the String
      */
     public String execCommandOutput(String command, String dir, String host, String idRsa) {
         String response = "";

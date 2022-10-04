@@ -15,11 +15,18 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
+
     @Autowired
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
+    /**
+     * Select Account Info
+     *
+     * @param id the id
+     * @return the AccountModel
+     */
     public AccountModel getAccountInfo(int id) {
         AccountModel accountModel = null;
         try {

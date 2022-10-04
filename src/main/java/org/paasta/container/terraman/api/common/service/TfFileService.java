@@ -44,11 +44,14 @@ public class TfFileService {
     /**
      * terraform provider.tf 파일 생성 및 작성 (String)
      *
-     * @param clusterId
-     * @param provider
-     * @param seq
-     * @param pod
-     * @return String
+     * @param clusterId the clusterId
+     * @param provider the provider
+     * @param seq the seq
+     * @param pod the pod
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the String
      */
     public String createProviderFile(String clusterId, String provider, int seq, String pod, String host, String idRsa, String processGb) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
@@ -105,9 +108,10 @@ public class TfFileService {
     /**
      * terraform 파일 생성 및 작성 (String)
      *
-     * @param fileModel
-     * @param clusterId
-     * @return String
+     * @param fileModel the fileModel
+     * @param clusterId the clusterId
+     * @param processGb the processGb
+     * @return the String
      */
     private String tfCreateWithWriteAws(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
@@ -144,9 +148,10 @@ public class TfFileService {
     /**
      * terraform 파일 생성 및 작성 (String)
      *
-     * @param fileModel
-     * @param clusterId
-     * @return String
+     * @param fileModel the fileModel
+     * @param clusterId the clusterId
+     * @param processGb the processGb
+     * @return the String
      */
     private String tfCreateWithWriteOpenstack(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
@@ -185,9 +190,10 @@ public class TfFileService {
     /**
      * terraform 파일 생성 및 작성 (String)
      *
-     * @param fileModel
-     * @param clusterId
-     * @return String
+     * @param fileModel the fileModel
+     * @param clusterId the clusterId
+     * @param processGb the processGb
+     * @return the String
      */
     private String tfCreateWithWriteVSphere(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;

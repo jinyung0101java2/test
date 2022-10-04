@@ -32,12 +32,18 @@ public class InstanceService {
         this.commonFileUtils = commonFileUtils;
         this.commandService = commandService;
     }
+
     /**
-     * Instance 정보 조회 (Get Instance Info)
+     * Select Instance Info
      *
+     * @param clusterId the clusterId
+     * @param provider the provider
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
      * @return the InstanceModel
      */
-    public InstanceModel getInstansce(String clusterId, String provider, String host, String idRsa, String processGb) {
+    public InstanceModel getInstance(String clusterId, String provider, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(StringUtils.equals(Constants.UPPER_AWS, provider.toUpperCase())) {
             resultModel = getInstanceInfoAws(clusterId, host, idRsa, processGb);
@@ -55,9 +61,14 @@ public class InstanceService {
     }
 
     /**
-     * Instances 정보 조회 (Get Instances Info)
+     * Select Instances Info
      *
-     * @return the InstanceModel
+     * @param clusterId the clusterId
+     * @param provider the provider
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the List<InstanceModel>
      */
     public List<InstanceModel> getInstances(String clusterId, String provider, String host, String idRsa, String processGb) {
         List<InstanceModel> resultList = new ArrayList<InstanceModel>();
@@ -76,8 +87,12 @@ public class InstanceService {
     }
 
     /**
-     * get Instance info AWS
+     * Select Instance Info AWS
      *
+     * @param clusterId the cluster
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
      * @return the InstanceModel
      */
     private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
@@ -115,8 +130,12 @@ public class InstanceService {
     }
 
     /**
-     * get Instance info GCP
+     * Select Instance Info GCP
      *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
      * @return the InstanceModel
      */
     private InstanceModel getInstanceInfoGcp(String clusterId, String host, String idRsa, String processGb) {
@@ -125,8 +144,12 @@ public class InstanceService {
     }
 
     /**
-     * get Instance info VSphere
+     * Select Instance Info VSphere
      *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
      * @return the InstanceModel
      */
     private InstanceModel getInstanceInfoVSphere(String clusterId, String host, String idRsa, String processGb) {
@@ -135,8 +158,12 @@ public class InstanceService {
     }
 
     /**
-     * get Instance info opnestack
+     * Select Instance Info OpenStack
      *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
      * @return the InstanceModel
      */
     private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
@@ -181,9 +208,13 @@ public class InstanceService {
     }
 
     /**
-     * get Instances Info AWS
+     * Select Instances Info AWS
      *
-     * @return the List<InstanceModel>
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
      */
     private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
@@ -219,9 +250,13 @@ public class InstanceService {
     }
 
     /**
-     * get Instances Info GCP
+     * Select Instances Info GCP
      *
-     * @return the List<InstanceModel>
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
      */
     private List<InstanceModel> getInstancesInfoGcp(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
@@ -229,9 +264,13 @@ public class InstanceService {
     }
 
     /**
-     * get Instances Info VSphere
+     * Select Instances Info VSphere
      *
-     * @return the List<InstanceModel>
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
      */
     private List<InstanceModel> getInstancesInfoVSphere(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
@@ -239,9 +278,13 @@ public class InstanceService {
     }
 
     /**
-     * get Instances Info
+     * Select Instances Info OpenStack
      *
-     * @return the List<InstanceModel>
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
      */
     private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
@@ -281,8 +324,10 @@ public class InstanceService {
     }
 
     /**
-     * File Read (File)
+     * Read State File
      *
+     * @param clusterId the clusterId
+     * @param processGb the processGb
      * @return the JsonObject
      */
     private JsonObject readStateFile(String clusterId, String processGb) {
@@ -290,8 +335,11 @@ public class InstanceService {
     }
 
     /**
-     * get Public IP
+     * Get Public Ip
      *
+     * @param compInstanceId the compInstanceId
+     * @param jsonObject the jsonObject
+     * @param privateIp the privateIp
      * @return the String
      */
     private String getPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
@@ -318,6 +366,12 @@ public class InstanceService {
         return publicIp;
     }
 
+    /**
+     * Get AWS HostName
+     *
+     * @param ipAddr the ip address
+     * @return the String
+     */
     private String getAWSHostName(String ipAddr) {
         String rst = "ip-";
         String ipString = ipAddr.replaceAll("[.]","-");

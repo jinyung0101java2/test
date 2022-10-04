@@ -26,6 +26,13 @@ public class ClusterService {
         this.clusterRepository = clusterRepository;
     }
 
+    /**
+     * Update Cluster Info
+     *
+     * @param clusterId the clusterId
+     * @param status the status
+     * @return the ClusterModel
+     */
     @Transactional
     public ClusterModel updateCluster(String clusterId, String status) {
         ClusterModel clusterModel = clusterRepository.findById(clusterId).get();
