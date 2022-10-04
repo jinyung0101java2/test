@@ -42,16 +42,10 @@ spec:
               value: "{VAULT_SECRET_ID}"
             - name: K8S_MASTER_NODE_IP
               value: "{K8S_MASTER_NODE_IP}"
-          volumeMounts:
-            - name: cluster-key
-              mountPath: '/home/ubuntu/.ssh/'
       imagePullSecrets:
         - name: {IMAGE_PULL_SECRET}
-      volumes:
-        - name: cluster-key
-          secret:
-            secretName: cluster-keyfair
-            defaultMode: 0600
+      nodeSelector:
+        terramanFlag: true
 ---
 apiVersion: v1
 kind: Service
