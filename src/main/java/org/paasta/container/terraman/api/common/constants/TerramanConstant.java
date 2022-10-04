@@ -7,7 +7,7 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/paasta-master-key";
+    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
 
     /**
      * file name & directory
