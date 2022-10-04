@@ -74,7 +74,6 @@ public class TerramanConstant {
      * get cluster info
      * */
     public static final String CLUSTER_PRIVATE_KEY(String clusterId, String processGb) {
-        
 //        String path = "cluster-key";
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
 //            path = "/home/ubuntu/.ssh/" + path;
