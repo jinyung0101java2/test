@@ -90,7 +90,7 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        //clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
+        clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
