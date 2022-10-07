@@ -53,6 +53,10 @@
 			</div>
 		</article>
 	</div>
+	<input type="hidden" id="cluster_status_A" th:value="#{M0835}"/>
+	<input type="hidden" id="cluster_status_B" th:value="#{M0838}"/>
+	<input type="hidden" id="cluster_status_C" th:value="#{M0837}"/>
+	<input type="hidden" id="cluster_status_D" th:value="#{M0836}"/>
 </div>
 <th:block layout:fragment="script">
 	<script type="text/javascript">
@@ -97,7 +101,7 @@
 								if(data.items[i].status === 'A' && !data.items[i].isActive) data.items[i].status = 'B';
 								html = `<tr><td class="left"><a class="name" href="javascript:;" data-id="${data.items[i].clusterId}">${data.items[i].name}</a></td>
 											<td>${data.items[i].providerType}</td>
-											<td><button type="button" class="button_status_${data.items[i].status}" onclick="javascript:;" data-id="${data.items[i].clusterId}"></button></td>
+											<td><div class="tooltip"><button type="button" class="button_status_${data.items[i].status}" onclick="javascript:;" data-id="${data.items[i].clusterId}"></button><span class="tooltiptext">${document.querySelector('#cluster_status_' + data.items[i].status).value}</span></div></td>
 											</tr>`;
 								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 							}
