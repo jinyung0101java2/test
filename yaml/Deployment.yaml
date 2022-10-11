@@ -52,8 +52,15 @@ spec:
           secret:
             secretName: cluster-keyfair
             defaultMode: 0600
-      nodeSelector:
-        terramanFlag: "Y"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: masterNode
+                  operator: In
+                  values:
+                    - Y
 ---
 apiVersion: v1
 kind: Service

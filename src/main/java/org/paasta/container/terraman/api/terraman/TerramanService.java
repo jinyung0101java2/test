@@ -419,10 +419,6 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
 
-        LOGGER.info("클러스터 배포가 완료되었습니다.");
-//        LOGGER.info("클러스터 배포가 완료되었습니다. " + cResult);
-        // log 저장
-        clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_DEPLOY_LOG);
         /*************************************************************************************************************************************/
 
         /**************************************************************************************************************************************
@@ -512,7 +508,9 @@ public class TerramanService {
         /**************************************************************************************************************************************
          * 12. 완료 후 프로세스 종료
          * ************************************************************************************************************************************/
-        LOGGER.info("cluster 생성이 완료되었습니다.");
+        LOGGER.info("클러스터 배포가 완료되었습니다.");
+        // log 저장
+        clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.KUBESPRAY_DEPLOY_LOG);
         return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_SUCCESS);
         /*************************************************************************************************************************************/
     }
