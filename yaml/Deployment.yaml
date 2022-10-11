@@ -55,12 +55,13 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                - key: masterNode
-                  operator: In
-                  values:
-                    - Y
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: masterNode
+                    operator: In
+                    values:
+                      - Y
 ---
 apiVersion: v1
 kind: Service
