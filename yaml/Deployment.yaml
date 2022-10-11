@@ -61,7 +61,7 @@ spec:
                   - key: masterNode
                     operator: In
                     values:
-                      - Y
+                      - 'Y'
 ---
 apiVersion: v1
 kind: Service
