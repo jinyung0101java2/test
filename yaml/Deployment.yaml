@@ -54,7 +54,8 @@ spec:
             defaultMode: 0600
       affinity:
         nodeAffinity:
-          preferredDuringSchedulingRequiredDuringExecution:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
               preference:
                 matchExpressions:
                   - key: masterNode
