@@ -55,7 +55,6 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingRequiredDuringExecution:
-            - weight: 1
               preference:
                 matchExpressions:
                   - key: masterNode
