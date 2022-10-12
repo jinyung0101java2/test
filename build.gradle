@@ -111,5 +111,6 @@ test {
 jacocoTestReport {
     reports {
         xml.enabled true
+        xml.destination file("build/reports/jacoco.xml")
     }
 }

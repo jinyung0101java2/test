@@ -115,22 +115,23 @@ public class TfFileService {
      */
     private String tfCreateWithWriteAws(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
+        BufferedWriter writer = null;
         try {
             File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
-                file.createNewFile(); // 신규생성
+                boolean fileFlag = file.createNewFile(); // 신규생성
             }
 
             // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            writer = new BufferedWriter(new FileWriter(file, false));
 
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll("\"awsRegion\":", "region =");
-            jsonString = jsonString.replaceAll("\"awsAccessKey\":", "access_key =");
-            jsonString = jsonString.replaceAll("\"awsSecretKey\":", "secret_key =");
+            jsonString = jsonString.replace("\"awsRegion\":", "region =");
+            jsonString = jsonString.replace("\"awsAccessKey\":", "access_key =");
+            jsonString = jsonString.replace("\"awsSecretKey\":", "secret_key =");
 
             writer.write("provider \"aws\" " + jsonString);
 
@@ -141,6 +142,12 @@ public class TfFileService {
         catch (IOException e) {
             resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage());
+        } finally {
+            try {
+                // 버퍼 및 스트림 뒷정리
+                writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
+                writer.close(); // 스트림 종료
+            } catch (IOException e2){}
         }
         return resultCode;
     }
@@ -155,24 +162,25 @@ public class TfFileService {
      */
     private String tfCreateWithWriteOpenstack(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
+        BufferedWriter writer = null;
         try {
             File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
-                file.createNewFile(); // 신규생성
+                boolean fileFlag = file.createNewFile(); // 신규생성
             }
 
             // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            writer = new BufferedWriter(new FileWriter(file, false));
 
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll("\"openstackTenantName\":", "tenant_name =");
-            jsonString = jsonString.replaceAll("\"openstackPassword\":", "password =");
-            jsonString = jsonString.replaceAll("\"openstackAuthUrl\":", "auth_url =");
-            jsonString = jsonString.replaceAll("\"openstackUserName\":", "user_name =");
-            jsonString = jsonString.replaceAll("\"openstackRegion\":", "region =");
+            jsonString = jsonString.replace("\"openstackTenantName\":", "tenant_name =");
+            jsonString = jsonString.replace("\"openstackPassword\":", "password =");
+            jsonString = jsonString.replace("\"openstackAuthUrl\":", "auth_url =");
+            jsonString = jsonString.replace("\"openstackUserName\":", "user_name =");
+            jsonString = jsonString.replace("\"openstackRegion\":", "region =");
 
             writer.write(TerramanConstant.PREFIX_PROVIDER_OPENSTACK + "\n\n" + "provider \"openstack\" " + jsonString);
 
@@ -183,6 +191,12 @@ public class TfFileService {
         catch (IOException e) {
             resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage());
+        } finally {
+            try {
+                // 버퍼 및 스트림 뒷정리
+                writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
+                writer.close(); // 스트림 종료
+            } catch (IOException e2){}
         }
         return resultCode;
     }
@@ -197,22 +211,23 @@ public class TfFileService {
      */
     private String tfCreateWithWriteVSphere(FileModel fileModel, String clusterId, String processGb) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
+        BufferedWriter writer = null;
         try {
             File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))); // File객체 생성
             if(!file.exists()){ // 파일이 존재하지 않으면
-                file.createNewFile(); // 신규생성
+                boolean fileFlag = file.createNewFile(); // 신규생성
             }
 
             // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            writer = new BufferedWriter(new FileWriter(file, false));
 
             // 파일 쓰기
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String jsonString = gson.toJson(fileModel);
             jsonString = jsonString.replaceAll(",", "");
-            jsonString = jsonString.replaceAll("\"vSphereUser\":", "user =");
-            jsonString = jsonString.replaceAll("\"vSpherePassword\":", "password =");
-            jsonString = jsonString.replaceAll("\"vSphereServer\":", "vsphere_server =");
+            jsonString = jsonString.replace("\"vSphereUser\":", "user =");
+            jsonString = jsonString.replace("\"vSpherePassword\":", "password =");
+            jsonString = jsonString.replace("\"vSphereServer\":", "vsphere_server =");
 
             writer.write("provider \"vsphere\" " + jsonString);
 
@@ -223,6 +238,12 @@ public class TfFileService {
         catch (IOException e) {
             resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage());
+        } finally {
+            try {
+                // 버퍼 및 스트림 뒷정리
+                writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
+                writer.close(); // 스트림 종료
+            } catch (IOException e2){}
         }
         return resultCode;
     }

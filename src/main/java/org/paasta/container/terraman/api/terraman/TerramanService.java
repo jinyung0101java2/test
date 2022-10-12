@@ -72,11 +72,9 @@ public class TerramanService {
         int seq = Integer.parseInt(terramanRequest.getSeq());
         String provider = terramanRequest.getProvider();
 
-        //String processGb = terramanRequest.getProcessGb();
         String cResult = "";
         String fResult = "";
         int mpSeq = 0;
-        int sshChk = 0;
 
         InstanceModel instanceInfo = null;
 
@@ -184,8 +182,6 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, fResult);
         }
 
-        //commandService.execCommandOutput(TerramanConstant.NETWORK_COPY_COMMAND(cResult), TerramanConstant.MOVE_DIR_CLUSTER(clusterId));
-
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_TF_LOG);
         /*************************************************************************************************************************************/
@@ -211,7 +207,6 @@ public class TerramanService {
         }
 
         LOGGER.info("Processing terraform init.");
-        //LOGGER.info("Processing terraform init. " + cResult);
 
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_INIT_LOG);
@@ -237,7 +232,7 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
         }
         LOGGER.info("Processing terraform plan.");
-//        LOGGER.info("Processing terraform plan " + cResult);
+
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq++, TerramanConstant.TERRAFORM_PLAN_LOG);
         /*************************************************************************************************************************************/
@@ -290,7 +285,7 @@ public class TerramanService {
             return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
         }
 
-        Loop : for(int i = 0; i<100; i++) {
+        for(int i = 0; i<100; i++) {
             try {
                 Thread.sleep(10000);
             } catch (Exception e) {
@@ -300,9 +295,9 @@ public class TerramanService {
             cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
             LOGGER.info("ssh connection result :: " + cResult);
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-                break Loop;
+                break;
             } else if (StringUtils.isNotBlank(cResult) && StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
-                break Loop;
+                break;
             }
         }
 
