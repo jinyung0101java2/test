@@ -27,7 +27,4 @@ public class PropertyService {
     @Value("${master.host}")
     private String masterHost;
 
-//    @Value("${vault.path.cluster-token}")
-//    private String vaultClusterTokenPath;
-
 }

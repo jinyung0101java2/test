@@ -21,6 +21,8 @@ public class Constants {
     public static final String UPPER_OPENSTACK = "OPENSTACK";
     public static final String UPPER_VSPHERE = "VSPHERE";
 
+    public static final String DIV = "/";
+
     public Constants() {
         throw new IllegalStateException();
     }

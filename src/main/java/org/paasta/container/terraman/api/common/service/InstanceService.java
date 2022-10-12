@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 public class InstanceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InstanceService.class);
-    private static final String containerMsg = "CONTAINER";
 
     private final CommonFileUtils commonFileUtils;
     private final CommandService commandService;
@@ -48,7 +47,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultModel = getInstanceInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultModel = getInstanceInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa, processGb); break;
-            default : LOGGER.error("%s is Cloud not supported.", provider);
+            default : LOGGER.error("{} is Cloud not supported.", provider);
                 resultModel = new InstanceModel("", "", "", "");
                 break;
         }
@@ -74,7 +73,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultList = getInstancesInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultList = getInstancesInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultList = getInstancesInfoOpenstack(clusterId, host, idRsa, processGb); break;
-            default : LOGGER.error("%s is Cloud not supported.", provider); break;
+            default : LOGGER.error("{} is Cloud not supported.", provider); break;
         }
 
         return resultList;
@@ -91,7 +90,7 @@ public class InstanceService {
      */
     private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), containerMsg)) {
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
@@ -104,17 +103,17 @@ public class InstanceService {
         String publicIp = "";
         String hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
-            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
-                if(StringUtils.equals(resource.getAsJsonObject().get("type").getAsString(), "aws_instance")) {
-                    rName = resource.getAsJsonObject().get("name").getAsString();
-                    if(StringUtils.equals(rName, "master")) {
-                        JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.AWS_INSTANCE_MSG)) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    if(StringUtils.equals(rName, TerramanConstant.MASTER_MSG)) {
+                        JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                         if(instances != null) {
                             for(JsonElement instance : instances) {
-                                JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
-                                privateIp = attributes.get("private_ip").isJsonNull() ? "" : attributes.get("private_ip").getAsString();
-                                publicIp = attributes.get("public_ip").isJsonNull() ? "" : attributes.get("public_ip").getAsString();
+                                JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                                privateIp = attributes.get(TerramanConstant.PRIVATE_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PRIVATE_IP_MSG).getAsString();
+                                publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
                                 hostName = getAWSHostName(privateIp);
                             }
                         }
@@ -155,7 +154,7 @@ public class InstanceService {
      */
     private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), containerMsg)) {
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
@@ -171,22 +170,20 @@ public class InstanceService {
         String compInstanceId = "";
 
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
-            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
-                if(StringUtils.equals(resource.getAsJsonObject().get("mode").getAsString(), "managed")) {
-                    if(StringUtils.contains(resource.getAsJsonObject().get("type").getAsString(), "instance")) {
-                        if(StringUtils.contains(resource.getAsJsonObject().get("name").getAsString(), "master")) {
-                            rName = resource.getAsJsonObject().get("name").getAsString();
-                            JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
-                            if(instances != null) {
-                                for(JsonElement instance : instances) {
-                                    JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
-                                    compInstanceId = attributes.get("id").isJsonNull() ? "" : attributes.get("id").getAsString();
-                                    privateIp = attributes.get("access_ip_v4").isJsonNull() ? "" : attributes.get("access_ip_v4").getAsString();
-                                    publicIp = getPublicIp(compInstanceId, jsonObject, privateIp);
-                                    hostName = attributes.get("name").isJsonNull() ? "" : attributes.get("name").getAsString();
-                                }
-                            }
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.INSTANCE_MSG)
+                && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG)) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
+                    if(instances != null) {
+                        for(JsonElement instance : instances) {
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString();
+                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString();
+                            publicIp = getPublicIp(compInstanceId, jsonObject, privateIp);
+                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString();
                         }
                     }
                 }
@@ -208,7 +205,7 @@ public class InstanceService {
      */
     private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), containerMsg)) {
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
@@ -222,16 +219,16 @@ public class InstanceService {
         String publicIp = "";
         String hostName = "";
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
-            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
-                if(StringUtils.equals(resource.getAsJsonObject().get("type").getAsString(), "aws_instance")) {
-                    rName = resource.getAsJsonObject().get("name").getAsString();
-                    JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.AWS_INSTANCE_MSG)) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                     if(instances != null) {
                         for(JsonElement instance : instances) {
-                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
-                            privateIp = attributes.get("private_ip").isJsonNull() ? "" : attributes.get("private_ip").getAsString();
-                            publicIp = attributes.get("public_ip").isJsonNull() ? "" : attributes.get("public_ip").getAsString();
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            privateIp = attributes.get(TerramanConstant.PRIVATE_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PRIVATE_IP_MSG).getAsString();
+                            publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
                             hostName = getAWSHostName(privateIp);
                         }
                         modelList.add(new InstanceModel(rName, hostName, privateIp, publicIp));
@@ -271,7 +268,7 @@ public class InstanceService {
      */
     private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), containerMsg)) {
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
@@ -286,19 +283,19 @@ public class InstanceService {
         String compInstanceId = "";
 
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
-            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
-                if(StringUtils.equals(resource.getAsJsonObject().get("mode").getAsString(), "managed")
-                && StringUtils.contains(resource.getAsJsonObject().get("type").getAsString(), "instance")) {
-                    rName = resource.getAsJsonObject().get("name").getAsString();
-                    JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.INSTANCE_MSG)) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                     if(instances != null) {
                         for(JsonElement instance : instances) {
-                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
-                            compInstanceId = attributes.get("id").isJsonNull() ? "" : attributes.get("id").getAsString();
-                            privateIp = attributes.get("access_ip_v4").isJsonNull() ? "" : attributes.get("access_ip_v4").getAsString();
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString();
+                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString();
                             publicIp = getPublicIp(compInstanceId, jsonObject, privateIp);
-                            hostName = attributes.get("name").isJsonNull() ? "" : attributes.get("name").getAsString();
+                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString();
                         }
                         modelList.add(new InstanceModel(rName, hostName, privateIp, publicIp));
                     }
@@ -330,17 +327,17 @@ public class InstanceService {
     private String getPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
         String publicIp = privateIp;
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
-            JsonArray resources = (JsonArray) jsonObject.get("resources");
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for (JsonElement resource : resources) {
-                if (StringUtils.equals(resource.getAsJsonObject().get("mode").getAsString(), "managed")
-                && StringUtils.contains(resource.getAsJsonObject().get("type").getAsString(), "floatingip")) {
-                    JsonArray instances = resource.getAsJsonObject().get("instances").isJsonNull() ? null : resource.getAsJsonObject().get("instances").getAsJsonArray();
+                if (StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.FLOATINGIP_MSG)) {
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                     if (instances != null) {
                         for (JsonElement instance : instances) {
-                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get("attributes");
-                            String instanceId = attributes.get("instance_id").isJsonNull() ? "" : attributes.get("instance_id").getAsString();
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            String instanceId = attributes.get(TerramanConstant.INSTANCE_ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.INSTANCE_ID_MSG).getAsString();
                             if (instanceId.equals(compInstanceId)) {
-                                publicIp = attributes.get("floating_ip").isJsonNull() ? privateIp : attributes.get("floating_ip").getAsString();
+                                publicIp = attributes.get(TerramanConstant.FLOATING_IP_MSG).isJsonNull() ? privateIp : attributes.get(TerramanConstant.FLOATING_IP_MSG).getAsString();
                             }
                         }
                     }

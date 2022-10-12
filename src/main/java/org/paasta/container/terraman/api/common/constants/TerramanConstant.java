@@ -189,4 +189,29 @@ public class TerramanConstant {
     public static final String CLUSTER_CREATE_STATUS = "C";
     public static final String CLUSTER_COMPLETE_STATUS = "A";
     public static final String CLUSTER_FAIL_STATUS = "D";
+
+    /**
+     * terraman InstanceService 상수
+     */
+    public static final String CONTAINER_MSG = "CONTAINER";
+    public static final String RESOURCE_MSG = "resources";
+    public static final String MASTER_MSG = "master";
+    public static final String INSTANCES_MSG = "instances";
+    public static final String INSTANCE_MSG = "instance";
+    public static final String ATTRIBUTE_MSG = "attributes";
+    public static final String PRIVATE_IP_MSG = "private_ip";
+    public static final String PUBLIC_IP_MSG = "public_ip";
+
+    public static final String TYPE_MSG = "type";
+    public static final String NAME_MSG = "name";
+    public static final String AWS_INSTANCE_MSG = "aws_instance";
+
+    public static final String MODE_MSG = "mode";
+    public static final String MANAGED_MSG = "managed";
+    public static final String ID_MSG = "id";
+    public static final String ACCESS_IP_V4_MSG = "access_ip_v4";
+
+    public static final String FLOATINGIP_MSG= "floatingip";
+    public static final String INSTANCE_ID_MSG= "instance_id";
+    public static final String FLOATING_IP_MSG= "floating_ip";
 }

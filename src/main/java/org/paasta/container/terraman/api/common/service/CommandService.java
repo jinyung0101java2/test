@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 @Service
 public class CommandService {
@@ -68,13 +67,9 @@ public class CommandService {
             channelSftp.cd(dir);
             channelSftp.put(in, uploadFile.getName());
             resultCommand = Constants.RESULT_STATUS_SUCCESS;
-        } catch (SftpException | JSchException e) {
+        } catch (SftpException | JSchException | IOException  e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
+        } finally {
             this.disConnectSSH();
         }
         return resultCommand;
@@ -148,7 +143,7 @@ public class CommandService {
             if(e.getMessage().contains("timed out")) {
                 resultCommand = Constants.RESULT_STATUS_TIME_OUT;
             }
-            LOGGER.error("JSchException : %s", e.getMessage());
+            LOGGER.error("JSchException : {}", e.getMessage());
         } finally {
             this.disConnectSSH();
         }
@@ -174,7 +169,7 @@ public class CommandService {
         ProcessBuilder prsbld = null;
         Process prs = null;
 
-        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));){
+        try {
             prsbld = new ProcessBuilder(cmd);
             // 디렉토리 이동
             if(!StringUtils.equals(dir, "")) {
@@ -183,7 +178,11 @@ public class CommandService {
 
             // 프로세스 수행시작
             prs = prsbld.start();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
 
+        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));){
             while ((s = stdInput.readLine()) != null)
             {
                 sb.append(s + System.getProperty("line.separator"));
