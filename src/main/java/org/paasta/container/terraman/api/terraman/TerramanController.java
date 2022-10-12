@@ -50,6 +50,7 @@ public class TerramanController {
     private final ClusterLogService clusterLogService;
     private final VaultService vaultService;
     private final PropertyService propertyService;
+    private final TfFileService tfFileService;
     @Value("${master.host}")
     private String MASTER_HOST;
 
@@ -62,7 +63,8 @@ public class TerramanController {
             , ClusterLogService clusterLogService
             , VaultService vaultService
             , PropertyService propertyService
-            , VaultTemplate vaultTemplate) {
+            , VaultTemplate vaultTemplate
+            , TfFileService tfFileService) {
         this.commonService = commonService;
         this.terramanService = terramanService;
         this.commonFileUtils = commonFileUtils;
@@ -71,6 +73,7 @@ public class TerramanController {
         this.vaultService = vaultService;
         this.propertyService = propertyService;
         this.vaultTemplate = vaultTemplate;
+        this.tfFileService = tfFileService;
     }
 
     /**
@@ -135,5 +138,10 @@ public class TerramanController {
     public ResultStatusModel deleteTerraman(@PathVariable String clusterId) {
 //        return terramanService.deleteTerraman(clusterId, "Daemon");
         return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
+    }
+
+    @GetMapping(value = "/test")
+    public void test() {
+        tfFileService.createProviderFile("terraform-cluster", "openstack",13,"", "", "", "daemon");
     }
 }

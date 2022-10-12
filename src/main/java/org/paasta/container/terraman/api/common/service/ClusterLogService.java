@@ -1,15 +1,9 @@
 package org.paasta.container.terraman.api.common.service;
 
-import org.paasta.container.terraman.api.common.model.ClusterLogEmbededModel;
 import org.paasta.container.terraman.api.common.model.ClusterLogModel;
 import org.paasta.container.terraman.api.common.repository.ClusterLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Optional;
-
-import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysString;
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
 
 @Service
@@ -23,7 +17,7 @@ public class ClusterLogService {
     }
 
     /**
-     * Account 정보 조회
+     * cluster log 저장
      *
      * @param clusterId the clusterId
      * @param processNo the processNo
@@ -40,12 +34,12 @@ public class ClusterLogService {
     }
 
     /**
-     * Account 정보 조회
+     * cluster log 삭제
      *
      * @param clusterId the clusterId
-     * @return the AccountModel
+     * @return the void
      */
-    public void deleteClusterLogByClusterId(String clusterId) throws Exception {
+    public void deleteClusterLogByClusterId(String clusterId) {
         clusterLogRepository.deleteClusterLog(clusterId);
     }
 }

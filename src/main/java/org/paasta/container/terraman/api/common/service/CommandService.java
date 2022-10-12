@@ -3,7 +3,6 @@ package org.paasta.container.terraman.api.common.service;
 import com.jcraft.jsch.*;
 import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.constants.Constants;
-import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.TimeoutException;
 
 @Service
 public class CommandService {
@@ -29,7 +27,7 @@ public class CommandService {
      * @param host the host
      * @return the void
      */
-    private void SSHConnect(String host, String idRsa) throws JSchException {
+    private void sshConnect(String host, String idRsa) throws JSchException {
         String userName = "ubuntu";
         int port = 22;
         JSch jsch = new JSch();
@@ -52,24 +50,6 @@ public class CommandService {
     }
 
     /**
-     * 디렉토리( or 파일) 존재 여부
-     * @param path the path
-     * @return the boolean
-     */
-    public boolean exists(String path) {
-        Vector res = null;
-        try {
-            res = channelSftp.ls(path);
-        } catch (SftpException e) {
-            if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
-                return false;
-            }
-        }
-        return res != null && !res.isEmpty();
-    }
-
-
-    /**
      * SSH 파일 업로드
      *
      * @param dir the dir
@@ -78,33 +58,24 @@ public class CommandService {
      * @param uploadFile the uploadFile
      * @return the String
      */
-    public String SSHFileUpload(String dir, String host, String idRsa, File uploadFile) {
+    public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
-        SftpATTRS attrs;
-        FileInputStream in = null;
-        try {
-            SSHConnect(host, idRsa);
+        try (FileInputStream in = new FileInputStream(uploadFile);){
+            sshConnect(host, idRsa);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
-            in = new FileInputStream(uploadFile);
             channelSftp.cd(dir);
             channelSftp.put(in, uploadFile.getName());
-            // 업로드했는지 확인
-            if (this.exists(dir +"/"+uploadFile.getName())) {
-                resultCommand = Constants.RESULT_STATUS_SUCCESS;
-            }
+            resultCommand = Constants.RESULT_STATUS_SUCCESS;
         } catch (SftpException | JSchException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } finally {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
             this.disConnectSSH();
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return resultCommand;
     }
@@ -120,28 +91,21 @@ public class CommandService {
      * @return the void
      */
     public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
-        InputStream is = null;
-        FileOutputStream out = null;
-        try {
-            SSHConnect(host, idRsa);
+        // 원하는 경로에 파일 생성
+        File localFile = new File(localDir);
+        try (InputStream is = channelSftp.get(fileName);
+             FileOutputStream out = new FileOutputStream(localFile);){
+            sshConnect(host, idRsa);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
             // 경로 이동
             channelSftp.cd(dir);
-            is = channelSftp.get(fileName);
-            // 원하는 경로에 파일 생성
-            File localFile = new File(localDir);
-
-            out = new FileOutputStream(localFile);
 
             int readCount = 0;
             while( (readCount = is.read()) > 0 ){
                 out.write(readCount);
             }
-
-            is.close();
-            out.close();
         } catch (SftpException se) {
             se.printStackTrace();
         } catch ( Exception e){
@@ -164,7 +128,7 @@ public class CommandService {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
         try {
-            SSHConnect(host, idRsa);
+            sshConnect(host, idRsa);
             channelExec = (ChannelExec) session.openChannel("exec");
             if(!StringUtils.equals(dir, "")) {
                 command = "cd " + dir + " && " + command;
@@ -184,7 +148,7 @@ public class CommandService {
             if(e.getMessage().contains("timed out")) {
                 resultCommand = Constants.RESULT_STATUS_TIME_OUT;
             }
-            LOGGER.error("JSchException : " + e.getMessage());
+            LOGGER.error("JSchException : %s", e.getMessage());
         } finally {
             this.disConnectSSH();
         }
@@ -200,7 +164,7 @@ public class CommandService {
      */
     private String getResponse(String command, String dir) {
         String resultOutput = "";
-        List<String> cmd = new ArrayList<String>();
+        List<String> cmd = new ArrayList<>();
         cmd.add("/bin/bash");
         cmd.add("-c");
         cmd.add(command);
@@ -210,7 +174,7 @@ public class CommandService {
         ProcessBuilder prsbld = null;
         Process prs = null;
 
-        try {
+        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));){
             prsbld = new ProcessBuilder(cmd);
             // 디렉토리 이동
             if(!StringUtils.equals(dir, "")) {
@@ -220,7 +184,6 @@ public class CommandService {
             // 프로세스 수행시작
             prs = prsbld.start();
 
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));
             while ((s = stdInput.readLine()) != null)
             {
                 sb.append(s + System.getProperty("line.separator"));

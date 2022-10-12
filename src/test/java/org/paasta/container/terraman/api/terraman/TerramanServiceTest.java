@@ -131,7 +131,7 @@ public class TerramanServiceTest {
     @Test
     public void createTerramanTest() throws Exception {
         // when
-        when(propertyService.getMASTER_HOST()).thenReturn(TEST_HOST);
+        when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
         doNothing().when(clusterLogService).deleteClusterLogByClusterId(TEST_CLUSTER_ID);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN_PATH);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
