@@ -158,7 +158,7 @@ public class CommandService {
      * @return the String
      */
     private String getResponse(String command, String dir) {
-        String resultOutput = "";
+        String resultOutput = Constants.RESULT_STATUS_FAIL;
         List<String> cmd = new ArrayList<>();
         cmd.add("/bin/bash");
         cmd.add("-c");
@@ -182,39 +182,39 @@ public class CommandService {
             LOGGER.error(e.getMessage());
         }
 
-        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));){
-            while ((s = stdInput.readLine()) != null)
-            {
-                sb.append(s + System.getProperty("line.separator"));
-            }
-            resultOutput = sb.toString();
-            prs.getErrorStream().close();
-            prs.getInputStream().close();
-            prs.getOutputStream().close();
+        if(prs != null) {
+            try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(prs.getInputStream()));){
+                while ((s = stdInput.readLine()) != null)
+                {
+                    sb.append(s + System.getProperty("line.separator"));
+                }
+                resultOutput = sb.toString();
+                prs.getErrorStream().close();
+                prs.getInputStream().close();
+                prs.getOutputStream().close();
 
-            // 종료까지 대기
-            prs.waitFor();
+                // 종료까지 대기
+                prs.waitFor();
 
-        }
-        catch (Exception e1) {
-            if(e1.getMessage().contains("timed out")) {
-                resultOutput = Constants.RESULT_STATUS_TIME_OUT;
-            } else {
-                resultOutput = Constants.RESULT_STATUS_FAIL;
-            }
-            LOGGER.error(e1.getMessage());
-        }
-        finally
-        {
-            if(prs != null) {
-                try {
-                    prs.destroy();
-                } catch(Exception e2) {
+            } catch (Exception e1) {
+                if(e1.getMessage().contains("timed out")) {
+                    resultOutput = Constants.RESULT_STATUS_TIME_OUT;
+                } else {
                     resultOutput = Constants.RESULT_STATUS_FAIL;
-                    LOGGER.error(e2.getMessage());
+                }
+                LOGGER.error(e1.getMessage());
+            } finally {
+                if(prs != null) {
+                    try {
+                        prs.destroy();
+                    } catch(Exception e2) {
+                        resultOutput = Constants.RESULT_STATUS_FAIL;
+                        LOGGER.error(e2.getMessage());
+                    }
                 }
             }
         }
+
         return resultOutput;
     }
 
