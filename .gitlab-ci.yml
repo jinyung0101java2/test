@@ -38,7 +38,7 @@ variables:
   # sonarqube
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   GIT_DEPTH: "0"
-  SONAR_TOKEN: 1ce8814ef1f7059b6f1d0cbfad910582b48c0799
+  SONAR_TOKEN: 7e63d6ff74e9b2be5a177a4eaa85dd09e3887272
   SONAR_HOST_URL: http://15.164.195.107:30087
 
   ENV_SCOPE: dev_aws
