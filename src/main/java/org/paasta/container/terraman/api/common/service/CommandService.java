@@ -68,7 +68,7 @@ public class CommandService {
             channelSftp.put(in, uploadFile.getName());
             resultCommand = Constants.RESULT_STATUS_SUCCESS;
         } catch (SftpException | JSchException | IOException  e) {
-            e.printStackTrace();
+            LOGGER.error("Exception : {}", e.getMessage());
         } finally {
             this.disConnectSSH();
         }
@@ -102,9 +102,9 @@ public class CommandService {
                 out.write(readCount);
             }
         } catch (SftpException se) {
-            se.printStackTrace();
+            LOGGER.error("SftpException : {}", se.getMessage());
         } catch ( Exception e){
-            e.printStackTrace();
+            LOGGER.error("Exception : {}", e.getMessage());
         } finally {
             this.disConnectSSH();
         }
