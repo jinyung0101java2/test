@@ -65,47 +65,47 @@ build:
       - build
       - .gradlew
 
-check coverage: # Job name
-  stage: build # Stage name
-  image:
-    name: docker.io/gradle:6.9.2-jdk8
-    entrypoint: [""]
-  script:
-    - export
-    - |
-      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
-      then
-        gradle wrapper
-      fi
-    - chmod +x gradlew
-    - ./gradlew sonarqube -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$APP_NAME -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=src/main/java -Dsonar.test=src/test/java -Dsonar.java.binaries=build/classes -Dsonar.inclusions=**/*Service.java
-  allow_failure: true
-  cache: # Artifact tag 사용 가능
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - .sonar/cache
-
-test:
-  stage: test
-  image:
-    name: docker.io/gradle:6.9.2-jdk8 # kaniko image 사용
-    entrypoint: [ "" ]
-  script:
-    - export
-    - export GRADLE_USER_HOME=`pwd`/.gradle
-    - |
-      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
-      then
-        gradle wrapper
-      fi
-    - chmod +x gradlew
-    - ./gradlew check
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - build
-      - .gradlew
+#check coverage: # Job name
+#  stage: build # Stage name
+#  image:
+#    name: docker.io/gradle:6.9.2-jdk8
+#    entrypoint: [""]
+#  script:
+#    - export
+#    - |
+#      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
+#      then
+#        gradle wrapper
+#      fi
+#    - chmod +x gradlew
+#    - ./gradlew sonarqube -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$APP_NAME -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.sources=src/main/java -Dsonar.test=src/test/java -Dsonar.java.binaries=build/classes -Dsonar.inclusions=**/*Service.java
+#  allow_failure: true
+#  cache: # Artifact tag 사용 가능
+#    key: "$CI_COMMIT_REF_NAME"
+#    paths:
+#      - .sonar/cache
+#
+#test:
+#  stage: test
+#  image:
+#    name: docker.io/gradle:6.9.2-jdk8 # kaniko image 사용
+#    entrypoint: [ "" ]
+#  script:
+#    - export
+#    - export GRADLE_USER_HOME=`pwd`/.gradle
+#    - |
+#      if [[ ! -e gradle/wrapper/gradle-wrapper.jar ]]
+#      then
+#        gradle wrapper
+#      fi
+#    - chmod +x gradlew
+#    - ./gradlew check
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    policy: pull
+#    paths:
+#      - build
+#      - .gradlew
 
 docker build:
   stage: docker
@@ -161,6 +161,6 @@ deploy:
 
 stages:
   - build
-  - test
+#  - test
   - docker
   - deploy

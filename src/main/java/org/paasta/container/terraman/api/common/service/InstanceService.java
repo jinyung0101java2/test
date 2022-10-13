@@ -154,6 +154,12 @@ public class InstanceService {
      */
     private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
+        LOGGER.info("getInstanceInfoOpenstack");
+        LOGGER.info("clusterId : {}", clusterId);
+        LOGGER.info("host : {}", host);
+        LOGGER.info("idRsa : {}", idRsa);
+        LOGGER.info("processGb : {}", processGb);
+        LOGGER.info("equal : {}", StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG));
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))

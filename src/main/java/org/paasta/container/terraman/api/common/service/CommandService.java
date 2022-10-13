@@ -26,7 +26,7 @@ public class CommandService {
      * @param host the host
      * @return the void
      */
-    private void sshConnect(String host, String idRsa) throws JSchException {
+    public void sshConnect(String host, String idRsa) throws JSchException {
         String userName = "ubuntu";
         int port = 22;
         JSch jsch = new JSch();
@@ -41,7 +41,7 @@ public class CommandService {
      *
      * @return the void
      */
-    private void disConnectSSH() {
+    public void disConnectSSH() {
         if (session != null) session.disconnect();
         if (channelExec != null) channelExec.disconnect();
         if (channelSftp != null) channelSftp.quit();
@@ -87,6 +87,12 @@ public class CommandService {
      */
     public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
         // 원하는 경로에 파일 생성
+        LOGGER.info("sshFileDownload");
+        LOGGER.info("dir : {}", dir);
+        LOGGER.info("localDir : {}", localDir);
+        LOGGER.info("fileName : {}", fileName);
+        LOGGER.info("host : {}", host);
+        LOGGER.info("idRsa : {}", idRsa);
         File localFile = new File(localDir);
         try (InputStream is = channelSftp.get(fileName);
              FileOutputStream out = new FileOutputStream(localFile);){
@@ -119,7 +125,7 @@ public class CommandService {
      * @param idRsa the idRsa
      * @return the String
      */
-    private String getSSHResponse(String command, String dir, String host, String idRsa) {
+    public String getSSHResponse(String command, String dir, String host, String idRsa) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
         try {
@@ -157,7 +163,7 @@ public class CommandService {
      * @param dir the dir
      * @return the String
      */
-    private String getResponse(String command, String dir) {
+    public String getResponse(String command, String dir) {
         String resultOutput = Constants.RESULT_STATUS_FAIL;
         List<String> cmd = new ArrayList<>();
         cmd.add("/bin/bash");
@@ -236,7 +242,4 @@ public class CommandService {
         }
         return response;
     }
-
-
-
 }
