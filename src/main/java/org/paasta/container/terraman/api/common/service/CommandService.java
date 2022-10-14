@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 @Service
 public class CommandService {
@@ -37,6 +38,23 @@ public class CommandService {
     }
 
     /**
+     * 디렉토리( or 파일) 존재 여부
+     * @param path the path
+     * @return the boolean
+     */
+    public boolean exists(String path) {
+        Vector res = null;
+        try {
+            res = channelSftp.ls(path);
+        } catch (SftpException e) {
+            if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+                return false;
+            }
+        }
+        return res != null && !res.isEmpty();
+    }
+
+    /**
      * SSH Disconnect
      *
      * @return the void
@@ -59,17 +77,29 @@ public class CommandService {
      */
     public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
-        try (FileInputStream in = new FileInputStream(uploadFile);){
+        SftpATTRS attrs;
+        FileInputStream in = null;
+        try {
             sshConnect(host, idRsa);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
+            in = new FileInputStream(uploadFile);
             channelSftp.cd(dir);
             channelSftp.put(in, uploadFile.getName());
-            resultCommand = Constants.RESULT_STATUS_SUCCESS;
+            // 업로드했는지 확인
+            if (this.exists(dir +"/"+uploadFile.getName())) {
+                resultCommand = Constants.RESULT_STATUS_SUCCESS;
+            }
+            in.close();
         } catch (SftpException | JSchException | IOException  e) {
             LOGGER.error("Exception : {}", e.getMessage());
         } finally {
+            try {
+                in.close();
+            } catch (IOException ie) {
+                LOGGER.error(ie.getMessage());
+            }
             this.disConnectSSH();
         }
         return resultCommand;
@@ -93,25 +123,39 @@ public class CommandService {
         LOGGER.info("fileName : {}", fileName);
         LOGGER.info("host : {}", host);
         LOGGER.info("idRsa : {}", idRsa);
-        File localFile = new File(localDir);
-        try (InputStream is = channelSftp.get(fileName);
-             FileOutputStream out = new FileOutputStream(localFile);){
+        InputStream is = null;
+        FileOutputStream out = null;
+        try {
             sshConnect(host, idRsa);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
             // 경로 이동
             channelSftp.cd(dir);
+            is = channelSftp.get(fileName);
+            // 원하는 경로에 파일 생성
+            File localFile = new File(localDir);
+
+            out = new FileOutputStream(localFile);
 
             int readCount = 0;
             while( (readCount = is.read()) > 0 ){
                 out.write(readCount);
             }
+
+            is.close();
+            out.close();
         } catch (SftpException se) {
             LOGGER.error("SftpException : {}", se.getMessage());
         } catch ( Exception e){
             LOGGER.error("Exception : {}", e.getMessage());
         } finally {
+            try {
+                if(is != null) is.close();
+                if(out != null) out.close();
+            } catch (IOException ie) {
+                LOGGER.error(ie.getMessage());
+            }
             this.disConnectSSH();
         }
     }
@@ -126,6 +170,11 @@ public class CommandService {
      * @return the String
      */
     public String getSSHResponse(String command, String dir, String host, String idRsa) {
+        LOGGER.info("sshResponse -------");
+        LOGGER.info("command : {}", command);
+        LOGGER.info("dir : {}", dir);
+        LOGGER.info("host : {}", host);
+        LOGGER.info("idRsa : {}", idRsa);
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
         try {
