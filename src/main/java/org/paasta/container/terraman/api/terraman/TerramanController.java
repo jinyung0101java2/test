@@ -51,6 +51,8 @@ public class TerramanController {
     private final VaultService vaultService;
     private final PropertyService propertyService;
     private final TfFileService tfFileService;
+    private final CommandService commandService;
+
     @Value("${master.host}")
     private String MASTER_HOST;
 
@@ -64,7 +66,8 @@ public class TerramanController {
             , VaultService vaultService
             , PropertyService propertyService
             , VaultTemplate vaultTemplate
-            , TfFileService tfFileService) {
+            , TfFileService tfFileService
+            , CommandService commandService) {
         this.commonService = commonService;
         this.terramanService = terramanService;
         this.commonFileUtils = commonFileUtils;
@@ -74,6 +77,7 @@ public class TerramanController {
         this.propertyService = propertyService;
         this.vaultTemplate = vaultTemplate;
         this.tfFileService = tfFileService;
+        this.commandService = commandService;
     }
 
     /**
@@ -142,6 +146,12 @@ public class TerramanController {
 
     @GetMapping(value = "/test")
     public void test() {
-        tfFileService.createProviderFile("terraform-cluster", "openstack",13,"", "", "", "daemon");
+        String result = "";
+        result = commandService.getSSHResponse("sudo chmod 666 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+        LOGGER.info("first :: {}", result);
+        result = commandService.getSSHResponse("echo \"15.164.195.107 foo.bar.com.new\" >> /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+        LOGGER.info("second :: {}", result);
+        result = commandService.getSSHResponse("sudo chmod 644 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+        LOGGER.info("third :: {}", result);
     }
 }
