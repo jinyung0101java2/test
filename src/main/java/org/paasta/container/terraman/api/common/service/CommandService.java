@@ -170,11 +170,6 @@ public class CommandService {
      * @return the String
      */
     public String getSSHResponse(String command, String dir, String host, String idRsa) {
-        LOGGER.info("sshResponse -------");
-        LOGGER.info("command : {}", command);
-        LOGGER.info("dir : {}", dir);
-        LOGGER.info("host : {}", host);
-        LOGGER.info("idRsa : {}", idRsa);
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
         try {

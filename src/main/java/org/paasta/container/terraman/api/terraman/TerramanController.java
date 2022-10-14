@@ -154,4 +154,8 @@ public class TerramanController {
         result = commandService.getSSHResponse("sudo chmod 644 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
         LOGGER.info("third :: {}", result);
     }
+
+    @GetMapping(value = "/test2")
+    public void test2() {
+    }
 }
