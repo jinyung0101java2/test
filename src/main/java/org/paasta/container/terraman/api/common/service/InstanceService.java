@@ -88,7 +88,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
+    public InstanceModel getInstanceInfoAws(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -102,7 +102,7 @@ public class InstanceService {
         String privateIp = "";
         String publicIp = "";
         String hostName = "";
-        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+        if((jsonObject != null) &&(!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.AWS_INSTANCE_MSG)) {
@@ -121,6 +121,8 @@ public class InstanceService {
                 }
             }
             resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
+        } else {
+            resultModel = new InstanceModel("", "", "", "");
         }
         return resultModel;
     }
@@ -130,7 +132,7 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoGcp() {
+    public InstanceModel getInstanceInfoGcp() {
         return new InstanceModel("", "", "", "");
     }
 
@@ -139,7 +141,7 @@ public class InstanceService {
      *
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoVSphere() {
+    public InstanceModel getInstanceInfoVSphere() {
         return new InstanceModel("", "", "", "");
     }
 
@@ -152,14 +154,8 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
+    public InstanceModel getInstanceInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
-        LOGGER.info("getInstanceInfoOpenstack");
-        LOGGER.info("clusterId : {}", clusterId);
-        LOGGER.info("host : {}", host);
-        LOGGER.info("idRsa : {}", idRsa);
-        LOGGER.info("processGb : {}", processGb);
-        LOGGER.info("equal : {}", StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG));
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
@@ -169,13 +165,13 @@ public class InstanceService {
         }
 
         JsonObject jsonObject = readStateFile(clusterId, processGb);
+
         String rName = "";
         String privateIp = "";
         String publicIp = "";
         String hostName = "";
         String compInstanceId = "";
-
-        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+        if((jsonObject != null) && (!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
@@ -209,7 +205,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the InstanceModel
      */
-    private List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
+    public List<InstanceModel> getInstancesInfoAws(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -224,7 +220,7 @@ public class InstanceService {
         String privateIp = "";
         String publicIp = "";
         String hostName = "";
-        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+        if((jsonObject != null) &&(!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.AWS_INSTANCE_MSG)) {
@@ -250,7 +246,7 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoGcp() {
+    public List<InstanceModel> getInstancesInfoGcp() {
         return new ArrayList<>();
     }
 
@@ -259,7 +255,7 @@ public class InstanceService {
      *
      * @return the List<InstanceModel>
      */
-    private List<InstanceModel> getInstancesInfoVSphere() {
+    public List<InstanceModel> getInstancesInfoVSphere() {
         return new ArrayList<>();
     }
 
@@ -272,7 +268,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the InstanceModel
      */
-    private List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
+    public List<InstanceModel> getInstancesInfoOpenstack(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -288,7 +284,7 @@ public class InstanceService {
         String hostName = "";
         String compInstanceId = "";
 
-        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+        if((jsonObject != null) &&(!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
@@ -318,7 +314,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the JsonObject
      */
-    private JsonObject readStateFile(String clusterId, String processGb) {
+    public JsonObject readStateFile(String clusterId, String processGb) {
         return commonFileUtils.fileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)));
     }
 
@@ -330,7 +326,7 @@ public class InstanceService {
      * @param privateIp the privateIp
      * @return the String
      */
-    private String getPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
+    public String getPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
         String publicIp = privateIp;
         if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
@@ -359,7 +355,7 @@ public class InstanceService {
      * @param ipAddr the ip address
      * @return the String
      */
-    private String getAWSHostName(String ipAddr) {
+    public String getAWSHostName(String ipAddr) {
         String rst = "ip-";
         String ipString = ipAddr.replaceAll("[.]","-");
         rst += ipString;

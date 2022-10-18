@@ -5,10 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
+import org.paasta.container.terraman.api.common.util.TerramanFileUtils;
 import org.paasta.container.terraman.api.terraman.TerramanProcessService;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -18,7 +20,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -37,9 +38,18 @@ public class TfFileServiceTest {
     private static final String TEST_STR = "test";
     private static final String TEST_PATH = "path";
 
+    private static final String TEST_AWS = "AWS";
+    private static final String TEST_OPENSTACK = "OPENSTACK";
+    private static final String TEST_GCP = "GCP";
+    private static final String TEST_VSPHERE = "VSPHERE";
+
+
+    private File fileMock;
+    private FileWriter fileWriterMock;
+    private BufferedWriter bufferedWriterMock;
 
     private FileModel fileModel;
-    private HashMap hashMap;
+    private HashMap<String, Object> hashMap;
     private AccountModel accountModel;
 
     @Mock
@@ -66,13 +76,20 @@ public class TfFileServiceTest {
     private TerramanProcessService terramanProcessService;
     @Mock
     private TfFileService tfFileServiceMock;
+    @Mock
+    private TerramanFileUtils terramanFileUtils;
 
     @InjectMocks
     private TfFileService TfFileService;
 
     @Before
     public void setUp() {
+        fileMock = mock(File.class);
+        fileWriterMock = mock(FileWriter.class);
+        bufferedWriterMock = mock(BufferedWriter.class);
+
         hashMap = new HashMap();
+        hashMap.put("test","test");
         accountModel = new AccountModel();
         accountModel.setId(1);
         accountModel.setName("testAccount");
@@ -104,29 +121,28 @@ public class TfFileServiceTest {
 
     @Test
     public void createProviderFileTest() {
-        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
-        when(vaultService.read(TEST_PATH, HashMap.class)).thenReturn(hashMap);
+        doReturn(TEST_STR).when(propertyService).getVaultBase();
+        doReturn(hashMap).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(tfFileServiceMock.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
 
-        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_AWS, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
-//        assertThat(result).isNotNull();
-        assertEquals(null, result);
+        //assertEquals(null, result);
     }
 
-//    @Test
-//    public void createTfFileDivTest() {
-//        File fileMock = mock(File.class);
-//        FileWriter fileWriter = mock(FileWriter.class);
-//        BufferedWriter bufferedWriter = mock(BufferedWriter.class);
-//
-//        when(TfFileService.tfCreateWithWriteAws(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-//        when(TfFileService.tfCreateWithWriteVSphere(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-//        when(TfFileService.tfCreateWithWriteOpenstack(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-//
-//        String result = tfFileService.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER);
-//
-//        assertThat(result).isNotNull();
-//        assertEquals(null, result);
-//    }
+    @Test
+    public void createTfFileDivTest() {
+        File fileMock = mock(File.class);
+        FileWriter fileWriter = mock(FileWriter.class);
+        BufferedWriter bufferedWriter = mock(BufferedWriter.class);
+
+        when(terramanFileUtils.tfCreateWithWriteAws(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(terramanFileUtils.tfCreateWithWriteVSphere(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(terramanFileUtils.tfCreateWithWriteOpenstack(fileModel, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        String result = tfFileService.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_AWS);
+
+        assertEquals(null, result);
+    }
 }

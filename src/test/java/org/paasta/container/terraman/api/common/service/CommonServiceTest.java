@@ -30,6 +30,7 @@ public class CommonServiceTest {
     private Class<?> classMock;
     private ResultStatusModel testReulstModel;
     private Gson gson;
+    private Object objectMock;
 
     @Mock
     private CommandService commandService;
@@ -59,16 +60,18 @@ public class CommonServiceTest {
     public void setUp() {
         testReulstModel = new ResultStatusModel();
         testReulstModel.setResultCode(Constants.RESULT_STATUS_SUCCESS);
+
+        objectMock = new Object();
     }
 
-//    @Test
-//    public void setResultObjectTest() {
-//        when(gson.toJson(testReulstModel)).thenReturn(TEST_RESULT_STR);
-//        ResultStatusModel result = commonService.setResultObject(testReulstModel, testReulstModel.getClass());
-//
-//        // then
-//        assertThat(result).isNotNull();
-//        assertEquals(Constants.RESULT_STATUS_SUCCESS, result.getResultCode());
-//    }
+    @Test
+    public void setResultModelTest() {
+
+    }
+
+    @Test
+    public void setResultObjectTest() {
+        //commonService.setResultObject(objectMock, Object.class);
+    }
 
 }

@@ -100,7 +100,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_DIR, "", "")).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR);
-        assertThat(result).isNotNull();
+
         assertEquals(1, result);
     }
 
@@ -113,7 +113,7 @@ public class TerramanProcessServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
 
         int result = terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -124,7 +124,7 @@ public class TerramanProcessServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_IAC_LOG);
 
         int result = terramanProcessService.terramanProcessStart(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROVIDER, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(3, result);
     }
 
@@ -138,7 +138,7 @@ public class TerramanProcessServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_TF_LOG);
 
         int result = terramanProcessService.terramanProcessSetTfFile(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_INT_SEQ);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -150,7 +150,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessSetTfFile(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_INT_SEQ);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -160,7 +160,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_INIT_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(2, result);
     }
 
@@ -172,7 +172,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -182,7 +182,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_PLAN_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(2, result);
     }
 
@@ -194,7 +194,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -204,7 +204,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_APPLY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(2, result);
     }
 
@@ -216,7 +216,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -228,7 +228,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(2, result);
     }
 
@@ -238,7 +238,7 @@ public class TerramanProcessServiceTest {
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(null);
 
         int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -251,7 +251,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(2, result);
     }
 
@@ -262,7 +262,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_DEPLOY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(1, result);
     }
 
@@ -275,7 +275,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -289,7 +289,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -308,7 +308,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -324,7 +324,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -341,7 +341,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -359,7 +359,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -378,7 +378,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 
@@ -387,7 +387,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_COMPLETE_STATUS);
 
         int result = terramanProcessService.terramanProcessClusterStatusUpdate(TEST_MP_SEQ, TEST_CLUSTER_ID);
-        assertThat(result).isNotNull();
+
         assertEquals(1, result);
     }
 
@@ -398,7 +398,7 @@ public class TerramanProcessServiceTest {
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessClusterStatusUpdate(TEST_MP_SEQ, TEST_CLUSTER_ID);
-        assertThat(result).isNotNull();
+
         assertEquals(-1, result);
     }
 }

@@ -293,7 +293,6 @@ public class TerramanServiceTest {
 //        ResultStatusModel result = terramanService.deleteTerraman(TEST_CLUSTER_ID, TEST_PROCESS_GB);
 //
 //        // then
-//        assertThat(result).isNotNull();
 //        assertEquals(Constants.RESULT_STATUS_SUCCESS, result.getResultCode());
 //    }
 

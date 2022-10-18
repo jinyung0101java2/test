@@ -111,7 +111,6 @@ public class CommandServiceTest {
 
         String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
 
-        assertThat(result).isNotNull();
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
 }
