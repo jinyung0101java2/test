@@ -83,6 +83,7 @@ public class TfFileService {
                         fileModel.setOpenstackRegion(account.getRegion());
                         break;
                     default :
+                        resultCode = Constants.RESULT_STATUS_FAIL;
                         LOGGER.error("{} is Cloud not supported.", provider);
                         break;
                 }
@@ -104,13 +105,14 @@ public class TfFileService {
                 }
             }
         } catch (Exception e) {
+            resultCode = Constants.RESULT_STATUS_FAIL;
             LOGGER.error(e.getMessage(), e);
         }
 
         return resultCode;
     }
 
-    private String createTfFileDiv(FileModel fileModel, String clusterId, String processGb, String provider) {
+    public String createTfFileDiv(FileModel fileModel, String clusterId, String processGb, String provider) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         boolean fileFlag = true;
         if(fileModel != null) {
@@ -155,7 +157,7 @@ public class TfFileService {
      * @param file the file
      * @return the String
      */
-    private String tfCreateWithWriteAws(FileModel fileModel, File file) {
+    public String tfCreateWithWriteAws(FileModel fileModel, File file) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
         // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));) {
@@ -186,7 +188,7 @@ public class TfFileService {
      * @param file the file
      * @return the String
      */
-    private String tfCreateWithWriteOpenstack(FileModel fileModel, File file) {
+    public String tfCreateWithWriteOpenstack(FileModel fileModel, File file) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
         // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));) {
@@ -218,7 +220,7 @@ public class TfFileService {
      * @param file the file
      * @return the String
      */
-    private String tfCreateWithWriteVSphere(FileModel fileModel, File file) {
+    public String tfCreateWithWriteVSphere(FileModel fileModel, File file) {
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
         // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));) {

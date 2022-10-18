@@ -250,18 +250,8 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER), TEST_HOST, TEST_IDRSA)).thenReturn(TEST_RESULT_CODE);
-        when(terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessStart(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROVIDER, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessSetTfFile(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_INT_SEQ)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessClusterStatusUpdate(TEST_MP_SEQ, TEST_CLUSTER_ID)).thenReturn(TEST_MP_SEQ);
+        when(commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(TEST_CLUSTER_ID), "", TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         terramanService.createTerraman(gParams, TEST_PROCESS_GB_CONTAINER);
 
@@ -278,18 +268,8 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER), TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_FAIL);
-        when(terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessStart(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROVIDER, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessSetTfFile(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_INT_SEQ)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB_CONTAINER, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessClusterStatusUpdate(TEST_MP_SEQ, TEST_CLUSTER_ID)).thenReturn(TEST_MP_SEQ);
+        when(commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(TEST_CLUSTER_ID), "", TEST_HOST, TEST_IDRSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
 
         terramanService.createTerraman(gParams, TEST_PROCESS_GB_CONTAINER);
 

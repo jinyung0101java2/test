@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  * @since 2022.07.11
  */
-
 @Service
 @Data
 public class PropertyService {

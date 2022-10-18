@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+
 @Service
 public class CommandService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandService.class);
@@ -117,12 +118,6 @@ public class CommandService {
      */
     public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
         // 원하는 경로에 파일 생성
-        LOGGER.info("sshFileDownload");
-        LOGGER.info("dir : {}", dir);
-        LOGGER.info("localDir : {}", localDir);
-        LOGGER.info("fileName : {}", fileName);
-        LOGGER.info("host : {}", host);
-        LOGGER.info("idRsa : {}", idRsa);
         InputStream is = null;
         FileOutputStream out = null;
         try {

@@ -233,6 +233,16 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
+    public void terramanProcessGetInstanceNullTest() {
+        when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_ID, TEST_PROCESS_GB))).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
+        when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(null);
+
+        int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER);
+        assertThat(result).isNotNull();
+        assertEquals(-1, result);
+    }
+
+    @Test
     public void terramanProcessSetKubesprayTest() {
         when(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_ID, TEST_PROCESS_GB))).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceList);
