@@ -1,17 +1,12 @@
 package org.paasta.container.terraman.api.common.service;
 
-import com.jcraft.jsch.*;
 import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.util.CommandUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 
 @Service

@@ -60,50 +60,72 @@ public class TfFileService {
         AccountModel account = accountService.getAccountInfo(seq);
         FileModel fileModel = new FileModel();
         String resultFile = "";
-        if(res != null) {
-            switch(provider.toUpperCase()) {
-                case Constants.UPPER_AWS :
-                    fileModel.setAwsAccessKey(String.valueOf(res.get("access_key")));
-                    fileModel.setAwsSecretKey(String.valueOf(res.get("secret_key")));
-                    fileModel.setAwsRegion(account.getRegion());
-                    break;
-                case Constants.UPPER_GCP :
-                    LOGGER.error("{} is Cloud not supported.", provider);
-                    break;
-                case Constants.UPPER_VSPHERE :
-                    fileModel.setVSphereUser(String.valueOf(res.get("uesr")));
-                    fileModel.setVSpherePassword(String.valueOf(res.get("password")));
-                    fileModel.setVSphereServer(String.valueOf(res.get("vsphere_server")));
-                    break;
-                case Constants.UPPER_OPENSTACK :
-                    fileModel.setOpenstackTenantName(account.getProject());
-                    fileModel.setOpenstackPassword(String.valueOf(res.get("password")));
-                    fileModel.setOpenstackAuthUrl(String.valueOf(res.get("auth_url")));
-                    fileModel.setOpenstackUserName(String.valueOf(res.get("user_name")));
-                    fileModel.setOpenstackRegion(account.getRegion());
-                    break;
-                default :
-                    resultCode = Constants.RESULT_STATUS_FAIL;
-                    LOGGER.error("{} is Cloud not supported.", provider);
-                    break;
+
+        String awsAccessKey = "";
+        String awsSecretKey = "";
+
+        String vsphereUser = "";
+        String vspherePassword = "";
+        String vsphereVsphereServer = "";
+
+        String openstackPassword = "";
+        String openstackAuthUrl = "";
+        String openstackUserName = "";
+
+        switch(provider.toUpperCase()) {
+            case Constants.UPPER_AWS :
+                awsAccessKey = res != null ? String.valueOf(res.get("access_key")) : "";
+                awsSecretKey = res != null ? String.valueOf(res.get("secret_key")) : "";
+                fileModel.setAwsAccessKey(awsAccessKey);
+                fileModel.setAwsSecretKey(awsSecretKey);
+                fileModel.setAwsRegion(account.getRegion());
+                break;
+            case Constants.UPPER_GCP :
+                LOGGER.error("{} is Cloud not supported.", provider);
+                break;
+            case Constants.UPPER_VSPHERE :
+                vsphereUser = res != null ? String.valueOf(res.get("uesr")) : "";
+                vspherePassword = res != null ? String.valueOf(res.get("password")) : "";
+                vsphereVsphereServer = res != null ? String.valueOf(res.get("vsphere_server")) : "";
+                fileModel.setVSphereUser(vsphereUser);
+                fileModel.setVSpherePassword(vspherePassword);
+                fileModel.setVSphereServer(vsphereVsphereServer);
+                break;
+            case Constants.UPPER_OPENSTACK :
+                openstackPassword = res != null ? String.valueOf(res.get("password")) : "";
+                openstackAuthUrl = res != null ? String.valueOf(res.get("auth_url")) : "";
+                openstackUserName = res != null ? String.valueOf(res.get("user_name")) : "";
+                fileModel.setOpenstackTenantName(account.getProject());
+                fileModel.setOpenstackPassword(openstackPassword);
+                fileModel.setOpenstackAuthUrl(openstackAuthUrl);
+                fileModel.setOpenstackUserName(openstackUserName);
+                fileModel.setOpenstackRegion(account.getRegion());
+                break;
+            default :
+                resultCode = Constants.RESULT_STATUS_FAIL;
+                LOGGER.error("{} is Cloud not supported.", provider);
+                break;
+        }
+
+        if(fileModel == null) {
+            return Constants.RESULT_STATUS_FAIL;
+        }
+
+        resultFile = new TerramanFileUtils().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
+
+        if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
+            if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
+                File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)) ); // 파일 객체 생성
+                commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa, uploadfile);
             }
-
-            if(fileModel != null) {
-                resultFile = new TerramanFileUtils().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
-
-                if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
-                    if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-                        File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)) ); // 파일 객체 생성
-                        commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa, uploadfile);
-                    }
-                    resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa);
-                    if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
-                        resultCode = Constants.RESULT_STATUS_SUCCESS;
-                        LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", resultCode);
-                    }
-                }
+            resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa);
+            if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
+                resultCode = Constants.RESULT_STATUS_SUCCESS;
+                LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", resultCode);
             }
         }
+
+
 
         return resultCode;
     }

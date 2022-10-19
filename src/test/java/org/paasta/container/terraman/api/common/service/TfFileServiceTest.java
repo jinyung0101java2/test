@@ -45,10 +45,10 @@ public class TfFileServiceTest {
     private static final String TEST_GCP = "GCP";
     private static final String TEST_VSPHERE = "VSPHERE";
 
-    private File fileMock;
-    private FileModel fileModel;
-    private static HashMap<String, Object> hashMap;
-    private AccountModel accountModel;
+    private static File fileMock;
+    private static FileModel fileModel = null;
+    private static HashMap<String, Object> hashMap = null;
+    private static AccountModel accountModel = null;
 
     @Mock
     private TerramanFileUtils terramanFileUtils;
@@ -101,13 +101,81 @@ public class TfFileServiceTest {
     }
 
     @Test
-    public void createProviderFileTest() {
+    public void createProviderFileDefaultTest() {
+        HashMap response = new HashMap();
+        response.put("default", "testDefault");
+
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
-        when(vaultService.read(TEST_PATH, HashMap.class)).thenReturn(hashMap);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileUtils.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderAwsFileTest() {
+        HashMap response = new HashMap();
+        response.put("access_key", "awsAccessKey");
+        response.put("secret_key", "awsSecretKey");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
         when(terramanFileUtils.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_AWS, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderFileOpenstackTest() {
+        HashMap response = new HashMap();
+        response.put("password", "openstackPassword");
+        response.put("auth_url", "openstackAuthUrl");
+        response.put("user_name", "openstackUserName");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileUtils.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_OPENSTACK, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderFileVsphereTest() {
+        HashMap response = new HashMap();
+        response.put("uesr", "vsphereUser");
+        response.put("password", "vspherePassword");
+        response.put("vsphere_server", "vsphereVsphereServer");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileUtils.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_VSPHERE, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderFileGcpTest() {
+        HashMap response = new HashMap();
+        response.put("gcp", "gcpTest");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileUtils.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_GCP, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
