@@ -10,11 +10,8 @@ import org.paasta.container.platform.web.admin.login.model.UsersLoginMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
 
 
 /**
@@ -41,16 +38,8 @@ public class IntroOverviewController {
     @ApiOperation(value = "Intro overview 페이지 이동(Move Intro overview page)", nickname = "indexView")
     @GetMapping(value = {"/", ConstantsUrl.URI_CP_GLOBAL_URL})
     @NoAuth
-    public Object baseView(@RequestParam(name = Constants.SERVICE_SESSION_REFRESH, required = false, defaultValue = "false") String sessionRefresh) {
-
-        if (sessionRefresh.equalsIgnoreCase(Constants.CHECK_TRUE)) {
-            LOGGER.info("[FOR THE SERVICE TYPE] CONNECT VIA DASHBOARD URI BUTTON TO REFRESH SESSION...");
-            SecurityContextHolder.clearContext();
-            return new RedirectView("/");
-        }
-
+    public Object baseView() {
         UsersLoginMetaData usersLoginMetaData = loginService.getAuthenticationUserMetaData();
-
         if (Constants.AUTH_ADMIN_LIST.contains(usersLoginMetaData.getUserType())) {
             return "global/overview";
         }

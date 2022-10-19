@@ -2,12 +2,10 @@ package org.paasta.container.platform.web.admin.clusters.nodes;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.paasta.container.platform.web.admin.common.Constants;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Nodes Controller 클래스
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @since 2021.04.30
  */
 @Api(value = "NodesController v1")
+@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
 @Controller
 public class NodesController {
     private static final String BASE_URL = "nodes/";
