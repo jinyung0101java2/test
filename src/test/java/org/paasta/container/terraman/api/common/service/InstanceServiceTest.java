@@ -1,6 +1,5 @@
 package org.paasta.container.terraman.api.common.service;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.Before;
@@ -8,6 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.paasta.container.terraman.api.common.CommonService;
+import org.paasta.container.terraman.api.common.PropertyService;
+import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.InstanceModel;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;

@@ -1,4 +1,4 @@
-package org.paasta.container.terraman.api.common.service;
+package org.paasta.container.terraman.api.common;
 
 import com.google.gson.Gson;
 import org.paasta.container.terraman.api.common.constants.Constants;

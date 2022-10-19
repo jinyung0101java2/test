@@ -1,4 +1,4 @@
-package org.paasta.container.terraman.api.common.service;
+package org.paasta.container.terraman.api.common;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

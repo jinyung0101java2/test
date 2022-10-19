@@ -1,14 +1,12 @@
 package org.paasta.container.terraman.api.terraman;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
+import org.paasta.container.terraman.api.common.CommonService;
+import org.paasta.container.terraman.api.common.PropertyService;
+import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.service.*;
@@ -19,15 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.FileReader;
-import java.io.Reader;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-
-import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
-import static org.paasta.container.terraman.api.common.util.CommonUtils.procSetTimestamp;
 
 /**
  * Terraman Controller 클래스

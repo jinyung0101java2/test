@@ -1,4 +1,4 @@
-package org.paasta.container.terraman.api.common.service;
+package org.paasta.container.terraman.api.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,6 +5,9 @@ import com.google.gson.GsonBuilder;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.FileModel;
+import org.paasta.container.terraman.api.common.service.TfFileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class TerramanFileUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerramanFileUtils.class);
 
     /**
      * terraform 파일 생성 및 작성 (String)
@@ -102,6 +106,44 @@ public class TerramanFileUtils {
             resultCode = Constants.RESULT_STATUS_SUCCESS;
         } catch (IOException e1) {
             resultCode = Constants.RESULT_STATUS_FAIL;
+        }
+        return resultCode;
+    }
+
+    public String createTfFileDiv(FileModel fileModel, String clusterId, String processGb, String provider) {
+        String resultCode = Constants.RESULT_STATUS_FAIL;
+        boolean fileFlag = true;
+        if(fileModel != null) {
+            try {
+                File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb))); // File객체 생성
+                if(!file.exists()){ // 파일이 존재하지 않으면
+                    fileFlag = file.createNewFile(); // 신규생성
+                }
+
+                if(fileFlag) {
+                    switch(provider.toUpperCase()) {
+                        case Constants.UPPER_AWS :
+                            resultCode = this.tfCreateWithWriteAws(fileModel, file);
+                            break;
+                        case Constants.UPPER_GCP :
+                            LOGGER.error("{} is Cloud not supported.", provider);
+                            break;
+                        case Constants.UPPER_VSPHERE :
+                            resultCode = this.tfCreateWithWriteVSphere(fileModel, file);
+                            break;
+                        case Constants.UPPER_OPENSTACK :
+                            resultCode = this.tfCreateWithWriteOpenstack(fileModel, file);
+                            break;
+                        default :
+                            LOGGER.error("{} is Cloud not supported.", provider);
+                            break;
+                    }
+                }
+            }
+            catch (IOException e) {
+                resultCode = Constants.RESULT_STATUS_FAIL;
+                LOGGER.error(e.getMessage());
+            }
         }
         return resultCode;
     }
