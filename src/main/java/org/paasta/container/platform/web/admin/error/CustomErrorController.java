@@ -69,7 +69,7 @@ public class CustomErrorController implements ErrorController {
      */
     @ApiOperation(value = "HTTP Code 401 Error 페이지 이동(Go to the http code 401 error page)", nickname = "handleError401")
     @NoAuth
-    @GetMapping( {"/error/401", "/common/error/unauthorized"})
+    @GetMapping("/error/401")
     public String handleError401() {
         return BASE_URL + "401";
     }
@@ -82,7 +82,7 @@ public class CustomErrorController implements ErrorController {
      */
     @ApiOperation(value = "HTTP Code 403 Error 페이지 이동(Go to the http code 403 error page)", nickname = "handleError403")
     @NoAuth
-    @GetMapping("/error/403")
+    @GetMapping( {"/error/403", "/common/error/unauthorized"})
     public String handleError403() {
         return BASE_URL + "403";
     }

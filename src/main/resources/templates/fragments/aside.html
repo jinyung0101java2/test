@@ -40,19 +40,24 @@
             <li class="plus" aside_d1="storages">
                 <a href="javascript:" class="dep01">Storages</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)" aside_d2="persistent_volumes">Persistent Volumes</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMES)" sec:authorize="!hasAnyAuthority('USER')" aside_d2="persistent_volumes">Persistent Volumes</a></li>
                     <li><a onclick="movePage(URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS)" aside_d2="persistent_volume_claims">Persistent Volume Claims</a></li>
-                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)" aside_d2="storage_classes">Storage Classes</a></li>
+                    <li><a onclick="movePage(URI_CP_STORAGES_STORAGECLASSES)" sec:authorize="!hasAnyAuthority('USER')" aside_d2="storage_classes">Storage Classes</a></li>
+                </ul>
+            </li>
+            <li class="plus" aside_d1="configmaps">
+                <a href="javascript:" class="dep01">ConfigMaps</a>
+                <ul class="sub">
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)" aside_d2="configmaps">ConfigMaps</a></li>
                 </ul>
             </li>
             <li class="plus" aside_d1="managements">
                 <a href="javascript:" class="dep01">Managements</a>
                 <ul class="sub">
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)" aside_d2="users">Users</a></li>
+                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_USERS_ADMIN)" sec:authorize="!hasAnyAuthority('USER')" aside_d2="users">Users</a></li>
                     <li><a onclick="movePage(URI_CP_MANAGEMENTS_ROLES)" aside_d2="roles">Roles</a></li>
                     <li><a onclick="movePage(URI_CP_MANAGEMENTS_RESOURCEQUOTAS)" aside_d2="resource_quotas">Resource Quotas</a></li>
                     <li><a onclick="movePage(URI_CP_MANAGEMENTS_LIMITRANGES)" aside_d2="limit_ranges">Limit Ranges</a></li>
-                    <li><a onclick="movePage(URI_CP_MANAGEMENTS_CONFIGMAPS)" aside_d2="configmaps">ConfigMaps</a></li>
                 </ul>
             </li>
             <li class="plus" aside_d1="info">

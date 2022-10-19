@@ -2,21 +2,20 @@ package org.paasta.container.platform.web.admin.managements.users;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.paasta.container.platform.web.admin.common.Constants;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Users Controller 클래스
  *
- * @author jjy
+ * @author kjhoon
  * @version 1.0
- * @since 2021.05.06
+ * @since 2022.10.09
  **/
 @Api(value = "UsersController v1")
+@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
 @Controller
 public class UsersController {
 
@@ -34,23 +33,6 @@ public class UsersController {
     public String getAdminList() {
         return BASE_URL + "admin";
     }
-
-/*
-
-    */
-/**
-     * Admin 상세 페이지 이동(Go to the admin details page)
-     *
-     * @return the view
-     *//*
-
-    @ApiOperation(value = "Admin 상세 페이지 이동(Go to the admin details page)", nickname = "getAdminDetails")
-    @GetMapping(value = ConstantsUrl.URI_CP_MANAGEMENTS_USERS_ADMIN + ConstantsUrl.URI_CP_DETAILS)
-    public String getAdminDetails() {
-        return BASE_URL + "adminDetail";
-    }
-*/
-
 
 
     /**

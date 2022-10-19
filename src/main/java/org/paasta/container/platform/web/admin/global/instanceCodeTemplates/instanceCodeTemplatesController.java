@@ -3,6 +3,7 @@ package org.paasta.container.platform.web.admin.global.instanceCodeTemplates;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.paasta.container.platform.web.admin.common.ConstantsUrl;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Api(value = "InstanceCodeTemplatesController v1")
+@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
 @Controller
 public class instanceCodeTemplatesController {
     private static final String BASE_URL = "global/instanceCodeTemplates/";
