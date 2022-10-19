@@ -120,10 +120,10 @@ public class InstanceService {
                     }
                 }
             }
-            resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
-        } else {
-            resultModel = new InstanceModel("", "", "", "");
+
         }
+        resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
+
         return resultModel;
     }
 
@@ -190,8 +190,8 @@ public class InstanceService {
                     }
                 }
             }
-            resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
         }
+        resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
 
         return resultModel;
     }

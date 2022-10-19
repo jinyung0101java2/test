@@ -17,8 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -42,12 +44,15 @@ public class CommandServiceTest {
     private static final String TEST_STR = "test";
 
 
+    Vector vectorMock;
     private File uploadFile = mock(File.class);
     private FileInputStream fileInputStream = mock(FileInputStream.class);
     private Session session = null;
     private ChannelExec channelExec = null;
     private ChannelSftp channelSftp = null;
+    private ChannelSftp channelSftpMock = null;
     private Channel channel = null;
+    private Channel channelMock = null;
     private JSch jsch = null;
     private List<String> list;
 
@@ -85,23 +90,102 @@ public class CommandServiceTest {
         list.add("pwd");
         list.add("test");
 
+        vectorMock = null;
         uploadFile = mock(File.class);
         fileInputStream = mock(FileInputStream.class);
         session = mock(Session.class);
         channelExec = mock(ChannelExec.class);
-        channelSftp = mock(ChannelSftp.class);
-        channel = mock(Channel.class);
+        channelMock = mock(Channel.class);
+        channelSftpMock = mock(ChannelSftp.class);
+
+        channelSftp = (ChannelSftp)channel;
+
+        channel = null;
         jsch = mock(JSch.class);
+    }
+
+    @Test
+    public void sshConnectTest() {
+        try (MockedConstruction mocked = mockConstruction(File.class)) {
+            File f = new File("test");
+            doNothing().when(jsch).addIdentity(f.getName());
+            when(jsch.getSession(TEST_USER_NAME, TEST_HOST, TEST_PORT)).thenReturn(session);
+            doNothing().when(session).setConfig("StrictHostKeyChecking", "no");
+            doNothing().when(session).connect();
+
+            commandService.sshConnect(TEST_HOST, TEST_ID_RSA);
+        } catch (Exception e) {}
+    }
+
+    @Test
+    public void existsTest() {
+        try {
+            when(channelSftp.ls(TEST_FILE_PATH)).thenReturn(vectorMock);
+
+            boolean result = commandService.exists(TEST_FILE_PATH);
+
+            assertEquals(false, result);
+        } catch (Exception e) {}
+    }
+
+    @Test
+    public void existsTestFailed() {
+        try {
+            when(channelSftp.ls(TEST_FILE_PATH)).thenThrow(SftpException.class);
+
+            boolean result = commandService.exists(TEST_FILE_PATH);
+
+            assertEquals(false, result);
+        } catch (Exception e) {}
     }
 
     @Test
     public void  disConnectSSHTest() {
         doNothing().when(session).disconnect();
         doNothing().when(channelExec).disconnect();
-        doNothing().when(channelSftp).quit();
-        doNothing().when(channel).disconnect();
+        doNothing().when(channelSftpMock).quit();
+        doNothing().when(channelMock).disconnect();
 
         commandService.disConnectSSH();
+    }
+
+    @Test
+    public void sshFileUploadTest() {
+        try (MockedConstruction mocked = mockConstruction(File.class);
+            MockedConstruction mocked2 = mockConstruction(FileInputStream.class);) {
+            File f = new File("test");
+            FileInputStream in = new FileInputStream(f);
+
+            doNothing().when(commandServiceMock).sshConnect(TEST_HOST, TEST_ID_RSA);
+            doReturn(channel).when(session).openChannel("sftp");
+            doNothing().when(channel).connect();
+            doNothing().when(channelSftp).cd(TEST_DIR);
+            doNothing().when(channelSftp).put(in, f.getName());
+
+            String result = commandService.sshFileUpload(TEST_DIR, TEST_HOST, TEST_ID_RSA, f);
+
+            assertEquals("", result);
+        } catch (Exception e) {}
+
+    }
+
+    @Test
+    public void sshFileDownloadTest() {
+        try (MockedConstruction mocked = mockConstruction(File.class);
+             MockedConstruction mocked2 = mockConstruction(FileOutputStream.class);) {
+            File f = new File("test");
+            FileOutputStream out = new FileOutputStream(f);
+
+            doNothing().when(commandServiceMock).sshConnect(TEST_HOST, TEST_ID_RSA);
+            doReturn(channel).when(session).openChannel("sftp");
+            doNothing().when(channel).connect();
+            doNothing().when(channelSftp).cd(TEST_DIR);
+            doNothing().when(channelSftp).get(TEST_UPLOAD_NAME);
+
+            commandService.sshFileDownload(TEST_DIR, TEST_DIR, TEST_UPLOAD_NAME, TEST_HOST, TEST_ID_RSA);
+
+        } catch (Exception e) {}
+
     }
 
     @Test

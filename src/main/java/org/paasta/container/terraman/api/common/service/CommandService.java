@@ -78,7 +78,7 @@ public class CommandService {
      */
     public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
-        SftpATTRS attrs;
+
         FileInputStream in = null;
         try {
             sshConnect(host, idRsa);
