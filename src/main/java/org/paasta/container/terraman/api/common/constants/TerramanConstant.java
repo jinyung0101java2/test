@@ -1,8 +1,16 @@
 package org.paasta.container.terraman.api.common.constants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TerramanConstant {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerramanConstant.class);
+
+    private TerramanConstant() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * ssh conn key
@@ -59,9 +67,9 @@ public class TerramanConstant {
 
     public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
         String dir = CLUSTER_STATE_DIR(clusterId);
-//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-//            dir = "/home/ubuntu/" + dir;
-//        }
+        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            dir = "/home/ubuntu/" + dir;
+        }
         return dir;
     }
     public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
@@ -89,7 +97,9 @@ public class TerramanConstant {
         try {
             secrets = secrets.trim();
             resultString = "kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.error("TerramanConstants get token error : {}", e.getMessage());
+        }
         return resultString;
     }
 
@@ -107,26 +117,7 @@ public class TerramanConstant {
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
-//    public static final String INSTANCE_COPY_COMMAND = "sudo docker cp a44ddef5e883:openstack-resource.tf instance.tf";
-//    public static final String NETWORK_COPY_COMMAND(String pod) {
-//        return "kubectl cp -n cp-portal " + pod + ":tmp/test/ ./network.tf";
-//    }
 
-    /********************************************************************************************************************************
-     * local
-     * ******************************************************************************************************************************/
-    public static final String INSTANCE_COPY_COMMAND = "cp ~/tf-source/openstack/tf-resource/openstack-resource.tf ./instance.tf";
-    public static final String NETWORK_COPY_COMMAND = "cp ~/tf-source/openstack/tf-network/network-resource.tf ./network.tf";
-
-//    public static final String CREATE_DIR_CLUSTER(String clusterId) {
-//        return "mkdir -p -v /home/ubuntu/tmp/terraform/cluster_"+clusterId;
-//    }
-//
-//    public static final String MOVE_DIR_CLUSTER(String clusterId) {
-//        return "/home/ubuntu/tmp/terraform/cluster_"+clusterId;
-//    }
-//    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
-    /********************************************************************************************************************************/
 
     /**
      * terraform 실행 명령어
