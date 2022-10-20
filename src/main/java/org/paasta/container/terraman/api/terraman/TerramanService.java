@@ -79,7 +79,7 @@ public class TerramanService {
         // 생성중 status 변경
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
 
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+        //if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             LOGGER.info("container conn");
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
@@ -89,7 +89,7 @@ public class TerramanService {
                 mpSeq = -1;
             }
             hostDir = "";
-        }
+        //}
 
         /**************************************************************************************************************************************
          * 0. terraman process setting
