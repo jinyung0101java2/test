@@ -60,7 +60,7 @@ public class TerramanConstant {
     public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
         String dir = CLUSTER_STATE_DIR(clusterId);
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            dir = "/home/ubuntu/" + dir;
+//            dir = "/home/ubuntu/" + dir;
 //        }
         return dir;
     }
