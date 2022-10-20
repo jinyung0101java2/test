@@ -100,51 +100,51 @@ public class TerramanController {
         terramanService.createTerraman(terramanRequest, "Daemon");
     }
 
-    /**
-     * Terraman 삭제(Delete Terraman) - Container 실행
-     *
-     * @return the resultStatus
-     */
-    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Container 실행", nickname = "deleteTerraman")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster"),
-            @ApiImplicitParam(name = "processGb", value = "Terraman 삭제 구분", required = false, dataType = "string", paramType = "path")
-    })
-    @DeleteMapping(value = "/{clusterId:.+}/{processGb:.+}")
-    public ResultStatusModel deleteTerraman(
-            @PathVariable String clusterId
-            , @PathVariable String processGb) {
-//        return terramanService.deleteTerraman(clusterId, processGb);
-        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
-    }
-
-    /**
-     * Terraman 삭제(Delete Terraman) - Daemon 실행
-     *
-     * @return the resultStatus
-     */
-    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Daemon 실행", nickname = "deleteTerraman")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster")
-    })
-    @DeleteMapping(value = "/{clusterId:.+}")
-    public ResultStatusModel deleteTerraman(@PathVariable String clusterId) {
-//        return terramanService.deleteTerraman(clusterId, "Daemon");
-        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
-    }
-
-    @GetMapping(value = "/test")
-    public void test() {
-        String result = "";
-        result = commandService.getSSHResponse("sudo chmod 666 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-        LOGGER.info("first :: {}", result);
-        result = commandService.getSSHResponse("echo \"15.164.195.107 foo.bar.com.new\" >> /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-        LOGGER.info("second :: {}", result);
-        result = commandService.getSSHResponse("sudo chmod 644 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-        LOGGER.info("third :: {}", result);
-    }
-
-    @GetMapping(value = "/test2")
-    public void test2() {
-    }
+//    /**
+//     * Terraman 삭제(Delete Terraman) - Container 실행
+//     *
+//     * @return the resultStatus
+//     */
+//    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Container 실행", nickname = "deleteTerraman")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster"),
+//            @ApiImplicitParam(name = "processGb", value = "Terraman 삭제 구분", required = false, dataType = "string", paramType = "path")
+//    })
+//    @DeleteMapping(value = "/{clusterId:.+}/{processGb:.+}")
+//    public ResultStatusModel deleteTerraman(
+//            @PathVariable String clusterId
+//            , @PathVariable String processGb) {
+////        return terramanService.deleteTerraman(clusterId, processGb);
+//        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
+//    }
+//
+//    /**
+//     * Terraman 삭제(Delete Terraman) - Daemon 실행
+//     *
+//     * @return the resultStatus
+//     */
+//    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Daemon 실행", nickname = "deleteTerraman")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster")
+//    })
+//    @DeleteMapping(value = "/{clusterId:.+}")
+//    public ResultStatusModel deleteTerraman(@PathVariable String clusterId) {
+////        return terramanService.deleteTerraman(clusterId, "Daemon");
+//        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
+//    }
+//
+//    @GetMapping(value = "/test")
+//    public void test() {
+//        String result = "";
+//        result = commandService.getSSHResponse("sudo chmod 666 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+//        LOGGER.info("first :: {}", result);
+//        result = commandService.getSSHResponse("echo \"15.164.195.107 foo.bar.com.new\" >> /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+//        LOGGER.info("second :: {}", result);
+//        result = commandService.getSSHResponse("sudo chmod 644 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
+//        LOGGER.info("third :: {}", result);
+//    }
+//
+//    @GetMapping(value = "/test2")
+//    public void test2() {
+//    }
 }
