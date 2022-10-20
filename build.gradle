@@ -22,7 +22,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 
-group = 'org.paasta.container.platform.web.admin'
+group = 'org.paasta.container.platform.web.ui'
 sourceCompatibility = '1.8'
 
 configurations {

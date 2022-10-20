@@ -7,61 +7,61 @@
     <script th:inline="javascript">
 
      // API URI
-     var URI_CP_BASE_URL = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_BASE_URL}]];
-     var URI_CP_INDEX_URL = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_INDEX_URL}]];
-     var URI_CP_CLUSTERS_NAMESPACES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CLUSTERS_NAMESPACES}]];
-     var URI_CP_CLUSTERS_NODES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CLUSTERS_NODES}]];
+     var URI_CP_BASE_URL = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_BASE_URL}]];
+     var URI_CP_INDEX_URL = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_INDEX_URL}]];
+     var URI_CP_CLUSTERS_NAMESPACES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_CLUSTERS_NAMESPACES}]];
+     var URI_CP_CLUSTERS_NODES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_CLUSTERS_NODES}]];
 
-     var URI_CP_WORKLOADS_DEPLOYMENTS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_WORKLOADS_DEPLOYMENTS}]];
-     var URI_CP_WORKLOADS_PODS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_WORKLOADS_PODS}]];
-     var URI_CP_WORKLOADS_REPLICASETS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_WORKLOADS_REPLICASETS}]];
+     var URI_CP_WORKLOADS_DEPLOYMENTS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_WORKLOADS_DEPLOYMENTS}]];
+     var URI_CP_WORKLOADS_PODS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_WORKLOADS_PODS}]];
+     var URI_CP_WORKLOADS_REPLICASETS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_WORKLOADS_REPLICASETS}]];
 
-     var URI_CP_SERVICES_SERVICES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_SERVICES_SERVICES}]];
-     var URI_CP_SERVICES_INGRESSES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_SERVICES_INGRESSES}]];
+     var URI_CP_SERVICES_SERVICES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_SERVICES_SERVICES}]];
+     var URI_CP_SERVICES_INGRESSES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_SERVICES_INGRESSES}]];
 
-     var URI_CP_STORAGES_STORAGECLASSES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_STORAGES_STORAGECLASSES}]];
-     var URI_CP_STORAGES_PERSISTENTVOLUMES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_STORAGES_PERSISTENTVOLUMES}]];
-     var URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS}]];
+     var URI_CP_STORAGES_STORAGECLASSES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_STORAGES_STORAGECLASSES}]];
+     var URI_CP_STORAGES_PERSISTENTVOLUMES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_STORAGES_PERSISTENTVOLUMES}]];
+     var URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_STORAGES_PERSISTENTVOLUMECLAIMS}]];
 
-     var URI_CP_MANAGEMENTS_LIMITRANGES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_LIMITRANGES}]];
-     var URI_CP_MANAGEMENTS_RESOURCEQUOTAS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_RESOURCEQUOTAS}]];
-     var URI_CP_MANAGEMENTS_ROLES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_ROLES}]];
-     var URI_CP_MANAGEMENTS_USERS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_USERS}]];
-     var URI_CP_MANAGEMENTS_USERS_ADMIN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_USERS_ADMIN}]];
-     var URI_CP_MANAGEMENTS_INACTIVE_USERS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_INACTIVE_USERS}]];
-     var URI_CP_MANAGEMENTS_CONFIGMAPS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_MANAGEMENTS_CONFIGMAPS}]];
+     var URI_CP_MANAGEMENTS_LIMITRANGES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_LIMITRANGES}]];
+     var URI_CP_MANAGEMENTS_RESOURCEQUOTAS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_RESOURCEQUOTAS}]];
+     var URI_CP_MANAGEMENTS_ROLES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_ROLES}]];
+     var URI_CP_MANAGEMENTS_USERS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_USERS}]];
+     var URI_CP_MANAGEMENTS_USERS_ADMIN = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_USERS_ADMIN}]];
+     var URI_CP_MANAGEMENTS_INACTIVE_USERS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_INACTIVE_USERS}]];
+     var URI_CP_MANAGEMENTS_CONFIGMAPS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_MANAGEMENTS_CONFIGMAPS}]];
 
-     var URI_CP_INFO_ACCESS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_INFO_ACCESS}]];
-     var URI_CP_INFO_PRIVATE_REPOSITORY = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_INFO_PRIVATE_REPOSITORY}]];
+     var URI_CP_INFO_ACCESS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_INFO_ACCESS}]];
+     var URI_CP_INFO_PRIVATE_REPOSITORY = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_INFO_PRIVATE_REPOSITORY}]];
 
-     var URI_CP_GLOBAL_CLUSTER = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_CLUSTERS}]];
-     var URI_CP_GLOBAL_CLOUD_ACCOUNTS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_CLOUD_ACCOUNTS}]];
-     var URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES}]];
+     var URI_CP_GLOBAL_CLUSTER = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_GLOBAL_CLUSTERS}]];
+     var URI_CP_GLOBAL_CLOUD_ACCOUNTS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_GLOBAL_CLOUD_ACCOUNTS}]];
+     var URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES}]];
 
-     var URI_CP_LIST = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LIST}]];
-     var URI_CP_DETAILS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_DETAILS}]];
-     var URI_CP_CREATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_CREATE}]];
-     var URI_CP_UPDATE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_UPDATE}]];
-     var URI_CP_LOGS = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LOGS}]];
-     var URI_CP_POPUP = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_POPUP}]];
+     var URI_CP_LIST = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_LIST}]];
+     var URI_CP_DETAILS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_DETAILS}]];
+     var URI_CP_CREATE = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_CREATE}]];
+     var URI_CP_UPDATE = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_UPDATE}]];
+     var URI_CP_LOGS = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_LOGS}]];
+     var URI_CP_POPUP = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_POPUP}]];
 
      var URI_REQUEST_CP_API = [[${@environment.getProperty('cpApi.url')}]] + '/';
      //사용자 로그인 데이터 조회
-     var URI_CP_GET_USER_LOGIN_DATA =  [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_GET_USER_LOGIN_DATA}]];
-     var URI_CP_REFRESH_TOKEN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_REFRESH_TOKEN}]];
+     var URI_CP_GET_USER_LOGIN_DATA =  [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_GET_USER_LOGIN_DATA}]];
+     var URI_CP_REFRESH_TOKEN = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_REFRESH_TOKEN}]];
 
-     var URI_CP_LOGOUT = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_CP_LOGOUT}]];
+     var URI_CP_LOGOUT = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_CP_LOGOUT}]];
 
-     var URL_API_LOCALE_LANGUAGE = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_LOCALE_LANGUAGE}]];
-     var URL_API_CHANGE_LOCALE_PARAM = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URL_API_CHANGE_LOCALE_PARAM}]];
-     var LANG_KO = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_KO}]];
-     var LANG_EN = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).LANG_EN}]];
+     var URL_API_LOCALE_LANGUAGE = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URL_API_LOCALE_LANGUAGE}]];
+     var URL_API_CHANGE_LOCALE_PARAM = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URL_API_CHANGE_LOCALE_PARAM}]];
+     var LANG_KO = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).LANG_KO}]];
+     var LANG_EN = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).LANG_EN}]];
 
-     var URI_API_SET_CLUSTER_AUTHORITY = [[${T(org.paasta.container.platform.web.admin.common.ConstantsUrl).URI_API_SET_CLUSTER_AUTHORITY}]];
+     var URI_API_SET_CLUSTER_AUTHORITY = [[${T(org.paasta.container.platform.web.ui.common.ConstantsUrl).URI_API_SET_CLUSTER_AUTHORITY}]];
 
 
-     var RESULT_STATUS_SUCCESS = [[${T(org.paasta.container.platform.web.admin.common.Constants).RESULT_STATUS_SUCCESS}]];
-     var RESULT_STATUS_FAIL = [[${T(org.paasta.container.platform.web.admin.common.Constants).RESULT_STATUS_FAIL}]];
+     var RESULT_STATUS_SUCCESS = [[${T(org.paasta.container.platform.web.ui.common.Constants).RESULT_STATUS_SUCCESS}]];
+     var RESULT_STATUS_FAIL = [[${T(org.paasta.container.platform.web.ui.common.Constants).RESULT_STATUS_FAIL}]];
 
      // VALUE
      var NAMESPACE_ALL_VALUE ='ALL';
