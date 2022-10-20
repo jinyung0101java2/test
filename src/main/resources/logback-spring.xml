@@ -17,7 +17,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.paasta.container.platform.web.admin" level="info"/>
+    <logger name="org.paasta.container.platform.web.ui" level="info"/>
     <logger name="org.apache.catalina.session.ManagerBase" level="info"/>
 
     <root level="INFO">
