@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 public class TerramanService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanService.class);
 
-    private final VaultService vaultService;
-    private final CommonService commonService;
     private final ClusterLogService clusterLogService;
     private final CommandService commandService;
     private final ClusterService clusterService;
@@ -27,16 +25,12 @@ public class TerramanService {
 
     @Autowired
     public TerramanService(
-            VaultService vaultService
-            , CommonService commonService
-            , ClusterLogService clusterLogService
+            ClusterLogService clusterLogService
             , CommandService commandService
             , ClusterService clusterService
             , PropertyService propertyService
             , TerramanProcessService terramanProcessService
     ) {
-        this.vaultService = vaultService;
-        this.commonService = commonService;
         this.clusterLogService = clusterLogService;
         this.commandService = commandService;
         this.clusterService = clusterService;
@@ -78,8 +72,12 @@ public class TerramanService {
 
         // 생성중 status 변경
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
-
-        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+        LOGGER.info("processGb : {}", processGb);
+        LOGGER.info("clusterId : {}", clusterId);
+        LOGGER.info("flag : {}", StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER"));
+        if(StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            LOGGER.info("processGb : {}", processGb);
+            LOGGER.info("clusterId : {}", clusterId);
             LOGGER.info("container conn");
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
