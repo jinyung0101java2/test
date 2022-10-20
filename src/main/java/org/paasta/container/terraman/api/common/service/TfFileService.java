@@ -7,14 +7,13 @@ import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
-import org.paasta.container.terraman.api.common.util.TerramanFileUtils;
+import org.paasta.container.terraman.api.common.terramanproc.TerramanFileProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 @Service
@@ -107,11 +106,7 @@ public class TfFileService {
                 break;
         }
 
-        if(fileModel == null) {
-            return Constants.RESULT_STATUS_FAIL;
-        }
-
-        resultFile = new TerramanFileUtils().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
+        resultFile = new TerramanFileProcess().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
 
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
             if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {

@@ -7,8 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.repository.ClusterRepository;
-import org.paasta.container.terraman.api.common.util.CommonFileUtils;
-import org.paasta.container.terraman.api.terraman.TerramanProcessService;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 

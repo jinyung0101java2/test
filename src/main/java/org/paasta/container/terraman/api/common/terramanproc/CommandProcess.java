@@ -1,4 +1,4 @@
-package org.paasta.container.terraman.api.common.util;
+package org.paasta.container.terraman.api.common.terramanproc;
 
 import com.jcraft.jsch.*;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class CommandUtils {
+public class CommandProcess {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandService.class);
 

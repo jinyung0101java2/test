@@ -7,13 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.paasta.container.terraman.api.common.CommonService;
-import org.paasta.container.terraman.api.common.PropertyService;
-import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.InstanceModel;
+import org.paasta.container.terraman.api.common.terramanproc.TerramanInstanceProcess;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
-import org.paasta.container.terraman.api.terraman.TerramanProcessService;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -61,25 +58,11 @@ public class InstanceServiceTest {
     private JsonObject jsonObject;
 
     @Mock
-    private CommonService commonService;
+    private TerramanInstanceProcess terramanInstanceProcess;
     @Mock
     private CommandService commandService;
     @Mock
-    private ClusterLogService clusterLogService;
-    @Mock
     private CommonFileUtils commonFileUtils;
-    @Mock
-    private ClusterService clusterService;
-    @Mock
-    private PropertyService propertyService;
-    @Mock
-    private VaultService vaultService;
-    @Mock
-    private AccountService accountService;
-    @Mock
-    private TfFileService tfFileService;
-    @Mock
-    private TerramanProcessService terramanProcessService;
     @Mock
     private InstanceService instanceService;
 
@@ -641,6 +624,7 @@ public class InstanceServiceTest {
     public void getInstanceInfoAwsTest() {
         doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstanceInfoAws(jsonObject)).thenReturn(instanceResultModel);
 
         InstanceModel result = instanceServiceMock.getInstanceInfoAws(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
 
@@ -651,6 +635,7 @@ public class InstanceServiceTest {
     public void getInstanceInfoOpenstackTest() {
         doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstanceInfoOpenstack(jsonObject)).thenReturn(instanceResultModel);
 
         InstanceModel result = instanceServiceMock.getInstanceInfoOpenstack(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
 
@@ -675,6 +660,7 @@ public class InstanceServiceTest {
     public void getInstancesInfoAwsTest() {
         doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstancesInfoAws(jsonObject)).thenReturn(instancesResultModel);
 
         List<InstanceModel> result = instanceServiceMock.getInstancesInfoAws(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
 
@@ -685,6 +671,7 @@ public class InstanceServiceTest {
     public void getInstancesInfoOpenstackTest() {
         doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstancesInfoOpenstack(jsonObject)).thenReturn(instancesResultModel);
 
         List<InstanceModel> result = instanceServiceMock.getInstancesInfoOpenstack(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
 
@@ -712,19 +699,5 @@ public class InstanceServiceTest {
         JsonObject result = instanceServiceMock.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB);
 
         assertEquals(null, result);
-    }
-
-    @Test
-    public void getPublicIpTest() {
-        String result = instanceServiceMock.getPublicIp(TEST_INSTANCE_ID, jsonObject, TEST_PRIVATE_IP);
-
-        assertEquals(TEST_IP_ADDR, result);
-    }
-
-    @Test
-    public void getAWSHostNameTest() {
-        String result = instanceServiceMock.getAWSHostName(TEST_IP_ADDR);
-
-        assertEquals(TEST_CH_PRIVATE_IP, result);
     }
 }

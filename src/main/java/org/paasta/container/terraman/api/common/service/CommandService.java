@@ -1,7 +1,7 @@
 package org.paasta.container.terraman.api.common.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.util.CommandUtils;
+import org.paasta.container.terraman.api.common.terramanproc.CommandProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class CommandService {
      * @return the String
      */
     public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
-        return new CommandUtils().sshFileUpload(dir, host, idRsa, uploadFile);
+        return new CommandProcess().sshFileUpload(dir, host, idRsa, uploadFile);
     }
 
     /**
@@ -37,7 +37,7 @@ public class CommandService {
      * @return the void
      */
     public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
-        new CommandUtils().sshFileDownload(dir, localDir, fileName, host, idRsa);
+        new CommandProcess().sshFileDownload(dir, localDir, fileName, host, idRsa);
     }
 
     /**
@@ -50,7 +50,7 @@ public class CommandService {
      * @return the String
      */
     public String getSSHResponse(String command, String dir, String host, String idRsa) {
-        return new CommandUtils().getSSHResponse(command, dir, host, idRsa);
+        return new CommandProcess().getSSHResponse(command, dir, host, idRsa);
     }
 
     /**
@@ -61,7 +61,7 @@ public class CommandService {
      * @return the String
      */
     public String getResponse(String command, String dir) {
-        return new CommandUtils().getResponse(command, dir);
+        return new CommandProcess().getResponse(command, dir);
     }
 
     /**

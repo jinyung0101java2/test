@@ -1,11 +1,10 @@
-package org.paasta.container.terraman.api.common.util;
+package org.paasta.container.terraman.api.common.terramanproc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.FileModel;
-import org.paasta.container.terraman.api.common.service.TfFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class TerramanFileUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TerramanFileUtils.class);
+public class TerramanFileProcess {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TerramanFileProcess.class);
 
     /**
      * terraform 파일 생성 및 작성 (String)
