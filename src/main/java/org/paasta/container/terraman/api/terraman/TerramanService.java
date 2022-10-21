@@ -175,7 +175,6 @@ public class TerramanService {
             LOGGER.info("클러스터 배포가 완료되었습니다.");
             // log 저장
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.KUBESPRAY_DEPLOY_LOG);
-            
         }
 
         /*************************************************************************************************************************************/
