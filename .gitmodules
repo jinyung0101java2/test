@@ -1,4 +1,0 @@
-[submodule "container-platform-helm-chart"]
-	path = container-platform-helm-chart
-	url = https://gitlab.3.38.65.248.nip.io/container-platform/container-platform-helm-chart.git
-	branch = dev
