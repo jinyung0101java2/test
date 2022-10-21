@@ -59,6 +59,8 @@ spec:
               - matchExpressions:
                   - key: node-role.kubernetes.io/master
                     operator: In
+                    values:
+                      - 'master'
 ---
 apiVersion: v1
 kind: Service
