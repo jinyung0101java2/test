@@ -72,13 +72,7 @@ public class TerramanService {
 
         // 생성중 status 변경
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
-        LOGGER.info("processGb : {}", processGb);
-        LOGGER.info("clusterId : {}", clusterId);
-        LOGGER.info("flag : {}", StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER"));
         if(StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            LOGGER.info("processGb : {}", processGb);
-            LOGGER.info("clusterId : {}", clusterId);
-            LOGGER.info("container conn");
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
             cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa);

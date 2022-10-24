@@ -243,7 +243,6 @@ public class TerramanProcessService {
         int errorInt = -1;
 
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
-        LOGGER.info("instanceInfo :: {}", instanceInfo);
         if(instanceInfo == null) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
