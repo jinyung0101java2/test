@@ -24,7 +24,7 @@ variables:
   KEYCLOAK_NAMESPACE: keycloak
   VAULT_ROLE_NAME: webapp
   CONFIGMAP_CHART_PATH: ./container-platform-helm-chart/container-platform-terraman/container-platform-terraman-configmap
-  NODE_SELECT_KEY: node-role.kubernetes.io\/master
+  NODE_SELECT_KEY: "node-role.kubernetes.io\/master"
   NODE_SELECT_VALUE: "master"
   NODE_SELECT_OPERATOR: In
   MASTER_HOST_KEY: master-host-key
