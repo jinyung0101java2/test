@@ -24,6 +24,11 @@ variables:
   KEYCLOAK_NAMESPACE: keycloak
   VAULT_ROLE_NAME: webapp
   CONFIGMAP_CHART_PATH: ./container-platform-helm-chart/container-platform-terraman/container-platform-terraman-configmap
+  NODE_SELECT_KEY: node-role.kubernetes.io/master
+  NODE_SELECT_VALUE: "master"
+  NODE_SELECT_OPERATOR: In
+  MASTER_HOST_KEY: master-host-key
+  MASTER_HOST_MOUNT_PATH: "/home/ubuntu/.ssh/"
 
 configmap deploy:
   stage: pre-deploy
@@ -71,6 +76,11 @@ configmap deploy:
     - sed -i "s/\${CP_SERVICE_PIPELINE_NAMESPACE}/$CP_SERVICE_PIPELINE_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${CP_SERVICE_SOURCE_CONTROL_NAMESPACE}/$CP_SERVICE_SOURCE_CONTROL_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${CP_DEFAULT_INGRESS_NAMESPACE}/$CP_DEFAULT_INGRESS_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${NODE_SELECT_KEY}/$NODE_SELECT_KEY/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${NODE_SELECT_VALUE}/$NODE_SELECT_VALUE/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${NODE_SELECT_OPERATOR}/$NODE_SELECT_OPERATOR/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${MASTER_HOST_KEY}/$MASTER_HOST_KEY/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${MASTER_HOST_MOUNT_PATH}/$MASTER_HOST_MOUNT_PATH/g" $CONFIGMAP_CHART_PATH/values.yaml
 
 
     # for check
