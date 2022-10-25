@@ -1,5 +1,6 @@
 variables:
   CHART_NAME: cp-terraman-app
+  MASTER_HOST_KEY: master-host-key
 
 app deploy:
   stage: deploy

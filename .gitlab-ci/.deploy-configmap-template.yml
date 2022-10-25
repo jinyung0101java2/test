@@ -23,8 +23,8 @@ variables:
   DATABASE_NAMESPACE: mariadb
   KEYCLOAK_NAMESPACE: keycloak
   VAULT_ROLE_NAME: webapp
+  CP_PORTAL_PROVIDER_TYPE: cp-portal-$PROVIDER_TYPE
   CONFIGMAP_CHART_PATH: ./container-platform-helm-chart/container-platform-terraman/container-platform-terraman-configmap
-  MASTER_HOST_KEY: master-host-key
 
 configmap deploy:
   stage: pre-deploy
@@ -51,6 +51,9 @@ configmap deploy:
     - sed -i "s/\${DATABASE_USER_PASSWORD}/$DATABASE_USER_PASSWORD/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${DATABASE_TERRAMAN_ID}/$DATABASE_TERRAMAN_ID/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${DATABASE_TERRAMAN_PASSWORD}/$DATABASE_TERRAMAN_PASSWORD/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${CP_SERVICE_PIPELINE_NAMESPACE}/$CP_SERVICE_PIPELINE_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${CP_SERVICE_SOURCE_CONTROL_NAMESPACE}/$CP_SERVICE_SOURCE_CONTROL_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
+    - sed -i "s/\${CP_DEFAULT_INGRESS_NAMESPACE}/$CP_DEFAULT_INGRESS_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${NFS_NAMESPACE}/$NFS_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${REPOSITORY_NAMESPACE}/$REPOSITORY_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${DATABASE_NAMESPACE}/$DATABASE_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
@@ -61,10 +64,6 @@ configmap deploy:
     - sed -i "s/\${VAULT_ROLE_NAME}/$VAULT_ROLE_NAME/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${VAULT_ROLE_ID}/$VAULT_ROLE_ID/g" $CONFIGMAP_CHART_PATH/values.yaml
     - sed -i "s/\${VAULT_SECRET_ID}/$VAULT_SECRET_ID/g" $CONFIGMAP_CHART_PATH/values.yaml
-    - sed -i "s/\${CP_SERVICE_PIPELINE_NAMESPACE}/$CP_SERVICE_PIPELINE_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
-    - sed -i "s/\${CP_SERVICE_SOURCE_CONTROL_NAMESPACE}/$CP_SERVICE_SOURCE_CONTROL_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
-    - sed -i "s/\${CP_DEFAULT_INGRESS_NAMESPACE}/$CP_DEFAULT_INGRESS_NAMESPACE/g" $CONFIGMAP_CHART_PATH/values.yaml
-    - sed -i "s/\${MASTER_HOST_KEY}/$MASTER_HOST_KEY/g" $CONFIGMAP_CHART_PATH/values.yaml
 
 
     # for check
