@@ -102,7 +102,8 @@
                             for(var i = 0; i <= data.items.length-1; i++) {
                                 for (var j = 0; j <= data.items[i].spec.rules.length-1; j++) {
                                     for (var k = 0; k <= data.items[i].spec.rules[j].http.paths.length-1; k++) {
-                                        link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}:${nodePort}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
+                                        /*link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}:${nodePort}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;*/
+                                        link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
                                         link[i+1] = '';
                                     }
                                 }
