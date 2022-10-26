@@ -46,32 +46,21 @@
     </div>
 </div>
 <th:block layout:fragment="script">
-    <script type="text/javascript">
+    <script th:inline="javascript">
         window.onload = () => {
-
             func.init(ASIDE_DP1.INFO, ASIDE_DP2.PRIVATE_REPOSITORY);
-            //callbackFuncNameLoad();
-            document.getElementById('nameSpaceTitleDiv').style.display="none";
-            document.getElementById('clusterTitleDiv').style.display="none";
 
             const privateRepositoryInfo = {
-
-                init(){
-
-                    func.loadData('GET', `${func.url}privateRegistry/cp-harbor`, 'application/json', privateRepositoryInfo.event);
-
-                },
-
-                event(data){
-
+                event(){
                     document.getElementById('harborBtn').addEventListener('click', (e) => {
-                        window.open('about:blank').location.href = data.repositoryUrl;
+                        /*<![CDATA[*/
+                        window.open('about:blank').location.href = [[${privateRepositoryUrl}]];
+                    /*]]>*/
                 }, false);
                 },
-
             };
 
-            privateRepositoryInfo.init();
+            privateRepositoryInfo.event();
         }
     </script>
 </th:block>

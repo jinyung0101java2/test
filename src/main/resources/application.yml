@@ -10,8 +10,9 @@ management:
     enabled: false
 
 private:
-  registry:
-    imageName: cp-harbor
+  repository:
+    url: ${REPOSITORY_URL}
+
 
 keycloak:
   oauth:
