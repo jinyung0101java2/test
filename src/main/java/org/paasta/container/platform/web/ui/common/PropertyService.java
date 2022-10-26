@@ -21,8 +21,8 @@ public class PropertyService {
     @Value("${commonApi.url}")
     private String commonApiUrl;
 
-    @Value("${private.registry.imageName}")
-    private String privateRegistryImageName;
+    @Value("${private.repository.url}")
+    private String privateRepositoryUrl;
 
     @Value("${keycloak.oauth.client.superAdminRole}")
     private String keycloakSuperAdminRole;

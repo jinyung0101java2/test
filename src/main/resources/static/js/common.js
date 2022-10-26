@@ -97,37 +97,37 @@ const func = {
 	},
 
 	clusters(data){
-		 var html ='';
-		  for(var i=0; i<=data.items.length-1; i++){
-			  html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}">${data.items[i].clusterName}</a></li>`;
-			};
+		var html ='';
+		for(var i=0; i<=data.items.length-1; i++){
+			html += `<li><a href="javascript:;" data-name="${data.items[i].clusterId}">${data.items[i].clusterName}</a></li>`;
+		};
 
-		     document.getElementById("clusterListUl").innerHTML = html;
+		document.getElementById("clusterListUl").innerHTML = html;
 
-		     /////////////////////
-			if(sessionStorage.getItem('cluster') != null){
-				document.querySelector('.clusterTop').innerText = sessionStorage.getItem('clusterName');
-			} else {
-				document.querySelector('.clusterTop').innerText = data.items[0].clusterName;
-				sessionStorage.setItem('cluster', data.items[0].clusterId);
-				sessionStorage.setItem('clusterName', data.items[0].clusterName);
-			};
+		/////////////////////
+		if(sessionStorage.getItem('cluster') != null){
+			document.querySelector('.clusterTop').innerText = sessionStorage.getItem('clusterName');
+		} else {
+			document.querySelector('.clusterTop').innerText = data.items[0].clusterName;
+			sessionStorage.setItem('cluster', data.items[0].clusterId);
+			sessionStorage.setItem('clusterName', data.items[0].clusterName);
+		};
 
-			var name = document.querySelector('.clusterUl').querySelectorAll('a');
-			func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
+		var name = document.querySelector('.clusterUl').querySelectorAll('a');
+		func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
 
-			//cluster click event
-			for(var i=0 ; i<name.length; i++){
-				name[i].addEventListener('click', (e) => {
+		//cluster click event
+		for(var i=0 ; i<name.length; i++){
+			name[i].addEventListener('click', (e) => {
 				sessionStorage.setItem('cluster' , e.target.getAttribute('data-name'));
-				sessionStorage.setItem('clusterName', e.target.innerText);
-				document.querySelector('.clusterTop').innerText = e.target.innerText;
-				sessionStorage.removeItem('nameSpace');
-				func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
-				///func.setAuthority(userType);
-				func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
-			}, false);
-			};
+			sessionStorage.setItem('clusterName', e.target.innerText);
+			document.querySelector('.clusterTop').innerText = e.target.innerText;
+			sessionStorage.removeItem('nameSpace');
+			func.setUserAuthority(sessionStorage.getItem('cluster'), data.items);
+			IS_RELOAD = true;
+			func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
+		}, false);
+		};
 
 		func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', func.namespaces);
 
@@ -156,7 +156,7 @@ const func = {
 
 			for(var i=0 ; i<name.length; i++){
 				name[i].addEventListener('click', (e) => {
-				sessionStorage.setItem('nameSpace' , e.target.getAttribute('data-name'));
+					sessionStorage.setItem('nameSpace' , e.target.getAttribute('data-name'));
 				document.querySelector('.nameTop').innerText = e.target.innerText;
 				if(IS_NAMELOAD) {
 					func.loadData('GET', null, 'application/json', func.nameLoad);
@@ -165,12 +165,17 @@ const func = {
 					movePage(URI_CP_INDEX_URL);
 				}
 			}, false);
+
 			};
 
-			if(IS_OVERVIEW) {
-				func.loadData('GET', null, 'application/json', func.nameLoad);
+			if(IS_RELOAD) {
+				if(IS_NAMELOAD) {
+					func.loadData('GET', null, 'application/json', func.nameLoad);
+				}
+				else {
+					movePage(URI_CP_INDEX_URL);
+				}
 			}
-
 		};
 	},
 
@@ -386,12 +391,12 @@ const func = {
 	},
 
 	setUserAuthority(cluster, usersList){
-	 var authority ='';
+		var authority ='';
 		for(var i= 0; i < usersList.length; i++) {
 			var users = usersList[i];
 			if(users.clusterId === cluster) {
-              authority = users.userType;
-              break;
+				authority = users.userType;
+				break;
 			}
 		}
 		var request = new XMLHttpRequest();
@@ -499,17 +504,17 @@ const func = {
 						else {
 							document.getElementById('wrap').removeChild(document.getElementById('loading'));
 							var response = JSON.parse(request.responseText);
-								if (response.httpStatusCode == 200) {
-									if(response.resultCode == RESULT_STATUS_SUCCESS) {
-										func.alertPopup('SUCCESS', response.detailMessage, true, MSG_CONFIRM, callFunc);
-									}
-									else {
-										func.alertPopup('ERROR', response.detailMessage, true, MSG_CONFIRM, 'closed');
-									}
+							if (response.httpStatusCode == 200) {
+								if(response.resultCode == RESULT_STATUS_SUCCESS) {
+									func.alertPopup('SUCCESS', response.detailMessage, true, MSG_CONFIRM, callFunc);
 								}
 								else {
 									func.alertPopup('ERROR', response.detailMessage, true, MSG_CONFIRM, 'closed');
 								}
+							}
+							else {
+								func.alertPopup('ERROR', response.detailMessage, true, MSG_CONFIRM, 'closed');
+							}
 
 						}
 					} else {

@@ -125,7 +125,7 @@
 
      var CURRENT_LOCALE_LANGUAGE = '';
 
-     var IS_OVERVIEW = false;
+     var IS_RELOAD = false;
      var IS_NAMELOAD = false;
      var IS_GLOBAL = false;
 
@@ -184,64 +184,64 @@
 
 <script>
  function movePage(locationName) {
-    location.href = locationName;
-}
+     location.href = locationName;
+ }
 
-function historyBack() {
-    window.history.back();
+ function historyBack() {
+     window.history.back();
 
-}
+ }
 
-function convertUserTypeString(userType) {
-    if(userType == AUTH_SUPER_ADMIN) {
-        return AUTH_SUPER_ADMIN_CG;
-    }
-    else if(userType == AUTH_CLUSTER_ADMIN) {
-        return AUTH_CLUSTER_ADMIN_CG;
-    }
-    else {
-        return AUTH_USER_CG;
-    }
-}
+ function convertUserTypeString(userType) {
+     if(userType == AUTH_SUPER_ADMIN) {
+         return AUTH_SUPER_ADMIN_CG;
+     }
+     else if(userType == AUTH_CLUSTER_ADMIN) {
+         return AUTH_CLUSTER_ADMIN_CG;
+     }
+     else {
+         return AUTH_USER_CG;
+     }
+ }
 
-function changeLocaleLanguage() {
-    var u_locale_lang = document.getElementById("u_locale_lang").value;
-    var reqUrl =  URL_API_LOCALE_LANGUAGE+"?"+ URL_API_CHANGE_LOCALE_PARAM + "=" + u_locale_lang;
-    func.setLocaleLang(reqUrl);
-}
+ function changeLocaleLanguage() {
+     var u_locale_lang = document.getElementById("u_locale_lang").value;
+     var reqUrl =  URL_API_LOCALE_LANGUAGE+"?"+ URL_API_CHANGE_LOCALE_PARAM + "=" + u_locale_lang;
+     func.setLocaleLang(reqUrl);
+ }
 
-function activeEdit(id, buttonId) {
-    document.getElementById(id).readOnly = false;
-    document.getElementById(buttonId).style.display = 'none';
-}
+ function activeEdit(id, buttonId) {
+     document.getElementById(id).readOnly = false;
+     document.getElementById(buttonId).style.display = 'none';
+ }
 
-function setSelectValue(id, val) {
-    document.getElementById(id).value = val;
-}
+ function setSelectValue(id, val) {
+     document.getElementById(id).value = val;
+ }
 
-function reloadPage() {
-    location.reload();
-}
+ function reloadPage() {
+     location.reload();
+ }
 
-function callbackFuncNameLoad() {
- /*  var items = document.querySelectorAll('.scroll02');
-    for (var i = 0, len = items.length; i < len; i++) {
-         items[i].classList.toggle('hidden', isHidden);
-    }*/
-    IS_NAMELOAD = true;
+ function callbackFuncNameLoad() {
+     /*  var items = document.querySelectorAll('.scroll02');
+        for (var i = 0, len = items.length; i < len; i++) {
+             items[i].classList.toggle('hidden', isHidden);
+        }*/
+     IS_NAMELOAD = true;
 
-}
+ }
 
-function isEmpty(str){
-    if(typeof str == "undefined" || str == null || str == "")
-        return true;
-    else
-        return false ;
-}
+ function isEmpty(str){
+     if(typeof str == "undefined" || str == null || str == "")
+         return true;
+     else
+         return false ;
+ }
 
-function chunkString(str, length) {
-    return str.match(new RegExp('.{1,' + length + '}', 'g'));
-}
+ function chunkString(str, length) {
+     return str.match(new RegExp('.{1,' + length + '}', 'g'));
+ }
 </script>
 </span>
 
