@@ -49,9 +49,9 @@ spec:
         - name: {IMAGE_PULL_SECRET}
       volumes:
         - name: master-host-key
-          secret:
-            secretName: master-host-key
-            defaultMode: 0600
+          hostPath:
+            # directory location on host
+            path: /home/ubuntu/.ssh
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
