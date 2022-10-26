@@ -61,20 +61,3 @@ spec:
                     operator: In
                     values:
                       - 'master'
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cp-terraman-service
-  labels:
-    app: cp-terraman-service
-  namespace: cp-terraman
-spec:
-  ports:
-    - nodePort: {SERVICE_NODEPORT}
-      port: {SERVICE_PORT}
-      protocol: TCP
-      targetPort: {SERVICE_TARGET_PORT}
-  selector:
-    app: cp-terraman-api
-  type: NodePort
