@@ -52,7 +52,7 @@ ext {
 
 
 war {
-	archivesBaseName = 'paas-ta-container-platform-webui'
+	archivesBaseName = 'paas-ta-container-platform-ui'
 	enabled = false
 }
 
