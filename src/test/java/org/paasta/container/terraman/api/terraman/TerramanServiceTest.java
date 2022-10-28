@@ -76,6 +76,7 @@ public class TerramanServiceTest {
     private static InstanceModel gInstanceModel = null;
     private static List<InstanceModel> gInstanceList = null;
     private static ClusterModel clusterModel = null;
+    private static ClusterModel clusterModelMock = null;
     private static HashMap hashMap = null;
     private static AccountModel accountModel = null;
     private File uploadFile = null;
@@ -135,6 +136,10 @@ public class TerramanServiceTest {
         hashMap = new HashMap();
         hashMap.put("test", "test");
         uploadFile = new File(TEST_FILE_PATH);
+
+        clusterModelMock = new ClusterModel();
+        clusterModelMock.setClusterId(TEST_CLUSTER_ID);
+        clusterModelMock.setName(TEST_CLUSTER_NAME);
     }
 
 
@@ -144,6 +149,7 @@ public class TerramanServiceTest {
     @Test
     public void createTerramanTest() throws Exception {
         // when
+        when(clusterService.getCluster(TEST_CLUSTER_ID)).thenReturn(clusterModelMock);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
