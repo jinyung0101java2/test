@@ -1,9 +1,7 @@
 package org.paasta.container.terraman.api.terraman;
 
 import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.CommonService;
 import org.paasta.container.terraman.api.common.PropertyService;
-import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ClusterModel;
@@ -72,10 +70,8 @@ public class TerramanService {
             mpSeq = -1;
         }
 
-        if(clusterModel != null) {
-            if(StringUtils.isNotBlank(clusterModel.getName())) {
-                clusterName = TerramanConstant.KUBERSPRAY_VARS_PRIVATE_KEY + clusterModel.getName();
-            }
+        if(clusterModel != null && StringUtils.isNotBlank(clusterModel.getName())) {
+            clusterName = clusterModel.getName();
         }
 
         // 생성중 status 변경

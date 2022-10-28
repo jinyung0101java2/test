@@ -4,6 +4,7 @@ public class Constants {
     public static final String RESULT_STATUS_SUCCESS = "SUCCESS";
     public static final String RESULT_STATUS_FAIL = "FAIL";
     public static final String RESULT_STATUS_TIME_OUT = "timeOut";
+    public static final String RESULT_STATUS_FILE_NOT_FOUND = "FileNotFoundException";
 
     public static final String SUPPORTED_RESOURCE_STORAGE = "storage";
 

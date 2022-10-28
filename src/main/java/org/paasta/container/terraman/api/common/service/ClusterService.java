@@ -4,8 +4,6 @@ import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.repository.ClusterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
-import java.util.Optional;
 
 import static org.paasta.container.terraman.api.common.util.CommonUtils.getSysTimestamp;
 

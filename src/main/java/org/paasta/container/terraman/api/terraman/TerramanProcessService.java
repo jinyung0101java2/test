@@ -1,7 +1,6 @@
 package org.paasta.container.terraman.api.terraman;
 
 import org.apache.commons.lang3.StringUtils;
-import org.paasta.container.terraman.api.common.CommonService;
 import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
@@ -22,7 +21,6 @@ public class TerramanProcessService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanProcessService.class);
 
     private final VaultService vaultService;
-    private final CommonService commonService;
     private final ClusterLogService clusterLogService;
     private final CommandService commandService;
     private final InstanceService instanceService;
@@ -30,12 +28,10 @@ public class TerramanProcessService {
     private final PropertyService propertyService;
     private final TfFileService tfFileService;
 
-    //private static InstanceModel instanceInfo;
 
     @Autowired
     public TerramanProcessService(
             VaultService vaultService
-            , CommonService commonService
             , ClusterLogService clusterLogService
             , CommandService commandService
             , InstanceService instanceService
@@ -44,7 +40,6 @@ public class TerramanProcessService {
             , TfFileService tfFileService
     ) {
         this.vaultService = vaultService;
-        this.commonService = commonService;
         this.clusterLogService = clusterLogService;
         this.commandService = commandService;
         this.instanceService = instanceService;
@@ -261,7 +256,9 @@ public class TerramanProcessService {
             LOGGER.info("ssh connection result : {}", cResult);
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break;
-            } else if (StringUtils.isNotBlank(cResult) && StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+            } else if ( StringUtils.isNotBlank(cResult)
+                    && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+                    || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
                 connFlag = true;
                 break;
             }
@@ -338,7 +335,7 @@ public class TerramanProcessService {
                 sb.append(line);
             }
 
-            sb.append(clusterName);
+            sb.append(TerramanConstant.KUBERSPRAY_VARS_PRIVATE_KEY + clusterName);
 
             cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
