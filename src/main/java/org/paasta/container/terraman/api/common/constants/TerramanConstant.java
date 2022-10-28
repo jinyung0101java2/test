@@ -59,19 +59,23 @@ public class TerramanConstant {
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
         return "mkdir -p -v tmp/terraform/"+clusterId;
+//        return "sudo mkdir -p -v /home/1000/terraform/"+clusterId;
     }
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
         return "tmp/terraform/" + clusterId;
+//        return "/home/1000/terraform/" + clusterId;
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
-        String dir = CLUSTER_STATE_DIR(clusterId);
-        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-            dir = "/home/ubuntu/" + dir;
-        }
-        return dir;
+//        String dir = CLUSTER_STATE_DIR(clusterId);
+//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+//            dir = "/home/ubuntu/" + dir;
+//        }
+//        return dir;
+        return CLUSTER_STATE_DIR(clusterId);
     }
+//    public static final String DELETE_DIR_CLUSTER = "/home/1000/terraform";
     public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r "+clusterId;
@@ -87,7 +91,7 @@ public class TerramanConstant {
 //            path = "/home/ubuntu/.ssh/" + path;
 //        }
 //        return path;
-        return "/home/ubuntu/cluster-keypairs/paasta-cluster-key";
+        return "/home/ubuntu/cluster-keypairs/paasta-" + clusterId + "-key";
     }
     public static final String SERVICE_ACCOUNT_CREATE = "kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
@@ -115,6 +119,7 @@ public class TerramanConstant {
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api --field-selector=status.phase=Running -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
+//        return "kubectl cp -n cp-portal " + pod + ":/home/1000/terraform/" + clusterId + " /home/1000/tmp/terraform/"+clusterId;
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
 
