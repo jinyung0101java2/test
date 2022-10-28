@@ -32,4 +32,15 @@ public class ClusterService {
         clusterModel.setLastModified(getSysTimestamp());
         return clusterRepository.save(clusterModel);
     }
+
+    /**
+     * Update Cluster Info
+     *
+     * @param clusterId the clusterId
+     * @return the ClusterModel
+     */
+    public ClusterModel getCluster(String clusterId) {
+        return clusterRepository.findById(clusterId).orElse(new ClusterModel());
+    }
+
 }

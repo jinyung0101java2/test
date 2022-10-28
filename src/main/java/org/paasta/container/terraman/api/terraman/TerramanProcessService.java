@@ -21,11 +21,6 @@ import java.util.List;
 public class TerramanProcessService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanProcessService.class);
 
-    private static final String KUBERSPRAY_VARS_EXPORT_WORKER = "export WORKER";
-    private static final String KUBERSPRAY_VARS_HOSTNAME = "_NODE_HOSTNAME=";
-    private static final String KUBERSPRAY_VARS_PUBLIC_IP = "_NODE_PUBLIC_IP=";
-    private static final String KUBERSPRAY_VARS_PRIVATE_IP = "_NODE_PRIVATE_IP=";
-
     private final VaultService vaultService;
     private final CommonService commonService;
     private final ClusterLogService clusterLogService;
@@ -230,7 +225,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider) {
+    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) {
         /**************************************************************************************************************************************
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          *
@@ -262,7 +257,7 @@ public class TerramanProcessService {
                 LOGGER.error(e.getMessage());
             }
             LOGGER.info("ssh connection checked");
-            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName, processGb));
             LOGGER.info("ssh connection result : {}", cResult);
             if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                 break;
@@ -291,7 +286,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessSetKubespray(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider) {
+    public int terramanProcessSetKubespray(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) {
         /**************************************************************************************************************************************
          * 7. Kubespray 다운로드 및 kubespray_var.sh 파일 작성하기
          *
@@ -330,18 +325,20 @@ public class TerramanProcessService {
                 String line = "";
                 if( !obj.getResourceName().contains("master") ) {
                     line = "\\n"
-                            + KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
-                            + KUBERSPRAY_VARS_HOSTNAME + obj.getInstanceName()
+                            + TerramanConstant.KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
+                            + TerramanConstant.KUBERSPRAY_VARS_HOSTNAME + obj.getInstanceName()
                             + "\\n"
-                            + KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
-                            + KUBERSPRAY_VARS_PUBLIC_IP + obj.getPublicIp()
+                            + TerramanConstant.KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
+                            + TerramanConstant.KUBERSPRAY_VARS_PUBLIC_IP + obj.getPublicIp()
                             + "\\n"
-                            + KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
-                            + KUBERSPRAY_VARS_PRIVATE_IP + obj.getPrivateIp();
+                            + TerramanConstant.KUBERSPRAY_VARS_EXPORT_WORKER + workerSeq
+                            + TerramanConstant.KUBERSPRAY_VARS_PRIVATE_IP + obj.getPrivateIp();
                     workerSeq++;
                 }
                 sb.append(line);
             }
+
+            sb.append(clusterName);
 
             cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -391,7 +388,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessCreateVault(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider) {
+    public int terramanProcessCreateVault(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) {
         /**************************************************************************************************************************************
          * 9. 클러스터 정보 vault 생성
          * clusterId = clusterId
@@ -409,7 +406,7 @@ public class TerramanProcessService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
                 , ""
                 , instanceInfo.getPublicIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -419,7 +416,7 @@ public class TerramanProcessService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
                 , ""
                 , instanceInfo.getPublicIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -429,7 +426,7 @@ public class TerramanProcessService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
                 , ""
                 , instanceInfo.getPublicIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -439,7 +436,7 @@ public class TerramanProcessService {
         cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult)
                 , ""
                 , instanceInfo.getPublicIp()
-                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterId, processGb));
+                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName, processGb));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);

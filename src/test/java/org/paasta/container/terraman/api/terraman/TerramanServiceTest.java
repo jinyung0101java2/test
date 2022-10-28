@@ -34,6 +34,7 @@ public class TerramanServiceTest {
     private static final String TEST_DEFAULT_PATH = "secret";
     private static final String TEST_PROVIDER = "openstack";
     private static final String TEST_CLUSTER_ID = "test_cluster";
+    private static final String TEST_CLUSTER_NAME = "test_cluster_name";
     private static final String TEST_SEQ = "13";
     private static final int TEST_INT_SEQ = 13;
 
@@ -153,10 +154,10 @@ public class TerramanServiceTest {
         when(terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
+        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);
+        when(terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER)).thenReturn(TEST_MP_SEQ);
+        when(terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessClusterStatusUpdate(TEST_MP_SEQ, TEST_CLUSTER_ID)).thenReturn(TEST_MP_SEQ);
 
         terramanService.createTerraman(gParams, TEST_PROCESS_GB);

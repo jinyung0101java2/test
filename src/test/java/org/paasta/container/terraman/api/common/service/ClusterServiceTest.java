@@ -60,4 +60,12 @@ public class ClusterServiceTest {
         ClusterModel result = clusterService.updateCluster(TEST_CLUSTER_ID, TEST_STATUS);
         assertEquals(null, result);
     }
+
+    @Test
+    public void getClusterTest() {
+        when(clusterRepository.findById(TEST_CLUSTER_ID)).thenReturn(optClusterModelMock);
+
+        ClusterModel result = clusterService.getCluster(TEST_CLUSTER_ID);
+        assertEquals(clusterModelResultMock, result);
+    }
 }

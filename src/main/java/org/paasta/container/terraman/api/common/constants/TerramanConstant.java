@@ -85,13 +85,13 @@ public class TerramanConstant {
     /**
      * get cluster info
      * */
-    public static final String CLUSTER_PRIVATE_KEY(String clusterId, String processGb) {
+    public static final String CLUSTER_PRIVATE_KEY(String clusterName, String processGb) {
 //        String path = "cluster-key";
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
 //            path = "/home/ubuntu/.ssh/" + path;
 //        }
 //        return path;
-        return "/home/ubuntu/cluster-keypairs/paasta-" + clusterId + "-key";
+        return "/home/ubuntu/cluster-keypairs/" + clusterName + "-key";
     }
     public static final String SERVICE_ACCOUNT_CREATE = "kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
@@ -210,4 +210,13 @@ public class TerramanConstant {
     public static final String FLOATINGIP_MSG= "floatingip";
     public static final String INSTANCE_ID_MSG= "instance_id";
     public static final String FLOATING_IP_MSG= "floating_ip";
+
+    /**
+     * terraman kuberspray vars
+     */
+    public static final String KUBERSPRAY_VARS_EXPORT_WORKER = "export WORKER";
+    public static final String KUBERSPRAY_VARS_HOSTNAME = "_NODE_HOSTNAME=";
+    public static final String KUBERSPRAY_VARS_PUBLIC_IP = "_NODE_PUBLIC_IP=";
+    public static final String KUBERSPRAY_VARS_PRIVATE_IP = "_NODE_PRIVATE_IP=";
+    public static final String KUBERSPRAY_VARS_PRIVATE_KEY = "export CLUSTER_PRIVATE_KEY=";
 }

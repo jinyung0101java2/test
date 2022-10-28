@@ -6,6 +6,7 @@ import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
+import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class TerramanService {
         String clusterId = terramanRequest.getClusterId();
         int seq = StringUtils.isBlank(String.valueOf(terramanRequest.getSeq())) ? 0 : Integer.parseInt(terramanRequest.getSeq());
         String provider = terramanRequest.getProvider();
+        String clusterName = "";
 
         String cResult = "";
         int mpSeq = 0;
@@ -61,7 +63,7 @@ public class TerramanService {
         String idRsa = "";
         String hostDir = "/home/ubuntu";
 
-
+        ClusterModel clusterModel = clusterService.getCluster(clusterId);
 
         if(StringUtils.isBlank(clusterId) || StringUtils.isBlank(provider)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -70,11 +72,21 @@ public class TerramanService {
             mpSeq = -1;
         }
 
+        if(clusterModel != null) {
+            if(StringUtils.isNotBlank(clusterModel.getName())) {
+                clusterName = TerramanConstant.KUBERSPRAY_VARS_PRIVATE_KEY + clusterModel.getName();
+            }
+        }
+
         // 생성중 status 변경
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
         if(StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
+            LOGGER.info("cluster_id :: {}", clusterId);
+            LOGGER.info("host :: {}", host);
+            LOGGER.info("id_rsa :: {}", idRsa);
+            LOGGER.info("CREATE_DIR_CLUSTER :: {}", TerramanConstant.CREATE_DIR_CLUSTER(clusterId));
             cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -130,14 +142,14 @@ public class TerramanService {
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            mpSeq = terramanProcessService.terramanProcessGetInstanceIp(mpSeq, clusterId, processGb, host, idRsa, provider);
+            mpSeq = terramanProcessService.terramanProcessGetInstanceIp(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
         /**************************************************************************************************************************************
          * 7. Kubespray 다운로드 및 kubespray_var.sh 파일 작성하기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            mpSeq = terramanProcessService.terramanProcessSetKubespray(mpSeq, clusterId, processGb, host, idRsa, provider);
+            mpSeq = terramanProcessService.terramanProcessSetKubespray(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
         /**************************************************************************************************************************************
@@ -151,7 +163,7 @@ public class TerramanService {
          * 9. 클러스터 정보 vault 생성
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            mpSeq = terramanProcessService.terramanProcessCreateVault(mpSeq, clusterId, processGb, host, idRsa, provider);
+            mpSeq = terramanProcessService.terramanProcessCreateVault(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
         /**************************************************************************************************************************************
