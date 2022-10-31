@@ -4,7 +4,7 @@ public class Constants {
     public static final String RESULT_STATUS_SUCCESS = "SUCCESS";
     public static final String RESULT_STATUS_FAIL = "FAIL";
     public static final String RESULT_STATUS_TIME_OUT = "timeOut";
-    public static final String RESULT_STATUS_FILE_NOT_FOUND = "FileNotFoundException";
+    public static final String RESULT_STATUS_FILE_NOT_FOUND = "No such file or directory";
 
     public static final String SUPPORTED_RESOURCE_STORAGE = "storage";
 
@@ -12,7 +12,7 @@ public class Constants {
     public static final String STRING_ORIGINAL_DATE_TYPE = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String STRING_TIME_ZONE_ID = "Asia/Seoul";
 
-    public static final String noName = "[-]";
+    public static final String NO_NAME = "[-]";
     public static final String NULL_REPLACE_TEXT = "-";
 
     public static final String U_LANG_KO = "ko";

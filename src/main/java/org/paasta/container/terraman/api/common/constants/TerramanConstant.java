@@ -15,7 +15,7 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/home/ubuntu/cluster-keypairs/paasta-master-key";
+    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
 
     /**
      * file name & directory
@@ -91,7 +91,7 @@ public class TerramanConstant {
 //            path = "/home/ubuntu/.ssh/" + path;
 //        }
 //        return path;
-        return "/home/ubuntu/cluster-keypairs/" + clusterName + "-key";
+        return "/home/ubuntu/.ssh/" + clusterName + "-key";
     }
     public static final String SERVICE_ACCOUNT_CREATE = "kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";

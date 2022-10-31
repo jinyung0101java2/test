@@ -106,7 +106,7 @@ public class CommonUtils {
      * @return the string
      */
     public static String resourceNameCheck(String resourceName) {
-        return (resourceName == null) ? Constants.noName : resourceName;
+        return (resourceName == null) ? Constants.NO_NAME : resourceName;
     }
 
     /**
