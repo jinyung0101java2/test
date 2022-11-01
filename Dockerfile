@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/paas-ta-container-terraman-api.jar
 RUN apk add --no-cache \
   openssh-client \
   ca-certificates \
