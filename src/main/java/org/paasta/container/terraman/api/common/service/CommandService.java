@@ -22,8 +22,8 @@ public class CommandService {
      * @param uploadFile the uploadFile
      * @return the String
      */
-    public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
-        return new CommandProcess().sshFileUpload(dir, host, idRsa, uploadFile);
+    public String sshFileUpload(String dir, String host, String idRsa, File uploadFile, String userName) {
+        return new CommandProcess().sshFileUpload(dir, host, idRsa, uploadFile, userName);
     }
 
     /**
@@ -36,8 +36,8 @@ public class CommandService {
      * @param idRsa the idRsa
      * @return the void
      */
-    public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
-        new CommandProcess().sshFileDownload(dir, localDir, fileName, host, idRsa);
+    public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa, String userName){
+        new CommandProcess().sshFileDownload(dir, localDir, fileName, host, idRsa, userName);
     }
 
     /**
@@ -49,8 +49,8 @@ public class CommandService {
      * @param idRsa the idRsa
      * @return the String
      */
-    public String getSSHResponse(String command, String dir, String host, String idRsa) {
-        return new CommandProcess().getSSHResponse(command, dir, host, idRsa);
+    public String getSSHResponse(String command, String dir, String host, String idRsa, String userName) {
+        return new CommandProcess().getSSHResponse(command, dir, host, idRsa, userName);
     }
 
     /**
@@ -73,10 +73,10 @@ public class CommandService {
      * @param idRsa the idRsa
      * @return the String
      */
-    public String execCommandOutput(String command, String dir, String host, String idRsa) {
+    public String execCommandOutput(String command, String dir, String host, String idRsa, String userName) {
         String response = "";
         if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-            response = getSSHResponse(command, dir, host, idRsa);
+            response = getSSHResponse(command, dir, host, idRsa, userName);
         } else {
             response = getResponse(command, dir);
         }

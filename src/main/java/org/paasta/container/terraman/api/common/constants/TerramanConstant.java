@@ -1,6 +1,5 @@
 package org.paasta.container.terraman.api.common.constants;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,8 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
+//    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "$HOME/.ssh/paasta-master-key";
 
     /**
      * file name & directory
@@ -45,7 +45,8 @@ public class TerramanConstant {
      * kubespray cluster cp-cluster-terraman-vars.sh 변경 및 실행 명령어
      * */
     public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
-        return "echo -e \"" + contents + "\" > /home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
+//        return "echo -e \"" + contents + "\" > /home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
+        return "echo -e \"" + contents + "\" > $HOME/paas-ta-container-platform-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
     }
     public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster-terraman.sh";
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
@@ -58,13 +59,19 @@ public class TerramanConstant {
      * change directory 명령어
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
-        return "mkdir -p -v tmp/terraform/"+clusterId;
+        return "mkdir -p -v $HOME/tmp/terraform/"+clusterId;
+//        return "mkdir -p -v tmp/terraform/"+clusterId;
 //        return "sudo mkdir -p -v /home/1000/terraform/"+clusterId;
     }
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
-        return "tmp/terraform/" + clusterId;
+        return "$HOME/tmp/terraform/" + clusterId;
+//        return "tmp/terraform/" + clusterId;
 //        return "/home/1000/terraform/" + clusterId;
+    }
+
+    public static final String CLUSTER_LOCAL_STATE_DIR(String clusterId) {
+        return "/home/" + CUSTOM_USER_NAME + "/tmp/terraform/" + clusterId;
     }
 
     public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
@@ -75,12 +82,24 @@ public class TerramanConstant {
 //        return dir;
         return CLUSTER_STATE_DIR(clusterId);
     }
+
+    public static final String MOVE_DIR_CLUSTER_FILE_UPLOAD(String clusterId, String processGb) {
+//        String dir = CLUSTER_STATE_DIR(clusterId);
+//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+//            dir = "/home/ubuntu/" + dir;
+//        }
+//        return dir;
+        return CLUSTER_LOCAL_STATE_DIR(clusterId);
+    }
+
 //    public static final String DELETE_DIR_CLUSTER = "/home/1000/terraform";
-    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
+//    public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
+    public static final String DELETE_DIR_CLUSTER = "$HOME/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r "+clusterId;
     }
-    public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane";
+//    public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane";
+    public static final String MOVE_DIR_KUBESPRAY = "$HOME/paas-ta-container-platform-deployment/standalone/single_control_plane";
 
     /**
      * get cluster info
@@ -91,16 +110,17 @@ public class TerramanConstant {
 //            path = "/home/ubuntu/.ssh/" + path;
 //        }
 //        return path;
-        return "/home/ubuntu/.ssh/" + clusterName + "-key";
+//        return "/home/ubuntu/.ssh/" + clusterName + "-key";
+        return "$HOME/.ssh/" + clusterName + "-key";
     }
-    public static final String SERVICE_ACCOUNT_CREATE = "kubectl create serviceaccount k8sadmin -n kube-system";
-    public static final String SERVICE_ACCOUNT_BINDING = "kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
-    public static final String SERVICE_ACCOUNT_SECRET_NAME = "kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
+    public static final String SERVICE_ACCOUNT_CREATE = "sudo kubectl create serviceaccount k8sadmin -n kube-system";
+    public static final String SERVICE_ACCOUNT_BINDING = "sudo kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
+    public static final String SERVICE_ACCOUNT_SECRET_NAME = "sudo kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
     public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
         String resultString = "";
         try {
             secrets = secrets.trim();
-            resultString = "kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
+            resultString = "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
         } catch (Exception e) {
             LOGGER.error("TerramanConstants get token error : {}", e.getMessage());
         }
@@ -113,6 +133,8 @@ public class TerramanConstant {
      * */
     public static final String DIRECTORY_COMMAND = "pwd";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
+    public static final String DEFAULT_USER_NAME = "ubuntu";
+    public static final String CUSTOM_USER_NAME = "1000";
 
     /**
      * .tf 파일 복사 명령어
@@ -120,7 +142,8 @@ public class TerramanConstant {
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api --field-selector=status.phase=Running -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
 //        return "kubectl cp -n cp-portal " + pod + ":/home/1000/terraform/" + clusterId + " /home/1000/tmp/terraform/"+clusterId;
-        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
+//        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
+        return "kubectl cp -n cp-portal " + pod + ":/home/" + CUSTOM_USER_NAME + "tmp/terraform/" + clusterId + " $HOME/tmp/terraform/"+clusterId;
     }
 
 

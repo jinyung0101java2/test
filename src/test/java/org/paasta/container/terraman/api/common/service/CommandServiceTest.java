@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.paasta.container.terraman.api.common.constants.Constants;
+import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.terramanproc.CommandProcess;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,25 +45,25 @@ public class CommandServiceTest {
 
     @Test
     public void sshFileUploadTest() {
-        when(commandProcess.sshFileUpload(TEST_DIR, TEST_HOST, TEST_ID_RSA, fileMock)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandProcess.sshFileUpload(TEST_DIR, TEST_HOST, TEST_ID_RSA, fileMock, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
-        String result = commandService.sshFileUpload(TEST_DIR, TEST_HOST, TEST_ID_RSA, fileMock);
+        String result = commandService.sshFileUpload(TEST_DIR, TEST_HOST, TEST_ID_RSA, fileMock, TerramanConstant.DEFAULT_USER_NAME);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
 
     @Test
     public void sshFileDownloadTest() {
-        doNothing().when(commandProcess).sshFileDownload(TEST_DIR, TEST_LOCAL_DIR, TEST_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        doNothing().when(commandProcess).sshFileDownload(TEST_DIR, TEST_LOCAL_DIR, TEST_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
 
-        commandService.sshFileDownload(TEST_DIR, TEST_LOCAL_DIR, TEST_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        commandService.sshFileDownload(TEST_DIR, TEST_LOCAL_DIR, TEST_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
     }
 
     @Test
     public void getSSHResponseTest() {
-        when(commandProcess.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandProcess.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
-        String result = commandService.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
+        String result = commandService.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
@@ -78,10 +79,10 @@ public class CommandServiceTest {
 
     @Test
     public void  execCommandOutputSShTest() {
-        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
 //        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(TEST_COMMAND, TEST_DIR);
 
-        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
+        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
@@ -91,7 +92,7 @@ public class CommandServiceTest {
 //        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
         doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(TEST_COMMAND, TEST_DIR);
 
-        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, "", "");
+        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, "", "", TerramanConstant.DEFAULT_USER_NAME);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }

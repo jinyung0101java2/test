@@ -622,7 +622,7 @@ public class InstanceServiceTest {
 
     @Test
     public void getInstanceInfoAwsTest() {
-        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
         when(terramanInstanceProcess.getInstanceInfoAws(jsonObject)).thenReturn(instanceResultModel);
 
@@ -633,7 +633,7 @@ public class InstanceServiceTest {
 
     @Test
     public void getInstanceInfoOpenstackTest() {
-        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
         when(terramanInstanceProcess.getInstanceInfoOpenstack(jsonObject)).thenReturn(instanceResultModel);
 
@@ -658,7 +658,7 @@ public class InstanceServiceTest {
 
     @Test
     public void getInstancesInfoAwsTest() {
-        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
         when(terramanInstanceProcess.getInstancesInfoAws(jsonObject)).thenReturn(instancesResultModel);
 
@@ -669,7 +669,7 @@ public class InstanceServiceTest {
 
     @Test
     public void getInstancesInfoOpenstackTest() {
-        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA);
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
         when(terramanInstanceProcess.getInstancesInfoOpenstack(jsonObject)).thenReturn(instancesResultModel);
 

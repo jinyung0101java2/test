@@ -94,7 +94,8 @@ public class InstanceService {
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
-                    , idRsa);
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
         }
         JsonObject jsonObject = readStateFile(clusterId, processGb);
 
@@ -135,7 +136,8 @@ public class InstanceService {
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
-                    , idRsa);
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
         }
 
         JsonObject jsonObject = readStateFile(clusterId, processGb);
@@ -159,7 +161,8 @@ public class InstanceService {
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
-                    , idRsa);
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
         }
 
         JsonObject jsonObject = readStateFile(clusterId, processGb);
@@ -201,7 +204,8 @@ public class InstanceService {
                     , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
                     , TerramanConstant.TERRAFORM_STATE_FILE_NAME
                     , host
-                    , idRsa);
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
         }
         JsonObject jsonObject = readStateFile(clusterId, processGb);
 

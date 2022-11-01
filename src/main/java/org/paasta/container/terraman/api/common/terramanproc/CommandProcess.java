@@ -27,8 +27,7 @@ public class CommandProcess {
      * @param host the host
      * @return the void
      */
-    public void sshConnect(String host, String idRsa) throws JSchException {
-        String userName = "ubuntu";
+    public void sshConnect(String host, String idRsa, String userName) throws JSchException {
         int port = 22;
         JSch jsch = new JSch();
         jsch.addIdentity(idRsa);
@@ -75,12 +74,12 @@ public class CommandProcess {
      * @param uploadFile the uploadFile
      * @return the String
      */
-    public String sshFileUpload(String dir, String host, String idRsa, File uploadFile) {
+    public String sshFileUpload(String dir, String host, String idRsa, File uploadFile, String userName) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
 
         FileInputStream in = null;
         try {
-            sshConnect(host, idRsa);
+            sshConnect(host, idRsa, userName);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
@@ -115,12 +114,12 @@ public class CommandProcess {
      * @param idRsa the idRsa
      * @return the void
      */
-    public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa){
+    public void sshFileDownload(String dir, String localDir, String fileName, String host, String idRsa, String userName){
         // 원하는 경로에 파일 생성
         InputStream is = null;
         FileOutputStream out = null;
         try {
-            sshConnect(host, idRsa);
+            sshConnect(host, idRsa, userName);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
@@ -163,11 +162,11 @@ public class CommandProcess {
      * @param idRsa the idRsa
      * @return the String
      */
-    public String getSSHResponse(String command, String dir, String host, String idRsa) {
+    public String getSSHResponse(String command, String dir, String host, String idRsa, String userName) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         StringBuilder response = new StringBuilder();
         try {
-            sshConnect(host, idRsa);
+            sshConnect(host, idRsa, userName);
             channelExec = (ChannelExec) session.openChannel("exec");
             if(!StringUtils.equals(dir, "")) {
                 command = "cd " + dir + " && " + command;
@@ -271,10 +270,10 @@ public class CommandProcess {
      * @param idRsa the idRsa
      * @return the String
      */
-    public String execCommandOutput(String command, String dir, String host, String idRsa) {
+    public String execCommandOutput(String command, String dir, String host, String idRsa, String userName) {
         String response = "";
         if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-            response = getSSHResponse(command, dir, host, idRsa);
+            response = getSSHResponse(command, dir, host, idRsa, userName);
         } else {
             response = getResponse(command, dir);
         }
