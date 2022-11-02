@@ -24,7 +24,7 @@ public class TerramanConstant {
      * ssh conn key
      * */
 //    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
-    public static final String MASTER_ID_RSA = "home/" + CUSTOM_USER_NAME + "/.ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "home/" + DEFAULT_USER_NAME + "/.ssh/paasta-master-key";
     public static final String CLUSTER_PRIVATE_KEY(String clusterName, String processGb) {
 //        String path = "cluster-key";
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
@@ -32,7 +32,7 @@ public class TerramanConstant {
 //        }
 //        return path;
 //        return "/home/ubuntu/.ssh/" + clusterName + "-key";
-        return "home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
+        return "home/" + DEFAULT_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
     /*********************************************************************************************************/
 
