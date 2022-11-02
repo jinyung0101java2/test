@@ -12,10 +12,18 @@ public class TerramanConstant {
     }
 
     /**
+     * etc linux 명령어
+     * */
+    public static final String DIRECTORY_COMMAND = "pwd";
+    public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
+    public static final String DEFAULT_USER_NAME = "ubuntu";
+    public static final String CUSTOM_USER_NAME = "1000";
+
+    /**
      * ssh conn key
      * */
 //    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
-    public static final String MASTER_ID_RSA = ".././.ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "home/" + CUSTOM_USER_NAME + "/.ssh/paasta-master-key";
     public static final String CLUSTER_PRIVATE_KEY(String clusterName, String processGb) {
 //        String path = "cluster-key";
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
@@ -23,7 +31,7 @@ public class TerramanConstant {
 //        }
 //        return path;
 //        return "/home/ubuntu/.ssh/" + clusterName + "-key";
-        return ".././.ssh/" + clusterName + "-key";
+        return "home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
     /*********************************************************************************************************/
 
@@ -128,15 +136,6 @@ public class TerramanConstant {
         }
         return resultString;
     }
-
-
-    /**
-     * etc linux 명령어
-     * */
-    public static final String DIRECTORY_COMMAND = "pwd";
-    public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
-    public static final String DEFAULT_USER_NAME = "ubuntu";
-    public static final String CUSTOM_USER_NAME = "1000";
 
     /**
      * .tf 파일 복사 명령어
