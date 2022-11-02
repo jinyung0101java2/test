@@ -144,7 +144,7 @@ public class TerramanConstant {
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
 //        return "kubectl cp -n cp-portal " + pod + ":/home/1000/terraform/" + clusterId + " /home/1000/tmp/terraform/"+clusterId;
 //        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
-        return "kubectl cp -n cp-portal " + pod + ":/home/" + CUSTOM_USER_NAME + "tmp/terraform/" + clusterId + " $HOME/tmp/terraform/"+clusterId;
+        return "kubectl cp -n cp-portal " + pod + ":/home/" + CUSTOM_USER_NAME + "/tmp/terraform/" + clusterId + " $HOME/tmp/terraform/"+clusterId;
     }
 
 
