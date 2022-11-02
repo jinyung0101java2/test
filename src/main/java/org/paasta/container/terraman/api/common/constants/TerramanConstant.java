@@ -15,7 +15,7 @@ public class TerramanConstant {
      * ssh conn key
      * */
 //    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
-    public static final String MASTER_ID_RSA = ".." + System.getProperty("user.home") + ".ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "../.ssh/paasta-master-key";
 
     /**
      * get cluster info
@@ -27,7 +27,7 @@ public class TerramanConstant {
 //        }
 //        return path;
 //        return "/home/ubuntu/.ssh/" + clusterName + "-key";
-        return ".." + System.getProperty("user.home") + ".ssh/" + clusterName + "-key";
+        return "../.ssh/" + clusterName + "-key";
     }
 
     /**
