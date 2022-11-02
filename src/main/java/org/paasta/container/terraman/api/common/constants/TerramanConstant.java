@@ -15,11 +15,7 @@ public class TerramanConstant {
      * ssh conn key
      * */
 //    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
-    public static final String MASTER_ID_RSA = "../.ssh/paasta-master-key";
-
-    /**
-     * get cluster info
-     * */
+    public static final String MASTER_ID_RSA = ".././.ssh/paasta-master-key";
     public static final String CLUSTER_PRIVATE_KEY(String clusterName, String processGb) {
 //        String path = "cluster-key";
 //        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
@@ -27,8 +23,9 @@ public class TerramanConstant {
 //        }
 //        return path;
 //        return "/home/ubuntu/.ssh/" + clusterName + "-key";
-        return "../.ssh/" + clusterName + "-key";
+        return ".././.ssh/" + clusterName + "-key";
     }
+    /*********************************************************************************************************/
 
     /**
      * file name & directory
@@ -40,6 +37,7 @@ public class TerramanConstant {
     public static final String FILE_PATH(String clusterPath) {
         return clusterPath + "/provider.tf";
     }
+    /*********************************************************************************************************/
 
     /**
      * openstack provider prefix 생성
@@ -53,6 +51,7 @@ public class TerramanConstant {
             "  }\n" +
             "}";
 
+    /*********************************************************************************************************/
 
     /**
      * kubespray cluster cp-cluster-terraman-vars.sh 변경 및 실행 명령어
@@ -63,6 +62,7 @@ public class TerramanConstant {
     }
     public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster-terraman.sh";
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
+    /*********************************************************************************************************/
 
     /**
      * TERRAFORM COMMAND 명령어
