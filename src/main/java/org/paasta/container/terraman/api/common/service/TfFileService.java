@@ -110,8 +110,8 @@ public class TfFileService {
 
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
             if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-                File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb)) ); // 파일 객체 생성
-                commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
+                File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)) ); // 파일 객체 생성
+                commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
             }
             resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
             if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {

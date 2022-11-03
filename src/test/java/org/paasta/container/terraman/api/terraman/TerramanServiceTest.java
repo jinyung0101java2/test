@@ -153,7 +153,7 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
         when(terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessStart(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROVIDER, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessSetTfFile(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_INT_SEQ)).thenReturn(TEST_MP_SEQ);
@@ -198,7 +198,7 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(null, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(null, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(null, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(null), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
 
         terramanService.createTerraman(gParams2, TEST_PROCESS_GB);
 
@@ -215,7 +215,7 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(null));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
 
         terramanService.createTerraman(gParams2, TEST_PROCESS_GB);
 
@@ -232,7 +232,7 @@ public class TerramanServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(null, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(null));
         doReturn(clusterModel).when(clusterService).updateCluster(null, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
-        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(null, TEST_PROCESS_GB), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        when(commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(null), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
 
         terramanService.createTerraman(gParams2, TEST_PROCESS_GB);
 
