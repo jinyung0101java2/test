@@ -132,19 +132,4 @@ public class TerramanController {
 ////        return terramanService.deleteTerraman(clusterId, "Daemon");
 //        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
 //    }
-//
-//    @GetMapping(value = "/test")
-//    public void test() {
-//        String result = "";
-//        result = commandService.getSSHResponse("sudo chmod 666 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-//        LOGGER.info("first :: {}", result);
-//        result = commandService.getSSHResponse("echo \"15.164.195.107 foo.bar.com.new\" >> /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-//        LOGGER.info("second :: {}", result);
-//        result = commandService.getSSHResponse("sudo chmod 644 /etc/hosts", "", "15.164.195.107", "/home/ubuntu/.ssh/paasta-master-key");
-//        LOGGER.info("third :: {}", result);
-//    }
-//
-//    @GetMapping(value = "/test2")
-//    public void test2() {
-//    }
 }

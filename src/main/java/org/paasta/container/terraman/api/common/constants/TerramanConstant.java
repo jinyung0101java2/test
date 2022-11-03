@@ -23,15 +23,8 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-//    public static final String MASTER_ID_RSA = "/home/ubuntu/.ssh/paasta-master-key";
     public static final String MASTER_ID_RSA = "home/" + DEFAULT_USER_NAME + "/.ssh/paasta-master-key";
-    public static final String CLUSTER_PRIVATE_KEY(String clusterName, String processGb) {
-//        String path = "cluster-key";
-//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-//            path = "/home/ubuntu/.ssh/" + path;
-//        }
-//        return path;
-//        return "/home/ubuntu/.ssh/" + clusterName + "-key";
+    public static final String CLUSTER_PRIVATE_KEY(String clusterName) {
         return "home/" + DEFAULT_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
     /*********************************************************************************************************/
@@ -78,23 +71,15 @@ public class TerramanConstant {
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
         return "mkdir -p -v tmp/terraform/"+clusterId;
-//        return "sudo mkdir -p -v /home/1000/terraform/"+clusterId;
     }
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
         return "tmp/terraform/" + clusterId;
-//        return "/home/1000/terraform/" + clusterId;
     }
 
-    public static final String MOVE_DIR_CLUSTER(String clusterId, String processGb) {
-//        String dir = CLUSTER_STATE_DIR(clusterId);
-//        if(StringUtils.isBlank(processGb) || !StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-//            dir = "/home/ubuntu/" + dir;
-//        }
-//        return dir;
+    public static final String MOVE_DIR_CLUSTER(String clusterId) {
         return CLUSTER_STATE_DIR(clusterId);
     }
-    //    public static final String DELETE_DIR_CLUSTER = "/home/1000/terraform";
     public static final String DELETE_DIR_CLUSTER = "/home/ubuntu/tmp/terraform";
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r "+clusterId;
@@ -120,7 +105,6 @@ public class TerramanConstant {
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api --field-selector=status.phase=Running -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
-//        return "kubectl cp -n cp-portal " + pod + ":/home/1000/terraform/" + clusterId + " /home/1000/tmp/terraform/"+clusterId;
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
 
@@ -132,8 +116,6 @@ public class TerramanConstant {
     public static final String TERRAFORM_PLAN_COMMAND = "terraform plan";
     public static final String TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve";
     public static final String TERRAFORM_DESTROY_COMMAND = "terraform destroy -auto-approve";
-
-
 
 
     /**
