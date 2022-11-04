@@ -17,8 +17,8 @@ public class TerramanConstant {
      * */
     public static final String DIRECTORY_COMMAND = "pwd";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
-    public static final String DEFAULT_USER_NAME = "ubuntu";
-    public static final String CUSTOM_USER_NAME = "1000";
+    public static final String DEFAULT_USER_NAME = "1000";
+    public static final String CUSTOM_USER_NAME = "ubuntu";
 
     /**
      * ssh conn key
