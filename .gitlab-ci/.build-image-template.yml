@@ -22,14 +22,10 @@ docker build:
     #  echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
     - >- # build image
       /kaniko/executor
-        --context "${CI_PROJECT_DIR}"
-        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-        --destination "${HARBOR_HOST}/${HARBOR_PROJECT}/${CI_PROJECT_NAME}:${IMAGE_TAGS}"
-        --insecure
-#      /kaniko/executor
-#        --context "${CI_PROJECT_DIR}"
-#        --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-#        --destination "${CI_REGISTRY_IMAGE}:${IMAGE_TAGS}"
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${HARBOR_HOST}/${HARBOR_PROJECT}/${CI_PROJECT_NAME}:${IMAGE_TAGS}"
+      --insecure 
   cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
