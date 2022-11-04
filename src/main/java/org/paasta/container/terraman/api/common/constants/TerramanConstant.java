@@ -17,15 +17,15 @@ public class TerramanConstant {
      * */
     public static final String DIRECTORY_COMMAND = "pwd";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
-    public static final String DEFAULT_USER_NAME = "1000";
-    public static final String CUSTOM_USER_NAME = "ubuntu";
+    public static final String DEFAULT_USER_NAME = "ubuntu";
+    public static final String CUSTOM_USER_NAME = "1000";
 
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "home/" + DEFAULT_USER_NAME + "/.ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "home/" + CUSTOM_USER_NAME + "/.ssh/paasta-master-key";
     public static final String CLUSTER_PRIVATE_KEY(String clusterName) {
-        return "home/" + DEFAULT_USER_NAME + "/.ssh/" + clusterName + "-key";
+        return "home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
     /*********************************************************************************************************/
 

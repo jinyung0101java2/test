@@ -101,8 +101,8 @@ spring:
 logging:
   level:
     ROOT: INFO
-  file:
-    path: classpath:logback-spring.xml
+  path: classpath:logback-spring.xml
+  file: logs/application.log
 
 server:
   port: ${PORT:8091}
