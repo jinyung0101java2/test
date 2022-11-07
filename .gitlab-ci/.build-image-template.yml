@@ -11,7 +11,10 @@ docker build:
     - echo $HARBOR_USERNAME 
     - echo $HARBOR_PASSWORD 
     - echo $IMAGE_TAGS 
-    - echo $HARBOR_HOST 
+    - echo $HARBOR_HOST
+    - echo $HARBOR_PROJECT
+    - echo $CI_PROJECT_NAME
+    - echo $IMAGE_TAGS
     - rm -rf /kaniko/.docker 
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
