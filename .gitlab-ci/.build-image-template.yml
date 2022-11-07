@@ -18,8 +18,8 @@ docker build:
 #    - echo "{\"auths\":{\"${HARBOR_URL}\":{\"auth\":\"$(echo -n ${HARBOR_USERNAME}:${HARBOR_PASSWORD} | base64)\"}}}" > /kaniko/.docker/config.json
     - cat /kaniko/.docker/config.json
     #- cat /kaniko/.docker/config.json config.json 확인
-    #- | # ssl cert key 입력
-    #  echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
+    - | # ssl cert key 입력
+      echo "${GITLAB_CERT_KEY}" >> /kaniko/ssl/certs/additional-ca-cert-bundle.crt
     - >- # build image
       /kaniko/executor
       --context "${CI_PROJECT_DIR}"
