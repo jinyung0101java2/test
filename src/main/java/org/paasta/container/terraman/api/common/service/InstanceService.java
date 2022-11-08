@@ -7,6 +7,7 @@ import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.InstanceModel;
 import org.paasta.container.terraman.api.common.terramanproc.TerramanInstanceProcess;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultModel = getInstanceInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultModel = getInstanceInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa, processGb); break;
-            default : LOGGER.error("{} is Cloud not supported.", provider);
+            default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 resultModel = new InstanceModel("", "", "", "");
                 break;
         }
@@ -72,7 +73,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultList = getInstancesInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultList = getInstancesInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultList = getInstancesInfoOpenstack(clusterId, host, idRsa, processGb); break;
-            default : LOGGER.error("{} is Cloud not supported.", provider); break;
+            default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider)); break;
         }
 
         return resultList;

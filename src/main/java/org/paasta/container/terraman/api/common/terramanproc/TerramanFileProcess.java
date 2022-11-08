@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.FileModel;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,7 +126,7 @@ public class TerramanFileProcess {
                             resultCode = this.tfCreateWithWriteAws(fileModel, file);
                             break;
                         case Constants.UPPER_GCP :
-                            LOGGER.error("{} is Cloud not supported.", provider);
+                            LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                             break;
                         case Constants.UPPER_VSPHERE :
                             resultCode = this.tfCreateWithWriteVSphere(fileModel, file);
@@ -134,14 +135,14 @@ public class TerramanFileProcess {
                             resultCode = this.tfCreateWithWriteOpenstack(fileModel, file);
                             break;
                         default :
-                            LOGGER.error("{} is Cloud not supported.", provider);
+                            LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                             break;
                     }
                 }
             }
             catch (IOException e) {
                 resultCode = Constants.RESULT_STATUS_FAIL;
-                LOGGER.error(e.getMessage());
+                LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
             }
         }
         return resultCode;

@@ -2,6 +2,7 @@ package org.paasta.container.terraman.api.common.service;
 
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.repository.AccountRepository;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class AccountService {
             accountModel = new AccountModel();
             accountModel = accountRepository.findById(id);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
         }
         return accountModel;
     }

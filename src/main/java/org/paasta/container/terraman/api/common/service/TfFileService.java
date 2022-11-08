@@ -8,6 +8,7 @@ import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
 import org.paasta.container.terraman.api.common.terramanproc.TerramanFileProcess;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class TfFileService {
                 fileModel.setAwsRegion(account.getRegion());
                 break;
             case Constants.UPPER_GCP :
-                LOGGER.error("{} is Cloud not supported.", provider);
+                LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 break;
             case Constants.UPPER_VSPHERE :
                 vsphereUser = res != null ? String.valueOf(res.get("uesr")) : "";
@@ -102,7 +103,7 @@ public class TfFileService {
                 break;
             default :
                 resultCode = Constants.RESULT_STATUS_FAIL;
-                LOGGER.error("{} is Cloud not supported.", provider);
+                LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 break;
         }
 

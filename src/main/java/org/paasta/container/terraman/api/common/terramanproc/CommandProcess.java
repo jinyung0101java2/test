@@ -3,7 +3,9 @@ package org.paasta.container.terraman.api.common.terramanproc;
 import com.jcraft.jsch.*;
 import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.constants.Constants;
+import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.service.CommandService;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,12 +94,12 @@ public class CommandProcess {
             }
             in.close();
         } catch (SftpException | JSchException | IOException e) {
-            LOGGER.error("Exception : {}", e.getMessage());
+            LOGGER.error("Exception : {}", CommonUtils.loggerReplace(e.getMessage()));
         } finally {
             try {
                 if(in != null) in.close();
             } catch (IOException ie) {
-                LOGGER.error(ie.getMessage());
+                LOGGER.error(CommonUtils.loggerReplace(ie.getMessage()));
             }
             this.disConnectSSH();
         }
@@ -139,15 +141,15 @@ public class CommandProcess {
             is.close();
             out.close();
         } catch (SftpException se) {
-            LOGGER.error("SftpException : {}", se.getMessage());
+            LOGGER.error("SftpException : {}", CommonUtils.loggerReplace(se.getMessage()));
         } catch ( Exception e){
-            LOGGER.error("Exception : {}", e.getMessage());
+            LOGGER.error("Exception : {}", CommonUtils.loggerReplace(e.getMessage()));
         } finally {
             try {
                 if(is != null) is.close();
                 if(out != null) out.close();
             } catch (IOException ie) {
-                LOGGER.error(ie.getMessage());
+                LOGGER.error(CommonUtils.loggerReplace(ie.getMessage()));
             }
             this.disConnectSSH();
         }
@@ -186,7 +188,7 @@ public class CommandProcess {
             if(e.getMessage().contains("timed out")) {
                 resultCommand = Constants.RESULT_STATUS_TIME_OUT;
             }
-            LOGGER.error("JSchException : {}", e.getMessage());
+            LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
         } finally {
             this.disConnectSSH();
         }
@@ -203,8 +205,8 @@ public class CommandProcess {
     public String getResponse(String command, String dir) {
         String resultOutput = Constants.RESULT_STATUS_FAIL;
         List<String> cmd = new ArrayList<>();
-        cmd.add("/bin/bash");
-        cmd.add("-c");
+        cmd.add(TerramanConstant.LINUX_BASH);
+        cmd.add(TerramanConstant.LINUX_BASH_C);
         cmd.add(command);
 
         StringBuilder sb = new StringBuilder(1024);
@@ -222,7 +224,7 @@ public class CommandProcess {
             // 프로세스 수행시작
             prs = prsbld.start();
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
         }
 
         if(prs != null) {
@@ -245,14 +247,14 @@ public class CommandProcess {
                 } else {
                     resultOutput = Constants.RESULT_STATUS_FAIL;
                 }
-                LOGGER.error(e1.getMessage());
+                LOGGER.error(CommonUtils.loggerReplace(e1.getMessage()));
             } finally {
                 if(prs != null) {
                     try {
                         prs.destroy();
                     } catch(Exception e2) {
                         resultOutput = Constants.RESULT_STATUS_FAIL;
-                        LOGGER.error(e2.getMessage());
+                        LOGGER.error(CommonUtils.loggerReplace(e2.getMessage()));
                     }
                 }
             }

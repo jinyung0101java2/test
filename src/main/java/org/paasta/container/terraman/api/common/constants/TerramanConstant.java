@@ -1,6 +1,7 @@
 package org.paasta.container.terraman.api.common.constants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,8 @@ public class TerramanConstant {
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
     public static final String DEFAULT_USER_NAME = "ubuntu";
     public static final String CUSTOM_USER_NAME = "1000";
+    public static final String LINUX_BASH = "/bin/bash";
+    public static final String LINUX_BASH_C = "-c";
 
     /**
      * ssh conn key
@@ -95,7 +98,7 @@ public class TerramanConstant {
             secrets = secrets.trim();
             resultString = "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
         } catch (Exception e) {
-            LOGGER.error("TerramanConstants get token error : {}", e.getMessage());
+            LOGGER.error("TerramanConstants get token error : {}", CommonUtils.loggerReplace(e.getMessage()));
         }
         return resultString;
     }

@@ -50,7 +50,7 @@ public class CommonFileUtils {
         }
         catch (IOException e) {
             resultCode = Constants.RESULT_STATUS_FAIL;
-            LOGGER.error(e.getMessage());
+            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
         }
 
         return resultCode;
@@ -75,7 +75,7 @@ public class CommonFileUtils {
             obj = gson.fromJson(reader, JsonObject.class);
 
         } catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
         }
         return obj;
     }
@@ -98,7 +98,7 @@ public class CommonFileUtils {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
         }
         return resultCode;
     }
