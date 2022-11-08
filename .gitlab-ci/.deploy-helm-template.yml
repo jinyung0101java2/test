@@ -1,6 +1,7 @@
 variables:
   CHART_NAME: cp-terraman-app
   K8S_MASTER_HOST_KEY: master-host-key
+  TEST_HOST: "10.100.1.148:30002"
 
 app deploy:
   stage: deploy
@@ -14,7 +15,8 @@ app deploy:
     - sed -i "s/\${DEPLOY_NAME}/$APP_NAME/g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${NAMESPACE}/$NAMESPACE/g" $APP_CHART_PATH/values.yaml
 #    - sed -i "s~\${REPOSITORY_URL}~$CI_REGISTRY~g" $APP_CHART_PATH/values.yaml
-    - sed -i "s~\${REPOSITORY_URL}~$HARBOR_HOST~g" $APP_CHART_PATH/values.yaml
+#    - sed -i "s~\${REPOSITORY_URL}~$HARBOR_HOST~g" $APP_CHART_PATH/values.yaml
+    - sed -i "s~\${REPOSITORY_URL}~$TEST_HOST~g" $APP_CHART_PATH/values.yaml
 #    - sed -i "s~\${REPOSITORY_PROJECT_NAME}~$CI_PROJECT_NAMESPACE~g" $APP_CHART_PATH/values.yaml
     - sed -i "s~\${REPOSITORY_PROJECT_NAME}~$HARBOR_PROJECT~g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${IMAGE_NAME}/$CI_PROJECT_TITLE/g" $APP_CHART_PATH/values.yaml
