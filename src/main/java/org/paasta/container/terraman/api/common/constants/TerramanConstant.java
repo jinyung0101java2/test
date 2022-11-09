@@ -208,24 +208,24 @@ public class TerramanConstant {
     public static final String KUBERSPRAY_VARS_PRIVATE_KEY = "export CLUSTER_PRIVATE_KEY=";
 
 
-    public static final String COMMAND_SWITCH(String ref, String... str) {
+    public static final String COMMAND_SWITCH(String ref, String clusterId, String pod, String secrets, String contents) {
         String switchStr = "";
         switch(ref) {
-            case "1" : switchStr = CREATE_DIR_CLUSTER(str[0]); break;
+            case "1" : switchStr = CREATE_DIR_CLUSTER(clusterId); break;
             case "2" : switchStr = DIRECTORY_COMMAND; break;
             case "3" : switchStr = POD_NAME_COMMAND; break;
             case "4" : switchStr = TERRAFORM_INIT_COMMAND; break;
             case "5" : switchStr = TERRAFORM_PLAN_COMMAND; break;
             case "6" : switchStr = TERRAFORM_APPLY_COMMAND; break;
-            case "7" : switchStr = CLUSTER_KUBESPRAY_SH_FILE_COMMAND(str[0]); break;
+            case "7" : switchStr = CLUSTER_KUBESPRAY_SH_FILE_COMMAND(contents); break;
             case "8" : switchStr = KUBESPRAY_CHMOD_COMMAND; break;
             case "9" : switchStr = CLUSTER_KUBESPRAY_DEPLOY_COMMAND; break;
             case "10" : switchStr = SERVICE_ACCOUNT_CREATE; break;
             case "11" : switchStr = SERVICE_ACCOUNT_BINDING; break;
             case "12" : switchStr = SERVICE_ACCOUNT_SECRET_NAME; break;
-            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(str[0]); break;
-            case "14" : switchStr = INSTANCE_COPY_COMMAND(str[1], str[2]); break;
-            case "15" : switchStr = CREATE_DIR_CLUSTER(str[0]); break;
+            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(secrets); break;
+            case "14" : switchStr = INSTANCE_COPY_COMMAND(pod, clusterId); break;
+            case "15" : switchStr = CREATE_DIR_CLUSTER(clusterId); break;
         }
         return switchStr;
     }

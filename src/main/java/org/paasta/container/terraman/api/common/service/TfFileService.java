@@ -8,6 +8,7 @@ import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.terramanproc.TerramanFileProcess;
 import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -118,7 +119,15 @@ public class TfFileService {
                 }
             }
 //            resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
-            resultCode = commandService.execCommandOutput("14", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+            TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+            terramanCommandModel.setCommand("14");
+            terramanCommandModel.setDir("");
+            terramanCommandModel.setHost(host);
+            terramanCommandModel.setIdRsa(idRsa);
+            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+            terramanCommandModel.setClusterId(clusterId);
+            terramanCommandModel.setPod(pod);
+            resultCode = commandService.execCommandOutput(terramanCommandModel);
             if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
                 resultCode = Constants.RESULT_STATUS_SUCCESS;
                 LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", resultCode);

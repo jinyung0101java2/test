@@ -1,6 +1,7 @@
 package org.paasta.container.terraman.api.common.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.terramanproc.CommandProcess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,42 +44,35 @@ public class CommandService {
     /**
      * SSH Command Line Response
      *
-     * @param command the command
-     * @param dir the dir
-     * @param host the host
-     * @param idRsa the idRsa
+     * @param terramanCommandModel the terramanCommandModel
      * @return the String
      */
-    public String getSSHResponse(String command, String dir, String host, String idRsa, String userName) {
-        return new CommandProcess().getSSHResponse(command, dir, host, idRsa, userName);
+    public String getSSHResponse(TerramanCommandModel terramanCommandModel) {
+        return new CommandProcess().getSSHResponse(terramanCommandModel);
     }
 
     /**
      * Command Line Response
      *
-     * @param command the command
-     * @param dir the dir
+     * @param terramanCommandModel the terramanCommandModel
      * @return the String
      */
-    public String getResponse(String command, String dir) {
-        return new CommandProcess().getResponse(command, dir);
+    public String getResponse(TerramanCommandModel terramanCommandModel) {
+        return new CommandProcess().getResponse(terramanCommandModel);
     }
 
     /**
      * Command Line Excute
      *
-     * @param command the command
-     * @param dir the dir
-     * @param host the host
-     * @param idRsa the idRsa
+     * @param terramanCommandModel the terramanCommandModel
      * @return the String
      */
-    public String execCommandOutput(String command, String dir, String host, String idRsa, String userName) {
+    public String execCommandOutput(TerramanCommandModel terramanCommandModel) {
         String response = "";
-        if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-            response = getSSHResponse(command, dir, host, idRsa, userName);
+        if(!StringUtils.isBlank(terramanCommandModel.getIdRsa()) && !StringUtils.isBlank(terramanCommandModel.getHost())) {
+            response = getSSHResponse(terramanCommandModel);
         } else {
-            response = getResponse(command, dir);
+            response = getResponse(terramanCommandModel);
         }
         return response;
     }

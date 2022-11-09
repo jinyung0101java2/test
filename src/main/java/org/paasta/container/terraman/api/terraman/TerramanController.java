@@ -101,49 +101,4 @@ public class TerramanController {
     public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
         terramanService.createTerraman(terramanRequest, "Daemon");
     }
-
-    @ApiOperation(value = "Terraman 생성(Create Terraman) - Daemon 실행", nickname = "initTerraman")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
-    })
-    @PostMapping(value = "/test")
-    public void test(@RequestBody TerramanRequest terramanRequest) {
-        String aa = "tmp/terraform/test/provider.tf";
-        String bb = "/provider.tf";
-        LOGGER.info("aa :: {}", FilenameUtils.getName(aa));
-        LOGGER.info("bb :: {}", FilenameUtils.getName(bb));
-    }
-
-//    /**
-//     * Terraman 삭제(Delete Terraman) - Container 실행
-//     *
-//     * @return the resultStatus
-//     */
-//    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Container 실행", nickname = "deleteTerraman")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster"),
-//            @ApiImplicitParam(name = "processGb", value = "Terraman 삭제 구분", required = false, dataType = "string", paramType = "path")
-//    })
-//    @DeleteMapping(value = "/{clusterId:.+}/{processGb:.+}")
-//    public ResultStatusModel deleteTerraman(
-//            @PathVariable String clusterId
-//            , @PathVariable String processGb) {
-////        return terramanService.deleteTerraman(clusterId, processGb);
-//        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
-//    }
-//
-//    /**
-//     * Terraman 삭제(Delete Terraman) - Daemon 실행
-//     *
-//     * @return the resultStatus
-//     */
-//    @ApiOperation(value = "Terraman 삭제(Delete Terraman) - Daemon 실행", nickname = "deleteTerraman")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "clusterId", value = "Terraman 삭제 정보", required = true, dataType = "string", paramType = "path", defaultValue = "terraform-cluster")
-//    })
-//    @DeleteMapping(value = "/{clusterId:.+}")
-//    public ResultStatusModel deleteTerraman(@PathVariable String clusterId) {
-////        return terramanService.deleteTerraman(clusterId, "Daemon");
-//        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_FAIL);
-//    }
 }

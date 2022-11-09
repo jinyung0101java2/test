@@ -13,6 +13,7 @@ import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ClusterInfo;
 import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.model.InstanceModel;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.service.*;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.springframework.test.context.TestPropertySource;
@@ -101,8 +102,13 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessSetTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[14]);
+        terramanCommandModel.setDir(TEST_DIR);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
         doNothing().when(clusterLogService).deleteClusterLogByClusterId(TEST_CLUSTER_ID);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[14], TEST_DIR, "", "", TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessSet(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_DIR);
 
@@ -111,8 +117,13 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessSetFailTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[14]);
+        terramanCommandModel.setDir(TEST_DIR);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
         doNothing().when(clusterLogService).deleteClusterLogByClusterId(TEST_CLUSTER_ID);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[14], TEST_DIR, "", "", TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_FAIL);
 
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
@@ -124,7 +135,14 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessStartTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_RESULT_CODE);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_IAC_LOG);
 
@@ -136,7 +154,14 @@ public class TerramanProcessServiceTest {
     @Test
     public void terramanProcessSetTfFileTest() {
         TfFileService tfFileServiceMock = mock(TfFileService.class);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[2], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[2]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_RESULT_CODE);
         when(tfFileServiceMock.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH, TEST_PROCESS_GB)).thenReturn(TEST_RESULT_CODE);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_TF_ERROR_LOG);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -149,7 +174,14 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessSetTfFileFailTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[2], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_RESULT_CODE);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[2]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_RESULT_CODE);
         when(tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_INT_SEQ, TEST_STRING, TEST_HOST, TEST_ID_RSA_PATH, TEST_PROCESS_GB)).thenReturn(Constants.RESULT_STATUS_FAIL);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_TF_ERROR_LOG);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -161,8 +193,25 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessInitTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[3], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[3]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
@@ -171,20 +220,54 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessInitFailTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[3], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[3]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_INIT_FAIL_LOG);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
-        assertEquals(-1, result);
+        assertEquals(2, result);
     }
 
     @Test
     public void terramanProcessPlanTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[4], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[4]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
@@ -193,20 +276,54 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessPlanFailTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[4], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[4]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_PLAN_FAIL_LOG);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
-        assertEquals(-1, result);
+        assertEquals(2, result);
     }
 
     @Test
     public void terramanProcessApplyTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[5], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[5]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
@@ -215,19 +332,42 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessApplyFailTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[5], TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID), TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[5]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_CLUSTER(TEST_CLUSTER_ID));
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_APPLY_FAIL_LOG);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA);
 
-        assertEquals(-1, result);
+        assertEquals(2, result);
     }
 
     @Test
     public void terramanProcessGetInstanceIpTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -239,7 +379,13 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessGetInstanceNullTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(null);
 
         int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME);
@@ -249,9 +395,24 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessSetKubesprayTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[7]);
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceList);
-        when(commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND("test"), "", TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
@@ -262,9 +423,34 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessExecKubesprayTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[7], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[8], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[7]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[8]);
+        terramanCommandModel3.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel3.setHost(TEST_HOST);
+        terramanCommandModel3.setIdRsa(TEST_IDRSA);
+        terramanCommandModel3.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel3)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
 
@@ -273,38 +459,109 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessExecKubesprayModErrorTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[7], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[7]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_MP_SEQ, TerramanConstant.TERRAFORM_CHANGE_MODE_ERROR);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
 
-        assertEquals(-1, result);
+        assertEquals(1, result);
     }
 
     @Test
     public void terramanProcessExecKubesprayDeployErrorTest() {
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[1], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(TEST_STRING);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[7], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[8], TerramanConstant.MOVE_DIR_KUBESPRAY, TEST_HOST, TEST_IDRSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
+        terramanCommandModel.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_IDRSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[7]);
+        terramanCommandModel2.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel2.setHost(TEST_HOST);
+        terramanCommandModel2.setIdRsa(TEST_IDRSA);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[8]);
+        terramanCommandModel3.setDir(TerramanConstant.MOVE_DIR_KUBESPRAY);
+        terramanCommandModel3.setHost(TEST_HOST);
+        terramanCommandModel3.setIdRsa(TEST_IDRSA);
+        terramanCommandModel3.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STRING);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel3)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
         int result = terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA);
 
-        assertEquals(-1, result);
+        assertEquals(1, result);
     }
 
     @Test
     public void terramanProcessCreateVaultTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel4 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[12]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[9], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[10], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[11], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[12], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel3)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel4)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN);
         when(vaultService.write(TEST_CLUSTER_API_URL, clusterInfoMock)).thenReturn(gInstanceModel);
@@ -319,8 +576,16 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessCreateVaulCreateErrortTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[9], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_FAIL);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN);
         when(vaultService.write(TEST_CLUSTER_API_URL, clusterInfoMock)).thenReturn(gInstanceModel);
@@ -335,9 +600,24 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessCreateVaultBindingErrorTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[9], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[10], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_FAIL);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN);
         when(vaultService.write(TEST_CLUSTER_API_URL, clusterInfoMock)).thenReturn(gInstanceModel);
@@ -352,10 +632,32 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessCreateVaultSecretNameErrorTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[9], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[10], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[11], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel3)).thenReturn(Constants.RESULT_STATUS_FAIL);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN);
         when(vaultService.write(TEST_CLUSTER_API_URL, clusterInfoMock)).thenReturn(gInstanceModel);
@@ -370,11 +672,40 @@ public class TerramanProcessServiceTest {
 
     @Test
     public void terramanProcessCreateVaultTokenErrorTest() {
+        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
+        TerramanCommandModel terramanCommandModel4 = new TerramanCommandModel();
+
+        terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[12]);
+        terramanCommandModel.setHost(gInstanceModel.getPublicIp());
+        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
+        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
+
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[9], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[10], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[11], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
-        when(commandService.execCommandOutput(TEST_COMMAND_NUMBER[12], "", gInstanceModel.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME), TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_FAIL);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel2)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel3)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel4)).thenReturn(Constants.RESULT_STATUS_FAIL);
         when(propertyService.getVaultClusterApiUrl()).thenReturn(TEST_CLUSTER_API_URL);
         when(propertyService.getVaultClusterTokenPath()).thenReturn(TEST_CLUSTER_TOKEN);
         when(vaultService.write(TEST_CLUSTER_API_URL, clusterInfoMock)).thenReturn(gInstanceModel);

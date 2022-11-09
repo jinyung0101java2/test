@@ -5,6 +5,7 @@ import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ClusterModel;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,12 +78,18 @@ public class TerramanService {
         // 생성중 status 변경
         clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_CREATE_STATUS);
         if(StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
+            TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
             LOGGER.info("host :: {}", host);
             LOGGER.info("idRsa :: {}", idRsa);
+            terramanCommandModel.setCommand("15");
+            terramanCommandModel.setHost(host);
+            terramanCommandModel.setIdRsa(idRsa);
+            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+            terramanCommandModel.setClusterId(clusterId);
 //            cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
-            cResult = commandService.execCommandOutput("15", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+            cResult = commandService.execCommandOutput(terramanCommandModel);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
                 mpSeq = -1;
@@ -180,53 +187,4 @@ public class TerramanService {
 
         /*************************************************************************************************************************************/
     }
-
-    /**
-     * Terraman 삭제(Delete Terraman)
-     *
-     * @param clusterId the clusterId
-     * @param clusterId the processGb
-     * @return the resultStatus
-     */
-//    public ResultStatusModel deleteTerraman(String clusterId, String processGb) {
-//        String host = "";
-//        String idRsa = "";
-//        ResultStatusModel resultStatus = new ResultStatusModel();
-//
-//        if(StringUtils.isBlank(clusterId)) {
-//            LOGGER.error("cluster_id가 없습니다.. {}", Constants.RESULT_STATUS_FAIL);
-//            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
-//        }
-//
-//        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
-//            host = propertyService.getMasterHost();
-//            idRsa = TerramanConstant.MASTER_ID_RSA;
-//        }
-//
-//        String cResult;
-//        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_DESTROY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId, processGb), host, idRsa);
-//        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-//            LOGGER.error("terraform 삭제 중 오류가 발생하였습니다. {}", cResult);
-//            return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
-//        } else {
-//            cResult = commandService.execCommandOutput(TerramanConstant.DELETE_CLUSTER(clusterId), TerramanConstant.DELETE_DIR_CLUSTER, host, idRsa);
-//            if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-//                LOGGER.error("Cluster 삭제 중 오류가 발생하였습니다. {}", cResult);
-//                return (ResultStatusModel) commonService.setResultModel(resultStatus, cResult);
-//            }
-//        }
-//
-//        vaultService.delete(propertyService.getVaultClusterTokenPath().replace("{id}", clusterId));
-//        // cluster log 삭제
-//        try {
-//            clusterLogService.deleteClusterLogByClusterId(clusterId);
-//        } catch (Exception e) {
-//            LOGGER.error("cluster log 삭제에 실패하였습니다.");
-//            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-//            return (ResultStatusModel) commonService.setResultModel(resultStatus, Constants.RESULT_STATUS_FAIL);
-//        }
-//
-//        return (ResultStatusModel) commonService.setResultModel(new ResultStatusModel(), Constants.RESULT_STATUS_SUCCESS);
-//
-//    }
 }

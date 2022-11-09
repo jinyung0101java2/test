@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.terramanproc.CommandProcess;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.*;
 @TestPropertySource("classpath:application.yml")
 public class CommandServiceTest {
 
+    private static final String TEST_CLUSTER_ID = "testClusterId";
     private static final String TEST_HOST = "1.1.1.1";
     private static final String TEST_ID_RSA = "id_rsa";
     private static final String TEST_DIR = "/";
@@ -28,6 +30,8 @@ public class CommandServiceTest {
     private static final String TEST_FILE_NAME = "testFileName";
 
     private File fileMock;
+
+    private static TerramanCommandModel terramanCommandModel;
 
     @Mock
     private CommandProcess commandProcess;
@@ -40,6 +44,13 @@ public class CommandServiceTest {
     @Before
     public void setUp() {
         fileMock = mock(File.class);
+        terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand("1");
+        terramanCommandModel.setDir(TEST_DIR);
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_ID_RSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
     }
 
 
@@ -61,28 +72,29 @@ public class CommandServiceTest {
 
     @Test
     public void getSSHResponseTest() {
-        when(commandProcess.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
-        String result = commandService.getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(commandProcess.getSSHResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        String result = commandService.getSSHResponse(terramanCommandModel);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
 
     @Test
     public void getResponseTest() {
-        when(commandProcess.getResponse(TEST_COMMAND, TEST_DIR)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandProcess.getResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
-        String result = commandService.getResponse(TEST_COMMAND, TEST_DIR);
+        String result = commandService.getResponse(terramanCommandModel);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
 
     @Test
     public void  execCommandOutputSShTest() {
-        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(terramanCommandModel);
 //        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(TEST_COMMAND, TEST_DIR);
 
-        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        String result = commandService.execCommandOutput(terramanCommandModel);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
@@ -90,9 +102,9 @@ public class CommandServiceTest {
     @Test
     public void  execCommandOutputTest() {
 //        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
-        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(TEST_COMMAND, TEST_DIR);
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
 
-        String result = commandService.execCommandOutput(TEST_COMMAND, TEST_DIR, "", "", TerramanConstant.DEFAULT_USER_NAME);
+        String result = commandService.execCommandOutput(terramanCommandModel);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }

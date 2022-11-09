@@ -4,6 +4,7 @@ import com.jcraft.jsch.*;
 import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.service.CommandService;
 import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -158,23 +159,24 @@ public class CommandProcess {
     /**
      * SSH Command Line Response
      *
-     * @param command the command
-     * @param dir the dir
-     * @param host the host
-     * @param idRsa the idRsa
+     * @param terramanCommandModel the terramanCommandModel
      * @return the String
      */
-    public String getSSHResponse(String command, String dir, String host, String idRsa, String userName) {
+    public String getSSHResponse(TerramanCommandModel terramanCommandModel) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         String execCommand = "";
         StringBuilder response = new StringBuilder();
         try {
-            sshConnect(host, idRsa, userName);
+            sshConnect(terramanCommandModel.getHost(), terramanCommandModel.getIdRsa(), terramanCommandModel.getUserName());
             channelExec = (ChannelExec) session.openChannel("exec");
-            if(!StringUtils.equals(dir, "")) {
-                execCommand = "cd " + dir + " && ";
+            if(!StringUtils.equals(terramanCommandModel.getDir(), "")) {
+                execCommand = "cd " + terramanCommandModel.getDir() + " && ";
             }
-            execCommand += TerramanConstant.COMMAND_SWITCH(command);
+            execCommand += TerramanConstant.COMMAND_SWITCH(terramanCommandModel.getCommand()
+                    , terramanCommandModel.getClusterId()
+                    , terramanCommandModel.getPod()
+                    , terramanCommandModel.getSecrets()
+                    , terramanCommandModel.getContents());
             LOGGER.info("Command Str :: {}", execCommand);
             channelExec.setCommand(execCommand);
             InputStream inputStream = channelExec.getInputStream();
@@ -201,16 +203,19 @@ public class CommandProcess {
     /**
      * Command Line Response
      *
-     * @param command the command
-     * @param dir the dir
+     * @param terramanCommandModel the terramanCommandModel
      * @return the String
      */
-    public String getResponse(String command, String dir) {
+    public String getResponse(TerramanCommandModel terramanCommandModel) {
         String resultOutput = Constants.RESULT_STATUS_FAIL;
         List<String> cmd = new ArrayList<>();
         cmd.add(TerramanConstant.LINUX_BASH);
         cmd.add(TerramanConstant.LINUX_BASH_C);
-        cmd.add(TerramanConstant.COMMAND_SWITCH(command));
+        cmd.add(TerramanConstant.COMMAND_SWITCH(terramanCommandModel.getCommand()
+                , terramanCommandModel.getClusterId()
+                , terramanCommandModel.getPod()
+                , terramanCommandModel.getSecrets()
+                , terramanCommandModel.getContents()));
 
         StringBuilder sb = new StringBuilder(1024);
         String s = null;
@@ -220,8 +225,8 @@ public class CommandProcess {
         try {
             prsbld = new ProcessBuilder(cmd);
             // 디렉토리 이동
-            if(!StringUtils.equals(dir, "")) {
-                prsbld.directory(new File(dir));
+            if(!StringUtils.equals(terramanCommandModel.getDir(), "")) {
+                prsbld.directory(new File(terramanCommandModel.getDir()));
             }
 
             // 프로세스 수행시작

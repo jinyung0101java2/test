@@ -14,6 +14,9 @@ public class Constants {
 
     public static final String NO_NAME = "[-]";
     public static final String NULL_REPLACE_TEXT = "-";
+    public static final String EMPTY_STRING ="";
+    public static final int EMPTY_INT =0;
+    public static final String EMPTY_DIR ="/home/ubuntu";
 
     public static final String U_LANG_KO = "ko";
 
