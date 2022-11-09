@@ -8,8 +8,10 @@ import org.mockito.Mock;
 import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
+import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.terramanproc.TerramanFileProcess;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -44,6 +46,7 @@ public class TfFileServiceTest {
     private static FileModel fileModel = null;
     private static HashMap<String, Object> hashMap = null;
     private static AccountModel accountModel = null;
+    private static TerramanCommandModel terramanCommandModel = null;
 
     @Mock
     private TerramanFileProcess terramanFileProcess;
@@ -54,7 +57,7 @@ public class TfFileServiceTest {
     @Mock
     private AccountService accountService;
     @Mock
-    private TfFileService tfFileServiceMock;
+    private CommandService commandService;
 
     @InjectMocks
     private TfFileService tfFileService;
@@ -91,7 +94,13 @@ public class TfFileServiceTest {
         fileModel.setVSphereServer("testServer");
         fileModel.setVSphereUser("testUser");
 
-
+        terramanCommandModel = new TerramanCommandModel();
+        terramanCommandModel.setCommand("14");
+        terramanCommandModel.setHost(TEST_HOST);
+        terramanCommandModel.setIdRsa(TEST_ID_RSA);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+        terramanCommandModel.setPod(TEST_POD);
 
     }
 
@@ -104,6 +113,7 @@ public class TfFileServiceTest {
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
         when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
@@ -119,7 +129,8 @@ public class TfFileServiceTest {
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
-        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_AWS, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
@@ -136,7 +147,8 @@ public class TfFileServiceTest {
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
-        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_OPENSTACK, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
@@ -153,7 +165,8 @@ public class TfFileServiceTest {
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
-        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_VSPHERE, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
@@ -168,7 +181,8 @@ public class TfFileServiceTest {
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
-        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(TEST_STR);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_GCP, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 

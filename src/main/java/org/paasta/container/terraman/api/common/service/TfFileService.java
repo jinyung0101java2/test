@@ -109,6 +109,7 @@ public class TfFileService {
                 break;
         }
 
+        LOGGER.info("fileModel :: {}", CommonUtils.loggerReplace(fileModel));
         resultFile = new TerramanFileProcess().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
 
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
