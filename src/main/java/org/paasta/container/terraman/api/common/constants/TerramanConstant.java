@@ -26,9 +26,9 @@ public class TerramanConstant {
     /**
      * ssh conn key
      * */
-    public static final String MASTER_ID_RSA = "home/" + CUSTOM_USER_NAME + "/.ssh/paasta-master-key";
+    public static final String MASTER_ID_RSA = "/home/" + CUSTOM_USER_NAME + "/.ssh/paasta-master-key";
     public static final String CLUSTER_PRIVATE_KEY(String clusterName) {
-        return "home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
+        return "/home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
     /*********************************************************************************************************/
 

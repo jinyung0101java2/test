@@ -175,6 +175,7 @@ public class CommandProcess {
                 execCommand = "cd " + dir + " && ";
             }
             execCommand += TerramanConstant.COMMAND_SWITCH(command);
+            LOGGER.info("Command Str :: {}", execCommand);
             channelExec.setCommand(execCommand);
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
