@@ -166,14 +166,16 @@ public class CommandProcess {
      */
     public String getSSHResponse(String command, String dir, String host, String idRsa, String userName) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
+        String execCommand = "";
         StringBuilder response = new StringBuilder();
         try {
             sshConnect(host, idRsa, userName);
             channelExec = (ChannelExec) session.openChannel("exec");
             if(!StringUtils.equals(dir, "")) {
-                command = "cd " + dir + " && " + command;
+                execCommand = "cd " + dir + " && ";
             }
-            channelExec.setCommand(command);
+            execCommand += TerramanConstant.COMMAND_SWITCH(command);
+            channelExec.setCommand(execCommand);
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
 
@@ -207,7 +209,7 @@ public class CommandProcess {
         List<String> cmd = new ArrayList<>();
         cmd.add(TerramanConstant.LINUX_BASH);
         cmd.add(TerramanConstant.LINUX_BASH_C);
-        cmd.add(command);
+        cmd.add(TerramanConstant.COMMAND_SWITCH(command));
 
         StringBuilder sb = new StringBuilder(1024);
         String s = null;
@@ -261,24 +263,5 @@ public class CommandProcess {
         }
 
         return resultOutput;
-    }
-
-    /**
-     * Command Line Excute
-     *
-     * @param command the command
-     * @param dir the dir
-     * @param host the host
-     * @param idRsa the idRsa
-     * @return the String
-     */
-    public String execCommandOutput(String command, String dir, String host, String idRsa, String userName) {
-        String response = "";
-        if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-            response = getSSHResponse(command, dir, host, idRsa, userName);
-        } else {
-            response = getResponse(command, dir);
-        }
-        return response;
     }
 }

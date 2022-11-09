@@ -3,6 +3,7 @@ package org.paasta.container.terraman.api.common.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.bcel.Const;
 import org.paasta.container.terraman.api.common.constants.Constants;
@@ -68,7 +69,7 @@ public class CommonFileUtils {
         JsonObject obj = new JsonObject();
         try{
             // FileReader 생성
-            Reader reader = new FileReader(fName);
+            Reader reader = new FileReader(FilenameUtils.getName(fName));
 
             // Json 파일 읽어서, Lecture 객체로 변환
             Gson gson = new Gson();
@@ -88,7 +89,7 @@ public class CommonFileUtils {
      */
     public String fileDelete(String fName){
         String resultCode = Constants.RESULT_STATUS_FAIL;
-        File file = new File(fName);
+        File file = new File(FilenameUtils.getName(fName));
 
         try{
             if( file.exists() ){

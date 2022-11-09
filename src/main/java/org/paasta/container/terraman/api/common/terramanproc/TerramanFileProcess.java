@@ -2,6 +2,7 @@ package org.paasta.container.terraman.api.common.terramanproc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FilenameUtils;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.FileModel;
@@ -115,7 +116,7 @@ public class TerramanFileProcess {
         boolean fileFlag = true;
         if(fileModel != null) {
             try {
-                File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))); // File객체 생성
+                File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(FilenameUtils.getName(clusterId)))); // File객체 생성
                 if(!file.exists()){ // 파일이 존재하지 않으면
                     fileFlag = file.createNewFile(); // 신규생성
                 }

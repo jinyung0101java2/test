@@ -82,7 +82,8 @@ public class TerramanService {
         if(StringUtils.isNotBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), "CONTAINER")) {
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
-            cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//            cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+            cResult = commandService.execCommandOutput("15", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
                 mpSeq = -1;

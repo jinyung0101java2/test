@@ -4,10 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.io.FilenameUtils;
 import org.paasta.container.terraman.api.common.CommonService;
 import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
+import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
 import org.paasta.container.terraman.api.common.service.*;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
@@ -98,6 +100,18 @@ public class TerramanController {
     @PostMapping(value = "/create")
     public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
         terramanService.createTerraman(terramanRequest, "Daemon");
+    }
+
+    @ApiOperation(value = "Terraman 생성(Create Terraman) - Daemon 실행", nickname = "initTerraman")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
+    })
+    @PostMapping(value = "/test")
+    public void test(@RequestBody TerramanRequest terramanRequest) {
+        String aa = "tmp/terraform/test/provider.tf";
+        String bb = "/provider.tf";
+        LOGGER.info("aa :: {}", FilenameUtils.getName(aa));
+        LOGGER.info("bb :: {}", FilenameUtils.getName(bb));
     }
 
 //    /**

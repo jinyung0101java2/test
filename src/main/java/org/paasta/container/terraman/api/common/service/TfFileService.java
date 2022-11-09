@@ -1,5 +1,6 @@
 package org.paasta.container.terraman.api.common.service;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.paasta.container.terraman.api.common.PropertyService;
 import org.paasta.container.terraman.api.common.VaultService;
@@ -111,10 +112,13 @@ public class TfFileService {
 
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
             if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
-                File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)) ); // 파일 객체 생성
-                commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
+                if(StringUtils.isNotBlank(clusterId)) {
+                    File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(FilenameUtils.getName(clusterId))) ); // 파일 객체 생성
+                    commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
+                }
             }
-            resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//            resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+            resultCode = commandService.execCommandOutput("14", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
             if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
                 resultCode = Constants.RESULT_STATUS_SUCCESS;
                 LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", resultCode);

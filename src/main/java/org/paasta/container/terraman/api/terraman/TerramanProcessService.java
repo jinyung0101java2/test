@@ -65,7 +65,8 @@ public class TerramanProcessService {
         }
 
         // 해당 클러스터 디렉토리 생성
-        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "", TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), hostDir, "", "", TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("1", hostDir, "", "", TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
@@ -79,7 +80,8 @@ public class TerramanProcessService {
          * 1. terraman process start
          * ***********************************************************************************************************************************/
         LOGGER.info("execute terraform!!");
-        LOGGER.info("1. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("1. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("1. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
 
         // log 저장
 
@@ -104,15 +106,17 @@ public class TerramanProcessService {
          * TERRAFORM_TF_ERROR_LOG = "Provider file creation error, cluster creation aborted. errCode ::";
          * TERRAFORM_TF_LOG = "Tf file for instance configuration is complete.";
          * ************************************************************************************************************************************/
-        LOGGER.info("2. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("2. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("2. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         String fResult = Constants.RESULT_STATUS_FAIL;
         int errorInt = -1;
-        cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.POD_NAME_COMMAND, "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("3", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         try {
             fResult = tfFileService.createProviderFile(clusterId, provider, seq, cResult.trim(), host, idRsa, processGb);
         } catch (Exception e) {
-            LOGGER.error("error : {} ", CommonUtils.loggerReplace(e.getMessage()));
+//            LOGGER.error("error : {} ", e.getMessage().replaceAll("[\r\n]",""));
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_TF_ERROR_LOG + fResult);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -141,14 +145,16 @@ public class TerramanProcessService {
          * - log
          * TERRAFORM_INIT_LOG = "Terraform initialization is complete.";
          * ************************************************************************************************************************************/
-        LOGGER.info("3. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("3. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("3. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         int errorInt = -1;
 
         // command line 실행
-        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_INIT_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_INIT_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("4", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-            LOGGER.error("terraform init 확인하십시오. {}", CommonUtils.loggerReplace(cResult));
+            LOGGER.error("terraform init 확인하십시오.");
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_INIT_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -172,14 +178,16 @@ public class TerramanProcessService {
          * - log
          * TERRAFORM_PLAN_LOG = "The system has confirmed that there are no problems with the terraform plan.";
          * ************************************************************************************************************************************/
-        LOGGER.info("4. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("4. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("4. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         int errorInt = -1;
 
         // command line 실행
-        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_PLAN_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_PLAN_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("5", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
-            LOGGER.error("terraform plan을 확인하십시오. {}", CommonUtils.loggerReplace(cResult));
+            LOGGER.error("terraform plan을 확인하십시오.");
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_PLAN_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -202,12 +210,14 @@ public class TerramanProcessService {
          * - log
          * TERRAFORM_APPLY_LOG = "The system has finished configuring the instances for cluster creation.";
          * ************************************************************************************************************************************/
-        LOGGER.info("5. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("5. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("5. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         int errorInt = -1;
 
         // command line 실행
-        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_APPLY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.TERRAFORM_APPLY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("6", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_APPLY_FAIL_LOG);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -228,7 +238,8 @@ public class TerramanProcessService {
          * - log
          * TERRAFORM_SUCCESS_LOG = "It succeeded in loading the configuration information of the newly created instance.";
          * ************************************************************************************************************************************/
-        LOGGER.info("6. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("6. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("6. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         boolean connFlag = false;
         int errorInt = -1;
@@ -246,38 +257,36 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        for(int i = 0; i<100; i++) {
-            try {
-                Thread.sleep(10000);
-            } catch (Exception e) {
-                LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
-            }
-            LOGGER.info("ssh connection checked");
-            cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName), TerramanConstant.DEFAULT_USER_NAME);
-            LOGGER.info("ssh connection result : {}", CommonUtils.loggerReplace(CommonUtils.loggerReplace(cResult)));
-            if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-                break;
-            } else if ( StringUtils.isNotBlank(cResult)
-                    && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-                    || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
-                connFlag = true;
-                break;
-            }
-        }
-
-        if (connFlag) {
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
-        }
-
-        LOGGER.info("ssh connection complete : {}", CommonUtils.loggerReplace(CommonUtils.loggerReplace(cResult)));
-
         try {
+            for(int i = 0; i<100; i++) {
+                Thread.sleep(10000);
+
+                LOGGER.info("ssh connection checked");
+//                cResult = commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName), TerramanConstant.DEFAULT_USER_NAME);
+                cResult = commandService.execCommandOutput("2", "", instanceInfo.getPublicIp(), TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName), TerramanConstant.DEFAULT_USER_NAME);
+                LOGGER.info("ssh connection result : {}", (StringUtils.isNotBlank(cResult) ? cResult.replaceAll("[\r\n]","") : Constants.NULL_REPLACE_TEXT.replaceAll("[\r\n]","")));
+                if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+                    break;
+                } else if ( StringUtils.isNotBlank(cResult)
+                        && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
+                    connFlag = true;
+                    break;
+                }
+            }
+
+            if (connFlag) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
+
+            LOGGER.info("ssh connection complete : {}", (StringUtils.isNotBlank(cResult) ? cResult.replaceAll("[\r\n]","") : Constants.NULL_REPLACE_TEXT.replaceAll("[\r\n]","")));
             Thread.sleep(10000);
         } catch (Exception e) {
-            LOGGER.error(CommonUtils.loggerReplace(e.getMessage()));
+
         }
+
 
         clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         mpSeq += 1;
@@ -295,7 +304,8 @@ public class TerramanProcessService {
          * - log
          * KUBESPRAY_CONFIG_LOG = "Configuration information update for cluster configuration has been completed.";
          * ************************************************************************************************************************************/
-        LOGGER.info("7. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("7. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("7. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         int errorInt = -1;
 
@@ -338,7 +348,8 @@ public class TerramanProcessService {
 
             sb.append("\\n\\n" + TerramanConstant.KUBERSPRAY_VARS_PRIVATE_KEY + clusterName + "-key");
 
-            cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//            cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_SH_FILE_COMMAND(sb.toString()), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+            cResult = commandService.execCommandOutput("7", "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                 clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_FILE_ERROR);
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -366,18 +377,21 @@ public class TerramanProcessService {
          * - log
          * KUBESPRAY_DEPLOY_LOG = "The provisioning of the cluster is complete.";
          * ************************************************************************************************************************************/
-        LOGGER.info("8. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("8. current directory :: {}", CommonUtils.loggerReplace(commandService.execCommandOutput(TerramanConstant.DIRECTORY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)));
+//        LOGGER.info("8. current directory :: {}", (commandService.execCommandOutput("2", TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME)).replaceAll("[\r\n]",""));
         String cResult = "";
         int errorInt = -1;
 
-        cResult = commandService.execCommandOutput(TerramanConstant.KUBESPRAY_CHMOD_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.KUBESPRAY_CHMOD_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("8", TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CHANGE_MODE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_DEPLOY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+//        cResult = commandService.execCommandOutput(TerramanConstant.CLUSTER_KUBESPRAY_DEPLOY_COMMAND, TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("9", TerramanConstant.MOVE_DIR_KUBESPRAY, host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -401,7 +415,12 @@ public class TerramanProcessService {
         int errorInt = -1;
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
+//        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_CREATE
+//                , ""
+//                , instanceInfo.getPublicIp()
+//                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
+//                , TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("10"
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
@@ -412,7 +431,12 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
+//        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_BINDING
+//                , ""
+//                , instanceInfo.getPublicIp()
+//                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
+//                , TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("11"
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
@@ -423,7 +447,12 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
+//        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_SECRET_NAME
+//                , ""
+//                , instanceInfo.getPublicIp()
+//                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
+//                , TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("12"
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
@@ -434,7 +463,12 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult)
+//        cResult = commandService.execCommandOutput(TerramanConstant.SERVICE_ACCOUNT_TOKEN(cResult)
+//                , ""
+//                , instanceInfo.getPublicIp()
+//                , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
+//                , TerramanConstant.DEFAULT_USER_NAME);
+        cResult = commandService.execCommandOutput("13"
                 , ""
                 , instanceInfo.getPublicIp()
                 , TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName)
