@@ -69,7 +69,7 @@ public class CommonFileUtils {
         JsonObject obj = new JsonObject();
         try{
             // FileReader 생성
-            Reader reader = new FileReader(FilenameUtils.getName(fName));
+            Reader reader = new FileReader(fName);
 
             // Json 파일 읽어서, Lecture 객체로 변환
             Gson gson = new Gson();
@@ -89,7 +89,7 @@ public class CommonFileUtils {
      */
     public String fileDelete(String fName){
         String resultCode = Constants.RESULT_STATUS_FAIL;
-        File file = new File(FilenameUtils.getName(fName));
+        File file = new File(fName);
 
         try{
             if( file.exists() ){
