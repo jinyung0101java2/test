@@ -32,6 +32,7 @@ public class CommandServiceTest {
     private File fileMock;
 
     private static TerramanCommandModel terramanCommandModel;
+    private static TerramanCommandModel terramanCommandModel2;
 
     @Mock
     private CommandProcess commandProcess;
@@ -51,6 +52,12 @@ public class CommandServiceTest {
         terramanCommandModel.setIdRsa(TEST_ID_RSA);
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModel2 = new TerramanCommandModel();
+        terramanCommandModel2.setCommand("1");
+        terramanCommandModel2.setDir(TEST_DIR);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
     }
 
 
@@ -92,7 +99,6 @@ public class CommandServiceTest {
     @Test
     public void  execCommandOutputSShTest() {
         doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(terramanCommandModel);
-//        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(TEST_COMMAND, TEST_DIR);
 
         String result = commandService.execCommandOutput(terramanCommandModel);
 
@@ -101,10 +107,9 @@ public class CommandServiceTest {
 
     @Test
     public void  execCommandOutputTest() {
-//        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(TEST_COMMAND, TEST_DIR, TEST_HOST, TEST_ID_RSA);
         doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
 
-        String result = commandService.execCommandOutput(terramanCommandModel);
+        String result = commandService.execCommandOutput(terramanCommandModel2);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
