@@ -11,6 +11,7 @@ import org.paasta.container.terraman.api.common.VaultService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.service.*;
 import org.paasta.container.terraman.api.common.util.CommonFileUtils;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.Field;
 
 /**
  * Terraman Controller 클래스
@@ -101,4 +104,29 @@ public class TerramanController {
     public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
         terramanService.createTerraman(terramanRequest, "Daemon");
     }
+
+//    @ApiOperation(value = "Terraman 생성(Create Terraman) - Daemon 실행", nickname = "initTerraman")
+//    @GetMapping(value = "/test")
+//    public void test() {
+//        LOGGER.info("test start");
+//        TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
+//        terramanCommandModel.setClusterId("testClusterId;");
+//        terramanCommandModel.setDir("testDir|");
+//        terramanCommandModel.setUserName("testUserName&");
+//        terramanCommandModel.setIdRsa("testIdRsa\"");
+//
+//        Field[] fields = terramanCommandModel.getClass().getDeclaredFields();
+//        try {
+//            for(Field field : fields){
+//                field.setAccessible(true);
+//                Object obj = field.get(terramanCommandModel);
+//                field.set(terramanCommandModel, String.valueOf(obj).replaceAll("[;|&\"]",""));
+//            }
+//        } catch (Exception e) {
+//            LOGGER.info("Exception : {}", e.getMessage());
+//        }
+//
+//        LOGGER.info("change Object :: {}", terramanCommandModel.toString());
+//
+//    }
 }

@@ -287,6 +287,7 @@ public class TerramanProcessService {
             terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
             terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
+            LOGGER.info("test :: {}", terramanCommandModel.toString());
             for(int i = 0; i<100; i++) {
                 Thread.sleep(10000);
 
@@ -296,7 +297,8 @@ public class TerramanProcessService {
                     break;
                 } else if ( StringUtils.isNotBlank(cResult)
                         && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
+                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)
+                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL)) ) {
                     connFlag = true;
                     break;
                 }
