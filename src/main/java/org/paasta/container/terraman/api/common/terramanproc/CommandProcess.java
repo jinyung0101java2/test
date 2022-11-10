@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -172,12 +174,9 @@ public class CommandProcess {
             if(!StringUtils.equals(terramanCommandModel.getDir(), "")) {
                 execCommand = "cd " + terramanCommandModel.getDir() + " && ";
             }
-            execCommand += TerramanConstant.COMMAND_SWITCH(terramanCommandModel.getCommand()
-                    , terramanCommandModel.getClusterId()
-                    , terramanCommandModel.getPod()
-                    , terramanCommandModel.getSecrets()
-                    , terramanCommandModel.getContents());
-            LOGGER.info("Command Str :: {}", execCommand);
+
+            execCommand += TerramanConstant.COMMAND_SWITCH(terramanCommandModel);
+            LOGGER.info("Command Str :: {}", CommonUtils.loggerReplace(execCommand));
             channelExec.setCommand(execCommand);
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
@@ -211,11 +210,7 @@ public class CommandProcess {
         List<String> cmd = new ArrayList<>();
         cmd.add(TerramanConstant.LINUX_BASH);
         cmd.add(TerramanConstant.LINUX_BASH_C);
-        cmd.add(TerramanConstant.COMMAND_SWITCH(terramanCommandModel.getCommand()
-                , terramanCommandModel.getClusterId()
-                , terramanCommandModel.getPod()
-                , terramanCommandModel.getSecrets()
-                , terramanCommandModel.getContents()));
+        cmd.add(TerramanConstant.COMMAND_SWITCH(terramanCommandModel));
 
         StringBuilder sb = new StringBuilder(1024);
         String s = null;

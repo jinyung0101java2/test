@@ -1,6 +1,7 @@
 package org.paasta.container.terraman.api.common.constants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,25 +208,24 @@ public class TerramanConstant {
     public static final String KUBERSPRAY_VARS_PRIVATE_IP = "_NODE_PRIVATE_IP=";
     public static final String KUBERSPRAY_VARS_PRIVATE_KEY = "export CLUSTER_PRIVATE_KEY=";
 
-
-    public static final String COMMAND_SWITCH(String ref, String clusterId, String pod, String secrets, String contents) {
+    public static final String COMMAND_SWITCH(TerramanCommandModel terramanCommandModel) {
         String switchStr = "";
-        switch(ref) {
-            case "1" : switchStr = CREATE_DIR_CLUSTER(clusterId); break;
+        switch(terramanCommandModel.getCommand()) {
+            case "1" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
             case "2" : switchStr = DIRECTORY_COMMAND; break;
             case "3" : switchStr = POD_NAME_COMMAND; break;
             case "4" : switchStr = TERRAFORM_INIT_COMMAND; break;
             case "5" : switchStr = TERRAFORM_PLAN_COMMAND; break;
             case "6" : switchStr = TERRAFORM_APPLY_COMMAND; break;
-            case "7" : switchStr = CLUSTER_KUBESPRAY_SH_FILE_COMMAND(contents); break;
+            case "7" : switchStr = CLUSTER_KUBESPRAY_SH_FILE_COMMAND(terramanCommandModel.getContents()); break;
             case "8" : switchStr = KUBESPRAY_CHMOD_COMMAND; break;
             case "9" : switchStr = CLUSTER_KUBESPRAY_DEPLOY_COMMAND; break;
             case "10" : switchStr = SERVICE_ACCOUNT_CREATE; break;
             case "11" : switchStr = SERVICE_ACCOUNT_BINDING; break;
             case "12" : switchStr = SERVICE_ACCOUNT_SECRET_NAME; break;
-            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(secrets); break;
-            case "14" : switchStr = INSTANCE_COPY_COMMAND(pod, clusterId); break;
-            case "15" : switchStr = CREATE_DIR_CLUSTER(clusterId); break;
+            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(terramanCommandModel.getSecrets()); break;
+            case "14" : switchStr = INSTANCE_COPY_COMMAND(terramanCommandModel.getPod(), terramanCommandModel.getClusterId()); break;
+            case "15" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
         }
         return switchStr;
     }

@@ -1,16 +1,19 @@
 package org.paasta.container.terraman.api.common.util;
 
+import org.paasta.container.terraman.api.common.CommonService;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.model.ResultStatusModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Common Utils 클래스
@@ -21,6 +24,7 @@ import java.util.logging.Logger;
  */
 
 public class CommonUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
     /**
      * Timestamp Timezone 을 변경하여 재설정(reset timestamp)
      *
@@ -181,6 +185,26 @@ public class CommonUtils {
         if( StringUtils.hasText(str) && (str != "null") ) {
             str = str.trim().replaceAll("[.]","-");
             str = "ip-" + str;
+        }
+        return str;
+    }
+
+    /**
+     * injection 방어 (String)
+     *
+     * @param str
+     * @return String the replaced string
+     */
+    public static Object defInjection(Object str) {
+        Field[] fields = str.getClass().getDeclaredFields();
+        try {
+            for(Field field : fields){
+                field.setAccessible(true);
+                Object obj = field.get(str);
+                field.set(str, String.valueOf(obj).replaceAll("[;|&\"]",""));
+            }
+        } catch (Exception e) {
+            LOGGER.info("Exception : {}", CommonUtils.loggerReplace(e.getMessage()));
         }
         return str;
     }

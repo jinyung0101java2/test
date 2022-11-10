@@ -7,6 +7,7 @@ import org.paasta.container.terraman.api.common.constants.TerramanConstant;
 import org.paasta.container.terraman.api.common.model.ClusterModel;
 import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.service.*;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +82,8 @@ public class TerramanService {
             TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
             host = propertyService.getMasterHost();
             idRsa = TerramanConstant.MASTER_ID_RSA;
-            LOGGER.info("host :: {}", host);
-            LOGGER.info("idRsa :: {}", idRsa);
+            LOGGER.info("host :: {}", CommonUtils.loggerReplace(host));
+            LOGGER.info("idRsa :: {}", CommonUtils.loggerReplace(idRsa));
             terramanCommandModel.setCommand("15");
             terramanCommandModel.setHost(host);
             terramanCommandModel.setIdRsa(idRsa);
