@@ -176,6 +176,9 @@ const func = {
 					movePage(URI_CP_INDEX_URL);
 				}
 			}
+			if(IS_INDEX) {
+				func.loadData('GET', null, 'application/json', func.nameLoad);
+			}
 		};
 	},
 

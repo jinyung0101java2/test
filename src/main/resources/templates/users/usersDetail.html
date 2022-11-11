@@ -45,24 +45,17 @@
                         <table>
                             <caption>Details</caption>
                             <colgroup >
-                                <col width="18%" />
-                                <col width="16%" />
-                                <col width="16%" />
-                                <col width="18%" />
-                                <col width="16%" />
-                                <col width="16%" />
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="25%" />
                             </colgroup>
                             <thead>
                             <tr>
-                                <th scope="col" rowspan="2">Namespaces</th>
-                                <th scope="col" rowspan="2">Authority</th>
-                                <th scope="col" rowspan="2">Role</th>
-                                <th scope="col" colspan="3">Secrets</th>
-                            </tr>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">UID</th>
-                                <th scope="col">Created time</th>
+                                <th scope="col">Namespaces</th>
+                                <th scope="col">Authority</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Created Time</th>
                             </tr>
                             </thead>
                             <tbody class="detailList">
@@ -110,14 +103,12 @@
 								<td class="left">${data.items[i].cpNamespace}</td>
 								<td class="left">${convertUserTypeString(data.items[i].userType)}</td>
 								<td class="left">${data.items[i].roleSetCode}</td>
-								<td class="left">${data.items[i].secretName}</td>
-                                <td class="left">${data.items[i].secretUid}</td>
-                                <td class="left">${data.items[i].secretCreationTimestamp}</td>`;
+                                <td class="left">${data.items[i].created}</td>`;
 
                         func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
                     };
                 } else {
-                    var html = '<tr><td colspan="6">No Data.</td></tr>';
+                    var html = '<tr><td colspan="4">No Data.</td></tr>';
 
                     func.appendHtml(document.querySelector('.detailList'), html, 'tbody');
                 };

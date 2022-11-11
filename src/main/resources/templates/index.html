@@ -80,12 +80,12 @@
 
     <script type="text/javascript">
         window.onload = () => {
+            IS_INDEX = true;
             func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.C_OVERVIEW);
 
             const overview = {
                 init() {
                     func.nameLoad = overview.load;
-                    overview.load();
                 },
 
                 load() {
