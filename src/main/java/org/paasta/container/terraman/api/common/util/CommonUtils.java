@@ -172,7 +172,11 @@ public class CommonUtils {
      * @return String the replaced string
      */
     public static String loggerReplace(String str) {
-        return str.replaceAll("[\r\n]","");
+        String result = "";
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(str)) {
+            result = str.replaceAll("[\r\n]","");
+        }
+        return result;
     }
 
     /**

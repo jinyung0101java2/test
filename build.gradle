@@ -57,6 +57,8 @@ jar {
     enabled = false
 }
 dependencies {
+    compileOnly 'com.google.code.findbugs:annotations:3.0.1'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'junit:junit:4.13.1'
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-aop"

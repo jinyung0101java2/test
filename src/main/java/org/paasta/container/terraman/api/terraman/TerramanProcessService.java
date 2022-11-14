@@ -526,7 +526,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    private String dirCheck(String message, String dir, String clusterId, String host, String idRsa) {
+    private void dirCheck(String message, String dir, String clusterId, String host, String idRsa) {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         terramanCommandModel.setCommand("2");
         terramanCommandModel.setDir(dir);
@@ -535,6 +535,5 @@ public class TerramanProcessService {
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
         LOGGER.info(CommonUtils.loggerReplace(message), CommonUtils.loggerReplace(commandService.execCommandOutput(terramanCommandModel)));
-        return Constants.RESULT_STATUS_SUCCESS;
     }
 }

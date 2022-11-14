@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("PATH_TRAVERSAL_IN")
 public class TerramanFileProcess {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanFileProcess.class);
 

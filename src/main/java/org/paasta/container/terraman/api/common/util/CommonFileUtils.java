@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.HashMap;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings({"PATH_TRAVERSAL_IN", "PATH_TRAVERSAL_IN", "PATH_TRAVERSAL_IN"})
 @Service
 public class CommonFileUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonFileUtils.class);

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings({"COMMAND_INJECTION", "PATH_TRAVERSAL_IN"})
 public class CommandProcess {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandService.class);

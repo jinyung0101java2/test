@@ -13,6 +13,7 @@ import org.paasta.container.terraman.api.common.model.AccountModel;
 import org.paasta.container.terraman.api.common.model.FileModel;
 import org.paasta.container.terraman.api.common.model.TerramanCommandModel;
 import org.paasta.container.terraman.api.common.terramanproc.TerramanFileProcess;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -58,6 +59,8 @@ public class TfFileServiceTest {
     private AccountService accountService;
     @Mock
     private CommandService commandService;
+    @Mock
+    private CommonUtils commonUtils;
 
     @InjectMocks
     private TfFileService tfFileService;

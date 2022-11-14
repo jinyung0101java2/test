@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.HashMap;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("PATH_TRAVERSAL_IN")
 @Service
 public class TfFileService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TfFileService.class);
@@ -59,7 +60,9 @@ public class TfFileService {
         String path = propertyService.getVaultBase();
         path = path + provider.toUpperCase() + Constants.DIV + seq;
         HashMap<String, Object> res = vaultService.read(path, HashMap.class);
-        LOGGER.info("Vault :: {}", CommonUtils.loggerReplace(res.toString()));
+        if(res != null) {
+            LOGGER.info("Vault :: {}", CommonUtils.loggerReplace(res.toString()));
+        }
         AccountModel account = accountService.getAccountInfo(seq);
         FileModel fileModel = new FileModel();
         String resultFile = "";
