@@ -116,7 +116,7 @@ public class TerramanFileProcess {
         boolean fileFlag = true;
         if(fileModel != null) {
             try {
-                File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(FilenameUtils.getName(clusterId)))); // File객체 생성
+                File file = new File(TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId))); // File객체 생성
                 if(!file.exists()){ // 파일이 존재하지 않으면
                     fileFlag = file.createNewFile(); // 신규생성
                 }

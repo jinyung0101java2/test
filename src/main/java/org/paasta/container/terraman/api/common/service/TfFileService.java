@@ -116,7 +116,7 @@ public class TfFileService {
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
             if(!StringUtils.isBlank(idRsa) && !StringUtils.isBlank(host)) {
                 if(StringUtils.isNotBlank(clusterId)) {
-                    File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(FilenameUtils.getName(clusterId))) ); // 파일 객체 생성
+                    File uploadfile = new File( TerramanConstant.FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)) ); // 파일 객체 생성
                     commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
                 }
             }
