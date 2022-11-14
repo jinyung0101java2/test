@@ -168,6 +168,7 @@ public class CommandProcess {
     public String getSSHResponse(TerramanCommandModel terramanCommandModel) {
         String resultCommand = Constants.RESULT_STATUS_FAIL;
         String execCommand = "";
+        LOGGER.info("TerramanModel :: {}", CommonUtils.loggerReplace(terramanCommandModel.toString()));
         StringBuilder response = new StringBuilder();
         try {
             sshConnect(terramanCommandModel.getHost(), terramanCommandModel.getIdRsa(), terramanCommandModel.getUserName());
