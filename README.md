@@ -2,7 +2,7 @@
 
 ![image](https://user-images.githubusercontent.com/67575226/117615561-d74f8d80-b1a4-11eb-8dc0-70117f96cdad.png)
 컨테이너플랫폼을 구성하는 UserPortal에 해당하는 Repository이며 아래 Repository와 함께 플랫폼의 서비스를 구성합니다.
-- [PaaS-TA 컨테이너 플랫폼 관리자 포탈](https://github.com/PaaS-TA/paas-ta-container-platform-webadmin)
+- [PaaS-TA 컨테이너 플랫폼 관리자 포탈](https://github.com/PaaS-TA/container-platform-portal-ui)
 - [PaaS-TA 컨테이너 플랫폼 Common-API](https://github.com/PaaS-TA/paas-ta-container-platform-common-api)
 - [PaaS-TA 컨테이너 플랫폼 API](https://github.com/PaaS-TA/paas-ta-container-platform-api)
 

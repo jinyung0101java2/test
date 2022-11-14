@@ -46,7 +46,7 @@ public class SwaggerConfig {
     @Bean
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("PaaS-TA Container Platform WebUser Docs")
+                .title("PaaS-TA Container Platform UI Docs")
                 .version("v1.0")
                 .description("This is a API Document created with swagger.")
                 .license("Apache2.0")
