@@ -68,8 +68,9 @@ public class TerramanConstant {
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
 
     /**
-     * TERRAFORM COMMAND 명령어
+     * keys 권한 변경
      * */
+    public static final String KEYS_CHANGE_MOD = "find /home/1000/.ssh/ -type f -exec chmod -v 600 {} \\;";
 
     /**
      * change directory 명령어
@@ -226,6 +227,7 @@ public class TerramanConstant {
             case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(terramanCommandModel.getSecrets()); break;
             case "14" : switchStr = INSTANCE_COPY_COMMAND(terramanCommandModel.getPod(), terramanCommandModel.getClusterId()); break;
             case "15" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
+            case "16" : switchStr = KEYS_CHANGE_MOD; break;
         }
         return switchStr;
     }

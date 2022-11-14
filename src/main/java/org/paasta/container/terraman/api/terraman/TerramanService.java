@@ -65,6 +65,12 @@ public class TerramanService {
 
         ClusterModel clusterModel = clusterService.getCluster(clusterId);
 
+        // keys change mod
+        TerramanCommandModel terramanCommandModelForKey = new TerramanCommandModel();
+        terramanCommandModelForKey.setCommand("16");
+        commandService.execCommandOutput(terramanCommandModelForKey);
+
+
         if(StringUtils.isBlank(clusterId) || StringUtils.isBlank(provider)) {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             mpSeq += 1;

@@ -287,7 +287,7 @@ public class TerramanProcessService {
             terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
             terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
-            LOGGER.info("test :: {}", terramanCommandModel.toString());
+            LOGGER.info("test :: {}", CommonUtils.loggerReplace(terramanCommandModel.toString()));
             for(int i = 0; i<100; i++) {
                 Thread.sleep(10000);
 
@@ -534,7 +534,7 @@ public class TerramanProcessService {
         terramanCommandModel.setIdRsa(idRsa);
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
-        LOGGER.info(message, CommonUtils.loggerReplace(commandService.execCommandOutput(terramanCommandModel)));
+        LOGGER.info(CommonUtils.loggerReplace(message), CommonUtils.loggerReplace(commandService.execCommandOutput(terramanCommandModel)));
         return Constants.RESULT_STATUS_SUCCESS;
     }
 }

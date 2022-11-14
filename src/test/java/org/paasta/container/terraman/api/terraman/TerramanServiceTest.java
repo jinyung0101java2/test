@@ -78,6 +78,7 @@ public class TerramanServiceTest {
     private static AccountModel accountModel = null;
     private File uploadFile = null;
     private static TerramanCommandModel terramanCommandModel = null;
+    private static TerramanCommandModel terramanCommandModelForKey = null;
 
 
 
@@ -146,6 +147,9 @@ public class TerramanServiceTest {
         terramanCommandModel.setIdRsa(TEST_IDRSA);
         terramanCommandModel.setUserName(TEST_CLUSTER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
+
+        terramanCommandModelForKey = new TerramanCommandModel();
+        terramanCommandModelForKey.setCommand("16");
     }
 
 
@@ -156,6 +160,7 @@ public class TerramanServiceTest {
     public void createTerramanTest() throws Exception {
         // when
         when(clusterService.getCluster(TEST_CLUSTER_ID)).thenReturn(clusterModelMock);
+        when(commandService.execCommandOutput(terramanCommandModelForKey)).thenReturn(TEST_RESULT_CODE);
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModel).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
         when(propertyService.getMasterHost()).thenReturn(TEST_HOST);
