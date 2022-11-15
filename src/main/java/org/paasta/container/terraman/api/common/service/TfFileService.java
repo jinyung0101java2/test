@@ -105,12 +105,10 @@ public class TfFileService {
                 fileModel.setOpenstackRegion(account.getRegion());
                 break;
             default :
-                resultCode = Constants.RESULT_STATUS_FAIL;
                 LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
-                break;
+                return Constants.RESULT_STATUS_FAIL;
         }
 
-        //LOGGER.info("fileModel :: {}", CommonUtils.loggerReplace(fileModel));
         resultFile = new TerramanFileProcess().createTfFileDiv(fileModel, clusterId, processGb, provider.toUpperCase());
 
         if(StringUtils.equals(resultFile, Constants.RESULT_STATUS_SUCCESS)) {
@@ -120,7 +118,6 @@ public class TfFileService {
                     commandService.sshFileUpload(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), host, idRsa, uploadfile, TerramanConstant.DEFAULT_USER_NAME);
                 }
             }
-//            resultCode = commandService.execCommandOutput(TerramanConstant.INSTANCE_COPY_COMMAND(pod, clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
             TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
             terramanCommandModel.setCommand("14");
             terramanCommandModel.setDir("");

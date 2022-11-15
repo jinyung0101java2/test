@@ -285,9 +285,9 @@ public class TerramanProcessService {
             terramanCommandModel.setCommand("2");
             terramanCommandModel.setHost(instanceInfo.getPublicIp());
             terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
-            terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
-            LOGGER.info("test :: {}", CommonUtils.loggerReplace(terramanCommandModel.toString()));
+
             for(int i = 0; i<100; i++) {
                 Thread.sleep(10000);
 
@@ -297,8 +297,7 @@ public class TerramanProcessService {
                     break;
                 } else if ( StringUtils.isNotBlank(cResult)
                         && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL)) ) {
+                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
                     connFlag = true;
                     break;
                 }
@@ -313,7 +312,7 @@ public class TerramanProcessService {
             LOGGER.info("ssh connection complete");
             Thread.sleep(10000);
         } catch (Exception e) {
-
+            LOGGER.info("ssh connection fail");
         }
 
 
@@ -420,7 +419,36 @@ public class TerramanProcessService {
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
         String cResult = "";
+        boolean connFlag = false;
         int errorInt = -1;
+
+        try {
+            for(int i = 0; i<100; i++) {
+                Thread.sleep(10000);
+
+                LOGGER.info("Master Connection checking...");
+                cResult = commandService.execCommandOutput(terramanCommandModel);
+                if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+                    break;
+                } else if ( StringUtils.isNotBlank(cResult)
+                        && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
+                    connFlag = true;
+                    break;
+                }
+            }
+
+            if (connFlag) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_MASTER_CONNECTION_TIME_OUT);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
+
+            LOGGER.info("Master Connection complete");
+            Thread.sleep(10000);
+        } catch (Exception e) {
+            LOGGER.info("Master Connection fail :: {}", CommonUtils.loggerReplace(e.getMessage()));
+        }
 
         cResult = commandService.execCommandOutput(terramanCommandModel);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
@@ -458,7 +486,7 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("10");
         terramanCommandModel.setHost(instanceInfo.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
         cResult = commandService.execCommandOutput(terramanCommandModel);
 

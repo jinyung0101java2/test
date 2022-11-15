@@ -36,7 +36,7 @@ public class TerramanInstanceProcess {
                             for(JsonElement instance : instances) {
                                 JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
                                 privateIp = attributes.get(TerramanConstant.PRIVATE_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PRIVATE_IP_MSG).getAsString();
-                                publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
+                                publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? privateIp : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
                                 hostName = getAWSHostName(privateIp);
                             }
                         }
@@ -112,7 +112,7 @@ public class TerramanInstanceProcess {
                         for(JsonElement instance : instances) {
                             JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
                             privateIp = attributes.get(TerramanConstant.PRIVATE_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PRIVATE_IP_MSG).getAsString();
-                            publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
+                            publicIp = attributes.get(TerramanConstant.PUBLIC_IP_MSG).isJsonNull() ? privateIp : attributes.get(TerramanConstant.PUBLIC_IP_MSG).getAsString();
                             hostName = getAWSHostName(privateIp);
                         }
                         modelList.add(new InstanceModel(rName, hostName, privateIp, publicIp));

@@ -153,7 +153,7 @@ public class TfFileServiceTest {
         when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
-        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_OPENSTACK, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+        String result = tfFileService.createProviderFile("", TEST_OPENSTACK, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }

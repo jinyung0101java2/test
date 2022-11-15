@@ -166,6 +166,7 @@ public class TerramanConstant {
     public static final String TERRAFORM_COMPLETE_CLUSTER_ERROR = "ERROR - complete cluster update failed";
     public static final String TERRAFORM_SSH_CONNECTION_FAIL = "ERROR - SSH CONNECTION FAILED";
     public static final String TERRAFORM_SSH_CONNECTION_TIME_OUT = "ERROR - SSH CONNECTION TIME OUT";
+    public static final String TERRAFORM_SSH_MASTER_CONNECTION_TIME_OUT = "ERROR - SSH MASTER CONNECTION TIME OUT";
 
 
     /**

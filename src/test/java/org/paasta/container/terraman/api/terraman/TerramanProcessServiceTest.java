@@ -43,7 +43,7 @@ public class TerramanProcessServiceTest {
     private static final String TEST_STRING = "test";
     private static final String TEST_ID_RSA_PATH = "/root/.ssh/id_rsa";
 
-    private static final String TEST_RESOURCE_NAME = "resourceName";
+    private static final String TEST_RESOURCE_NAME = "master";
     private static final String TEST_INSTANCE_NAME = "instanceName";
     private static final String TEST_PRIVATE_IP = "privateIp";
     private static final String TEST_PUBLIC_IP = "publicIp";
@@ -52,6 +52,7 @@ public class TerramanProcessServiceTest {
     private static final String TEST_CLUSTER_TOKEN = "token";
 
     private static InstanceModel gInstanceModel = null;
+    private static InstanceModel gInstanceModel2 = null;
     private static List<InstanceModel> gInstanceList = null;
     private static ClusterModel clusterModelMock = null;
     private static Object objectMock = null;
@@ -79,6 +80,7 @@ public class TerramanProcessServiceTest {
     @Before
     public void setUp() {
         gInstanceModel = new InstanceModel(TEST_RESOURCE_NAME, TEST_INSTANCE_NAME, TEST_PRIVATE_IP, TEST_PUBLIC_IP);
+        gInstanceModel2 = new InstanceModel(TEST_RESOURCE_NAME, TEST_INSTANCE_NAME, "", TEST_PUBLIC_IP);
         gInstanceList = new ArrayList<>();
         gInstanceList.add(gInstanceModel);
 
@@ -356,7 +358,7 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
@@ -374,7 +376,7 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(null);
@@ -392,7 +394,7 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[7]);
@@ -528,31 +530,31 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
         terramanCommandModel2.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel2.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel2.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
         terramanCommandModel3.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel3.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel3.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel4.setCommand(TEST_COMMAND_NUMBER[12]);
         terramanCommandModel4.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel4.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel4.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel4.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel4.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel5.setCommand(TEST_COMMAND_NUMBER[13]);
         terramanCommandModel5.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel5.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel5.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel5.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel5.setClusterId(TEST_CLUSTER_ID);
 
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
@@ -580,7 +582,7 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
@@ -605,13 +607,13 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
         terramanCommandModel2.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel2.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel2.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
 
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
@@ -638,19 +640,19 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
         terramanCommandModel2.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel2.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel2.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
         terramanCommandModel3.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel3.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel3.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
 
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
@@ -680,31 +682,31 @@ public class TerramanProcessServiceTest {
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel2.setCommand(TEST_COMMAND_NUMBER[10]);
         terramanCommandModel2.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel2.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel2.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel2.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel2.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel3.setCommand(TEST_COMMAND_NUMBER[11]);
         terramanCommandModel3.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel3.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel3.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel3.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel3.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel4.setCommand(TEST_COMMAND_NUMBER[12]);
         terramanCommandModel4.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel4.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel4.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel4.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel4.setClusterId(TEST_CLUSTER_ID);
 
         terramanCommandModel5.setCommand(TEST_COMMAND_NUMBER[13]);
         terramanCommandModel5.setHost(gInstanceModel.getPublicIp());
         terramanCommandModel5.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(TEST_CLUSTER_NAME));
-        terramanCommandModel5.setUserName(TerramanConstant.CUSTOM_USER_NAME);
+        terramanCommandModel5.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel5.setClusterId(TEST_CLUSTER_ID);
 
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(gInstanceModel);
