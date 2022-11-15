@@ -460,6 +460,7 @@ public class TerramanProcessService {
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
+
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(cResult));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {

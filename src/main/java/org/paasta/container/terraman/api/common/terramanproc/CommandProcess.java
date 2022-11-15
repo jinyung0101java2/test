@@ -179,6 +179,7 @@ public class CommandProcess {
 
             execCommand += TerramanConstant.COMMAND_SWITCH(terramanCommandModel);
             LOGGER.info("Command Str :: {}", CommonUtils.loggerReplace(execCommand));
+            LOGGER.info("Command Running ...");
             channelExec.setCommand(execCommand);
             InputStream inputStream = channelExec.getInputStream();
             channelExec.connect();
@@ -188,6 +189,7 @@ public class CommandProcess {
             while ((decodedLength = inputStream.read(buffer, 0, buffer.length)) > 0) {
                 response.append(new String(buffer, 0, decodedLength));
             }
+            LOGGER.info("Command Result :: {}", response.toString());
             resultCommand = response.toString();
 
         } catch (Exception e) {
