@@ -182,6 +182,7 @@ public class TerramanConstant {
     public static final String CONTAINER_MSG = "CONTAINER";
     public static final String RESOURCE_MSG = "resources";
     public static final String MASTER_MSG = "master";
+    public static final String MASTER_MSG_UPPER = "MASTER";
     public static final String INSTANCES_MSG = "instances";
     public static final String INSTANCE_MSG = "instance";
     public static final String ATTRIBUTE_MSG = "attributes";

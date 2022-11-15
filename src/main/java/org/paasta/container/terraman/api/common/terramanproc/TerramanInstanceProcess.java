@@ -30,7 +30,8 @@ public class TerramanInstanceProcess {
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.AWS_INSTANCE_MSG)) {
                     rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
-                    if(StringUtils.equals(rName, TerramanConstant.MASTER_MSG)) {
+//                    if(StringUtils.equals(rName, TerramanConstant.MASTER_MSG)) {
+                    if(StringUtils.contains(rName, TerramanConstant.MASTER_MSG) || StringUtils.contains(rName, TerramanConstant.MASTER_MSG_UPPER)) {
                         JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                         if(instances != null) {
                             for(JsonElement instance : instances) {
@@ -69,7 +70,8 @@ public class TerramanInstanceProcess {
             for(JsonElement resource : resources) {
                 if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
                         && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.INSTANCE_MSG)
-                        && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG)) {
+                        && (StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG)
+                        || StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG_UPPER)) ) {
                     rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
                     JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                     if(instances != null) {

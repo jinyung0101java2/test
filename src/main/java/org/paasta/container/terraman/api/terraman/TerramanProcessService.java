@@ -430,7 +430,7 @@ public class TerramanProcessService {
 
         terramanCommandModel.setCommand("9");
         cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Deploy Cluster :: {}", CommonUtils.loggerReplace(cResult));
+        LOGGER.info("Deploy Cluster :: {}", cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -462,7 +462,7 @@ public class TerramanProcessService {
         terramanCommandModel.setClusterId(clusterId);
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -471,7 +471,7 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("11");
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
