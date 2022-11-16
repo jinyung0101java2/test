@@ -58,13 +58,14 @@ public class TerramanProcessService {
         String cResult = "";
         int errorInt = -1;
         // cluster log 삭제
-        try {
-            clusterLogService.deleteClusterLogByClusterId(clusterId);
-        } catch (Exception e) {
-            LOGGER.error("cluster log 삭제에 실패하였습니다.");
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
-        }
+        clusterLogService.deleteClusterLogByClusterId(clusterId);
+//        try {
+//
+//        } catch (Exception e) {
+//            LOGGER.error("cluster log 삭제에 실패하였습니다.");
+//            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+//            return errorInt;
+//        }
 
         // 해당 클러스터 디렉토리 생성
         terramanCommandModel.setCommand("1");
@@ -430,7 +431,6 @@ public class TerramanProcessService {
 
         terramanCommandModel.setCommand("9");
         cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Deploy Cluster :: {}", cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
