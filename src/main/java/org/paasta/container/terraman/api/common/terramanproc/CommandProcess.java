@@ -193,7 +193,8 @@ public class CommandProcess {
             resultCommand = response.toString();
 
         } catch (Exception e) {
-            LOGGER.info("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
+            LOGGER.error("Exception");
+            LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
             if(e.getMessage().contains("timed out")) {
                 return Constants.RESULT_STATUS_TIME_OUT;
             } else if(e.getMessage().contains("Auth fail")) {
