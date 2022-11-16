@@ -190,6 +190,13 @@ public class CommandProcess {
                 response.append(new String(buffer, 0, decodedLength));
             }
             resultCommand = response.toString();
+            if(!StringUtils.equals(terramanCommandModel.getCommand(),"9")
+                && !StringUtils.equals(terramanCommandModel.getCommand(),"4")
+                && !StringUtils.equals(terramanCommandModel.getCommand(),"5")
+                && !StringUtils.equals(terramanCommandModel.getCommand(),"6")
+            ) {
+                LOGGER.info("Command Result :: {}", CommonUtils.loggerReplace(resultCommand));
+            }
 
         } catch (Exception e) {
             LOGGER.error("Exception");
