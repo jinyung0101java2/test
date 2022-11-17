@@ -96,14 +96,7 @@ public class TerramanConstant {
     public static final String SERVICE_ACCOUNT_BINDING = "sudo kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
     public static final String SERVICE_ACCOUNT_SECRET_NAME = "sudo kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
     public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
-        String resultString = "";
-        try {
-            secrets = secrets.trim();
-            resultString = "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
-        } catch (Exception e) {
-            LOGGER.error("TerramanConstants get token error : {}", CommonUtils.loggerReplace(e.getMessage()));
-        }
-        return resultString;
+        return "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
     }
 
     /**
@@ -226,7 +219,7 @@ public class TerramanConstant {
             case "10" : switchStr = SERVICE_ACCOUNT_CREATE; break;
             case "11" : switchStr = SERVICE_ACCOUNT_BINDING; break;
             case "12" : switchStr = SERVICE_ACCOUNT_SECRET_NAME; break;
-            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(terramanCommandModel.getSecrets()); break;
+            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(terramanCommandModel.getSecrets().trim()); break;
             case "14" : switchStr = INSTANCE_COPY_COMMAND(terramanCommandModel.getPod(), terramanCommandModel.getClusterId()); break;
             case "15" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
             case "16" : switchStr = KEYS_CHANGE_MOD; break;
