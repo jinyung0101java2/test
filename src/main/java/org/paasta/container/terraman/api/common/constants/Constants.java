@@ -4,6 +4,7 @@ public class Constants {
     public static final String RESULT_STATUS_SUCCESS = "SUCCESS";
     public static final String RESULT_STATUS_FAIL = "FAIL";
     public static final String RESULT_STATUS_TIME_OUT = "timeOut";
+    public static final String RESULT_STATUS_TIME_OUT2 = "timed out";
     public static final String RESULT_STATUS_FILE_NOT_FOUND = "No such file or directory";
     public static final String RESULT_STATUS_AUTH_FAIL = "Auth fail";
 
