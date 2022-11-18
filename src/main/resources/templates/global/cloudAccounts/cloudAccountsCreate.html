@@ -133,6 +133,10 @@
                     //check FILE
                     func.saveData('POST', `${func.url}accounts`, JSON.stringify(createName), true, 'application/json', func.historyBack());
 
+                },
+
+                saveComp() {
+                    func.historyBack();
                 }
             };
             createCloudAccounts.init();

@@ -191,8 +191,12 @@
                                 }
                     }
                     //check FILE
-                    func.saveData('POST', `${func.url}clusters`, JSON.stringify(arg), true, 'application/json', func.historyBack());
+                    func.saveData('POST', `${func.url}clusters`, JSON.stringify(arg), true, 'application/json', createClusters.saveComp);
 
+                },
+
+                saveComp() {
+                    func.historyBack();
                 }
             };
             createClusters.init();
