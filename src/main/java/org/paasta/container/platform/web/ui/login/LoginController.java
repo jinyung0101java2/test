@@ -2,6 +2,7 @@ package org.paasta.container.platform.web.ui.login;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.paasta.container.platform.web.ui.common.CommonUtils;
 import org.paasta.container.platform.web.ui.common.ConstantsUrl;
 import org.paasta.container.platform.web.ui.common.CustomIntercepterService;
 import org.paasta.container.platform.web.ui.login.model.UsersLoginMetaData;
@@ -164,8 +165,8 @@ public class LoginController {
 
         Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 
-        LOGGER.info("old: auth.getAuthorities():" + auth.getAuthorities());
-        LOGGER.info("new: auth.getAuthorities():" + currentAuth.getAuthorities());
+        LOGGER.info("old: auth.getAuthorities():" + CommonUtils.loggerReplace(auth.getAuthorities()));
+        LOGGER.info("new: auth.getAuthorities():" + CommonUtils.loggerReplace(currentAuth.getAuthorities()));
     }
 
 }
