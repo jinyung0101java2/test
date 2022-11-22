@@ -425,6 +425,7 @@ public class TerramanProcessService {
         int errorInt = -1;
 
         cResult = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("terraform change mode :: {}", cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CHANGE_MODE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -433,6 +434,7 @@ public class TerramanProcessService {
 
         terramanCommandModel.setCommand("9");
         cResult = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("terraform deploy cluster :: {}", cResult);
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -452,6 +454,7 @@ public class TerramanProcessService {
          *  - kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'      -->     SECRET_NAME 값 추출
          *  - kubectl describe secret {SECRET_NAME} -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d " "
          * ************************************************************************************************************************************/
+        this.dirCheck("9. current directory :: {}", TerramanConstant.MOVE_DIR_KUBESPRAY, clusterId, host,idRsa);
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         String cResult = "";
         int errorInt = -1;
