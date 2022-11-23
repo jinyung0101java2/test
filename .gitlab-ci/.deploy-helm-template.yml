@@ -1,6 +1,5 @@
 variables:
-  CHART_NAME: cp-terraman-app
-  K8S_MASTER_HOST_KEY: master-host-key
+  CHART_NAME: cp-portal-app
 
 app deploy:
   stage: deploy
@@ -13,9 +12,9 @@ app deploy:
     # Common
     - sed -i "s/\${DEPLOY_NAME}/$APP_NAME/g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${NAMESPACE}/$NAMESPACE/g" $APP_CHART_PATH/values.yaml
-#    - sed -i "s~\${REPOSITORY_URL}~$CI_REGISTRY~g" $APP_CHART_PATH/values.yaml
+    #- sed -i "s~\${REPOSITORY_URL}~$CI_REGISTRY~g" $APP_CHART_PATH/values.yaml
     - sed -i "s~\${REPOSITORY_URL}~$HARBOR_HOST~g" $APP_CHART_PATH/values.yaml
-#    - sed -i "s~\${REPOSITORY_PROJECT_NAME}~$CI_PROJECT_NAMESPACE~g" $APP_CHART_PATH/values.yaml
+    #- sed -i "s~\${REPOSITORY_PROJECT_NAME}~$CI_PROJECT_NAMESPACE~g" $APP_CHART_PATH/values.yaml
     - sed -i "s~\${REPOSITORY_PROJECT_NAME}~$HARBOR_PROJECT~g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${IMAGE_NAME}/$CI_PROJECT_TITLE/g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${IMAGE_TAGS}/$IMAGE_TAGS/g" $APP_CHART_PATH/values.yaml
@@ -26,8 +25,7 @@ app deploy:
     - sed -i "s/\${SERVICE_PORT}/$SERVICE_PORT/g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${SERVICE_TARGET_PORT}/$SERVICE_TARGET_PORT/g" $APP_CHART_PATH/values.yaml
     - sed -i "s/\${SERVICE_NODEPORT}/$SERVICE_NODEPORT/g" $APP_CHART_PATH/values.yaml
-    - sed -i "s/\${CP_TERRAMAN_CONFIGMAP_NAME}/$CP_TERRAMAN_CONFIGMAP_NAME/g" $APP_CHART_PATH/values.yaml
-    - sed -i "s/\${K8S_MASTER_HOST_KEY}/$K8S_MASTER_HOST_KEY/g" $APP_CHART_PATH/values.yaml
+    - sed -i "s/\${CP_PORTAL_CONFIGMAP_NAME}/$CP_PORTAL_CONFIGMAP_NAME/g" $APP_CHART_PATH/values.yaml
 
     # for check
     - cat $APP_CHART_PATH/values.yaml
