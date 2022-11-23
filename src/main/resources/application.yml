@@ -1,6 +1,6 @@
 spring:
   application:
-    name: cp-terraman-api
+    name: cp-portal-terraman
   cloud:
     vault:
       scheme: http
@@ -22,8 +22,8 @@ spring:
           expiry-threshold: 1m
 
 project:
-  name: cp-terraman-api
-  artifactId: cp-terraman-api
+  name: cp-portal-terraman
+  artifactId: cp-portal-terraman
   description: API of the PaaS-TA Container Terraman Portal
 
 management:
