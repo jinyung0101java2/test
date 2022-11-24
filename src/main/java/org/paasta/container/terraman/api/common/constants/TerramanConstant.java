@@ -104,7 +104,7 @@ public class TerramanConstant {
      * */
     public static  final String POD_NAME_COMMAND = "kubectl get pods -n cp-portal -l app=cp-portal-api --field-selector=status.phase=Running -o custom-columns=:metadata.name | grep 'cp-portal-api-deployment'";
     public static final String INSTANCE_COPY_COMMAND(String pod, String clusterId) {
-        return "kubectl cp -n cp-portal " + pod + ":/home/1000/tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
+        return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
 
 
