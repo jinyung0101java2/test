@@ -18,7 +18,7 @@
                     <dl>
                         <dt><label for="name">Name</label></dt>
                         <dd>
-                            <input id="name" type="text" th:placeholder="#{M0010}"/>
+                            <input id="name" type="text" th:placeholder="#{M0840}"/>
 <!--        FIXME, placeHolder 문구                    -->
                         </dd>
                     </dl>
@@ -98,12 +98,12 @@
                     };
 
                     //check FILE
-                    func.saveData('POST', `${func.url}templates`, JSON.stringify(createName), true, 'application/json', createCodeTemplates.returnPage());
+                    func.saveData('POST', `${func.url}templates`, JSON.stringify(createName), true, 'application/json', createCodeTemplates.saveComp);
                     //FIXME!!, 확인 버튼 클릭 전 이동하는 이슈
                 },
 
-                returnPage() {
-                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES;
+                saveComp() {
+                    func.historyBack();
                 }
             };
             createCodeTemplates.init();
