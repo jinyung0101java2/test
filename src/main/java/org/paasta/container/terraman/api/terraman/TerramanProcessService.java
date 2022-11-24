@@ -289,11 +289,13 @@ public class TerramanProcessService {
             terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
 
+            Thread.sleep(10000);
+
             for(int i = 0; i<100; i++) {
                 Thread.sleep(10000);
 
-                LOGGER.info("ssh connection checking...");
                 cResult = commandService.execCommandOutput(terramanCommandModel);
+                LOGGER.info("ssh connection checking... :: {}", CommonUtils.loggerReplace(cResult));
                 if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
                     break;
                 } else if ( StringUtils.isNotBlank(cResult)
@@ -305,7 +307,7 @@ public class TerramanProcessService {
                     break;
                 }
             }
-
+            LOGGER.info("connFlag :: {}", CommonUtils.loggerReplace(connFlag));
             if (connFlag) {
                 clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
