@@ -296,15 +296,22 @@ public class TerramanProcessService {
 
                 cResult = commandService.execCommandOutput(terramanCommandModel);
                 LOGGER.info("ssh connection checking... :: {}", CommonUtils.loggerReplace(cResult));
-                if(StringUtils.isNotBlank(cResult) && !StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-                    break;
-                } else if ( StringUtils.isNotBlank(cResult)
-                        && (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT2)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL)
-                        || StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) ) {
-                    connFlag = true;
-                    break;
+                if(StringUtils.isNotBlank(cResult)) {
+                    if(!StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+                        break;
+                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT) ) {
+                        connFlag = true;
+                        break;
+                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT2) ) {
+                        connFlag = true;
+                        break;
+                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL) ) {
+                        connFlag = true;
+                        break;
+                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND) ) {
+                        connFlag = true;
+                        break;
+                    }
                 }
             }
             LOGGER.info("connFlag :: {}", CommonUtils.loggerReplace(connFlag));
