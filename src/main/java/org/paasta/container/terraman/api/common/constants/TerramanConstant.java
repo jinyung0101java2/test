@@ -107,7 +107,6 @@ public class TerramanConstant {
         return "kubectl cp -n cp-portal " + pod + ":tmp/terraform/" + clusterId + " /home/ubuntu/tmp/terraform/"+clusterId;
     }
 
-
     /**
      * terraform 실행 명령어
      * */
