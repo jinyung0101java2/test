@@ -147,7 +147,7 @@
                     };
                     //     //FIXME! alert 창 띄우기
 
-                    func.saveData('PATCH', `${func.url}accounts`, JSON.stringify(updateAccount), true, 'application/json', cloudAccountsDetail.returnPage());
+                    func.saveData('PATCH', `${func.url}accounts`, JSON.stringify(updateAccount), true, 'application/json', func.refresh);
                 },
 
                 returnPage() {
