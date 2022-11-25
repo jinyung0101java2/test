@@ -94,10 +94,11 @@ public class TerramanConstant {
 
     public static final String SERVICE_ACCOUNT_CREATE = "sudo kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "sudo kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
-    public static final String SERVICE_ACCOUNT_SECRET_NAME = "sudo kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
-    public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
-        return "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
-    }
+    public static final String SERVICE_ACCOUNT_TOKEN = "kubectl create token k8sadmin3 -n kube-system";
+//    public static final String SERVICE_ACCOUNT_SECRET_NAME = "sudo kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
+//    public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
+//        return "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
+//    }
 
     /**
      * .tf 파일 복사 명령어
@@ -217,8 +218,8 @@ public class TerramanConstant {
             case "9" : switchStr = CLUSTER_KUBESPRAY_DEPLOY_COMMAND; break;
             case "10" : switchStr = SERVICE_ACCOUNT_CREATE; break;
             case "11" : switchStr = SERVICE_ACCOUNT_BINDING; break;
-            case "12" : switchStr = SERVICE_ACCOUNT_SECRET_NAME; break;
-            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN(terramanCommandModel.getSecrets().trim()); break;
+//            case "12" : switchStr = SERVICE_ACCOUNT_SECRET_NAME; break;
+            case "13" : switchStr = SERVICE_ACCOUNT_TOKEN; break;
             case "14" : switchStr = INSTANCE_COPY_COMMAND(terramanCommandModel.getPod(), terramanCommandModel.getClusterId()); break;
             case "15" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
             case "16" : switchStr = KEYS_CHANGE_MOD; break;

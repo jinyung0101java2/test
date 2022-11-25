@@ -289,8 +289,6 @@ public class TerramanProcessService {
             terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
 
-            Thread.sleep(10000);
-
             for(int i = 0; i<100; i++) {
                 Thread.sleep(10000);
 
@@ -322,7 +320,6 @@ public class TerramanProcessService {
             }
 
             LOGGER.info("ssh connection complete");
-            Thread.sleep(10000);
         } catch (Exception e) {
             LOGGER.info("ssh connection fail");
         }
@@ -492,14 +489,14 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        terramanCommandModel.setCommand("12");
-        cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Account Secret Name :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
-        }
+//        terramanCommandModel.setCommand("12");
+//        cResult = commandService.execCommandOutput(terramanCommandModel);
+//        LOGGER.info("Account Secret Name :: {}", CommonUtils.loggerReplace(cResult));
+//        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+//            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
+//            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+//            return errorInt;
+//        }
 
         terramanCommandModel.setCommand("13");
         terramanCommandModel.setSecrets(cResult);
@@ -511,19 +508,21 @@ public class TerramanProcessService {
             return errorInt;
         }
 
-        Object resultClusterInfo = vaultService.write(
-                propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
-                , new ClusterInfo(
-                        clusterId
-                        , propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp())
-                        , ( StringUtils.isNotBlank(cResult) ? cResult.trim() : cResult )
-                )
-        );
+        if(StringUtils.isNotBlank(cResult)) {
+            Object resultClusterInfo = vaultService.write(
+                    propertyService.getVaultClusterTokenPath().replace("{id}", clusterId)
+                    , new ClusterInfo(
+                            clusterId
+                            , propertyService.getVaultClusterApiUrl().replace("{ip}", instanceInfo.getPublicIp())
+                            , ( StringUtils.isNotBlank(cResult) ? cResult.trim() : cResult )
+                    )
+            );
 
-        if(resultClusterInfo == null) {
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_TOKEN_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
+            if(resultClusterInfo == null) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_TOKEN_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
         }
         LOGGER.info("cluster token 생성 완료하였습니다.");
         return mpSeq;
