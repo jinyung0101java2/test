@@ -642,3 +642,4 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .custom-access-contents {background-color: #eee; padding: 10px; overflow: auto; margin: 0 0 15px 0; word-break: break-all;}
 .custom-access-button {cursor:pointer;}
 #out_a {margin: -80px 0 0 0;}
+.tdbg {background-color: #f7f7f7; !important; }

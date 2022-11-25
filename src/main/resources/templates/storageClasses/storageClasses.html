@@ -25,16 +25,14 @@
                     <table>
                         <caption>storageClasses List</caption>
                         <colgroup >
-                            <col width="25%" />
-                            <col width="25%" />
-                            <col width="25%" />
-                            <col width="25%" />
+                            <col width="33%" />
+                            <col width="33%" />
+                            <col width="33%" />
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Provider</th>
-                            <th scope="col">Parameters</th>
                             <th scope="col">Created Time</th>
                         </tr>
                         </thead>
@@ -96,30 +94,18 @@
                         for(var i=0; i<=data.items.length-1; i++){
                             var html = `<tr>
 									<td class="left"><a href="javascript:;" data-name="${data.items[i].name}">${data.items[i].name}</a></td>
-									<td class="left">${data.items[i].provisioner}</td>`;
-
-                            var label = '';
-
-                            if(data.items[i].parameters != '-'){
-                                for(var j=0; j<=Object.getOwnPropertyNames(data.items[i].parameters).length-1; j++){
-                                    label += `<dl><dt>${Object.getOwnPropertyNames(data.items[i].parameters)[j]}</dt><dd>${data.items[i].parameters[Object.keys(data.items[i].parameters)[j]]}</dd></dl>`;
-                                };
-                            } else {
-                                label = `<dl><dt>-</dt></dl>`;
-                            }
-
-                            html += `<td class="left box">${label}</td>`;
-                            html += `<td>${data.items[i].creationTimestamp}</td></tr>`;
+									<td class="left">${data.items[i].provisioner}</td>
+                                    <td>${data.items[i].creationTimestamp}</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="4">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="3">No Data.</td></tr>`;
 
                         func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                     };
                 } else {
-                    var html = `<tr><td colspan="4">No Data.</td></tr>`;
+                    var html = `<tr><td colspan="3">No Data.</td></tr>`;
 
                     func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                 };
