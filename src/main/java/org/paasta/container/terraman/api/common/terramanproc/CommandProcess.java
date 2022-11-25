@@ -192,15 +192,14 @@ public class CommandProcess {
             resultCommand = response.toString();
 
         } catch (Exception e) {
+            if(e.getMessage().contains("timed out")) {
+                resultCommand = Constants.RESULT_STATUS_TIME_OUT;
+            } else if(e.getMessage().contains(Constants.RESULT_STATUS_AUTH_FAIL)) {
+                resultCommand = Constants.RESULT_STATUS_AUTH_FAIL;
+            }
             LOGGER.error("Exception");
             LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
-            if(e.getMessage().contains(Constants.RESULT_STATUS_TIME_OUT2)) {
-                return Constants.RESULT_STATUS_TIME_OUT;
-            } else if(e.getMessage().contains(Constants.RESULT_STATUS_AUTH_FAIL)) {
-                return Constants.RESULT_STATUS_AUTH_FAIL;
-            } else {
-                return Constants.RESULT_STATUS_FAIL;
-            }
+            LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
         } finally {
             this.disConnectSSH();
         }
