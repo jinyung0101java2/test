@@ -55,7 +55,7 @@
                         </colgroup>
                         <tbody class="resourceTable">
                         <tr>
-                            <th scope="row" class="left">Provider</th>
+                            <td scope="row" class="left tdbg">Provider</td>
                             <td class="left" id="provider"></td>
                         </tr>
                         </tbody>
@@ -134,7 +134,7 @@
                 if(data.parameters != "-") {
                     for (var i = 0; i <= Object.getOwnPropertyNames(data.parameters).length - 1; i++) {
 
-                        var html = `<tr><th class="left">${Object.getOwnPropertyNames(data.parameters)[i]}</th><td class="left">${data.parameters[Object.keys(data.parameters)[i]]}</td></tr>`;
+                        var html = `<tr><td class="left tdbg">${Object.getOwnPropertyNames(data.parameters)[i]}</td><td class="left">${data.parameters[Object.keys(data.parameters)[i]]}</td></tr>`;
 
                         func.appendHtml(document.querySelector('.resourceTable'), html, 'tbody');
                     }
