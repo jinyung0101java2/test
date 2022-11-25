@@ -74,7 +74,7 @@ public class TfFileService {
         String openstackPassword = "";
         String openstackAuthUrl = "";
         String openstackUserName = "";
-        LOGGER.info("vault :: {}", CommonUtils.loggerReplace(res.toString()));
+
         switch(provider.toUpperCase()) {
             case Constants.UPPER_AWS :
                 awsAccessKey = res != null ? String.valueOf(res.get("accessKey")) : "";
