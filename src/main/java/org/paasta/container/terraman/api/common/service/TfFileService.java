@@ -74,11 +74,11 @@ public class TfFileService {
         String openstackPassword = "";
         String openstackAuthUrl = "";
         String openstackUserName = "";
-
+        LOGGER.info("vault :: {}", CommonUtils.loggerReplace(res.toString()));
         switch(provider.toUpperCase()) {
             case Constants.UPPER_AWS :
-                awsAccessKey = res != null ? String.valueOf(res.get("access_key")) : "";
-                awsSecretKey = res != null ? String.valueOf(res.get("secret_key")) : "";
+                awsAccessKey = res != null ? String.valueOf(res.get("accessKey")) : "";
+                awsSecretKey = res != null ? String.valueOf(res.get("secretKey")) : "";
                 fileModel.setAwsAccessKey(awsAccessKey);
                 fileModel.setAwsSecretKey(awsSecretKey);
                 fileModel.setAwsRegion(account.getRegion());

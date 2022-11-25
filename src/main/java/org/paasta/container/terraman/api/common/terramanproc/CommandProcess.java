@@ -197,8 +197,6 @@ public class CommandProcess {
             } else if(e.getMessage().contains(Constants.RESULT_STATUS_AUTH_FAIL)) {
                 resultCommand = Constants.RESULT_STATUS_AUTH_FAIL;
             }
-            LOGGER.error("Exception");
-            LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
             LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
         } finally {
             this.disConnectSSH();
