@@ -474,7 +474,11 @@ public class TerramanProcessService {
 
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
+            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+            || StringUtils.isBlank(cResult)
+        ) {
+            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR));
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -483,7 +487,11 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("11");
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
+            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+            || StringUtils.isBlank(cResult)
+        ) {
+            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_BIND_ROLE_ERROR));
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
@@ -502,7 +510,11 @@ public class TerramanProcessService {
         terramanCommandModel.setSecrets(cResult);
         cResult = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Service Account Token :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
+            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
+            || StringUtils.isBlank(cResult)
+        ) {
+            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR));
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorInt;
