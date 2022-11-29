@@ -173,7 +173,7 @@
                                 "cluster" : document.getElementById('createName').value,
                                 "resourceName": document.getElementById('createName').value,
                                 "providerType": document.getElementById('createProvider').value,
-                                "cloudAccountId": document.querySelector('#createCloudAccount > option:checked').getAttribute('data-id'),
+                                "cloudAccountId": createClusters.getCloudAccount(),
                                 "hclScript": document.getElementById('createTemplatesDetail').value,
                                 "description": document.getElementById('createDescription').value,
                                 "isClusterRegister": false
@@ -197,7 +197,15 @@
 
                 saveComp() {
                     func.historyBack();
+                },
+
+                getCloudAccount() {
+                if(document.querySelector('#createCloudAccount > option:checked') == null) {
+                    return "";
+                } else {
+                    return document.querySelector('#createCloudAccount > option:checked').getAttribute('data-id');
                 }
+            }
             };
             createClusters.init();
         };
