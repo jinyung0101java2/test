@@ -659,7 +659,6 @@ public class TerramanProcessServiceTest {
 //        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[12]);
-        terramanCommandModel.setSecrets("");
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_FAIL);
 
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
@@ -667,7 +666,7 @@ public class TerramanProcessServiceTest {
 
         int result = terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME);
 
-        assertEquals(1, result);
+        assertEquals(-1, result);
     }
 
     @Test

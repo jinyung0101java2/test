@@ -50,6 +50,13 @@ spring:
     validationQuery: SELECT 1
     username: ${DATABASE_USER_ID}
     password: ${DATABASE_USER_PASSWORD}
+    hikari:
+      connectionTimeout: 10000
+      maximumPoolSize: 10
+      maxLifetime: 580000
+      poolName: HikariCP
+      readOnly: false
+      connectionTestQuery: SELECT 1
   jpa:
     database: mysql
     hibernate:
@@ -85,6 +92,13 @@ spring:
     validationQuery: SELECT 1
     username: ${DATABASE_USER_ID}
     password: ${DATABASE_USER_PASSWORD}
+    hikari:
+      connectionTimeout: 10000
+      maximumPoolSize: 10
+      maxLifetime: 580000
+      poolName: HikariCP
+      readOnly: false
+      connectionTestQuery: SELECT 1
   jpa:
     database: mysql
     hibernate:

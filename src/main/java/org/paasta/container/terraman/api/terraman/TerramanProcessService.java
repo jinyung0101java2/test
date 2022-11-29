@@ -463,6 +463,9 @@ public class TerramanProcessService {
         this.dirCheck("9. current directory :: {}", TerramanConstant.MOVE_DIR_KUBESPRAY, clusterId, host,idRsa);
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         String cResult = "";
+        String accountCreate = "";
+        String accountBinding = "";
+        String accountToken = "";
         int errorInt = -1;
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
 
@@ -472,52 +475,68 @@ public class TerramanProcessService {
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
 
-        cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
-            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-            || StringUtils.isBlank(cResult)
-        ) {
-            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR));
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
+        for(int i=0; i<5; i++) {
+            accountCreate = commandService.execCommandOutput(terramanCommandModel);
+            LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(accountCreate));
+
+            if( (!StringUtils.isBlank(accountCreate))
+                    && !(StringUtils.equals(Constants.RESULT_STATUS_FAIL, accountCreate))
+                    && !(StringUtils.contains(accountCreate, Constants.RESULT_STATUS_TIME_OUT))
+            ) {
+                break;
+            } else if( (!StringUtils.isBlank(accountCreate))
+                    && ( StringUtils.equals(Constants.RESULT_STATUS_FAIL, accountCreate)
+                    || StringUtils.contains(accountCreate, Constants.RESULT_STATUS_TIME_OUT) )
+            ) {
+                LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR));
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_SERVICE_ACCOUNT_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
         }
 
         terramanCommandModel.setCommand("11");
-        cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
-            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-            || StringUtils.isBlank(cResult)
-        ) {
-            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_BIND_ROLE_ERROR));
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
+
+        for(int i=0; i<5; i++) {
+            accountBinding = commandService.execCommandOutput(terramanCommandModel);
+            LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(accountBinding));
+
+            if( (!StringUtils.isBlank(accountBinding))
+                    && !(StringUtils.equals(Constants.RESULT_STATUS_FAIL, accountBinding))
+                    && !(StringUtils.contains(accountBinding, Constants.RESULT_STATUS_TIME_OUT))
+            ) {
+                break;
+            } else if( (!StringUtils.isBlank(accountBinding))
+                    && ( StringUtils.equals(Constants.RESULT_STATUS_FAIL, accountBinding)
+                    || StringUtils.contains(accountBinding, Constants.RESULT_STATUS_TIME_OUT) )
+            ) {
+                LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_BIND_ROLE_ERROR));
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_BIND_ROLE_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
         }
 
-//        terramanCommandModel.setCommand("12");
-//        cResult = commandService.execCommandOutput(terramanCommandModel);
-//        LOGGER.info("Account Secret Name :: {}", CommonUtils.loggerReplace(cResult));
-//        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult) || StringUtils.isBlank(cResult) || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
-//            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_SECRET_NAME_ERROR);
-//            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-//            return errorInt;
-//        }
-
         terramanCommandModel.setCommand("13");
-        terramanCommandModel.setSecrets(cResult);
-        cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Service Account Token :: {}", CommonUtils.loggerReplace(cResult));
-        if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
-            || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)
-            || StringUtils.isBlank(cResult)
-        ) {
-            LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR));
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorInt;
+
+        for(int i=0; i<5; i++) {
+            cResult = commandService.execCommandOutput(terramanCommandModel);
+            LOGGER.info("Service Account Token :: {}", CommonUtils.loggerReplace(cResult));
+
+            if( (!StringUtils.isBlank(cResult))
+                    && !(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult))
+                    && !(StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT))
+            ) {
+                break;
+            } else if( (!StringUtils.isBlank(cResult))
+                    && ( StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)
+                    || StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT) )
+            ) {
+                LOGGER.info(CommonUtils.loggerReplace(TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR));
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_GET_CLUSTER_TOKEN_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorInt;
+            }
         }
 
         if(StringUtils.isNotBlank(cResult)) {
