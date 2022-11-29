@@ -3,6 +3,7 @@ package org.paasta.container.terraman.api.common;
 import com.google.gson.Gson;
 import org.paasta.container.terraman.api.common.constants.Constants;
 import org.paasta.container.terraman.api.common.constants.CommonStatusCode;
+import org.paasta.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +73,11 @@ public class CommonService {
             }
 
         } catch (NoSuchMethodException e) {
-            LOGGER.error(NO_SUCH_METHOD_EXCEPTION_LOG, e);
+            LOGGER.error(NO_SUCH_METHOD_EXCEPTION_LOG, CommonUtils.loggerReplace(e));
         } catch (IllegalAccessException e1) {
-            LOGGER.error(ILLEGAL_ACCESS_EXCEPTION_LOG, e1);
+            LOGGER.error(ILLEGAL_ACCESS_EXCEPTION_LOG, CommonUtils.loggerReplace(e1));
         } catch (InvocationTargetException e2) {
-            LOGGER.error(INVOCATION_TARGET_EXCEPTION_LOG, e2);
+            LOGGER.error(INVOCATION_TARGET_EXCEPTION_LOG, CommonUtils.loggerReplace(e2));
         }
 
         return reqObject;

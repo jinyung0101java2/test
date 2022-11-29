@@ -95,6 +95,8 @@ public class TerramanConstant {
     /**
      * account token 생성 명령어
      * */
+    public static final String SERVICE_ACCOUNT_CHECK1 = "kubectl get ns";
+    public static final String SERVICE_ACCOUNT_CHECK2 = "sudo kubectl get ns";
     public static final String SERVICE_ACCOUNT_CREATE = "sudo kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "sudo kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
     public static final String SERVICE_ACCOUNT_TOKEN = "sudo kubectl create token k8sadmin --duration=999999h -n kube-system";
@@ -226,6 +228,8 @@ public class TerramanConstant {
             case "14" : switchStr = INSTANCE_COPY_COMMAND(terramanCommandModel.getPod(), terramanCommandModel.getClusterId()); break;
             case "15" : switchStr = CREATE_DIR_CLUSTER(terramanCommandModel.getClusterId()); break;
             case "16" : switchStr = KEYS_CHANGE_MOD; break;
+            case "17" : switchStr = SERVICE_ACCOUNT_CHECK1; break;
+            case "18" : switchStr = SERVICE_ACCOUNT_CHECK2; break;
         }
         return switchStr;
     }

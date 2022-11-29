@@ -95,7 +95,7 @@ public class TerramanService {
             terramanCommandModel.setIdRsa(idRsa);
             terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
             terramanCommandModel.setClusterId(clusterId);
-//            cResult = commandService.execCommandOutput(TerramanConstant.CREATE_DIR_CLUSTER(clusterId), "", host, idRsa, TerramanConstant.DEFAULT_USER_NAME);
+
             cResult = commandService.execCommandOutput(terramanCommandModel);
             if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
                 clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -108,7 +108,6 @@ public class TerramanService {
          * 0. terraman process setting
          * ***********************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessSet(mpSeq, clusterId, hostDir);
         }
 
@@ -116,7 +115,6 @@ public class TerramanService {
          * 1. terraman process start
          * ***********************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessStart(mpSeq, clusterId, provider, processGb, host, idRsa);
         }
 
@@ -125,7 +123,6 @@ public class TerramanService {
          * 2. IaaS에 따라 provider.tf 파일 정의 (Vault, Database)
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessSetTfFile(mpSeq, clusterId, processGb, host, idRsa, provider, seq);
         }
 
@@ -133,7 +130,6 @@ public class TerramanService {
          * 3. terraform init 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessInit(mpSeq, clusterId, processGb, host, idRsa);
         }
 
@@ -141,7 +137,6 @@ public class TerramanService {
          * 4. terraform plan 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessPlan(mpSeq, clusterId, processGb, host, idRsa);
         }
 
@@ -149,7 +144,6 @@ public class TerramanService {
          * 5. terraform apply 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessApply(mpSeq, clusterId, processGb, host, idRsa);
         }
 
@@ -157,7 +151,6 @@ public class TerramanService {
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessGetInstanceIp(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
@@ -165,7 +158,6 @@ public class TerramanService {
          * 7. Kubespray 다운로드 및 kubespray_var.sh 파일 작성하기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessSetKubespray(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
@@ -173,7 +165,6 @@ public class TerramanService {
          * 8. source deploy_kubespray.sh 실행하기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessExecKubespray(mpSeq, clusterId, host, idRsa);
         }
 
@@ -181,7 +172,6 @@ public class TerramanService {
          * 9. 클러스터 정보 vault 생성
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessCreateVault(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
         }
 
@@ -189,7 +179,6 @@ public class TerramanService {
          * 10. 클러스터 생성 상태 전송 --> DB 업데이트
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             mpSeq = terramanProcessService.terramanProcessClusterStatusUpdate(mpSeq, clusterId);
         }
         /*************************************************************************************************************************************/
@@ -198,7 +187,6 @@ public class TerramanService {
          * 11. 완료 후 프로세스 종료
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            LOGGER.info("seq :: {}", mpSeq);
             LOGGER.info("클러스터 배포가 완료되었습니다.");
             // log 저장
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.KUBESPRAY_DEPLOY_LOG);

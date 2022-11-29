@@ -431,7 +431,7 @@ public class TerramanProcessService {
         int errorInt = -1;
 
         cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("terraform change mode :: {}", cResult);
+        LOGGER.info("terraform change mode :: {}", CommonUtils.loggerReplace(cResult));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CHANGE_MODE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -440,7 +440,7 @@ public class TerramanProcessService {
 
         terramanCommandModel.setCommand("9");
         cResult = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("terraform deploy cluster :: {}", cResult);
+        LOGGER.info("terraform deploy cluster :: {}", CommonUtils.loggerReplace(cResult));
         if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_DEPLOY_CLUSTER_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -465,16 +465,23 @@ public class TerramanProcessService {
         String cResult = "";
         String accountCreate = "";
         String accountBinding = "";
-        String accountToken = "";
+        String chkCli = "";
         int errorInt = -1;
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
 
-        terramanCommandModel.setCommand("10");
+        terramanCommandModel.setCommand("17");
         terramanCommandModel.setHost(instanceInfo.getPublicIp());
         terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);
+        chkCli = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
+        terramanCommandModel.setCommand("18");
+        chkCli = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
+
+        terramanCommandModel.setCommand("10");
         for(int i=0; i<5; i++) {
             accountCreate = commandService.execCommandOutput(terramanCommandModel);
             LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(accountCreate));

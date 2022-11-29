@@ -129,7 +129,7 @@ public class TfFileService {
             resultCode = commandService.execCommandOutput(terramanCommandModel);
             if(!StringUtils.equals(Constants.RESULT_STATUS_FAIL, resultCode)) {
                 resultCode = Constants.RESULT_STATUS_SUCCESS;
-                LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", resultCode);
+                LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", CommonUtils.loggerReplace(resultCode));
             }
         }
 
