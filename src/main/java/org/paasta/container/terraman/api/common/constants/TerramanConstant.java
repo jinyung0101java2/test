@@ -92,9 +92,12 @@ public class TerramanConstant {
     }
     public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/paas-ta-container-platform-deployment/standalone/single_control_plane";
 
+    /**
+     * account token 생성 명령어
+     * */
     public static final String SERVICE_ACCOUNT_CREATE = "sudo kubectl create serviceaccount k8sadmin -n kube-system";
     public static final String SERVICE_ACCOUNT_BINDING = "sudo kubectl create clusterrolebinding k8sadmin --clusterrole=cluster-admin --serviceaccount=kube-system:k8sadmin";
-    public static final String SERVICE_ACCOUNT_TOKEN = "sudo kubectl create token k8sadmin -n kube-system";
+    public static final String SERVICE_ACCOUNT_TOKEN = "sudo kubectl create token k8sadmin --duration=999999h -n kube-system";
 //    public static final String SERVICE_ACCOUNT_SECRET_NAME = "sudo kubectl describe serviceaccount k8sadmin -n kube-system | grep 'Mountable secrets'";
 //    public static final String SERVICE_ACCOUNT_TOKEN(String secrets) {
 //        return "sudo kubectl describe secret " + secrets.substring(secrets.indexOf("k8sadmin")) + " -n kube-system | grep -E '^token' | cut -f2 -d':' | tr -d \" \"";
