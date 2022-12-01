@@ -250,9 +250,9 @@
                             label = `<dl><dt>-</dt></dl>`;
                         }
 
-                        html += `<td class="left box">${label}</td>`;
+                        html += `<td class="left box"><div class="labels">${label}</div></td>`;
 
-                        html += `<td>${data.items[i].podStatus}</td>
+                        html += `<td class="${data.items[i].podStatus.toLowerCase()}">${data.items[i].podStatus}</td>
 								<td>${data.items[i].restarts}</td>
 								<td>${data.items[i].creationTimestamp}</td>
 							</tr>`;

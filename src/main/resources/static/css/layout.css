@@ -284,12 +284,13 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .table_style01 table tr th {text-align:center; background-color:#f7f7f7; padding:12px 11px 10px 11px; border-bottom:1px solid #ebebeb; font-family:'Apple SD Gothic Neo B', sans-serif; font-weight:500; border-left:1px solid #ebebeb;}
 .table_style01 table tr th:first-child {border-left:0;}
 .table_style01 table tr th.left {text-align:left;}
-.table_style01 table tr td {text-align:center; border:1px solid #ebebeb; border-left:0; padding:18px 11px 16px 11px; color:#818894; font-size:16px; white-space:normal; letter-spacing:-0.2px;}
+.table_style01 table tr td {text-align:center; border:1px solid #ebebeb; border-left:0; padding:18px 11px 16px 11px; color:#818894; font-size:15px; white-space:normal; letter-spacing:-0.2px;}
 .table_style01 table tr td:last-child {border-right:0;}
 .table_style01 table tr td.active,
 .table_style01 table tr td.running,
 .table_style01 table tr td.true {color:#0ca583;}
 .table_style01 table tr td.terminating {color:#ffc53e;}
+.table_style01 table tr td.completed,
 .table_style01 table tr td.succeeded {color:#844adb;}
 .table_style01 table tr td.failed,
 .table_style01 table tr td.fail {color:#f34111;}
@@ -643,3 +644,33 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .custom-access-button {cursor:pointer;}
 #out_a {margin: -80px 0 0 0;}
 .tdbg {background-color: #f7f7f7; !important; }
+
+
+.labels::-webkit-scrollbar {
+	width: 3px;
+}
+
+/* Track */
+.labels::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+/* Handle */
+.labels::-webkit-scrollbar-thumb {
+	background: #9fa9a3;
+}
+
+/* Handle on hover */
+.labels::-webkit-scrollbar-thumb:hover {
+	background: #9fa9a3;
+}
+
+.labels{
+	overflow:auto;
+	width:100%;
+	max-height:150px;
+}
+
+.fs-14{
+	font-size: 14px !important;
+}

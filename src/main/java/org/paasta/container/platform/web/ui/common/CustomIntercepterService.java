@@ -13,6 +13,8 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -63,13 +65,20 @@ public class CustomIntercepterService {
 	 *
 	 * @return the user info
 	 */
-    public boolean isActive() {
-    	
+    public ActiveStatus isActive() {
+
+		ActiveStatus activeStatus = new ActiveStatus();
+
     	boolean bFlag =false;
     	
          try {
-        	 
-        	  String token = ((DashboardAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails()).getTokenValue();
+			 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			 if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_INACTIVE_USER))) {
+				 activeStatus = new ActiveStatus(false, Constants.AUTH_INACTIVE_USER);
+				 return activeStatus;
+			 }
+
+        	  String token = ((DashboardAuthenticationDetails) authentication.getDetails()).getTokenValue();
         	  
         	  MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         	  parameters.add("token", token);
@@ -102,8 +111,9 @@ public class CustomIntercepterService {
 			e.printStackTrace();
 			bFlag =false;
 		}
-         
-         return bFlag;
+
+		activeStatus.setActive(bFlag);
+         return activeStatus;
          
     }
 

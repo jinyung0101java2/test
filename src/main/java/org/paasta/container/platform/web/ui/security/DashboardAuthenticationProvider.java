@@ -108,7 +108,12 @@ public class DashboardAuthenticationProvider implements AuthenticationProvider {
                 dashboardAuthenticationDetails.setUsersLoginMetaData(usersLoginMetaData);
                 roles =  Arrays.asList(new SimpleGrantedAuthority(usersLoginMetaData.getUserType()));
             } else {
-                throw new InternalAuthenticationServiceException(authenticationResponse.getResultMessage());
+                if(authenticationResponse.getResultMessage().equals(Constants.LOGIN_INACTIVE_USER_MESSAGE)) {
+                    roles =  Arrays.asList(new SimpleGrantedAuthority(Constants.AUTH_INACTIVE_USER));
+                }
+                else {
+                    throw new InternalAuthenticationServiceException(authenticationResponse.getResultMessage());
+                }
             }
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException(e.getMessage());

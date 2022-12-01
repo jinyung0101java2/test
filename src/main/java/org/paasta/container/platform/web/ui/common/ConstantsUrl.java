@@ -53,6 +53,7 @@ public class ConstantsUrl {
     public static final String URI_CP_SESSION_OUT = "/sessionout";
     public static final String URI_AUTHENTICATION_FAILED = "/error/authenticationFailed";
     public static final String URI_CP_LOGOUT ="/logout";
+    public static final String URl_CP_INACTIVE = "/inactive";
 
     public static final String URI_API_SET_CLUSTER_AUTHORITY="/setAuthority";
 

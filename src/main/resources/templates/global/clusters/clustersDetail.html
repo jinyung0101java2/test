@@ -147,7 +147,7 @@
                         // "clusterType": clusterInfo.clusterType,
                         "description": document.getElementById('clusterDetailDescription').value
                     };
-                    func.saveData('PATCH', `${func.url}clusters`, JSON.stringify(updateAccount), true, 'application/json', clusterDetail.returnPage());
+                    func.saveData('PATCH', `${func.url}clusters`, JSON.stringify(updateAccount), true, 'application/json', func.refresh);
                 },
 
                 returnPage() {

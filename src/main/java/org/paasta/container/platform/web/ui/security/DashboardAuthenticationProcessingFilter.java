@@ -63,7 +63,7 @@ public class DashboardAuthenticationProcessingFilter extends OAuth2ClientAuthent
             String redirect_url = "/error/500";
 
             if(e.getMessage().equals(Constants.LOGIN_INACTIVE_USER_MESSAGE)) {
-                redirect_url = "/error/inactive";
+                redirect_url = ConstantsUrl.URl_CP_INACTIVE;
             }
             if(Constants.LOGIN_UNAUTHORIZED_MESSAGE.contains(e.getMessage())) {
                 redirect_url = "/error/401";
