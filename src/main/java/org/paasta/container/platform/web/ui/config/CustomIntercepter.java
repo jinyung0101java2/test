@@ -1,8 +1,7 @@
 package org.paasta.container.platform.web.ui.config;
 
 
-import org.paasta.container.platform.web.ui.common.ConstantsUrl;
-import org.paasta.container.platform.web.ui.common.CustomIntercepterService;
+import org.paasta.container.platform.web.ui.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +35,22 @@ public class CustomIntercepter extends HandlerInterceptorAdapter {
                 url.indexOf("/js") >= 0 ||
                 url.indexOf("/webjars") >= 0 ||
                 url.indexOf(ConstantsUrl.URI_CP_SESSION_OUT) >= 0 ||
+                url.indexOf(ConstantsUrl.URI_CP_LOGOUT) >= 0 ||
+                url.indexOf(ConstantsUrl.URl_CP_INACTIVE) >= 0 ||
                 url.indexOf("/error") >= 0
         )) {
 
-            boolean isActive = customIntercepterService.isActive();
+            ActiveStatus activeStatus = customIntercepterService.isActive();
 
- 	        if(!isActive) {
+            if(activeStatus.getMessage().equals(Constants.AUTH_INACTIVE_USER)) {
+                LOGGER.info("#### PREHANDLE :: USER IS INACTIVE...");
+                response.sendRedirect(ConstantsUrl.URl_CP_INACTIVE);
+                return false;
+            }
+
+ 	        if(!activeStatus.isActive()) {
 	       	 request.getSession().invalidate();
-                LOGGER.info("#### PREHANDLE :: USER IS INACTIVE");
+                LOGGER.info("#### PREHANDLE :: USER SESSION EXPIRED...");
 	       		 response.sendRedirect(ConstantsUrl.URI_CP_SESSION_OUT);
 	       		 return false;
 	        }

@@ -121,7 +121,7 @@ public class CustomErrorController implements ErrorController {
      */
     @ApiOperation(value = "inactive 페이지 이동(Go to the inactive page)", nickname = "handleInActive")
     @NoAuth
-    @GetMapping("/error/inactive")
+    @GetMapping(ConstantsUrl.URl_CP_INACTIVE)
     public String handleInActive() {
         return BASE_URL + "inactive";
     }

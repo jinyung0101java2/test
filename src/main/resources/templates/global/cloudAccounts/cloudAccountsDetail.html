@@ -48,9 +48,9 @@
             </div>
             <!-- btn -->
             <div class="btn02">
-                <button type="submit" id="delete" th:text="#{M0026}"></button>
+                <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')"></button>
                 <div>
-                    <a href="javascript:" id="modify" data-role="cloudAccounts" th:text="#{M0025}"></a>
+                    <a href="javascript:" id="modify" data-role="cloudAccounts" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
                     <a onclick="movePage(URI_CP_GLOBAL_CLOUD_ACCOUNTS)" th:text="#{M0028}"></a>
                 </div>
             </div>

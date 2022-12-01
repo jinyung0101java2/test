@@ -26,7 +26,7 @@ public class Constants {
     public static final String AUTH_SUPER_ADMIN = "SUPER_ADMIN";
     public static final String AUTH_CLUSTER_ADMIN = "CLUSTER_ADMIN";
     public static final String AUTH_USER = "USER";
-
+    public static final String AUTH_INACTIVE_USER = "INACTIVE_USER";
 
     public static final String LOGIN_TOKEN_EXPIRED = "TOKEN_EXPIRED";
     public static final String LOGIN_FAIL_MESSAGE = "LOGIN_FAILED";

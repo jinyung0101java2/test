@@ -24,12 +24,14 @@
                     <table>
                         <caption>Pods List</caption>
                         <colgroup >
-                            <col width="23%" />
-                            <col width="22%" />
-                            <col width="21%" />
-                            <col width="10%" />
+                            <col width="20%" />
+                            <col width="13%" />
+                            <col width="12%" />
                             <col width="8%" />
-                            <col width="16%" />
+                            <col width="7%" />
+                            <col width="7%" />
+                            <col width="6%" />
+                            <col width="14%" />
                         </colgroup>
                         <thead>
                         <tr>
@@ -37,6 +39,8 @@
                             <th scope="col">Namespaces</th>
                             <th scope="col">Nodes</th>
                             <th scope="col">Status</th>
+                            <th scope="col">CPU<br>(cores)</th>
+                            <th scope="col">MEMORY<br> (bytes)</th>
                             <th scope="col">Restarts</th>
                             <th scope="col">Created Time</th>
                         </tr>
@@ -85,7 +89,7 @@
             load(){
                 func.loading();
 
-                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/pods?limit=${pods.limit}&offset=${pods.offset}&searchName=${document.getElementById('searchText').value}`, 'application/json', pods.draw);
+                func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/pods?includeUsage=true&limit=${pods.limit}&offset=${pods.offset}&searchName=${document.getElementById('searchText').value}`, 'application/json', pods.draw);
             },
 
             draw(data){
@@ -95,7 +99,14 @@
                 if(data.httpStatusCode == 200){
                     if(data.items.length > 0){
                         for(var i=0; i<=data.items.length-1; i++){
-                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td class="left">${data.items[i].nodes}</td><td class="${data.items[i].podStatus.toLowerCase()}">${data.items[i].podStatus}</td><td>${data.items[i].restarts}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
+                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td>
+                                            <td class="left">${data.items[i].namespace}</td>
+                                            <td class="left">${data.items[i].nodes}</td>
+                                            <td class="${data.items[i].podStatus.toLowerCase()}">${data.items[i].podStatus}</td>
+                                            <td class="fs-14">${data.items[i].cpu.usage}</td>
+                                            <td class="fs-14">${data.items[i].memory.usage}</td>
+                                            <td class="fs-14">${data.items[i].restarts}</td>
+                                            <td>${data.items[i].creationTimestamp}</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
