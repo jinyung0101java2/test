@@ -89,7 +89,8 @@ public class CommandServiceTest {
 
     @Test
     public void getResponseTest() {
-        when(commandProcess.getResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
+        // when(commandProcess.getResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         String result = commandService.getResponse(terramanCommandModel);
 
@@ -109,7 +110,7 @@ public class CommandServiceTest {
     public void  execCommandOutputTest() {
         doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
 
-        String result = commandService.execCommandOutput(terramanCommandModel2);
+        String result = commandService.execCommandOutput(terramanCommandModel);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }
