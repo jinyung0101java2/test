@@ -89,8 +89,8 @@ public class CommandServiceTest {
 
     @Test
     public void getResponseTest() {
-        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandProcess).getResponse(terramanCommandModel);
-        // when(commandProcess.getResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        when(commandProcess.getResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
         String result = commandService.getResponse(terramanCommandModel);
 
