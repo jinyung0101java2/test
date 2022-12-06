@@ -657,12 +657,12 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 
 /* Handle */
 .labels::-webkit-scrollbar-thumb {
-	background: #9fa9a3;
+	background: #D3D3D3;
 }
 
 /* Handle on hover */
 .labels::-webkit-scrollbar-thumb:hover {
-	background: #9fa9a3;
+	background: #D3D3D3;
 }
 
 .labels{
