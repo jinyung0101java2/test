@@ -548,13 +548,17 @@ const func = {
 		if(bull){
 			html += `<a class='confirm' href='javascript:;'>${name}</a>`;
 		};
-		html += `</div></div>`;
+		html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
 
 		if(document.getElementById('alertModal') !== null) {
 			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
 		}
 
 		func.appendHtml(document.getElementById('wrap'), html, 'div');
+
+		document.getElementById('alertModal').querySelector('.close').addEventListener('click', (e) => {
+			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
+	}, false);
 
 		if(callback){
 			document.getElementById('alertModal').querySelector('.confirm').addEventListener('click', (e) => {
