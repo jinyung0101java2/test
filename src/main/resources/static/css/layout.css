@@ -633,7 +633,7 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .creat-type2 dl dt {margin-bottom: 0; margin-right: 20px; width: 80px;}
 .creat-type2 dl dd {display: flex; align-items: center;}
 .creat-type2 dl dd input {min-width: 500px;}
-.creat-type2 .add-btn {margin-left: 0; margin-top: 20px; width: 200px; background-color: #0950bf;}
+.creat-type2 .add-btn {margin-left: 0; margin-top: 20px; width: 200px; border :2px solid #a9a9a9; background-color: #fff; color : #626262;}
 .creat-type2 dl dd .con-txt {display: flex; align-items: center; margin-left: 15px;}
 .creat-type2 dl dd .con-txt p {font-size: 16px; color: #47494d; font-weight: 400; width: 100%; font-family: 'Apple SD Gothic Neo B', sans-serif; max-width: 80px;}
 .creat-type2 .info-section {padding: 50px 0 0 0;}
@@ -673,4 +673,11 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 
 .fs-14{
 	font-size: 14px !important;
+}
+
+.ingress-host{
+	display :inline;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #47494d;
 }

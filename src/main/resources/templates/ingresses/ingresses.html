@@ -24,13 +24,15 @@
                     <table>
                         <caption>Ingresses List</caption>
                         <colgroup >
-                            <col width="26%" />
-                            <col width="56%" />
-                            <col width="18%" />
+                            <col width="20%" />
+                            <col width="20%" />
+                            <col width="40%" />
+                            <col width="20%" />
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col">Name</th>
+                            <th scope="col">Namespace</th>
                             <th scope="col">Target</th>
                             <th scope="col">Created Time</th>
                         </tr>
@@ -94,7 +96,7 @@
                             for(var i = 0; i <= data.items.length-1; i++) {
                                 for (var j = 0; j <= data.items[i].spec.rules.length-1; j++) {
                                     for (var k = 0; k <= data.items[i].spec.rules[j].http.paths.length-1; k++) {
-                                        link[i] +=`<a href="http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}">http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</a> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
+                                        link[i] +=`<p class="ingress-host" onclick='window.open("http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}")'>${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</p> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
                                         link[i+1] = '';
                                     }
                                 }
@@ -103,19 +105,20 @@
                             for(var i = 0; i <= data.items.length-1; i++) {
                                 var html = `<tr>
                                  <td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td>
-                                 <td class="center">${link[i]}</td>
+                                  <td class="left">${data.items[i].namespace}</td>
+                                 <td class="left">${link[i]}</td>
                                  <td>${data.items[i].creationTimestamp}</td>
                              </tr>`;
 
                                 func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                             };
                         } else {
-                            var html = `<tr><td colspan="5">No Data.</td></tr>`;
+                            var html = `<tr><td colspan="4">No Data.</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="5">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="4">No Data.</td></tr>`;
 
                         func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                     };
