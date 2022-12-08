@@ -90,7 +90,7 @@
                 if(data.httpStatusCode == 200){
                     if(data.items.length > 0){
                         for(var i=0; i<=data.items.length-1; i++){
-                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].metadata.name}" data-spac="${data.items[i].metadata.namespace}">${data.items[i].metadata.name}</a></td><td class="left">${data.items[i].metadata.namespace}</td><td>${data.items[i].metadata.creationTimestamp}</td></tr>`;
+                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-spac="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };

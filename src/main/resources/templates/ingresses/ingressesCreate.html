@@ -15,10 +15,18 @@
             <div class="creat creat-type2">
                 <div>
                     <h3 th:text="|Ingresses #{M0024}|"></h3>
-                    <div class="g-select-wrap">
-                        <input id="metadataName" type="text" th:placeholder="Name">
-                        <input type="text" placeholder="Desc" class="long">
-                    </div>
+                    <dl>
+                        <dt><label for="targetNamespace">Namespace</label></dt>
+                        <dd>
+                            <input disabled="disabled" id="targetNamespace" type="text" />
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="metadataName">Name</label></dt>
+                        <dd>
+                            <input id="metadataName" type="text" th:placeholder="Name">
+                        </dd>
+                    </dl>
                 </div>
 
                 <!-- Rule -->
@@ -81,16 +89,17 @@
         window.onload = () => {
 
             func.init(ASIDE_DP1.SERVICES, ASIDE_DP2.INGRESSES);
-            callbackFuncNameLoad();
-
+            var targetNamespace = sessionStorage.getItem('nameSpace');
             var order = "";
             const createIngresses = {
 
                 init(){
+                    if(sessionStorage.getItem('nameSpace').toLowerCase() == "all") {
+                        func.alertPopup('ALERT', MSG_SELECTED_NAMESPACE_ALL, true, MSG_CLOSE, createIngresses.alertListBack);
+                        return false;
+                    }
 
-                    //namespace 정보 조회
-                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/namespacesList`, 'application/json', createIngresses.drawName);
-
+                    document.getElementById("targetNamespace").value = targetNamespace;
                     //service 정보 조회
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}/services`, 'application/json', createIngresses.drawServ);
 
@@ -99,6 +108,9 @@
                     createIngresses.event();
                 },
 
+                alertListBack() {
+                    movePage(URI_CP_SERVICES_INGRESSES);
+                },
                 reset(){
                     func.removeHtml(document.getElementById('target'));
 
