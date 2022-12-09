@@ -10,10 +10,6 @@
                 <li><a onclick="movePage(URI_CP_INFO_ACCESS)">Access</a></li>
             </ul>
             <!-- Click event class="on" -->
-            <fieldset>
-                <input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
-                <button type="submit" id="search" th:text="#{M0031}"></button>
-            </fieldset>
         </article>
         <article class="base-top">
             <div class="notice">
@@ -44,7 +40,7 @@
                 <div class="table_style01">
                     <div class="custom-access-title">
                         <p>1.
-                            <a id="harborBtn" th:text="#{M0060}" onclick="window.open('https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl')"></a>
+                            <a style="text-decoration: underline" th:text="#{M0060}" onclick="window.open('https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl')"></a>
                         </p>
                     </div>
                     <div class="custom-access-title">
