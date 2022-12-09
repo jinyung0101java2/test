@@ -248,9 +248,9 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 .log_style01 {background-color: #f7f7f7; margin-top: 10px; margin-bottom: 10px; height: auto; border-top: 2px solid #333333; vertical-align: top; display: flex; flex-direction: column;}
 .log_style01 div {text-align: left; font-size:22px; display:flex; flex-direction: column-reverse; height:auto; margin-top: 20px;}
 .log_style01 div dl {position:relative; float:left; margin-right:5px; margin-bottom:5px; padding:0 8px; line-height:28px; }
-.log_style01 div dl dt {float:left; padding-right:4px; color:#666; font-weight:bold; margin-left:5px; }
-.log_style01 div dl dd:before {content:' :: ';}
-.log_style01 div dl dd {float:left; }
+.log_style01 div dl dt {float:left; padding-right:4px; color:#666; font-weight:bold; margin-left:5px; font-size: 17px; }
+.log_style01 div dl dd:before {content:' : ';}
+.log_style01 div dl dd {float:left; font-size: 17px; }
 .button_status_A {background-color: #80d038; border: none; color: #80d038; padding: 6px; text-align: center; text-decoration: none; display: inline-block; border-radius: 50%;}
 .button_status_B {background-color: #feb615; border: none; color: #feb615; padding: 6px; text-align: center; text-decoration: none; display: inline-block; border-radius: 50%;}
 .button_status_C {
