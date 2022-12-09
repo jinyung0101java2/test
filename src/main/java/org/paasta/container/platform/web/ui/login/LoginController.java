@@ -165,8 +165,8 @@ public class LoginController {
 
         Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
 
-        LOGGER.info("old: auth.getAuthorities():" + CommonUtils.loggerReplace(auth.getAuthorities()));
-        LOGGER.info("new: auth.getAuthorities():" + CommonUtils.loggerReplace(currentAuth.getAuthorities()));
+        LOGGER.info("OLD AUTHORITIES >> " + CommonUtils.loggerReplace(auth.getAuthorities()));
+        LOGGER.info("NEW AUTHORITIES >> " + CommonUtils.loggerReplace(currentAuth.getAuthorities()));
     }
 
 }
