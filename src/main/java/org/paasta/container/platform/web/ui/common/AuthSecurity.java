@@ -8,7 +8,19 @@ import org.springframework.stereotype.Component;
 
 @Component("authSecurity")
 public class AuthSecurity {
-    public boolean checkisGlobalAdmin() {
+    public boolean checkIsGlobal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_SUPER_ADMIN))) {
+            return true;
+        }
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_CLUSTER_ADMIN))) {
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean checkIsClusterAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_USER))) {
             return false;

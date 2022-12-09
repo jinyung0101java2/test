@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @since 2021.04.30
  */
 @Api(value = "NodesController v1")
-@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
+@PreAuthorize("@authSecurity.checkIsClusterAdmin()")
 @Controller
 public class NodesController {
     private static final String BASE_URL = "nodes/";

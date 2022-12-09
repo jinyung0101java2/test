@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Api(value = "InstanceCodeTemplatesController v1")
-@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
+@PreAuthorize("@authSecurity.checkIsGlobal()")
 @Controller
 public class instanceCodeTemplatesController {
     private static final String BASE_URL = "global/instanceCodeTemplates/";

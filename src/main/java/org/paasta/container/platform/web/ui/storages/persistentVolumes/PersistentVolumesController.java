@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @since 2021.05.06
  */
 @Api(value = "PersistentVolumesController v1")
-@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
+@PreAuthorize("@authSecurity.checkIsClusterAdmin()")
 @Controller
 public class PersistentVolumesController {
 

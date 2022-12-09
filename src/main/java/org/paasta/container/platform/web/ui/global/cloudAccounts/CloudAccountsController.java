@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Api(value = "CloudAccountsController v1")
-@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
+@PreAuthorize("@authSecurity.checkIsGlobal()")
 @Controller
 public class CloudAccountsController {
     private static final String BASE_URL = "global/cloudAccounts/";

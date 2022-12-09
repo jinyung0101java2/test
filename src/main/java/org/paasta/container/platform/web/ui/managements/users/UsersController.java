@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @since 2022.10.09
  **/
 @Api(value = "UsersController v1")
-@PreAuthorize("@authSecurity.checkisGlobalAdmin()")
+@PreAuthorize("@authSecurity.checkIsClusterAdmin()")
 @Controller
 public class UsersController {
 
