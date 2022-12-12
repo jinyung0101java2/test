@@ -140,9 +140,11 @@
 						}
 					}, false);
 
+					if(document.querySelector('.create')) {
 					document.querySelector('.create').addEventListener('click', () => {
 						document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_CREATE;
 					}, false);
+					}
 
 					// logs 버튼 event
 
