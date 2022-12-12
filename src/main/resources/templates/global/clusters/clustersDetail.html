@@ -131,9 +131,10 @@
                     //     func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, clusterDetail.delete);
                     // }, false);
 
+                    if(document.getElementById('modify')) {
                     document.getElementById('modify').addEventListener('click', () => {
                         func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, clusterDetail.modify);
-                    }, false);
+                    }, false); }
                 },
 
                 modify() {

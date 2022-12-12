@@ -86,12 +86,15 @@
                 },
 
                 event(){
+                    if(document.getElementById('delete')) {
                     document.getElementById('delete').addEventListener('click', () => {
                         func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, instanceCodeDetail.delete);
-                }, false);
+                }, false);}
+
+                    if(document.getElementById('modify')) {
                     document.getElementById('modify').addEventListener('click', () => {
                         func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, instanceCodeDetail.modify);
-                    }, false);
+                    }, false);}
 
                 },
 

@@ -128,9 +128,11 @@
 					}
 				}, false);
 
+					if(document.querySelector('.create')) {
 					document.querySelector('.create').addEventListener('click', () => {
 						document.location.href = URI_CP_GLOBAL_CLOUD_ACCOUNTS + URI_CP_CREATE;
-				}, false);
+				}, false); }
+
 				},
 
 				listEvent(){
