@@ -36,12 +36,6 @@
                                 <input class="left" id="cloudAccountDetailProvider" type="text" readonly>
                             </td>
                         </tr>
-                        <tr>
-                            <th scope="row" class="left">Region</th>
-                            <td class="left">
-                                <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -78,7 +72,6 @@
 
                     document.getElementById('cloudAccountDetailName').value = data.name;
                     document.getElementById('cloudAccountDetailProvider').value = data.provider;
-                    document.getElementById('cloudAccountDetailRegion').value = data.region;
 
                     accountInfo = data;
 
@@ -93,6 +86,9 @@
                             document.getElementById('cloudAccountGCPProviderInfo').value = MASKED_DATA;
                             break;
                         case 'AWS':
+                            html += `<tr><th scope="row" class="left">Region</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
+                                </td></tr>`;
                             html += `<tr><th scope="row" class="left">Access-Key</th><td class="left box">
                                     <input class="left" id="cloudAccountAWSAccessKey" type="password" readonly>
                                 </td></tr>`;
@@ -100,10 +96,17 @@
                                     <input class="left" id="cloudAccountAWSSecretKey" type="password" readonly>
                                 </td></tr>`;
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountDetailRegion').value = data.region;
                             document.getElementById('cloudAccountAWSAccessKey').value = MASKED_DATA;
                             document.getElementById('cloudAccountAWSSecretKey').value = MASKED_DATA;
                             break;
                         case 'OPENSTACK':
+                            html += `<tr><th scope="row" class="left">Project</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailProject" type="text" readonly>
+                                </td></tr>`;
+                            html += `<tr><th scope="row" class="left">Region</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
+                                </td></tr>`;
                             html +=  `<tr><th scope="row" class="left">Auth_URL</th><td class="left box">
                                     <input class="left" id="cloudAccountOPENSTACKURL" type="password" readonly>
                                 </td></tr>`;
@@ -114,6 +117,8 @@
                                     <input class="left" id="cloudAccountOPENSTACKUserName" type="password" readonly>
                                 </td></tr>`;
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountDetailProject').value = data.project;
+                            document.getElementById('cloudAccountDetailRegion').value = data.region;
                             document.getElementById('cloudAccountOPENSTACKURL').value = MASKED_DATA;
                             document.getElementById('cloudAccountOPENSTACKPassword').value = MASKED_DATA;
                             document.getElementById('cloudAccountOPENSTACKUserName').value = MASKED_DATA;
