@@ -48,6 +48,7 @@ public class CloudAccountsController {
      *
      * @return the view
      */
+    @PreAuthorize("@authSecurity.checkIsSuperAdmin()")
     @ApiOperation(value = "CloudAccounts 생성 페이지 이동(Go to the cloudAccounts create page)", nickname = "getCloudAccountsCreate")
     @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_CLOUD_ACCOUNTS + ConstantsUrl.URI_CP_CREATE)
     public String getCloudAccountsCreate() {

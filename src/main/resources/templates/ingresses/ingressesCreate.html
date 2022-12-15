@@ -86,6 +86,7 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
+        var content_path_index = 0;
         window.onload = () => {
 
             func.init(ASIDE_DP1.SERVICES, ASIDE_DP2.INGRESSES);
@@ -252,6 +253,13 @@
             newPath.classList.add('content-path');
             newTarget.classList.add('content-target');
 
+
+            let content_idx = "content_idx_" + content_path_index;
+            content_path_index ++;
+            newPath.setAttribute("path-data", content_idx);
+            newTarget.setAttribute("path-data", content_idx);
+
+
             newPath.innerHTML = `
             <dt><label">Path</label></dt>
             <dd class="g-select-wrap">
@@ -263,7 +271,7 @@
                     </select>
                 </div>
                 <input name="path" type="text" class="rules" placeholder="e.g. /example" />
-                <button class="delete-btn" onclick="deleteBtn()">` + MSG_DELETE + `</button>
+                <button class="delete-btn" onclick="deletePathBtn()">` + MSG_DELETE + `</button>
             </dd>`;
 
             newTarget.innerHTML = `
@@ -277,7 +285,6 @@
                     <p><label>Port</label></p>
                     <input name="port" class="rules port" type="text" placeholder="e.g. 80"/>
                 </div>
-                <button class="delete-btn" onclick="deleteBtn()">` + MSG_DELETE + `</button>
             </dd>`;
 
             currentPath.insertAdjacentElement('afterend', newTarget);
@@ -335,12 +342,22 @@
             btnSynch();
         };
 
-        /* path, Rule 삭제 */
+        /* Rule 삭제 */
         function deleteBtn() {
             let currentPath = event.currentTarget.parentNode.parentNode;
             currentPath.remove();
             btnSynch();
         }
+
+        /* Path 삭제 */
+        function deletePathBtn() {
+            let parentNode = event.currentTarget.parentNode.parentNode;
+            let deletePath = parentNode.getAttribute("path-data");
+            let selector = '[path-data="'+ deletePath + '"]';
+            document.querySelectorAll(selector).forEach(e => e.remove());
+            btnSynch();
+        }
+
 
         function btnSynch() {
             let target = document.getElementsByName('target');

@@ -23,7 +23,7 @@
 						<dd id="providerName"></dd>
 					</dl>
 				</div>
-				<div><dl><dt class="button_status_D" style="padding: 7px; margin: 6px 4px 0 0;"></dt><dd id="clusterStatus"></dd></dl></div>
+				<div><dl><dt id ="button_status" class="button_status_D" style="padding: 7px; margin: 6px 4px 0 0;"></dt><dd id="clusterStatus"></dd></dl></div>
 				</div>
 				<!-- User -->
 				<div class="table_style01">
@@ -36,9 +36,9 @@
 						</colgroup>
 						<thead>
 						<tr>
-							<th scope="col">No.</th>
-							<th scope="col">상태 로그</th>
-							<th scope="col">경과시간</th>
+							<th scope="col">No</th>
+							<th scope="col">Message</th>
+							<th scope="col">Age</th>
 						</tr>
 						</thead>
 						<tbody class="listTable">
@@ -94,14 +94,13 @@
 				drawTable(data){
 					let html = ``;
 					let statusString = '';
-					statusString += '클러스터 ';
 
 
 
 					if (data.resultCode === 'FAIL') {
 						html = `<tr><td colspan="3">No Data.</td></tr>`;
 						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
-						statusString += '상태 확인 불가';
+						statusString += MSG_CLUSTER_STATUS_UNABLE_CHECK;
 					}
 					else {
 						now = Date.now();
@@ -114,18 +113,22 @@
 							let mins = Math.floor(sec / TIMES.MIN);
 							let time = days > 0 ? days : hours > 0 ? hours : mins > 0 ? mins : sec;
 
-							let timeString = days > 0 ? '일' : hours > 0 ? '시간' : mins > 0 ? '분' : '초';
+							let timeString = days > 0 ? MSG_DAYS : hours > 0 ? MSG_HOURS : mins > 0 ? MSG_MINS : MSG_SECS;
 							html = `<tr>
 								<td>${data.items[i].processNo}</td>
-								<td>${data.items[i].logMessage}</td>
-								<td>${Math.floor(time)}${timeString} 전 </td>
+								<td class="left">${data.items[i].logMessage}</td>
+								<td>${Math.floor(time)} ${timeString} ${MSG_AGO}</td>
 							</tr>`;
 							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 						}
 						if (data.items.length === 9) {
-							statusString += '생성 완료.';
+							statusString += MSG_CLUSTER_STATUS_CREATION_COMPLETED;
+							document.getElementById('button_status').classList.remove('button_status_D');
+							document.getElementById('button_status').classList.add('button_status_A');
 						} else {
-							statusString += '생성 중..';
+							statusString += MSG_CLUSTER_STATUS_CREATING;
+							document.getElementById('button_status').classList.remove('button_status_D');
+							document.getElementById('button_status').classList.add('button_status_C');
 						}
 					}
 					document.getElementById('clusterStatus').innerText = statusString;
