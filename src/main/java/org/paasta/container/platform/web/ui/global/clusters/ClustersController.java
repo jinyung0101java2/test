@@ -48,6 +48,7 @@ public class ClustersController {
      *
      * @return the view
      */
+    @PreAuthorize("@authSecurity.checkIsSuperAdmin()")
     @ApiOperation(value = "Clusters 생성 페이지 이동(Go to the clusters create page)", nickname = "getClustersCreate")
     @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_CLUSTERS + ConstantsUrl.URI_CP_CREATE)
     public String getClustersCreate() {

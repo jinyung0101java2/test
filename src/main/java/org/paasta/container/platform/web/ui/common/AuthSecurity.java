@@ -27,4 +27,13 @@ public class AuthSecurity {
         }
         return true;
     }
+
+
+    public boolean checkIsSuperAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Constants.AUTH_SUPER_ADMIN))) {
+            return true;
+        }
+        return false;
+    }
 }

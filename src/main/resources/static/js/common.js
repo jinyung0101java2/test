@@ -566,7 +566,8 @@ const func = {
 				callback();
 			};
 
-			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));
+			if(!IS_VCHK) {
+			document.getElementById('wrap').removeChild(document.getElementById('alertModal'));}
 		}, false);
 		};
 	},

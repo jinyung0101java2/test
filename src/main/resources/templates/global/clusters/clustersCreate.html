@@ -34,7 +34,7 @@
                         <dd>
                             <fieldset>
                                 <select id="createProvider" onchange="changeProviderSelect()">
-                                    <option selected>Select Option</option>
+                                    <option selected disabled hidden value='' th:text="#{M0845}"></option>
                                 </select>
                             </fieldset>
                         </dd>
@@ -95,7 +95,7 @@
                         </dd>
                     </dl>
                     <dl>
-                        <dt><label>Cluster IP</label></dt>
+                        <dt><label>Cluster API URL</label></dt>
                         <!-- 파일첨부 -->
                         <dd>
                             <input id="registerIP" type="text" placeholder="e.g) https://0.0.0.0:6443"/>
@@ -108,7 +108,7 @@
                         </dd>
                     </dl>
                     <dl>
-                        <dt><label>Credentials</label></dt>
+                        <dt><label>Cluster Service Token</label></dt>
                         <dd>
                             <textarea id="registerCredentials" rows="20"></textarea>
                         </dd>
@@ -167,6 +167,8 @@
                     let createType = document.querySelector('.tab-btn li.active').getAttribute('type');
                     let arg;
 
+                    if(createClusters.validCheck(createType)){
+
                     switch(createType) {
                         case 'create':
                             arg = {
@@ -192,7 +194,7 @@
                     }
                     //check FILE
                     func.saveData('POST', `${func.url}clusters`, JSON.stringify(arg), true, 'application/json', createClusters.saveComp);
-
+                    }
                 },
 
                 saveComp() {
@@ -205,7 +207,30 @@
                 } else {
                     return document.querySelector('#createCloudAccount > option:checked').getAttribute('data-id');
                 }
-            }
+            },
+
+                validCheck(type){
+                    if(type == 'create') {
+                        if(isEmpty(document.getElementById('createProvider').value)) {
+                            func.alertPopup('ERROR', MSG_REQUEST_VALUE_IS_MISSING, true, MSG_CLOSE,  createClusters.validReset);
+                            IS_VCHK = true;
+                            return false;
+                            }
+                    }
+                    else if(type == 'register') {
+                        if(isEmpty(document.getElementById('registerName').value) || isEmpty(document.getElementById('registerIP').value) ||
+                           isEmpty(document.getElementById('registerCredentials').value) || isEmpty(document.getElementById('registerProvider').value)) {
+                            func.alertPopup('ERROR', MSG_REQUEST_VALUE_IS_MISSING, true, MSG_CLOSE,  createClusters.validReset);
+                            IS_VCHK = true;
+                            return false;
+                        }
+                    }
+
+                    return true;
+                },
+                validReset(){
+                    IS_VCHK = false;
+                }
             };
             createClusters.init();
         };
@@ -216,7 +241,7 @@
 
             let html = ``;
             let provider = document.querySelector('#createProvider > option:checked').value;
-            if(provider != 'Select Option') {
+            if(provider != '') {
                 func.loadData('GET', `${func.url}accounts/provider/${provider}`, 'application/json', (e) => {
                     for (let item of e.items) {
                         html += `<option value="${item.name}" data-id="${item.id}"`;

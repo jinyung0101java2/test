@@ -48,6 +48,7 @@ public class instanceCodeTemplatesController {
      *
      * @return the view
      */
+    @PreAuthorize("@authSecurity.checkIsSuperAdmin()")
     @ApiOperation(value = "InstanceCodeTemplates 생성 페이지 이동(Go to the templates create page)", nickname = "getTemplatesCreate")
     @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + ConstantsUrl.URI_CP_CREATE)
     public String getInstanceCodeTemplatesCreate() {
