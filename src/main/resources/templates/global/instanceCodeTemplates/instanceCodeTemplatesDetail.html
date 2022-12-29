@@ -106,7 +106,7 @@
                     let updateTemplate = {
                         "resourceUid": sessionStorage.getItem('commonName'),
                         "resourceName": document.getElementById('name').value,
-                        "provider": document.getElementById('provider').value,
+                        "providerType": document.getElementById('provider').value,
                         "hclScript": document.getElementById('code').value
                     };
                     func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', instanceCodeDetail.returnPage);
