@@ -144,7 +144,7 @@
                     "selectValues": resourceQuotasList,
                 };
 
-                console.log(createName);
+
                func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/users/${sessionStorage.getItem('commonName')}`, JSON.stringify(createName), true, 'application/json', func.historyBack);
             }, false);
             },

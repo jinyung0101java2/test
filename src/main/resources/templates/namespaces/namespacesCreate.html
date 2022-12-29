@@ -152,7 +152,6 @@
                         "limitRangesList": limitRangesList,
                     };
 
-                    console.log(createName);
 
                  func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces`, JSON.stringify(createName), true, 'application/json', func.historyBack);
                 },

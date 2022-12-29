@@ -553,7 +553,7 @@
             let parentNode = event.currentTarget.parentNode.parentNode;
             let deletePath = parentNode.getAttribute("path-data");
             let selector = '[path-data="'+ deletePath + '"]';
-            console.log(selector);
+
             document.querySelectorAll(selector).forEach(e => e.remove());
             btnSynch();
         }
