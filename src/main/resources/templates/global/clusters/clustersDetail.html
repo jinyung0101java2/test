@@ -79,7 +79,7 @@
             </div>
             <!-- btn -->
             <div class="btn02">
-<!--                <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')" disabled></button>-->
+                <button type="submit" id="delete" th:text="#{M0849}" sec:authorize="hasAuthority('SUPER_ADMIN')" style="display:none"></button>
                 <div>
                     <a href="javascript:" id="modify" data-role="clusters" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
                     <a onclick="movePage(URI_CP_GLOBAL_CLUSTER)" th:text="#{M0028}"></a>
@@ -87,16 +87,21 @@
             </div>
         </article>
     </div>
+    <input type="hidden" id="msg_disconnect_cluster" th:value="#{M0850}"/>
 </div>
 
 <th:block layout:fragment="script">
     <script type="text/javascript">
         window.onload = () => {
 
+            var MSG_CHECK_DISCONNECT_CLUSTER = document.getElementById('msg_disconnect_cluster').value;
             IS_GLOBAL = true;
             func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.CLUSTERS);
             let isHide = false;
             let clusterInfo = '';
+            var clusterId = '';
+
+
             const clusterDetail = {
 
                 init(){
@@ -113,6 +118,8 @@
 
                     // Details data
                     clusterInfo = data;
+                    clusterDetail.enableDiscon(data.clusterType);
+                    clusterId = data.clusterId;
                     document.getElementById('clusterDetailName').value = data.name;
                     document.getElementById('clusterDetailProvider').value = data.providerType;
                     document.getElementById('clusterDetailVersion').value = data.kubernetesVersion;
@@ -127,9 +134,11 @@
 
                 event(){
                     switchCA();
-                    // document.getElementById('delete').addEventListener('click', () => {
-                    //     func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, clusterDetail.delete);
-                    // }, false);
+
+                    if(document.getElementById('delete')) {
+                     document.getElementById('delete').addEventListener('click', () => {
+                        func.alertPopup('DISCONNECT', MSG_CHECK_DISCONNECT_CLUSTER, true, MSG_CONFIRM, clusterDetail.delete);
+                    }, false); }
 
                     if(document.getElementById('modify')) {
                     document.getElementById('modify').addEventListener('click', () => {
@@ -151,13 +160,22 @@
                     func.saveData('PATCH', `${func.url}clusters`, JSON.stringify(updateAccount), true, 'application/json', func.refresh);
                 },
 
-                returnPage() {
-                    document.location.href = URI_CP_GLOBAL_CLUSTER + URI_CP_DETAILS;
+                moveLIstPage() {
+                    document.location.href = URI_CP_GLOBAL_CLUSTER;
                 },
 
                 delete(){
-                    func.saveData('DELETE', `${func.url}accounts/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                    func.saveData('DELETE', `${func.url}clusters/${clusterId}`, '', true, 'application/json', clusterDetail.moveLIstPage);
                 },
+
+               enableDiscon(type){
+                    if(document.getElementById('delete')) {
+                        if(type.toLowerCase() == 'host') {
+                            document.getElementById('delete').remove();}
+                        else{
+                            document.getElementById('delete').style.display ="";}
+                        }
+               }
             };
 
             clusterDetail.init();
