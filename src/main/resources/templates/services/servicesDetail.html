@@ -67,6 +67,10 @@
                             <td class="left" id="ip"></td>
                         </tr>
                         <tr>
+                            <th scope="row" class="left">Port</th>
+                            <td class="left" id="port"></td>
+                        </tr>
+                        <tr>
                             <th scope="row" class="left">Session Affinity</th>
                             <td class="left" id="affinity"></td>
                         </tr>
@@ -222,6 +226,20 @@
                 // Resource Info
                 document.getElementById('type').innerText = data.type;
                 document.getElementById('ip').innerText = data.clusterIP;
+
+                var ports = '';
+                for(var i = 0 ; i <= data.ports.length - 1 ; i++) {
+                    if (data.type == 'ClusterIP') {
+                        ports += `${data.ports[i].port}`;
+                    } else {
+                        ports += `${data.ports[i].port}:${data.ports[i].nodePort}`;
+                    }
+                    if (i != data.ports.length - 1) {
+                        ports += '<br>'
+                    }
+                }
+                document.getElementById('port').innerText = ports;
+
                 document.getElementById('affinity').innerText = data.sessionAffinity;
 
                 if(data.selector != '-'){
