@@ -1,7 +1,7 @@
 ![image](https://user-images.githubusercontent.com/67575226/117615561-d74f8d80-b1a4-11eb-8dc0-70117f96cdad.png)
 컨테이너플랫폼을 구성하는 포털 UI에 해당하는 Repository이며 아래 Repository와 함께 플랫폼의 서비스를 구성합니다.
-- [K-PaaS 컨테이너 플랫폼 포털 Common API](https://github.com/PaaS-TA/container-platform-portal-common-api)
-- [K-PaaS 컨테이너 플랫폼 포털 API](https://github.com/PaaS-TA/container-platform-portal-api)
+- [K-PaaS 컨테이너 플랫폼 포털 Common API](https://github.com/K-PaaS/cp-portal-common-api)
+- [K-PaaS 컨테이너 플랫폼 포털 API](https://github.com/K-PaaS/cp-portal-api)
 
 
 
