@@ -24,7 +24,7 @@ spring:
 project:
   name: cp-terraman-api
   artifactId: cp-terraman-api
-  description: API of the PaaS-TA Container Terraman Portal
+  description: API of the K-PaaS Container Terraman Portal
 
 management:
   security:
