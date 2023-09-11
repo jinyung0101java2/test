@@ -20,7 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.sonarqube"
 
-group = 'org.paasta.container.terraman.api'
+group = 'org.container.terraman.api'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -53,7 +53,7 @@ ext {
     mariaDbVersion = '3.0.4'
 }
 jar {
-    archivesBaseName = 'paas-ta-container-terraman-api'
+    archivesBaseName = 'container-terraman-api'
     enabled = false
 }
 dependencies {
