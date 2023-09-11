@@ -16,8 +16,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 /**
- * paastaDeliveryPipelineApi
- * paasta.delivery.pipeline.ui.config
+ * kpaasDeliveryPipelineApi
+ * kpaas.delivery.pipeline.ui.config
  *
  * @author REX
  * @version 1.0

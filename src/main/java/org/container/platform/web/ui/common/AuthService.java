@@ -22,8 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * paastaDeliveryPipelineApi
- * paasta.delivery.pipeline.ui.common
+ * kpaasDeliveryPipelineApi
+ * kpaas.delivery.pipeline.ui.common
  *
  * @author REX
  * @version 1.0
