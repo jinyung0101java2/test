@@ -10,7 +10,7 @@ gradlew*
 build/**
 bin/**
 out/**
-gradle/**
+#gradle/**
 WebContent/.svn
 
 # Compiled class file
