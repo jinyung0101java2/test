@@ -98,7 +98,7 @@ public class InstanceServiceTest {
                 "          \"schema_version\": 0,\n" +
                 "          \"attributes\": {\n" +
                 "            \"fingerprint\": \"test\",\n" +
-                "            \"id\": \"passta-cp-terraform-keypair\",\n" +
+                "            \"id\": \"cp-terraform-keypair\",\n" +
                 "            \"name\": \"test\",\n" +
                 "            \"public_key\": \"test\\n\",\n" +
                 "            \"region\": \"test\"\n" +
