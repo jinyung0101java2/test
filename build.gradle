@@ -22,7 +22,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 
-group = 'org.paasta.container.platform.web.ui'
+group = 'org.container.platform.web.ui'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -52,7 +52,7 @@ ext {
 
 
 war {
-	archivesBaseName = 'paas-ta-container-platform-ui'
+	archivesBaseName = 'container-platform-ui'
 	enabled = false
 }
 
