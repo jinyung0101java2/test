@@ -24,12 +24,12 @@
                     <table>
                         <caption>Services List</caption>
                         <colgroup >
-                            <col width="24%" />
-                            <col width="24%" />
-                            <col width="10%" />
+                            <col width="25%" />
+                            <col width="15%" />
+                            <col width="12%" />
                             <col width="16%" />
-                            <col width="10%" />
-                            <col width="16%" />
+                            <col width="12%" />
+                            <col width="20%" />
                         </colgroup>
                         <thead>
                         <tr>
@@ -96,28 +96,29 @@
                     if(data.httpStatusCode == 200){
                         if(data.items.length > 0){
                             for(var i=0; i<=data.items.length-1; i++){
-                                var ports = '';
-                                for(var j = 0 ; j <= data.items[i].ports.length - 1 ; j++) {
-                                    if (data.items[i].type == 'ClusterIP') {
-                                        ports += `${data.items[i].ports[j].port}`;
-                                    } else {
-                                        ports += `${data.items[i].ports[j].port}:${data.items[i].ports[j].nodePort}`;
-                                    }
-                                    if (i != data.items.length - 1) {
-                                        ports += '<br>'
-                                    }
+                                var item_port = data.items[i].ports;
+                                var port_data = '';
+                                for(var j = 0 ; j <=item_port.length-1 ; j++) {
+                                    if(data.items[i].type == 'ClusterIP')  {
+                                        port_data += `${item_port[j].port}/${item_port[j].protocol}<br>`;}
+                                    else {
+                                        port_data += `${item_port[j].port}:${item_port[j].nodePort}/${item_port[j].protocol}<br>`;}
                                 }
-                                var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td>${data.items[i].type}</td><td>${data.items[i].clusterIP}</td><td>${ports}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
+                                var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td>`
+                                     +`<td class="left">${data.items[i].namespace}</td><td>${data.items[i].type}</td>`
+                                    + `<td>${data.items[i].clusterIP}</td>`
+                                    + `<td class="fs-13">${port_data}</td>`
+                                    + `<td>${data.items[i].creationTimestamp}</td></tr>`;
 
                                 func.appendHtml(document.querySelector('.seviceList'), html, 'tbody');
                             };
                         } else {
-                            var html = `<tr><td colspan="5">No Data.</td></tr>`;
+                            var html = `<tr><td colspan="6">No Data.</td></tr>`;
 
                             func.appendHtml(document.querySelector('.seviceList'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="5">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="6">No Data.</td></tr>`;
 
                         func.appendHtml(document.querySelector('.seviceList'), html, 'tbody');
                     };

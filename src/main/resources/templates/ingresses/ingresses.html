@@ -18,22 +18,23 @@
         <article class="base">
             <div class="notice">
                 <h3>List</h3>
-                <!-- User -->
                 <div class="table_style01">
                     <!-- board -->
                     <table>
                         <caption>Ingresses List</caption>
                         <colgroup >
                             <col width="20%" />
-                            <col width="20%" />
-                            <col width="40%" />
+                            <col width="16%" />
+                            <col width="19%" />
+                            <col width="25%" />
                             <col width="20%" />
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Namespace</th>
-                            <th scope="col">Target</th>
+                            <th scope="col">Host</th>
+                            <th scope="col">Path</th>
                             <th scope="col">Created Time</th>
                         </tr>
                         </thead>
@@ -91,40 +92,82 @@
 
                     if(data.httpStatusCode == 200){
                         if(data.items.length > 0){
+                                for(var i=0; i<= data.items.length -1; i++){
+                                    var item = data.items[i];
+                                    var rowspanCount = item.spec.rules.length;
+                                    var item_rules_path = item.spec.rules[0].http.paths;
 
-                            var link = [''];
-                            for(var i = 0; i <= data.items.length-1; i++) {
-                                for (var j = 0; j <= data.items[i].spec.rules.length-1; j++) {
-                                    for (var k = 0; k <= data.items[i].spec.rules[j].http.paths.length-1; k++) {
-                                        link[i] +=`<p class="ingress-host" onclick='window.open("http://${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}")'>${data.items[i].spec.rules[j].host}${data.items[i].spec.rules[j].http.paths[k].path}</p> > ${data.items[i].spec.rules[j].http.paths[k].backend.service.name}<br>`;
-                                        link[i+1] = '';
+                                    var item_rules_path_str ="";
+                                    for (a=0; a<=item_rules_path.length -1 ; a++) {
+                                        var path = item_rules_path[a].path;
+                                        var service = item_rules_path[a].backend.service.name;
+                                        item_rules_path_str += `<span class="paths">${path}</span>`
+                                            + `<span class="fs-13"> > </span>`
+                                            + `<span class="fs-14">${service}</span><br>`;
                                     }
-                                }
-                            }
 
-                            for(var i = 0; i <= data.items.length-1; i++) {
-                                var html = `<tr>
-                                 <td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td>
-                                  <td class="left">${data.items[i].namespace}</td>
-                                 <td class="left">${link[i]}</td>
-                                 <td>${data.items[i].creationTimestamp}</td>
-                             </tr>`;
+                                    var host_td = "";
+                                    if(item.spec.rules[0].host == "-") {
+                                        host_td = `<p class="fs-14">${item.spec.rules[0].host}</p>`
+                                    }
+                                    else {
+                                        host_td= `<p class="fs-14 ingress-host" onclick='window.open("http://${item.spec.rules[0].host}")'>${item.spec.rules[0].host}</p>`
+                                    }
 
-                                func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
-                            };
+
+                                    var html =
+                                        `<tr><td class="left" rowspan="${rowspanCount}">`
+                                        + `<a href="javascript:;" data-name="${item.name}" data-id="${item.namespace}">${item.name}</td>`
+                                        + `<td rowspan="${rowspanCount}" class="left">${item.namespace}</td>`
+                                        + `<td class="left">` + host_td + `</td>`
+                                        + `<td class="left paths">${item_rules_path_str}</td>`
+                                        + `<td class="center list-table-last-td" rowspan="${rowspanCount}">${item.creationTimestamp}</td>`
+                                        + `</tr>`;
+
+
+                                    if(rowspanCount > 1) {
+                                        for (var j = 1; j <= rowspanCount - 1; j++) {
+                                             var rules = item.spec.rules[j];
+                                             var rules_path = rules.http.paths;
+
+                                            var rules_path_str ="";
+                                            for (a=0; a<=rules_path.length-1; a++) {
+                                                var path = rules_path[a].path;
+                                                var service = rules_path[a].backend.service.name;
+                                                rules_path_str += `<span class="paths">${path}</span>`
+                                                    + `<span class="fs-13"> > </span>`
+                                                    + `<span class="fs-14">${service}</span><br>`;
+                                            }
+
+                                            var host_str = "";
+                                            if(item.spec.rules[j].host == "-") {
+                                                host_str = `<p class="fs-14">${item.spec.rules[j].host}</p>`;
+                                            }
+                                            else {
+                                                host_str= `<p class="fs-14 ingress-host" onclick='window.open("http://${item.spec.rules[j].host}")'>${item.spec.rules[j].host}</p>`;
+                                            }
+
+                                            html += `<td class="left">` + host_str + `</td>`
+                                               + `<td class="left">${rules_path_str}</td></tr>`;
+                                        }
+
+                                    }
+
+                                    func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                                };
+
                         } else {
-                            var html = `<tr><td colspan="4">No Data.</td></tr>`;
-
+                            var html = `<tr><td colspan="5">No Data.</td></tr>`;
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
                     } else {
-                        var html = `<tr><td colspan="4">No Data.</td></tr>`;
+                        var html = `<tr><td colspan="5">No Data.</td></tr>`;
 
                         func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                     };
 
                     // more 버튼 활성, 비활성
-                    if(document.querySelector('.listTable').querySelectorAll('tr').length < ingresses.allItemCount){
+                    if(ingresses.limit * (ingresses.offset + 1) < ingresses.allItemCount){
                         document.querySelector('.more').classList.toggle('on', true);
                     } else {
                         document.querySelector('.more').classList.toggle('on', false);
@@ -140,10 +183,9 @@
                 event(){
                     // more 버튼 event
                     document.querySelector('.more').addEventListener('click', (e) => {
-                        if(document.querySelector('.listTable').querySelectorAll('tr').length < ingresses.allItemCount){
-                        ingresses.offset++;
-
-                        ingresses.load();
+                        if(ingresses.limit * (ingresses.offset + 1) < ingresses.allItemCount){
+                            ingresses.offset++;
+                            ingresses.load();
                     };
                 }, false);
 
@@ -155,7 +197,7 @@
                 listEvent(){
                     var listAll = document.querySelector('.listTable').querySelectorAll('a');
 
-                    for(var i=ingresses.offset*10; i<=listAll.length-1; i++){
+                    for(var i=ingresses.offset* ingresses.limit ; i<=listAll.length-1; i++){
                         listAll[i].addEventListener('click', (e) => {
                             sessionStorage.setItem('nameSpace', e.target.getAttribute('data-id'));
                         sessionStorage.setItem('commonName', e.target.getAttribute('data-name'));

@@ -67,7 +67,7 @@
                             <td class="left" id="ip"></td>
                         </tr>
                         <tr>
-                            <th scope="row" class="left">Port</th>
+                            <th scope="row" class="left">Ports<br><span class="fs-14">(Name, Port, Protocol)</span></th>
                             <td class="left" id="port"></td>
                         </tr>
                         <tr>
@@ -227,18 +227,16 @@
                 document.getElementById('type').innerText = data.type;
                 document.getElementById('ip').innerText = data.clusterIP;
 
-                var ports = '';
-                for(var i = 0 ; i <= data.ports.length - 1 ; i++) {
-                    if (data.type == 'ClusterIP') {
-                        ports += `${data.ports[i].port}`;
-                    } else {
-                        ports += `${data.ports[i].port}:${data.ports[i].nodePort}`;
-                    }
-                    if (i != data.ports.length - 1) {
-                        ports += '<br>'
-                    }
+                var item_port = data.ports;
+                var port_data = '';
+                for(var j = 0 ; j <= item_port.length - 1 ; j++) {
+                    if(data.type == 'ClusterIP')  {
+                        port_data += `${item_port[j].name},${item_port[j].port},${item_port[j].protocol}<br>`; }
+                    else {
+                        port_data += `${item_port[j].name},${item_port[j].port}:${item_port[j].nodePort},${item_port[j].protocol}<br>`; }
                 }
-                document.getElementById('port').innerText = ports;
+
+                document.getElementById('port').innerHTML = port_data;
 
                 document.getElementById('affinity').innerText = data.sessionAffinity;
 

@@ -671,6 +671,11 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 	max-height:150px;
 }
 
+
+.fs-13{
+	font-size: 13px !important;
+}
+
 .fs-14{
 	font-size: 14px !important;
 }
@@ -681,3 +686,5 @@ aside nav > ul > li.plus.on:before {content:""; background-color:#41454b;}
 	text-decoration: underline;
 	color: #47494d;
 }
+
+.paths { font-size: 14px; color: #47494d; }
