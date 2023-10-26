@@ -17,7 +17,6 @@ public class Constants {
     public static final String RESULT_STATUS_FAIL = "FAIL";
 
     public static final String TARGET_CP_API = "cpApi";
-    public static final String TARGET_COMMON_API = "commonApi";
 
     public static final String URI_API_USERS_DETAIL = "/clusters/{cluster:.+}/namespaces/{namespace:.+}/users/{userId:.+}";
 

@@ -18,9 +18,6 @@ public class PropertyService {
     @Value("${cpApi.url}")
     private String cpApiUrl;
 
-    @Value("${commonApi.url}")
-    private String commonApiUrl;
-
     @Value("${private.repository.url}")
     private String privateRepositoryUrl;
 

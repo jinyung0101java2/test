@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Rest Template Service 클래스
@@ -30,7 +28,6 @@ public class RestTemplateService {
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private static final String CONTENT_TYPE = "Content-Type";
     private final String cpApiBase64Authorization;
-    private final String commonApiBase64Authorization;
     private final RestTemplate restTemplate;
     private final PropertyService propertyService;
     private final LoginService loginService;
@@ -43,21 +40,13 @@ public class RestTemplateService {
     /**
      * Instantiates a new Rest template service
      *
-     * @param cpApiAuthorizationId         the container platform api authorization id
-     * @param cpApiAuthorizationPassword   the container platform api authorization password
-     * @param commonApiAuthorizationId       the common api authorization id
-     * @param commonApiAuthorizationPassword the common api authorization password
      * @param restTemplate                   the rest template
      * @param propertyService                the property service
      * @param loginService                the login service
      * @param request                        the HttpServletRequest
      */
     @Autowired
-    public RestTemplateService(@Value("${cpApi.authorization.id}") String cpApiAuthorizationId,
-                               @Value("${cpApi.authorization.password}") String cpApiAuthorizationPassword,
-                               @Value("${commonApi.authorization.id}") String commonApiAuthorizationId,
-                               @Value("${commonApi.authorization.password}") String commonApiAuthorizationPassword,
-                               RestTemplate restTemplate,
+    public RestTemplateService(RestTemplate restTemplate,
                                PropertyService propertyService,
                                LoginService loginService,
                                HttpServletRequest request) {
@@ -66,9 +55,6 @@ public class RestTemplateService {
         this.loginService = loginService;
         this.request = request ;
         cpApiBase64Authorization = "Bearer ";
-        commonApiBase64Authorization = "Basic "
-                + Base64Utils.encodeToString(
-                (commonApiAuthorizationId + ":" + commonApiAuthorizationPassword).getBytes(StandardCharsets.UTF_8));
     }
 
 
@@ -215,12 +201,6 @@ public class RestTemplateService {
         if (Constants.TARGET_CP_API.equals(reqApi)) {
             apiUrl = propertyService.getCpApiUrl();
             authorization = cpApiBase64Authorization + getAccessToken();
-        }
-
-        // COMMON API
-        if (Constants.TARGET_COMMON_API.equals(reqApi)) {
-            apiUrl = propertyService.getCommonApiUrl();
-            authorization = commonApiBase64Authorization;
         }
 
         base64Authorization = authorization;
