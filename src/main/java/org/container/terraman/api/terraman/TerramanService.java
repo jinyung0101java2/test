@@ -150,7 +150,7 @@ public class TerramanService {
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
-            mpSeq = terramanProcessService.terramanProcessGetInstanceIp(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName);
+            mpSeq = terramanProcessService.terramanProcessGetInstanceIp(mpSeq, clusterId, processGb, host, idRsa, provider, clusterName, seq);
         }
 
         /**************************************************************************************************************************************

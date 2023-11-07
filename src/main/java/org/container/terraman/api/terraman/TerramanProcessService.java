@@ -30,6 +30,7 @@ public class TerramanProcessService {
     private final ClusterService clusterService;
     private final PropertyService propertyService;
     private final TfFileService tfFileService;
+    private final NcloudService ncloudService;
 
 
     @Autowired
@@ -41,6 +42,7 @@ public class TerramanProcessService {
             , ClusterService clusterService
             , PropertyService propertyService
             , TfFileService tfFileService
+            , NcloudService ncloudService
     ) {
         this.vaultService = vaultService;
         this.clusterLogService = clusterLogService;
@@ -49,6 +51,7 @@ public class TerramanProcessService {
         this.clusterService = clusterService;
         this.propertyService = propertyService;
         this.tfFileService = tfFileService;
+        this.ncloudService = ncloudService;
     }
 
     public int terramanProcessSet(int mpSeq, String clusterId, String hostDir) {
@@ -257,7 +260,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) {
+    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName, int seq) {
         /**************************************************************************************************************************************
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          *
@@ -268,9 +271,14 @@ public class TerramanProcessService {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         String cResult = "";
         boolean connFlag = false;
-
-
+        String privateKey = Constants.RSA_PRIVATE_KEY;
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
+
+        //Ncloud 공개키 생성
+        if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+            ncloudService.createNcloudPublicKey(clusterId, provider, host, idRsa, processGb, seq, privateKey, mpSeq);
+        }
+
         if(instanceInfo == null) {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
@@ -283,46 +291,49 @@ public class TerramanProcessService {
             return errorResult;
         }
 
-        try {
-            terramanCommandModel.setCommand("2");
-            terramanCommandModel.setHost(instanceInfo.getPublicIp());
-            terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
-            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
-            terramanCommandModel.setClusterId(clusterId);
+        if (!provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
 
-            for(int i = 0; i<100; i++) {
-                Thread.sleep(10000);
+            try {
+                terramanCommandModel.setCommand("2");
+                terramanCommandModel.setHost(instanceInfo.getPublicIp());
+                terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
+                terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+                terramanCommandModel.setClusterId(clusterId);
 
-                cResult = commandService.execCommandOutput(terramanCommandModel);
-                LOGGER.info("ssh connection checking... :: {}", CommonUtils.loggerReplace(cResult));
-                if(StringUtils.isNotBlank(cResult)) {
-                    if(!StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
-                        break;
-                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT) ) {
-                        connFlag = true;
-                        break;
-                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT2) ) {
-                        connFlag = true;
-                        break;
-                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL) ) {
-                        connFlag = true;
-                        break;
-                    } else if ( StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND) ) {
-                        connFlag = true;
-                        break;
+                for (int i = 0; i < 100; i++) {
+                    Thread.sleep(10000);
+
+                    cResult = commandService.execCommandOutput(terramanCommandModel);
+                    LOGGER.info("ssh connection checking... :: {}", CommonUtils.loggerReplace(cResult));
+                    if (StringUtils.isNotBlank(cResult)) {
+                        if (!StringUtils.equals(cResult, Constants.RESULT_STATUS_FAIL)) {
+                            break;
+                        } else if (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT)) {
+                            connFlag = true;
+                            break;
+                        } else if (StringUtils.contains(cResult, Constants.RESULT_STATUS_TIME_OUT2)) {
+                            connFlag = true;
+                            break;
+                        } else if (StringUtils.contains(cResult, Constants.RESULT_STATUS_AUTH_FAIL)) {
+                            connFlag = true;
+                            break;
+                        } else if (StringUtils.contains(cResult, Constants.RESULT_STATUS_FILE_NOT_FOUND)) {
+                            connFlag = true;
+                            break;
+                        }
                     }
                 }
-            }
-            LOGGER.info("connFlag :: {}", CommonUtils.loggerReplace(connFlag));
-            if (connFlag) {
-                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
-                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-                return errorResult;
-            }
+                LOGGER.info("connFlag :: {}", CommonUtils.loggerReplace(connFlag));
+                if (connFlag) {
+                    clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SSH_CONNECTION_TIME_OUT);
+                    clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                    return errorResult;
+                }
 
-            LOGGER.info("ssh connection complete");
-        } catch (Exception e) {
-            LOGGER.info("ssh connection fail");
+                LOGGER.info("ssh connection complete");
+            } catch (Exception e) {
+                LOGGER.info("ssh connection fail");
+            }
         }
 
 

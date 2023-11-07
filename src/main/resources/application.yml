@@ -39,6 +39,12 @@ vault:
     cluster-token: "secret/cluster/{id}"
     cluster_api_url: "https://{ip}:6443"
 
+ncloud:
+  instance:
+    password:
+      api:
+        url: "http://175.45.205.209:31090"
+
 ---
 spring:
   config:

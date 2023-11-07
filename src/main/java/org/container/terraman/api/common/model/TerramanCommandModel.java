@@ -15,4 +15,6 @@ public class TerramanCommandModel {
     private String pod = Constants.EMPTY_STRING;
     private String secrets = Constants.EMPTY_STRING;
     private String contents = Constants.EMPTY_STRING;
+    private String instanceKey = Constants.EMPTY_STRING;
+    private String provider = Constants.EMPTY_STRING;
 }

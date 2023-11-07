@@ -3,11 +3,16 @@ package org.container.terraman.api.common;
 import com.google.gson.Gson;
 import org.container.terraman.api.common.constants.Constants;
 import org.container.terraman.api.common.constants.CommonStatusCode;
+import org.container.terraman.api.common.model.NcloudInstanceKeyModel;
 import org.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +26,8 @@ import java.lang.reflect.Method;
  */
 @Service
 public class CommonService {
+
+    private static final String CONTENT_TYPE = "Content-Type";
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonService.class);
     private static final String SET_RESULT_CODE = "setResultCode";
     private static final String SET_RESULT_MESSAGE = "setResultMessage";
@@ -29,16 +36,19 @@ public class CommonService {
     private static final String NO_SUCH_METHOD_EXCEPTION_LOG = "NoSuchMethodException :: {}";
     private static final String ILLEGAL_ACCESS_EXCEPTION_LOG = "IllegalAccessException :: {}";
     private static final String INVOCATION_TARGET_EXCEPTION_LOG = "InvocationTargetException :: {}";
+    private final RestTemplate restTemplate;
     private final Gson gson;
 
 
     /**
      * Instantiates a new Common service
      *
-     * @param gson the gson
+     * @param restTemplate
+     * @param gson         the gson
      */
     @Autowired
-    public CommonService(Gson gson) {
+    public CommonService(RestTemplate restTemplate, Gson gson) {
+        this.restTemplate = restTemplate;
         this.gson = gson;
     }
 
@@ -95,14 +105,13 @@ public class CommonService {
         return this.fromJson(this.toJson(requestObject), requestClass);
     }
 
-
     /**
      * json string 으로 변환(To json string)
      *
      * @param requestObject the request object
      * @return the string
      */
-    private String toJson(Object requestObject) {
+    public String toJson(Object requestObject) {
         return gson.toJson(requestObject);
     }
 
@@ -118,4 +127,33 @@ public class CommonService {
     private <T> T fromJson(String requestString, Class<T> requestClass) {
         return gson.fromJson(requestString, requestClass);
     }
+
+    /**
+     * t 전송(sendNcloudJson t)
+     *
+     * @param <T>          the type parameter
+     * @param reqUrl       the req url
+     * @param httpMethod   the http method
+     * @param bodyObject the body object
+     * @param responseType the response type
+     * @return the t
+     */
+    public <T> T sendNcloudJson(String reqUrl, HttpMethod httpMethod, Object bodyObject, Class<T> responseType){
+        HttpHeaders reqHeaders = new HttpHeaders();
+        reqHeaders.add(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        reqHeaders.add("ACCEPT", MediaType.APPLICATION_JSON_VALUE);
+
+        HttpEntity<Object> reqEntity;
+        reqEntity = new HttpEntity<>(bodyObject, reqHeaders);
+
+        ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
+
+        ResponseEntity<T> resEntity = null;
+
+        resEntity = restTemplate.exchange(reqUrl, httpMethod, reqEntity, responseType);
+
+        return resEntity.getBody();
+    };
+
 }
