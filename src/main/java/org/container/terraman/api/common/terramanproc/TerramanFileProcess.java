@@ -112,6 +112,40 @@ public class TerramanFileProcess {
         return resultCode;
     }
 
+    /**
+     * terraform 파일 생성 및 작성 (String)
+     *
+     * @param fileModel the fileModel
+     * @param file the file
+     * @return the String
+     */
+    private String tfCreateWithWriteNcloud(FileModel fileModel, File file) {
+        String resultCode = Constants.RESULT_STATUS_SUCCESS;
+        fileModel.setNcloudSupportVpc(true);
+        // BufferedWriter 생성 및 쓰기설정(파일 덮어쓰기 - false)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));) {
+            // 파일 쓰기
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonString = gson.toJson(fileModel);
+            jsonString = jsonString.replaceAll("[,]", "");
+            jsonString = jsonString.replace("\"ncloudRegion\":", "region =");
+            jsonString = jsonString.replace("\"ncloudAccessKey\":", "access_key =");
+            jsonString = jsonString.replace("\"ncloudSecretKey\":", "secret_key =");
+            jsonString = jsonString.replace("\"ncloudSite\":", "site =");
+            jsonString = jsonString.replace("\"ncloudSupportVpc\":", "support_vpc =");
+
+            //writer.write("provider \"ncloud\" " + jsonString);
+            writer.write(TerramanConstant.PREFIX_PROVIDER_NCLOUD + "\n\n" + "provider \"ncloud\" " + jsonString);
+
+            // 버퍼 및 스트림 뒷정리
+            writer.flush(); // 버퍼의 남은 데이터를 모두 쓰기
+            resultCode = Constants.RESULT_STATUS_SUCCESS;
+        } catch (IOException e1) {
+            resultCode = Constants.RESULT_STATUS_FAIL;
+        }
+        return resultCode;
+    }
+
     public String createTfFileDiv(FileModel fileModel, String clusterId, String processGb, String provider) {
         String resultCode = Constants.RESULT_STATUS_FAIL;
         boolean fileFlag = true;
@@ -136,6 +170,9 @@ public class TerramanFileProcess {
                         case Constants.UPPER_OPENSTACK :
                             resultCode = this.tfCreateWithWriteOpenstack(fileModel, file);
                             break;
+                        case Constants.UPPER_NCLOUD:
+                            resultCode = this.tfCreateWithWriteNcloud(fileModel, file);
+                            break;
                         default :
                             LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                             break;
@@ -149,4 +186,6 @@ public class TerramanFileProcess {
         }
         return resultCode;
     }
+
+
 }

@@ -1,6 +1,5 @@
 package org.container.terraman.api.common.service;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.container.terraman.api.common.PropertyService;
 import org.container.terraman.api.common.VaultService;
@@ -75,6 +74,10 @@ public class TfFileService {
         String openstackAuthUrl = "";
         String openstackUserName = "";
 
+        String ncloudAccessKey = "";
+        String ncloudSecretKey = "";
+        String ncloudSupportVpc = "";
+
         switch(provider.toUpperCase()) {
             case Constants.UPPER_AWS :
                 awsAccessKey = res != null ? String.valueOf(res.get("accessKey")) : "";
@@ -87,14 +90,14 @@ public class TfFileService {
                 LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 break;
             case Constants.UPPER_VSPHERE :
-                vsphereUser = res != null ? String.valueOf(res.get("uesr")) : "";
+                vsphereUser = res != null ? String.valueOf(res.get("user")) : "";
                 vspherePassword = res != null ? String.valueOf(res.get("password")) : "";
                 vsphereVsphereServer = res != null ? String.valueOf(res.get("vsphere_server")) : "";
                 fileModel.setVSphereUser(vsphereUser);
                 fileModel.setVSpherePassword(vspherePassword);
                 fileModel.setVSphereServer(vsphereVsphereServer);
                 break;
-            case Constants.UPPER_OPENSTACK :
+            case Constants.UPPER_OPENSTACK:
                 openstackPassword = res != null ? String.valueOf(res.get("password")) : "";
                 openstackAuthUrl = res != null ? String.valueOf(res.get("auth_url")) : "";
                 openstackUserName = res != null ? String.valueOf(res.get("user_name")) : "";
@@ -103,6 +106,15 @@ public class TfFileService {
                 fileModel.setOpenstackAuthUrl(openstackAuthUrl);
                 fileModel.setOpenstackUserName(openstackUserName);
                 fileModel.setOpenstackRegion(account.getRegion());
+                break;
+            case Constants.UPPER_NCLOUD:
+                ncloudAccessKey = res != null ? String.valueOf(res.get("access_key")) : "";
+                ncloudSecretKey = res != null ? String.valueOf(res.get("secret_key")) : "";
+                fileModel.setNcloudAccessKey(ncloudAccessKey);
+                fileModel.setNcloudSecretKey(ncloudSecretKey);
+                fileModel.setNcloudSite(account.getSite());
+                fileModel.setNcloudSupportVpc(ncloudSupportVpc);
+                fileModel.setNcloudRegion(account.getRegion());
                 break;
             default :
                 LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
@@ -132,13 +144,6 @@ public class TfFileService {
                 LOGGER.info("인스턴스 파일 복사가 완료되었습니다. : {}", CommonUtils.loggerReplace(resultCode));
             }
         }
-
-
-
         return resultCode;
     }
-
-
-
-
 }

@@ -20,6 +20,7 @@ public class TerramanConstant {
     public static final String DIRECTORY_COMMAND = "pwd";
     public static final String TERRAFORM_KUBESPRAY_COMMAND = "#!/bin/bash \\n\\n";
     public static final String DEFAULT_USER_NAME = "ubuntu";
+    public static final String NCLOUD_USER_NAME = "ncloud";
     public static final String CUSTOM_USER_NAME = "1000";
     public static final String LINUX_BASH = "/bin/bash";
     public static final String LINUX_BASH_C = "-c";
@@ -40,8 +41,16 @@ public class TerramanConstant {
     public static final String TERRAFORM_STATE_FILE_PATH(String clusterPath) {
         return clusterPath + "/terraform.tfstate";
     }
+    public static final String NCLOUD_PUB_FILE_PATH(String clusterPath) {
+        return clusterPath + "/authorized_keys";
+    }
+
     public static final String FILE_PATH(String clusterPath) {
         return clusterPath + "/provider.tf";
+    }
+
+    public static final String NCLOUD_PRIVATE_KEY_FILE_PATH(String clusterPath) {
+        return clusterPath + "/ncloud_rsa";
     }
 
 
@@ -57,12 +66,24 @@ public class TerramanConstant {
             "  }\n" +
             "}";
 
+    /**
+     * ncloud provider prefix 생성
+     * */
+    public static final String PREFIX_PROVIDER_NCLOUD = "terraform {\n" +
+            "  required_providers {\n" +
+            "    ncloud = {\n" +
+            "      source  = \"NaverCloudPlatform/ncloud\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "  required_version = \">= 0.13\"\n" +
+            "}";
+
 
     /**
      * kubespray cluster cp-cluster-terraman-vars.sh 변경 및 실행 명령어
      * */
     public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
-        return "echo -e \"" + contents + "\" > /home/ubuntu/container-platform-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
+        return "echo -e \"" + contents + "\" > /home/ubuntu/cp-deployment/standalone/single_control_plane/cp-cluster-terraman-vars.sh";
     }
     public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster-terraman.sh";
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
@@ -73,11 +94,18 @@ public class TerramanConstant {
     public static final String KEYS_CHANGE_MOD = "find /home/1000/.ssh/ -type f -exec chmod -v 600 {} \\;";
 
     /**
+     * keys 권한 변경
+     * */
+    public static final String NCLOUD_PRIVATE_KEY_CHANGE_MOD = "chmod 600 ncloud_rsa";
+
+    /**
      * change directory 명령어
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
         return "mkdir -p -v tmp/terraform/"+clusterId;
     }
+    public static final String CREATE_DIR_SSH_FILE = "mkdir -p -v .ssh/";
+    public static final String CREATE_NCLOUD_PUBLIC_KEY = "ssh-keygen -f ncloud_rsa -y > authorized_keys";
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
         return "tmp/terraform/" + clusterId;
@@ -90,7 +118,7 @@ public class TerramanConstant {
     public static final String DELETE_CLUSTER(String clusterId) {
         return "rm -r "+clusterId;
     }
-    public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/container-platform-deployment/standalone/single_control_plane";
+    public static final String MOVE_DIR_KUBESPRAY = "/home/ubuntu/cp-deployment/standalone/single_control_plane";
 
     /**
      * account token 생성 명령어
@@ -181,24 +209,39 @@ public class TerramanConstant {
     public static final String RESOURCE_MSG = "resources";
     public static final String MASTER_MSG = "master";
     public static final String MASTER_MSG_UPPER = "MASTER";
+    public static final String SERVER_MSG_UPPER = "SERVER";
+    public static final String PUBLIC_IP_MSG_UPPER = "PUBLIC";
+    public static final String NIC_MSG_UPPER = "NIC";
     public static final String INSTANCES_MSG = "instances";
     public static final String INSTANCE_MSG = "instance";
+    public static final String SERVER_MSG = "server";
+    public static final String LOGIN_KEY_MSG = "login_key";
+    public static final String NIC_MSG = "nic";
+    public static final String INTERFACE_MSG = "interface";
     public static final String ATTRIBUTE_MSG = "attributes";
     public static final String PRIVATE_IP_MSG = "private_ip";
+    public static final String PRIVATE_MSG = "private";
+    public static final String PRIVATE_MSG_UPPER = "PRIVATE";
     public static final String PUBLIC_IP_MSG = "public_ip";
-
+    public static final String PUBLIC_MSG = "public";
+    public static final String PUBLIC_MSG_UPPER = "PUBLIC";
     public static final String TYPE_MSG = "type";
     public static final String NAME_MSG = "name";
     public static final String AWS_INSTANCE_MSG = "aws_instance";
+    public static final String NCLOUD_INSTANCE_MSG = "ncloud_instance";
 
     public static final String MODE_MSG = "mode";
     public static final String MANAGED_MSG = "managed";
     public static final String ID_MSG = "id";
+    public static final String ISTANCE_NO_MSG = "instance_no";
+    public static final String PRIVATE_KEY_MSG = "private_key";
     public static final String ACCESS_IP_V4_MSG = "access_ip_v4";
 
     public static final String FLOATINGIP_MSG= "floatingip";
     public static final String INSTANCE_ID_MSG= "instance_id";
+    public static final String SERVER_INSTANCE_NO_MSG= "server_instance_no";
     public static final String FLOATING_IP_MSG= "floating_ip";
+    public static final String NETWORK_INTERFACE_MSG= "network_interface";
 
     /**
      * terraman kuberspray vars
@@ -230,6 +273,9 @@ public class TerramanConstant {
             case "16" : switchStr = KEYS_CHANGE_MOD; break;
             case "17" : switchStr = SERVICE_ACCOUNT_CHECK1; break;
             case "18" : switchStr = SERVICE_ACCOUNT_CHECK2; break;
+            case "19" : switchStr = CREATE_DIR_SSH_FILE; break;
+            case "20" : switchStr = NCLOUD_PRIVATE_KEY_CHANGE_MOD; break;
+            case "21" : switchStr = CREATE_NCLOUD_PUBLIC_KEY; break;
         }
         return switchStr;
     }
