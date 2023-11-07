@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.container.terraman.api.common.constants.Constants;
 import org.container.terraman.api.common.constants.TerramanConstant;
 import org.container.terraman.api.common.model.InstanceModel;
+import org.container.terraman.api.common.model.NcloudPrivateKeyModel;
 import org.container.terraman.api.common.terramanproc.TerramanInstanceProcess;
 import org.container.terraman.api.common.util.CommonFileUtils;
 import org.container.terraman.api.common.util.CommonUtils;
@@ -47,8 +48,33 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultModel = getInstanceInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultModel = getInstanceInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa, processGb); break;
+            case Constants.UPPER_NCLOUD: resultModel = getInstanceInfoNcloud(clusterId, host, idRsa, processGb); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 resultModel = new InstanceModel("", "", "", "");
+                break;
+        }
+
+        return resultModel;
+    }
+
+    /**
+     * Select Ncloud Private Key
+     *
+     * @param clusterId the clusterId
+     * @param provider the provider
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @param privateKey the privateKey
+     * @return the NcloudPrivateKeyModel
+     */
+    public NcloudPrivateKeyModel getNcloudPrivateKey(String clusterId, String provider, String host, String idRsa, String processGb, String privateKey) {
+        NcloudPrivateKeyModel resultModel = null;
+
+        switch(provider.toUpperCase()) {
+            case Constants.UPPER_NCLOUD: resultModel = getNcloudPriavateKeyIfo(clusterId, host, idRsa, processGb, privateKey); break;
+            default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
+                resultModel = new NcloudPrivateKeyModel("","","");
                 break;
         }
 
@@ -73,7 +99,30 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultList = getInstancesInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultList = getInstancesInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultList = getInstancesInfoOpenstack(clusterId, host, idRsa, processGb); break;
+            case Constants.UPPER_NCLOUD: resultList = getInstancesInfoNcloud(clusterId, host, idRsa, processGb); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider)); break;
+        }
+
+        return resultList;
+    }
+
+    /**
+     * Select Ncloud Privates Keys
+     *
+     * @param clusterId the clusterId
+     * @param provider the provider
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the List<NcloudPrivateKeyModel>
+     */
+    public List<NcloudPrivateKeyModel> getNcloudPrivateKeys(String clusterId, String provider, String host, String idRsa, String processGb) {
+        List<NcloudPrivateKeyModel> resultList = new ArrayList<>();
+
+        switch (provider.toUpperCase()) {
+            case Constants.UPPER_NCLOUD: resultList = getNcloudPriavateKeysIfo(clusterId, host, idRsa, processGb); break;
+            default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
+                break;
         }
 
         return resultList;
@@ -147,6 +196,63 @@ public class InstanceService {
     }
 
     /**
+     * Select Instance Info Ncloud
+     *
+     * @param clusterId the cluster
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
+     */
+    private InstanceModel getInstanceInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
+        InstanceModel resultModel = null;
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        return new TerramanInstanceProcess().getInstanceInfoNcloud(jsonObject);
+
+    }
+
+    /**
+     * Select Ncloud Private Key Info
+     *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @param privateKey the privateKey
+     * @return the NcloudPrivateKeyModel
+     */
+    public NcloudPrivateKeyModel getNcloudPriavateKeyIfo(String clusterId, String host, String idRsa, String processGb, String privateKey) {
+        NcloudPrivateKeyModel resultModel = null;
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        if (privateKey.toUpperCase().equals(Constants.RSA_PRIVATE_KEY) ) {
+            return new TerramanInstanceProcess().getNcloudRsaPrivateKeyInfo(jsonObject);
+        } else {
+            return new TerramanInstanceProcess().getNcloudPrivateKeyInfo(jsonObject);
+        }
+
+    }
+
+    /**
      * Select Instances Info AWS
      *
      * @param clusterId the clusterId
@@ -214,6 +320,57 @@ public class InstanceService {
     }
 
     /**
+     * Select Instances Info Ncloud
+     *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the List<InstanceModel>
+     */
+
+    private List<InstanceModel> getInstancesInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
+        List<InstanceModel> modelList = new ArrayList<>();
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        return new TerramanInstanceProcess().getInstancesInfoNcloud(jsonObject);
+    }
+
+    /**
+     * Select Ncloud Private Keys Info
+     *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the List<NcloudPrivateKeyModel>
+     */
+    public List<NcloudPrivateKeyModel> getNcloudPriavateKeysIfo(String clusterId, String host, String idRsa, String processGb) {
+        List<NcloudPrivateKeyModel> modelList = new ArrayList<>();
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        return new TerramanInstanceProcess().getNcloudPrivateKeysInfo(jsonObject);
+    }
+
+    /**
      * Read State File
      *
      * @param clusterId the clusterId
@@ -223,4 +380,5 @@ public class InstanceService {
     public JsonObject readStateFile(String clusterId, String processGb) {
         return commonFileUtils.fileRead(TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
     }
+
 }

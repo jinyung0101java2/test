@@ -365,7 +365,7 @@ public class TerramanProcessServiceTest {
         doNothing().when(clusterLogService).saveClusterLog(TEST_CLUSTER_ID, TEST_INT_SEQ, TerramanConstant.TERRAFORM_START_LOG(TEST_PROVIDER));
         doReturn(clusterModelMock).when(clusterService).updateCluster(TEST_CLUSTER_ID, TerramanConstant.CLUSTER_FAIL_STATUS);
 
-        int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME);
+        int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME, TEST_INT_SEQ);
 
         assertEquals(2, result);
     }
@@ -381,7 +381,7 @@ public class TerramanProcessServiceTest {
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_TIME_OUT);
         when(instanceService.getInstance(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_IDRSA, TEST_PROCESS_GB)).thenReturn(null);
 
-        int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME);
+        int result = terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME, TEST_INT_SEQ);
 
         assertEquals(-1, result);
     }

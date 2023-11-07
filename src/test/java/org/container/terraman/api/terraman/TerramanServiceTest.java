@@ -131,7 +131,7 @@ public class TerramanServiceTest {
         gInstanceList.add(gInstanceModel);
 
         clusterModel = new ClusterModel();
-        accountModel = new AccountModel(1,"2","3","4","5","6","7");
+        accountModel = new AccountModel(1,"2","3","4","5","6","7","8");
         hashMap = new HashMap();
         hashMap.put("test", "test");
         uploadFile = new File(TEST_FILE_PATH);
@@ -171,7 +171,7 @@ public class TerramanServiceTest {
         when(terramanProcessService.terramanProcessInit(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessPlan(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessApply(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
-        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);
+        when(terramanProcessService.terramanProcessGetInstanceIp(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME, TEST_INT_SEQ)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessSetKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessExecKubespray(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_HOST, TEST_IDRSA)).thenReturn(TEST_MP_SEQ);
         when(terramanProcessService.terramanProcessCreateVault(TEST_MP_SEQ, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_HOST, TEST_IDRSA, TEST_PROVIDER, TEST_CLUSTER_NAME)).thenReturn(TEST_MP_SEQ);

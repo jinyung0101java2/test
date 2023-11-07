@@ -28,6 +28,19 @@ public class CommandService {
     }
 
     /**
+     * SSH 파일 업로드
+     *
+     * @param dir the dir
+     * @param host the host
+     * @param instanceKey the idRsa
+     * @param uploadFile the uploadFile
+     * @return the String
+     */
+    public String sshPwdFileUpload(String dir, String host, String instanceKey, File uploadFile, String userName) {
+        return new CommandProcess().sshPwdFileUpload(dir, host, instanceKey, uploadFile, userName);
+    }
+
+    /**
      * SSH 파일 다운로드
      *
      * @param dir the dir
@@ -52,6 +65,16 @@ public class CommandService {
     }
 
     /**
+     * SSH Command Line Response
+     *
+     * @param terramanCommandModel the terramanCommandModel
+     * @return the String
+     */
+    public String getSSHPwdResponse(TerramanCommandModel terramanCommandModel) {
+        return new CommandProcess().getSSHPwdResponse(terramanCommandModel);
+    }
+
+    /**
      * Command Line Response
      *
      * @param terramanCommandModel the terramanCommandModel
@@ -71,6 +94,22 @@ public class CommandService {
         String response = "";
         if(!StringUtils.isBlank(terramanCommandModel.getIdRsa()) && !StringUtils.isBlank(terramanCommandModel.getHost())) {
             response = getSSHResponse(terramanCommandModel);
+        } else {
+            response = getResponse(terramanCommandModel);
+        }
+        return response;
+    }
+
+    /**
+     * Command Line Excute
+     *
+     * @param terramanCommandModel the terramanCommandModel
+     * @return the String
+     */
+    public String execPwdCommandOutput(TerramanCommandModel terramanCommandModel) {
+        String response = "";
+        if(!StringUtils.isBlank(terramanCommandModel.getInstanceKey()) && !StringUtils.isBlank(terramanCommandModel.getHost())) {
+            response = getSSHPwdResponse(terramanCommandModel);
         } else {
             response = getResponse(terramanCommandModel);
         }

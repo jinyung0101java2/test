@@ -43,6 +43,22 @@ public class CommandProcess {
     }
 
     /**
+     * SSH Pwd Connect
+     *
+     * @param host the host
+     * @return the void
+     */
+    public void sshPwdConnect(String userName, String host, String instanceKey) throws JSchException {
+        LOGGER.info("userName:::" + userName + ", host:::" + host + ", instanceKey:::" + instanceKey);
+        int port = 22;
+        JSch jsch = new JSch();
+        session = jsch.getSession(userName, host, port);
+        session.setPassword(instanceKey);
+        session.setConfig("StrictHostKeyChecking", "no");       // 호스트 정보를 검사하지 않도록 설정
+        session.connect();
+    }
+
+    /**
      * 디렉토리( or 파일) 존재 여부
      * @param path the path
      * @return the boolean
@@ -86,6 +102,45 @@ public class CommandProcess {
         FileInputStream in = null;
         try {
             sshConnect(host, idRsa, userName);
+            channel = session.openChannel("sftp");
+            channel.connect();
+            channelSftp = (ChannelSftp) channel;
+            in = new FileInputStream(uploadFile);
+            channelSftp.cd(dir);
+            channelSftp.put(in, uploadFile.getName());
+            // 업로드했는지 확인
+            if (this.exists(dir +"/"+uploadFile.getName())) {
+                resultCommand = Constants.RESULT_STATUS_SUCCESS;
+            }
+            in.close();
+        } catch (SftpException | JSchException | IOException e) {
+            LOGGER.error("Exception : {}", CommonUtils.loggerReplace(e.getMessage()));
+        } finally {
+            try {
+                if(in != null) in.close();
+            } catch (IOException ie) {
+                LOGGER.error(CommonUtils.loggerReplace(ie.getMessage()));
+            }
+            this.disConnectSSH();
+        }
+        return resultCommand;
+    }
+
+    /**
+     * SSH 파일 업로드
+     *
+     * @param dir the dir
+     * @param host the host
+     * @param instanceKey the instanceKey
+     * @param uploadFile the uploadFile
+     * @return the String
+     */
+    public String sshPwdFileUpload(String dir, String host, String instanceKey, File uploadFile, String userName) {
+        String resultCommand = Constants.RESULT_STATUS_FAIL;
+
+        FileInputStream in = null;
+        try {
+            sshPwdConnect(userName, host, instanceKey);
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp) channel;
@@ -205,6 +260,51 @@ public class CommandProcess {
     }
 
     /**
+     * SSH Command Line Response
+     *
+     * @param terramanCommandModel the terramanCommandModel
+     * @return the String
+     */
+    public String getSSHPwdResponse(TerramanCommandModel terramanCommandModel) {
+        String resultCommand = Constants.RESULT_STATUS_FAIL;
+        String execCommand = "";
+        LOGGER.info("TerramanModel :: {}", CommonUtils.loggerReplace(terramanCommandModel.toString()));
+        StringBuilder response = new StringBuilder();
+        try {
+            sshPwdConnect(terramanCommandModel.getUserName(), terramanCommandModel.getHost(), terramanCommandModel.getInstanceKey());
+            channelExec = (ChannelExec) session.openChannel("exec");
+            if(!StringUtils.equals(terramanCommandModel.getDir(), "")) {
+                execCommand = "cd " + terramanCommandModel.getDir() + " && ";
+            }
+
+            execCommand += TerramanConstant.COMMAND_SWITCH(terramanCommandModel);
+            LOGGER.info("Command Str :: {}", CommonUtils.loggerReplace(execCommand));
+            LOGGER.info("Command Running ...");
+            channelExec.setCommand(execCommand);
+            InputStream inputStream = channelExec.getInputStream();
+            channelExec.connect();
+
+            byte[] buffer = new byte[8192];
+            int decodedLength;
+            while ((decodedLength = inputStream.read(buffer, 0, buffer.length)) > 0) {
+                response.append(new String(buffer, 0, decodedLength));
+            }
+            resultCommand = response.toString();
+
+        } catch (Exception e) {
+            if(e.getMessage().contains("timed out")) {
+                resultCommand = Constants.RESULT_STATUS_TIME_OUT;
+            } else if(e.getMessage().contains(Constants.RESULT_STATUS_AUTH_FAIL)) {
+                resultCommand = Constants.RESULT_STATUS_AUTH_FAIL;
+            }
+            LOGGER.error("JSchException : {}", CommonUtils.loggerReplace(e.getMessage()));
+        } finally {
+            this.disConnectSSH();
+        }
+        return resultCommand;
+    }
+
+    /**
      * Command Line Response
      *
      * @param terramanCommandModel the terramanCommandModel
@@ -221,7 +321,6 @@ public class CommandProcess {
         String s = null;
         ProcessBuilder prsbld = null;
         Process prs = null;
-
         try {
             prsbld = new ProcessBuilder(cmd);
             // 디렉토리 이동

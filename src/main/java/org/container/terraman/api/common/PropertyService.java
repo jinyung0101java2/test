@@ -26,4 +26,7 @@ public class PropertyService {
     @Value("${master.host}")
     private String masterHost;
 
+    @Value("${ncloud.instance.password.api.url}")
+    private String ncloudInstancePasswordApiUrl;
+
 }
