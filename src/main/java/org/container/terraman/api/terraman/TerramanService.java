@@ -118,7 +118,6 @@ public class TerramanService {
             mpSeq = terramanProcessService.terramanProcessStart(mpSeq, clusterId, provider, processGb, host, idRsa);
         }
 
-
         /**************************************************************************************************************************************
          * 2. IaaS에 따라 provider.tf 파일 정의 (Vault, Database)
          * ************************************************************************************************************************************/

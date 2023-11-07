@@ -6,8 +6,8 @@ import lombok.Data;
 public class FileModel {
 
     /*
-    * OPENSTACK FOR TERRAFORM
-    * */
+     * OPENSTACK FOR TERRAFORM
+     * */
     private String openstackTenantName;
     private String openstackPassword;
     private String openstackAuthUrl;
@@ -27,4 +27,13 @@ public class FileModel {
     private String vSphereUser;
     private String vSpherePassword;
     private String vSphereServer;
+
+    /*
+     * NCP FOR TERRAFORM
+     * */
+    private String ncloudAccessKey;
+    private String ncloudSecretKey;
+    private String ncloudRegion;
+    private String ncloudSite;
+    private Object ncloudSupportVpc;
 }
