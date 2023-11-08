@@ -99,6 +99,16 @@ public class TerramanConstant {
     public static final String NCLOUD_PRIVATE_KEY_CHANGE_MOD = "chmod 600 ncloud_rsa";
 
     /**
+     * keys 문자 치환
+     * */
+    public static final String NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE = "sed -i 's/\"//g' /tmp/terraform/ncp-cluster/ncloud_rsa";
+
+    /**
+     * keys 문자 줄바꿈
+     * */
+    public static final String NCLOUD_PRIVATE_KEY_SED_NEW_LINE = "sed -i 's/,/\\n/g' /tmp/terraform/ncp-cluster/ncloud_rsa";
+
+    /**
      * change directory 명령어
      * */
     public static final String CREATE_DIR_CLUSTER(String clusterId) {
@@ -275,7 +285,9 @@ public class TerramanConstant {
             case "18" : switchStr = SERVICE_ACCOUNT_CHECK2; break;
             case "19" : switchStr = CREATE_DIR_SSH_FILE; break;
             case "20" : switchStr = NCLOUD_PRIVATE_KEY_CHANGE_MOD; break;
-            case "21" : switchStr = CREATE_NCLOUD_PUBLIC_KEY; break;
+            case "21" : switchStr = NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE; break;
+            case "22" : switchStr = NCLOUD_PRIVATE_KEY_SED_NEW_LINE; break;
+            case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY; break;
         }
         return switchStr;
     }
