@@ -154,8 +154,30 @@ public class NcloudService {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
         }
 
+       // 개인키(ncloud_rsa) 따옴표 제거
+       terramanCommandModel.setCommand("21");
+       terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
+       terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+       terramanCommandModel.setClusterId(clusterId);
+       cResult = commandService.execCommandOutput(terramanCommandModel);
+       if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+           clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+           clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
+       }
+
+       // 개인키(ncloud_rsa) 줄바꿈
+       terramanCommandModel.setCommand("22");
+       terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
+       terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+       terramanCommandModel.setClusterId(clusterId);
+       cResult = commandService.execCommandOutput(terramanCommandModel);
+       if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+           clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+           clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
+       }
+
         // 공개키(authorized_keys) 생성
-        terramanCommandModel.setCommand("21");
+        terramanCommandModel.setCommand("23");
         terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
         terramanCommandModel.setClusterId(clusterId);

@@ -215,7 +215,7 @@ public class TerramanInstanceProcess {
                             compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString();
                             publicIp = getNcloudPublicIp(compInstanceId, jsonObject);
                             privateKey = attributes.get(TerramanConstant.PRIVATE_KEY_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.PRIVATE_KEY_MSG).getAsString();
-                            privateKey = privateKey.replaceAll("\n", "\n");
+                            privateKey = privateKey.replaceAll("\n", ",");
                         }
                     }
                 }
