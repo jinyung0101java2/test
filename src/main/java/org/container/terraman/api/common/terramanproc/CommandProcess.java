@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings({"COMMAND_INJECTION", "PATH_TRAVERSAL_IN"})
@@ -37,6 +38,11 @@ public class CommandProcess {
         int port = 22;
         JSch jsch = new JSch();
         jsch.addIdentity(idRsa);
+        Properties config = new Properties();
+        config.put("kex","diffie-hellman-group1-sha1");
+        config.put("kex","diffie-hellman-group14-sha1");
+        config.put("kex","diffie-hellman-group-exchange-sha1");
+        config.put("kex","diffie-hellman-group-exchange-sha256");
         session = jsch.getSession(userName, host, port);
         session.setConfig("StrictHostKeyChecking", "no");       // 호스트 정보를 검사하지 않도록 설정
         session.connect();
@@ -52,6 +58,12 @@ public class CommandProcess {
         LOGGER.info("userName:::" + userName + ", host:::" + host + ", instanceKey:::" + instanceKey);
         int port = 22;
         JSch jsch = new JSch();
+        Properties config = new Properties();
+        config.put("kex","diffie-hellman-group1-sha1");
+        config.put("kex","diffie-hellman-group14-sha1");
+        config.put("kex","diffie-hellman-group-exchange-sha1");
+        config.put("kex","diffie-hellman-group-exchange-sha256");
+        config.put("StrictHostKeyChecking", "no");
         session = jsch.getSession(userName, host, port);
         session.setPassword(instanceKey);
         session.setConfig("StrictHostKeyChecking", "no");       // 호스트 정보를 검사하지 않도록 설정
