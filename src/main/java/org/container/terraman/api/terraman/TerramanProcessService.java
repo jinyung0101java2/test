@@ -5,10 +5,7 @@ import org.container.terraman.api.common.PropertyService;
 import org.container.terraman.api.common.VaultService;
 import org.container.terraman.api.common.constants.Constants;
 import org.container.terraman.api.common.constants.TerramanConstant;
-import org.container.terraman.api.common.model.ClusterInfo;
-import org.container.terraman.api.common.model.ClusterModel;
-import org.container.terraman.api.common.model.InstanceModel;
-import org.container.terraman.api.common.model.TerramanCommandModel;
+import org.container.terraman.api.common.model.*;
 import org.container.terraman.api.common.service.*;
 import org.container.terraman.api.common.util.CommonUtils;
 import org.slf4j.Logger;
@@ -480,12 +477,23 @@ public class TerramanProcessService {
         String chkCli = "";
 
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
+        List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
 
-        terramanCommandModel.setCommand("17");
-        terramanCommandModel.setHost(instanceInfo.getPublicIp());
-        terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
-        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+            for (int i = 0; i < ncloudPrivateKeysModel.size(); i++) {
+                if (ncloudPrivateKeysModel.get(i).getPublicIp().equals(instanceInfo.getPublicIp())) {
+                    terramanCommandModel.setInstanceKey(ncloudPrivateKeysModel.get(i).getPrivateKey());
+                    terramanCommandModel.setHost(ncloudPrivateKeysModel.get(i).getPublicIp());
+                }
+            }
+            terramanCommandModel.setUserName(TerramanConstant.NCLOUD_USER_NAME);
+        } else {
+            terramanCommandModel.setHost(instanceInfo.getPublicIp());
+            terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
+            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        }
         terramanCommandModel.setClusterId(clusterId);
+        terramanCommandModel.setCommand("17");
         chkCli = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
