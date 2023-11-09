@@ -41,6 +41,10 @@ public class TerramanConstant {
     public static final String TERRAFORM_STATE_FILE_PATH(String clusterPath) {
         return clusterPath + "/terraform.tfstate";
     }
+    public static final String NCLOUD_PRI_FILE_PATH(String clusterPath) {
+        return clusterPath + "/ncloud_rsa";
+    }
+
     public static final String NCLOUD_PUB_FILE_PATH(String clusterPath) {
         return clusterPath + "/authorized_keys";
     }

@@ -19,6 +19,9 @@ public class Constants {
     public static final String EMPTY_STRING ="";
     public static final int EMPTY_INT =0;
     public static final String EMPTY_DIR ="/home/ubuntu";
+    public static final String MASTER_SSH_DIR ="/home/ubuntu/.ssh";
+    public static final String NCLOUD_HOST_DIR ="/home1/ncloud/";
+    public static final String NCLOUD_SSH_DIR ="/home1/ncloud/.ssh";
 
     public static final String U_LANG_KO = "ko";
 
