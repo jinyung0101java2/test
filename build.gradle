@@ -49,7 +49,7 @@ ext {
     jjwtVersion = '0.9.1'
     jsonpathVersion = '2.4.0'
     springCloudVersion = '2021.0.3'
-    jschVersion = '0.1.55'
+//    jschVersion = '0.1.55'
     mariaDbVersion = '3.0.4'
 }
 jar {
@@ -92,9 +92,10 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.0'
     compile( "org.springframework.cloud:spring-cloud-starter-vault-config")
-    implementation "com.jcraft:jsch:${jschVersion}"
+//    implementation "com.jcraft:jsch:${jschVersion}"
     implementation 'commons-io:commons-io:2.11.0'
     testImplementation('org.mockito:mockito-inline:3.4.0')
+    implementation files('libs/jsch-0.2.7.jar')
 }
 dependencyManagement {
     imports {
