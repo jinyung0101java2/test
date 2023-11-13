@@ -41,8 +41,8 @@ public class TerramanConstant {
     public static final String TERRAFORM_STATE_FILE_PATH(String clusterPath) {
         return clusterPath + "/terraform.tfstate";
     }
-    public static final String NCLOUD_PRI_FILE_PATH(String clusterPath) {
-        return clusterPath + "/ncloud_rsa";
+    public static final String NCLOUD_PRI_FILE_PATH(String clusterPath, String clusterId) {
+        return clusterPath + "/" + clusterId + "-key";
     }
 
     public static final String NCLOUD_PUB_FILE_PATH(String clusterPath) {
@@ -53,8 +53,8 @@ public class TerramanConstant {
         return clusterPath + "/provider.tf";
     }
 
-    public static final String NCLOUD_PRIVATE_KEY_FILE_PATH(String clusterPath) {
-        return clusterPath + "/ncloud_rsa";
+    public static final String NCLOUD_PRIVATE_KEY_FILE_PATH(String clusterPath, String clusterId) {
+        return clusterPath + "/" + clusterId + "-key";
     }
 
 
@@ -100,17 +100,23 @@ public class TerramanConstant {
     /**
      * keys 권한 변경
      * */
-    public static final String NCLOUD_PRIVATE_KEY_CHANGE_MOD = "chmod 600 ncloud_rsa";
+    public static final String NCLOUD_PRIVATE_KEY_CHANGE_MOD(String clusterId){
+        return "chmod 600 " + clusterId + "-key";
+    }
 
     /**
      * keys 문자 치환
      * */
-    public static final String NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE = "sed -i 's/\"//g' /tmp/terraform/ncp-cluster/ncloud_rsa";
+    public static final String NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE(String clusterId) {
+        return "sed -i 's/\"//g' /tmp/terraform/ncp-cluster/" + clusterId + "-key";
+    }
 
     /**
      * keys 문자 줄바꿈
      * */
-    public static final String NCLOUD_PRIVATE_KEY_SED_NEW_LINE = "sed -i 's/,/\\n/g' /tmp/terraform/ncp-cluster/ncloud_rsa";
+    public static final String NCLOUD_PRIVATE_KEY_SED_NEW_LINE(String clusterId){
+        return "sed -i 's/,/\\n/g' /tmp/terraform/ncp-cluster/" + clusterId + "-key";
+    }
 
     /**
      * change directory 명령어
@@ -119,7 +125,9 @@ public class TerramanConstant {
         return "mkdir -p -v tmp/terraform/"+clusterId;
     }
     public static final String CREATE_DIR_SSH_FILE = "mkdir -p -v .ssh/";
-    public static final String CREATE_NCLOUD_PUBLIC_KEY = "ssh-keygen -f ncloud_rsa -y > authorized_keys";
+    public static final String CREATE_NCLOUD_PUBLIC_KEY(String clusterId) {
+        return "ssh-keygen -f " +  clusterId + "-key -y > authorized_keys";
+    };
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
         return "tmp/terraform/" + clusterId;
@@ -288,10 +296,10 @@ public class TerramanConstant {
             case "17" : switchStr = SERVICE_ACCOUNT_CHECK1; break;
             case "18" : switchStr = SERVICE_ACCOUNT_CHECK2; break;
             case "19" : switchStr = CREATE_DIR_SSH_FILE; break;
-            case "20" : switchStr = NCLOUD_PRIVATE_KEY_CHANGE_MOD; break;
-            case "21" : switchStr = NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE; break;
-            case "22" : switchStr = NCLOUD_PRIVATE_KEY_SED_NEW_LINE; break;
-            case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY; break;
+            case "20" : switchStr = NCLOUD_PRIVATE_KEY_CHANGE_MOD(terramanCommandModel.getClusterId()); break;
+            case "21" : switchStr = NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE(terramanCommandModel.getClusterId()); break;
+            case "22" : switchStr = NCLOUD_PRIVATE_KEY_SED_NEW_LINE(terramanCommandModel.getClusterId()); break;
+            case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
         }
         return switchStr;
     }

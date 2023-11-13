@@ -120,7 +120,7 @@ public class NcloudService {
         String cResult = "";
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
-        File file = new File(TerramanConstant.NCLOUD_PRIVATE_KEY_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
+        File file = new File(TerramanConstant.NCLOUD_PRIVATE_KEY_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), clusterId));
 
         // Ncloud 루트 패스워드 조회
         List<NcloudInstanceKeyModel> ncloudInstanceKeyModel = getNcloudSSHKey(clusterId, provider, host, idRsa, processGb, seq);
@@ -128,9 +128,9 @@ public class NcloudService {
         // Ncloud 개인키 조회
         NcloudPrivateKeyModel ncloudPrivateKeyModel = instanceService.getNcloudPrivateKey(clusterId, provider, host, idRsa, processGb, privateKey);
 
-        // Ncloud 개인키 파일(ncloud_rsa) 생성
+        // Ncloud 개인키 파일 생성
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
             String jsonString = gson.toJson(ncloudPrivateKeyModel.getPrivateKey());
             writer.write(jsonString);
             writer.flush();
@@ -139,7 +139,7 @@ public class NcloudService {
             resultCode = Constants.RESULT_STATUS_FAIL;
         }
 
-        // 개인키(ncloud_rsa) 권한 변경 600
+        // 개인키 권한 변경 600
         terramanCommandModel.setCommand("20");
         terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
@@ -150,7 +150,7 @@ public class NcloudService {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
         }
 
-        // 개인키(ncloud_rsa) 따옴표 제거
+        // 개인키 따옴표 제거
         terramanCommandModel.setCommand("21");
         terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
@@ -161,7 +161,7 @@ public class NcloudService {
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
         }
 
-        // 개인키(ncloud_rsa) 줄바꿈
+        // 개인키 줄바꿈
         terramanCommandModel.setCommand("22");
         terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
         terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
@@ -173,7 +173,7 @@ public class NcloudService {
         }
 
         //개인키 Master로 업로드
-        File uploadKeyFile = new File(TerramanConstant.NCLOUD_PRI_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
+        File uploadKeyFile = new File(TerramanConstant.NCLOUD_PRI_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), clusterId));
         commandService.sshFileUpload(Constants.MASTER_SSH_DIR, host, idRsa, uploadKeyFile, TerramanConstant.DEFAULT_USER_NAME);
 
         // 공개키(authorized_keys) 생성
@@ -206,7 +206,7 @@ public class NcloudService {
             }
         }
 
-        // Ncloud 접속 및 .ssh/authorized_keys 파일 업로드
+        // Ncloud 접속 및 .ssh/authorized_keys 파일(공개키) 업로드
         File uploadFile = new File(TerramanConstant.NCLOUD_PUB_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId)));
         for (int i = 0; i < ncloudInstanceKeyModel.size(); i++) {
 
