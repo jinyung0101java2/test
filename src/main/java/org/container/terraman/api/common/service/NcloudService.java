@@ -117,6 +117,7 @@ public class NcloudService {
      * @return the String
      */
     public String createNcloudPublicKey(String clusterId, String provider, String host, String idRsa, String processGb, int seq, String privateKey, int mpSeq) {
+        String masterHost = host;
         String cResult = "";
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
@@ -214,6 +215,19 @@ public class NcloudService {
                 host = ncloudPrivateKeysModel.get(i).getPublicIp();
             }
             commandService.sshPwdFileUpload(Constants.NCLOUD_SSH_DIR, host, ncloudInstanceKeyModel.get(i).getRootPassword(), uploadFile, TerramanConstant.NCLOUD_USER_NAME);
+        }
+
+        // Master Ncloud 개인키 권한 변경 600
+        terramanCommandModel.setCommand("20");
+        terramanCommandModel.setDir(Constants.MASTER_SSH_DIR);
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(clusterId);
+        terramanCommandModel.setHost(masterHost);
+        terramanCommandModel.setIdRsa(idRsa);
+        cResult = commandService.execCommandOutput(terramanCommandModel);
+        if (StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
         }
         return resultCode;
     };
