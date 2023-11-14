@@ -44,6 +44,9 @@ public class TerramanConstant {
     public static final String NCLOUD_PRI_FILE_PATH(String clusterPath, String clusterId) {
         return clusterPath + "/" + clusterId + "-key";
     }
+    public static final String NCLOUD_PUB_FILE_PATH(String clusterPath, String clusterId) {
+        return clusterPath + "/" + clusterId + "-key.pub";
+    }
 
     public static final String NCLOUD_PUB_FILE_PATH(String clusterPath) {
         return clusterPath + "/authorized_keys";
@@ -126,7 +129,10 @@ public class TerramanConstant {
     }
     public static final String CREATE_DIR_SSH_FILE = "mkdir -p -v .ssh/";
     public static final String CREATE_NCLOUD_PUBLIC_KEY(String clusterId) {
-        return "ssh-keygen -f " +  clusterId + "-key -y > authorized_keys";
+        return "ssh-keygen -f " + clusterId + "-key -y > authorized_keys";
+    };
+    public static final String COPY_NCLOUD_PUBLIC_KEY(String clusterId) {
+        return "cp authorized_keys " + clusterId + "-key.pub";
     };
 
     public static final String CLUSTER_STATE_DIR(String clusterId) {
@@ -300,7 +306,9 @@ public class TerramanConstant {
             case "21" : switchStr = NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE(terramanCommandModel.getClusterId()); break;
             case "22" : switchStr = NCLOUD_PRIVATE_KEY_SED_NEW_LINE(terramanCommandModel.getClusterId()); break;
             case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
+            case "24" : switchStr = COPY_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
         }
         return switchStr;
     }
 }
+
