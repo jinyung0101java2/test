@@ -174,8 +174,8 @@ public class NcloudService {
         }
 
         //개인키 Master로 업로드
-        File uploadKeyFile = new File(TerramanConstant.NCLOUD_PRI_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), clusterId));
-        commandService.sshFileUpload(Constants.MASTER_SSH_DIR, host, idRsa, uploadKeyFile, TerramanConstant.DEFAULT_USER_NAME);
+        File uploadPriKeyFile = new File(TerramanConstant.NCLOUD_PRI_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), clusterId));
+        commandService.sshFileUpload(Constants.MASTER_SSH_DIR, host, idRsa, uploadPriKeyFile, TerramanConstant.DEFAULT_USER_NAME);
 
         // 공개키(authorized_keys) 생성
         terramanCommandModel.setCommand("23");
@@ -188,6 +188,22 @@ public class NcloudService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
         }
+
+        // 공개키 복사(authorized_keys -> clusterId + "-key.pub")
+        terramanCommandModel.setCommand("24");
+        terramanCommandModel.setDir(TerramanConstant.CLUSTER_STATE_DIR(clusterId));
+        terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+        terramanCommandModel.setClusterId(clusterId);
+        commandService.execCommandOutput(terramanCommandModel);
+        cResult = commandService.execCommandOutput(terramanCommandModel);
+        if (StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_DIRECTORY_ERROR);
+        }
+
+        //공개키 Master로 업로드
+        File uploadPubKeyFile = new File(TerramanConstant.NCLOUD_PUB_FILE_PATH(TerramanConstant.MOVE_DIR_CLUSTER(clusterId), clusterId));
+        commandService.sshFileUpload(Constants.MASTER_SSH_DIR, host, idRsa, uploadPubKeyFile, TerramanConstant.DEFAULT_USER_NAME);
 
         // Ncloud 접속 및 .ssh 파일 생성
         List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
