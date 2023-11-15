@@ -48,6 +48,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultModel = getInstanceInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultModel = getInstanceInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultModel = getInstanceInfoOpenstack(clusterId, host, idRsa, processGb); break;
+            case Constants.UPPER_NHN : resultModel = getInstanceInfoNhn(clusterId, host, idRsa, processGb); break;
             case Constants.UPPER_NCLOUD: resultModel = getInstanceInfoNcloud(clusterId, host, idRsa, processGb); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 resultModel = new InstanceModel("", "", "", "");
@@ -99,6 +100,7 @@ public class InstanceService {
             case Constants.UPPER_GCP : resultList = getInstancesInfoGcp(); break;
             case Constants.UPPER_VSPHERE : resultList = getInstancesInfoVSphere(); break;
             case Constants.UPPER_OPENSTACK : resultList = getInstancesInfoOpenstack(clusterId, host, idRsa, processGb); break;
+            case Constants.UPPER_NHN : resultList = getInstancesInfoNhn(clusterId, host, idRsa, processGb); break;
             case Constants.UPPER_NCLOUD: resultList = getInstancesInfoNcloud(clusterId, host, idRsa, processGb); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider)); break;
         }
@@ -193,6 +195,31 @@ public class InstanceService {
         JsonObject jsonObject = readStateFile(clusterId, processGb);
 
         return new TerramanInstanceProcess().getInstanceInfoOpenstack(jsonObject);
+    }
+
+    /**
+     * Select Instance Info OpenStack
+     *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
+     */
+    public InstanceModel getInstanceInfoNhn(String clusterId, String host, String idRsa, String processGb) {
+        InstanceModel resultModel = null;
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        return new TerramanInstanceProcess().getInstanceInfoNhn(jsonObject);
     }
 
     /**
@@ -317,6 +344,30 @@ public class InstanceService {
         JsonObject jsonObject = readStateFile(clusterId, processGb);
 
         return new TerramanInstanceProcess().getInstancesInfoOpenstack(jsonObject);
+    }
+
+    /**
+     * Select Instances Info Nhn
+     *
+     * @param clusterId the clusterId
+     * @param host the host
+     * @param idRsa the idRsa
+     * @param processGb the processGb
+     * @return the InstanceModel
+     */
+    public List<InstanceModel> getInstancesInfoNhn(String clusterId, String host, String idRsa, String processGb) {
+        List<InstanceModel> modelList = new ArrayList<>();
+        if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
+            commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
+                    , TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(clusterId))
+                    , TerramanConstant.TERRAFORM_STATE_FILE_NAME
+                    , host
+                    , idRsa
+                    , TerramanConstant.DEFAULT_USER_NAME);
+        }
+        JsonObject jsonObject = readStateFile(clusterId, processGb);
+
+        return new TerramanInstanceProcess().getInstancesInfoNhn(jsonObject);
     }
 
     /**

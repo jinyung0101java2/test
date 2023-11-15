@@ -74,6 +74,10 @@ public class TfFileService {
         String openstackAuthUrl = "";
         String openstackUserName = "";
 
+        String nhnPassword = "";
+        String nhnAuthUrl = "";
+        String nhnUserName = "";
+
         String ncloudAccessKey = "";
         String ncloudSecretKey = "";
         String ncloudSupportVpc = "";
@@ -106,6 +110,16 @@ public class TfFileService {
                 fileModel.setOpenstackAuthUrl(openstackAuthUrl);
                 fileModel.setOpenstackUserName(openstackUserName);
                 fileModel.setOpenstackRegion(account.getRegion());
+                break;
+            case Constants.UPPER_NHN:
+                nhnPassword = res != null ? String.valueOf(res.get("password")) : "";
+                nhnAuthUrl = res != null ? String.valueOf(res.get("auth_url")) : "";
+                nhnUserName = res != null ? String.valueOf(res.get("user_name")) : "";
+                fileModel.setNhnTenantName(account.getProject());
+                fileModel.setNhnPassword(nhnPassword);
+                fileModel.setNhnAuthUrl(nhnAuthUrl);
+                fileModel.setNhnUserName(nhnUserName);
+                fileModel.setNhnRegion(account.getRegion());
                 break;
             case Constants.UPPER_NCLOUD:
                 ncloudAccessKey = res != null ? String.valueOf(res.get("access_key")) : "";

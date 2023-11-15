@@ -117,7 +117,6 @@ public class TerramanProcessService {
         String cResult = "";
         String fResult = Constants.RESULT_STATUS_FAIL;
 
-
         terramanCommandModel.setCommand("3");
         terramanCommandModel.setHost(host);
         terramanCommandModel.setIdRsa(idRsa);
@@ -269,26 +268,23 @@ public class TerramanProcessService {
         String cResult = "";
         boolean connFlag = false;
         String privateKey = Constants.RSA_PRIVATE_KEY;
-        InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
 
         //Ncloud 공개키 생성
         if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
             ncloudService.createNcloudPublicKey(clusterId, provider, host, idRsa, processGb, seq, privateKey, mpSeq);
-        }
+        } else {
+            InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
+            if (instanceInfo == null) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorResult;
+            }
 
-        if(instanceInfo == null) {
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCE_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorResult;
-        }
-
-        if(StringUtils.isBlank(instanceInfo.getPrivateIp())) {
-            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_PRIVATE_IP_ERROR);
-            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
-            return errorResult;
-        }
-
-        if (!provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+            if (StringUtils.isBlank(instanceInfo.getPrivateIp())) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_PRIVATE_IP_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorResult;
+            }
 
             try {
                 terramanCommandModel.setCommand("2");
@@ -331,11 +327,11 @@ public class TerramanProcessService {
             } catch (Exception e) {
                 LOGGER.info("ssh connection fail");
             }
+
         }
-
-
         clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_SUCCESS_LOG);
         mpSeq += 1;
+
         return mpSeq;
     }
 
@@ -411,6 +407,76 @@ public class TerramanProcessService {
             clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
             return errorResult;
         }
+
+        if(instanceList.size() > 0) {
+            String username = "";
+            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+                username = TerramanConstant.NCLOUD_USER_NAME;
+            } else {
+                username = TerramanConstant.DEFAULT_USER_NAME;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("all:" + "\\n" + "  hosts:" + "\\n");
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                line = "    " + obj.getInstanceName() + ":" + "\\n"
+                        + "      ansible_host: " + obj.getPublicIp() + "\\n"
+                        + "      ip: " + obj.getPublicIp() + "\\n"
+                        + "      access_ip: " + obj.getPublicIp() + "\\n"
+                        + "      ansible_user: " + username + "\\n";
+                sb.append(line);
+            }
+
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                if( obj.getResourceName().contains("master") ) {
+                    line = "  children:" + "\\n"
+                            + "    kube_control_plane:" + "\\n"
+                            + "      hosts:" + "\\n"
+                            + "        " + obj.getInstanceName() + ":" + "\\n";
+                }
+                sb.append(line);
+            }
+
+            sb.append("    kube_node:" + "\\n" +  "      hosts:" + "\\n");
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                line = "        " + obj.getInstanceName() + ":" + "\\n";
+                sb.append(line);
+            }
+
+            for(InstanceModel obj : instanceList) {
+                String line = "";
+                if( obj.getResourceName().contains("master") ) {
+                    line = "    etcd:" + "\\n"
+                            + "      hosts:" + "\\n"
+                            + "        " + obj.getInstanceName() + ":" + "\\n";
+                }
+                sb.append(line);
+            }
+
+            sb.append("    k8s_cluster:" + "\\n" + "      children:" + "\\n" + "        kube_control_plane:" +"\\n" + "        kube_node:" +"\\n");
+            sb.append("    calico_rr:" + "\\n" + "      hosts: {}");
+
+            terramanCommandModel.setCommand("25");
+            terramanCommandModel.setHost(host);
+            terramanCommandModel.setIdRsa(idRsa);
+            terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+            terramanCommandModel.setClusterId(clusterId);
+            terramanCommandModel.setContents(sb.toString());
+            cResult = commandService.execCommandOutput(terramanCommandModel);
+            if(StringUtils.equals(Constants.RESULT_STATUS_FAIL, cResult)) {
+                clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_CREATE_CLUSTER_FILE_ERROR);
+                clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+                return errorResult;
+            }
+        } else {
+            clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.TERRAFORM_NOT_EXISTS_INSTANCES_ERROR);
+            clusterService.updateCluster(clusterId, TerramanConstant.CLUSTER_FAIL_STATUS);
+            return errorResult;
+        }
+
         // log 저장
         clusterLogService.saveClusterLog(clusterId, mpSeq, TerramanConstant.KUBESPRAY_CONFIG_LOG);
         mpSeq += 1;
@@ -477,9 +543,12 @@ public class TerramanProcessService {
         String chkCli = "";
 
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
-        List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
+
+        terramanCommandModel.setClusterId(clusterId);
+        terramanCommandModel.setCommand("17");
 
         if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+            List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
             for (int i = 0; i < ncloudPrivateKeysModel.size(); i++) {
                 if (ncloudPrivateKeysModel.get(i).getPublicIp().equals(instanceInfo.getPublicIp())) {
                     terramanCommandModel.setInstanceKey(ncloudPrivateKeysModel.get(i).getPrivateKey());
@@ -487,23 +556,34 @@ public class TerramanProcessService {
                 }
             }
             terramanCommandModel.setUserName(TerramanConstant.NCLOUD_USER_NAME);
+            chkCli = commandService.execPwdCommandOutput(terramanCommandModel);
+            LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
+
         } else {
             terramanCommandModel.setHost(instanceInfo.getPublicIp());
             terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
             terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
+            chkCli = commandService.execCommandOutput(terramanCommandModel);
+            LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
         }
-        terramanCommandModel.setClusterId(clusterId);
-        terramanCommandModel.setCommand("17");
-        chkCli = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
         terramanCommandModel.setCommand("18");
-        chkCli = commandService.execCommandOutput(terramanCommandModel);
-        LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
+        if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+            chkCli = commandService.execPwdCommandOutput(terramanCommandModel);
+            LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
+        } else {
+            chkCli = commandService.execCommandOutput(terramanCommandModel);
+            LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
+        }
 
         terramanCommandModel.setCommand("10");
         for(int i=0; i<5; i++) {
-            accountCreate = commandService.execCommandOutput(terramanCommandModel);
+            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+                accountCreate = commandService.execPwdCommandOutput(terramanCommandModel);
+            } else {
+                accountCreate = commandService.execCommandOutput(terramanCommandModel);
+            }
+
             LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(accountCreate.trim()));
 
             if( (!StringUtils.isBlank(accountCreate.trim()))
@@ -525,7 +605,12 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("11");
 
         for(int i=0; i<5; i++) {
-            accountBinding = commandService.execCommandOutput(terramanCommandModel);
+            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+                accountBinding = commandService.execPwdCommandOutput(terramanCommandModel);
+            } else {
+                accountBinding = commandService.execCommandOutput(terramanCommandModel);
+            }
+
             LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(accountBinding.trim()));
 
             if( (!StringUtils.isBlank(accountBinding.trim()))
@@ -547,7 +632,12 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("13");
 
         for(int i=0; i<5; i++) {
-            cResult = commandService.execCommandOutput(terramanCommandModel);
+            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
+                cResult = commandService.execPwdCommandOutput(terramanCommandModel);
+            } else {
+                cResult = commandService.execCommandOutput(terramanCommandModel);
+            }
+
             LOGGER.info("Service Account Token :: {}", CommonUtils.loggerReplace(cResult.trim()));
 
             if( (!StringUtils.isBlank(cResult.trim()))

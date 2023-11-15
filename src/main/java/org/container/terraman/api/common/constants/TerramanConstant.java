@@ -74,6 +74,19 @@ public class TerramanConstant {
             "}";
 
     /**
+     * nhn provider prefix 생성
+     * */
+    public static final String PREFIX_PROVIDER_NHN = "terraform {\n" +
+            "  required_version = \">= 1.0.0\"\n" +
+            "  required_providers {\n" +
+            "    openstack = {\n" +
+            "      source  = \"terraform-provider-openstack/openstack\"\n" +
+            "      version = \"~>1.42.0\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+
+    /**
      * ncloud provider prefix 생성
      * */
     public static final String PREFIX_PROVIDER_NCLOUD = "terraform {\n" +
@@ -89,11 +102,18 @@ public class TerramanConstant {
     /**
      * kubespray cluster cp-cluster-terraman-vars.sh 변경 및 실행 명령어
      * */
-    public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
-        return "echo -e \"" + contents + "\" > /home/ubuntu/cp-deployment/standalone/cp-cluster-terraman-vars.sh";
+    public static final String CLUSTER_KUBESPRAY_YAML_FILE_COMMAND(String contents) {
+        return "echo -e \"" + contents + "\" > /home/ubuntu/cp-deployment/standalone/inventory/mycluster/hosts.yaml";
     }
     public static final String KUBESPRAY_CHMOD_COMMAND = "chmod +x deploy-cp-cluster-terraman.sh";
     public static final String CLUSTER_KUBESPRAY_DEPLOY_COMMAND = "source deploy-cp-cluster-terraman.sh";
+
+    /**
+     * kubespray cluster host.yaml 생성 명령어
+     * */
+    public static final String CLUSTER_KUBESPRAY_SH_FILE_COMMAND(String contents) {
+        return "echo -e \"" + contents + "\" > /home/ubuntu/cp-deployment/standalone/cp-cluster-terraman-vars.sh";
+    }
 
     /**
      * keys 권한 변경
@@ -266,6 +286,7 @@ public class TerramanConstant {
     public static final String ACCESS_IP_V4_MSG = "access_ip_v4";
 
     public static final String FLOATINGIP_MSG= "floatingip";
+    public static final String FLOATINGIP_ASSOCIATE_MSG= "floatingip_associate";
     public static final String INSTANCE_ID_MSG= "instance_id";
     public static final String SERVER_INSTANCE_NO_MSG= "server_instance_no";
     public static final String FLOATING_IP_MSG= "floating_ip";
@@ -307,6 +328,7 @@ public class TerramanConstant {
             case "22" : switchStr = NCLOUD_PRIVATE_KEY_SED_NEW_LINE(terramanCommandModel.getClusterId()); break;
             case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
             case "24" : switchStr = COPY_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
+            case "25" : switchStr = CLUSTER_KUBESPRAY_YAML_FILE_COMMAND(terramanCommandModel.getContents()); break;
         }
         return switchStr;
     }
