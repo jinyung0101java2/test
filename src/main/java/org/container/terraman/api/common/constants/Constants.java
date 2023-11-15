@@ -28,6 +28,7 @@ public class Constants {
     public static final String UPPER_AWS = "AWS";
     public static final String UPPER_GCP = "GCP";
     public static final String UPPER_OPENSTACK = "OPENSTACK";
+    public static final String UPPER_NHN = "NHN";
     public static final String UPPER_VSPHERE = "VSPHERE";
     public static final String UPPER_NCLOUD = "NCLOUD";
     public static final String  RSA_PRIVATE_KEY= "RPK";

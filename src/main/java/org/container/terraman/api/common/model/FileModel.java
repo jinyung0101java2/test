@@ -15,6 +15,15 @@ public class FileModel {
     private String openstackRegion;
 
     /*
+     * NHN FOR TERRAFORM
+     * */
+    private String nhnTenantName;
+    private String nhnPassword;
+    private String nhnAuthUrl;
+    private String nhnUserName;
+    private String nhnRegion;
+
+    /*
      * AWS FOR TERRAFORM
      * */
     private String awsAccessKey;

@@ -79,10 +79,50 @@ public class TerramanInstanceProcess {
                     if(instances != null) {
                         for(JsonElement instance : instances) {
                             JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
-                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString();
-                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString();
+                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString(); //0f20b6ec-0d1e-4c93-9abf-b2391d29d9b3
+                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString(); //192.168.0.19
                             publicIp = getOpenstackPublicIp(compInstanceId, jsonObject, privateIp);
-                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString();
+                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString(); //cp-cluster-master
+                        }
+                    }
+                }
+            }
+        }
+        resultModel = new InstanceModel(rName, hostName, privateIp, publicIp);
+
+        return resultModel;
+    }
+
+    /**
+     * Select Instance Info Nhn
+     *
+     * @param jsonObject the jsonObject
+     * @return the InstanceModel
+     */
+    public InstanceModel getInstanceInfoNhn(JsonObject jsonObject) {
+        InstanceModel resultModel = null;
+
+        String rName = "";
+        String privateIp = "";
+        String publicIp = "";
+        String hostName = "";
+        String compInstanceId = "";
+        if((jsonObject != null) && (!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
+            for(JsonElement resource : resources) {
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                        && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.INSTANCE_MSG)
+                        && (StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG)
+                        || StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString(), TerramanConstant.MASTER_MSG_UPPER)) ) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
+                    if(instances != null) {
+                        for(JsonElement instance : instances) {
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString(); //0f20b6ec-0d1e-4c93-9abf-b2391d29d9b3
+                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString(); //192.168.0.19
+                            publicIp = getNhnPublicIp(compInstanceId, jsonObject, privateIp);
+                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString(); //cp-cluster-master
                         }
                     }
                 }
@@ -299,6 +339,44 @@ public class TerramanInstanceProcess {
     }
 
     /**
+     * Select Instances Info Nhn
+     *
+     * @param jsonObject the jsonObject
+     * @return the InstanceModel
+     */
+    public List<InstanceModel> getInstancesInfoNhn(JsonObject jsonObject) {
+        List<InstanceModel> modelList = new ArrayList<>();
+
+        String rName = "";
+        String privateIp = "";
+        String publicIp = "";
+        String hostName = "";
+        String compInstanceId = "";
+
+        if((jsonObject != null) &&(!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
+            for(JsonElement resource : resources) {
+                if(StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                        && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.INSTANCE_MSG)) {
+                    rName = resource.getAsJsonObject().get(TerramanConstant.NAME_MSG).getAsString();
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
+                    if(instances != null) {
+                        for(JsonElement instance : instances) {
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            compInstanceId = attributes.get(TerramanConstant.ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ID_MSG).getAsString();
+                            privateIp = attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ACCESS_IP_V4_MSG).getAsString();
+                            publicIp = getNhnPublicIp(compInstanceId, jsonObject, privateIp);
+                            hostName = attributes.get(TerramanConstant.NAME_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.NAME_MSG).getAsString();
+                        }
+                        modelList.add(new InstanceModel(rName, hostName, privateIp, publicIp));
+                    }
+                }
+            }
+        }
+        return modelList;
+    }
+
+    /**
      * Select Instances Info Ncloud
      *
      * @param jsonObject the jsonObject
@@ -406,6 +484,37 @@ public class TerramanInstanceProcess {
             for (JsonElement resource : resources) {
                 if (StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
                         && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.FLOATINGIP_MSG)) {
+                    JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
+                    if (instances != null) {
+                        for (JsonElement instance : instances) {
+                            JsonObject attributes = (JsonObject) instance.getAsJsonObject().get(TerramanConstant.ATTRIBUTE_MSG);
+                            String instanceId = attributes.get(TerramanConstant.INSTANCE_ID_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.INSTANCE_ID_MSG).getAsString();
+                            if (instanceId.equals(compInstanceId)) {
+                                publicIp = attributes.get(TerramanConstant.FLOATING_IP_MSG).isJsonNull() ? privateIp : attributes.get(TerramanConstant.FLOATING_IP_MSG).getAsString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return publicIp;
+    }
+
+    /**
+     * Get Nhn Public Ip
+     *
+     * @param compInstanceId the compInstanceId
+     * @param jsonObject the jsonObject
+     * @param privateIp the privateIp
+     * @return the String
+     */
+    public String getNhnPublicIp(String compInstanceId, JsonObject jsonObject, String privateIp) {
+        String publicIp = privateIp;
+        if((!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
+            JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
+            for (JsonElement resource : resources) {
+                if (StringUtils.equals(resource.getAsJsonObject().get(TerramanConstant.MODE_MSG).getAsString(), TerramanConstant.MANAGED_MSG)
+                        && StringUtils.contains(resource.getAsJsonObject().get(TerramanConstant.TYPE_MSG).getAsString(), TerramanConstant.FLOATINGIP_ASSOCIATE_MSG)) {
                     JsonArray instances = resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).isJsonNull() ? null : resource.getAsJsonObject().get(TerramanConstant.INSTANCES_MSG).getAsJsonArray();
                     if (instances != null) {
                         for (JsonElement instance : instances) {
