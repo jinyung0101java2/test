@@ -73,7 +73,7 @@ public class InstanceService {
         NcloudPrivateKeyModel resultModel = null;
 
         switch(provider.toUpperCase()) {
-            case Constants.UPPER_NCLOUD: resultModel = getNcloudPriavateKeyIfo(clusterId, host, idRsa, processGb, privateKey); break;
+            case Constants.UPPER_NCLOUD: resultModel = getNcloudPrivateKeyIfo(clusterId, host, idRsa, processGb, privateKey); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 resultModel = new NcloudPrivateKeyModel("","","");
                 break;
@@ -122,7 +122,7 @@ public class InstanceService {
         List<NcloudPrivateKeyModel> resultList = new ArrayList<>();
 
         switch (provider.toUpperCase()) {
-            case Constants.UPPER_NCLOUD: resultList = getNcloudPriavateKeysIfo(clusterId, host, idRsa, processGb); break;
+            case Constants.UPPER_NCLOUD: resultList = getNcloudPrivateKeysInfo(clusterId, host, idRsa, processGb); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
                 break;
         }
@@ -198,7 +198,7 @@ public class InstanceService {
     }
 
     /**
-     * Select Instance Info OpenStack
+     * Select Instance Info Nhn
      *
      * @param clusterId the clusterId
      * @param host the host
@@ -231,7 +231,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the InstanceModel
      */
-    private InstanceModel getInstanceInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
+    public InstanceModel getInstanceInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
         InstanceModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -258,7 +258,7 @@ public class InstanceService {
      * @param privateKey the privateKey
      * @return the NcloudPrivateKeyModel
      */
-    public NcloudPrivateKeyModel getNcloudPriavateKeyIfo(String clusterId, String host, String idRsa, String processGb, String privateKey) {
+    public NcloudPrivateKeyModel getNcloudPrivateKeyIfo(String clusterId, String host, String idRsa, String processGb, String privateKey) {
         NcloudPrivateKeyModel resultModel = null;
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -380,7 +380,7 @@ public class InstanceService {
      * @return the List<InstanceModel>
      */
 
-    private List<InstanceModel> getInstancesInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
+    public List<InstanceModel> getInstancesInfoNcloud(String clusterId, String host, String idRsa, String processGb) {
         List<InstanceModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)
@@ -405,7 +405,7 @@ public class InstanceService {
      * @param processGb the processGb
      * @return the List<NcloudPrivateKeyModel>
      */
-    public List<NcloudPrivateKeyModel> getNcloudPriavateKeysIfo(String clusterId, String host, String idRsa, String processGb) {
+    public List<NcloudPrivateKeyModel> getNcloudPrivateKeysInfo(String clusterId, String host, String idRsa, String processGb) {
         List<NcloudPrivateKeyModel> modelList = new ArrayList<>();
         if(!StringUtils.isBlank(processGb) && StringUtils.equals(processGb.toUpperCase(), TerramanConstant.CONTAINER_MSG)) {
             commandService.sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(clusterId)

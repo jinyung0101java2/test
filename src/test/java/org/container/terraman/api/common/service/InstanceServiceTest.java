@@ -2,6 +2,7 @@ package org.container.terraman.api.common.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.container.terraman.api.common.model.NcloudPrivateKeyModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,11 +31,15 @@ public class InstanceServiceTest {
     private static final String TEST_ID_RSA = "testIdRsa";
     private static final String TEST_PROVIDER = "testProvider";
     private static final String TEST_PROCESS_GB = "testProcessGb";
+    private static final String TEST_PRIVATE_KEY = "testPrivateKey";
+    private static final String TEST_INSTANCE_NO = "1978956";
 
     private static final String TEST_AWS = "AWS";
     private static final String TEST_OPENSTCK = "OPENSTACK";
     private static final String TEST_GCP = "GCP";
     private static final String TEST_VSPHERE = "VSPHERE";
+    private static final String TEST_NCLOUD = "NCLOUD";
+    private static final String TEST_NHN = "NHN";
 
     private static final String TEST_RESOURCE_NAME = "testResourceName";
     private static final String TEST_INSTANCE_NAME = "testInstanceName";
@@ -56,6 +61,10 @@ public class InstanceServiceTest {
     private List<InstanceModel> instancesResultModel;
     private JsonObject readStateFile;
     private JsonObject jsonObject;
+    private NcloudPrivateKeyModel ncloudPrivateKeyModel;
+    private NcloudPrivateKeyModel ncloudPrivateKeyResultModel;
+    private List<NcloudPrivateKeyModel> ncloudPrivateKeysModel;
+    private List<NcloudPrivateKeyModel> ncloudPrivateKeysResultModel;
 
     @Mock
     private TerramanInstanceProcess terramanInstanceProcess;
@@ -77,6 +86,13 @@ public class InstanceServiceTest {
         instanceModel = new InstanceModel(TEST_RESOURCE_NAME, TEST_INSTANCE_NAME, TEST_PRIVATE_IP, TEST_PUBLIC_IP);
         instancesModel = new ArrayList<>();
         instancesModel.add(instanceModel);
+
+        ncloudPrivateKeyResultModel = new NcloudPrivateKeyModel("","","");
+        ncloudPrivateKeysResultModel = new ArrayList<>();
+
+        ncloudPrivateKeyModel = new NcloudPrivateKeyModel(TEST_INSTANCE_NO, TEST_PRIVATE_KEY, TEST_PUBLIC_IP);
+        ncloudPrivateKeysModel = new ArrayList<>();
+        ncloudPrivateKeysModel.add(ncloudPrivateKeyModel);
 
         readStateFile = new JsonObject();
         jsonObject = new JsonObject();
@@ -574,6 +590,30 @@ public class InstanceServiceTest {
     }
 
     @Test
+    public void getInstanceTestOfNcloud() {
+        when(instanceService.getInstanceInfoNcloud(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instanceModel);
+
+        InstanceModel result = instanceServiceMock.getInstance(TEST_CLUSTER_ID, TEST_NCLOUD, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+        assertEquals(instanceResultModel, result);
+    }
+
+    @Test
+    public void getInstanceTestOfNhn() {
+        when(instanceService.getInstanceInfoNhn(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instanceModel);
+
+        InstanceModel result = instanceServiceMock.getInstance(TEST_CLUSTER_ID, TEST_NHN, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+        assertEquals(instanceResultModel, result);
+    }
+
+    @Test
+    public void getNcloudPrivateKeyTest() {
+        when(instanceService.getNcloudPrivateKeyIfo(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB, TEST_PRIVATE_KEY)).thenReturn(ncloudPrivateKeyModel);
+
+        NcloudPrivateKeyModel result = instanceServiceMock.getNcloudPrivateKey(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER, TEST_PRIVATE_KEY);
+        assertEquals(ncloudPrivateKeyResultModel, result);
+    }
+
+    @Test
     public void getInstancesTestOfDefault() {
         List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
         assertEquals(instancesResultModel, result);
@@ -582,42 +622,51 @@ public class InstanceServiceTest {
     @Test
     public void getInstancesTestOfAws() {
         when(instanceService.getInstancesInfoAws(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
-
         List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_AWS, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
-
         assertEquals(instancesResultModel, result);
     }
 
     @Test
     public void getInstancesTestOfOpenstack() {
-        when(instanceService.getInstancesInfoGcp()).thenReturn(instancesModel);
-
+        when(instanceService.getInstancesInfoOpenstack(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
         List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_OPENSTCK, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
-
         assertEquals(instancesResultModel, result);
     }
 
     @Test
     public void getInstancesTestOfGcp() {
-        when(instanceService.getInstancesInfoAws(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
         when(instanceService.getInstancesInfoGcp()).thenReturn(instancesModel);
-        when(instanceService.getInstancesInfoVSphere()).thenReturn(instancesModel);
-        when(instanceService.getInstancesInfoOpenstack(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
-
         List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_GCP, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
         assertEquals(instancesResultModel, result);
     }
 
     @Test
     public void getInstancesTestOfVsphere() {
-        when(instanceService.getInstancesInfoAws(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
-        when(instanceService.getInstancesInfoGcp()).thenReturn(instancesModel);
         when(instanceService.getInstancesInfoVSphere()).thenReturn(instancesModel);
-        when(instanceService.getInstancesInfoOpenstack(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
-
         List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_VSPHERE, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
-
         assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getInstancesTestOfNcloud() {
+        when(instanceService.getInstancesInfoNcloud(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
+        List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_NCLOUD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+        assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getInstancesTestOfNhn() {
+        when(instanceService.getInstancesInfoNhn(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(instancesModel);
+        List<InstanceModel> result = instanceServiceMock.getInstances(TEST_CLUSTER_ID, TEST_NHN, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+        assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getNcloudPrivateKeysTest() {
+        when(instanceService.getNcloudPrivateKeysInfo(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(ncloudPrivateKeysModel);
+
+        List<NcloudPrivateKeyModel> result = instanceServiceMock.getNcloudPrivateKeys(TEST_CLUSTER_ID, TEST_NCLOUD, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+        assertEquals(ncloudPrivateKeysResultModel, result);
     }
 
     @Test
@@ -657,6 +706,39 @@ public class InstanceServiceTest {
     }
 
     @Test
+    public void getInstanceInfoNcloudTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstanceInfoNcloud(jsonObject)).thenReturn(instanceResultModel);
+
+        InstanceModel result = instanceServiceMock.getInstanceInfoNcloud(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+
+        assertEquals(instanceResultModel, result);
+    }
+
+    @Test
+    public void getInstanceInfoNhnTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstanceInfoNhn(jsonObject)).thenReturn(instanceResultModel);
+
+        InstanceModel result = instanceServiceMock.getInstanceInfoNhn(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+
+        assertEquals(instanceResultModel, result);
+    }
+
+    @Test
+    public void getNcloudPrivateKeyIfoTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getNcloudRsaPrivateKeyInfo(jsonObject)).thenReturn(ncloudPrivateKeyModel);
+
+        NcloudPrivateKeyModel result = terramanInstanceProcess.getNcloudRsaPrivateKeyInfo(jsonObject);
+
+        assertEquals(ncloudPrivateKeyModel, result);
+    }
+
+    @Test
     public void getInstancesInfoAwsTest() {
         doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
         when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
@@ -688,6 +770,39 @@ public class InstanceServiceTest {
     @Test
     public void getInstancesInfoVsphereTest() {
         List<InstanceModel> result = instanceServiceMock.getInstancesInfoVSphere();
+
+        assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getInstancesInfoNcloudTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstancesInfoNcloud(jsonObject)).thenReturn(instancesResultModel);
+
+        List<InstanceModel> result = instanceServiceMock.getInstancesInfoNcloud(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+
+        assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getInstancesInfoNhnTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getInstancesInfoNhn(jsonObject)).thenReturn(instancesResultModel);
+
+        List<InstanceModel> result = instanceServiceMock.getInstancesInfoNhn(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
+
+        assertEquals(instancesResultModel, result);
+    }
+
+    @Test
+    public void getNcloudPrivateKeysInfoTest() {
+        doNothing().when(commandService).sshFileDownload(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID), TerramanConstant.TERRAFORM_STATE_FILE_PATH(TerramanConstant.CLUSTER_STATE_DIR(TEST_CLUSTER_ID)), TerramanConstant.TERRAFORM_STATE_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
+        when(instanceService.readStateFile(TEST_CLUSTER_ID, TEST_PROCESS_GB)).thenReturn(jsonObject);
+        when(terramanInstanceProcess.getNcloudPrivateKeysInfo(jsonObject)).thenReturn(ncloudPrivateKeysModel);
+
+        List<NcloudPrivateKeyModel> result = instanceServiceMock.getNcloudPrivateKeysInfo(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_CONTAINER);
 
         assertEquals(instancesResultModel, result);
     }
