@@ -360,11 +360,11 @@ public class TerramanProcessService {
             for(InstanceModel obj : instanceList) {
                 String line = "";
                 if( obj.getResourceName().contains("master") ) {
-                    line = "export MASTER_NODE_HOSTNAME=" + obj.getInstanceName()
+                    line = "export MASTER1_NODE_HOSTNAME=" + obj.getInstanceName()
                             + "\\n"
-                            + "export MASTER_NODE_PUBLIC_IP=" + obj.getPublicIp()
+                            + "export MASTER1_NODE_PUBLIC_IP=" + obj.getPublicIp()
                             + "\\n"
-                            + "export MASTER_NODE_PRIVATE_IP=" + obj.getPrivateIp();
+                            + "export MASTER1_NODE_PRIVATE_IP=" + obj.getPrivateIp();
                 }
                 sb.append(line);
             }
