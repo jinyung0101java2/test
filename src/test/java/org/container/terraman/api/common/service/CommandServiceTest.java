@@ -24,6 +24,7 @@ public class CommandServiceTest {
     private static final String TEST_CLUSTER_ID = "testClusterId";
     private static final String TEST_HOST = "1.1.1.1";
     private static final String TEST_ID_RSA = "id_rsa";
+    private static final String TEST_INSTANCE_KEY = "u8kfor!LDD&3od";
     private static final String TEST_DIR = "/";
     private static final String TEST_COMMAND = "pwd";
     private static final String TEST_LOCAL_DIR = "/";
@@ -71,6 +72,16 @@ public class CommandServiceTest {
     }
 
     @Test
+    public void sshPwdFileUploadTest() {
+        when(commandProcess.sshFileUpload(TEST_DIR, TEST_HOST, TEST_INSTANCE_KEY, fileMock, TerramanConstant.NCLOUD_USER_NAME)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        String result = commandService.sshFileUpload(TEST_DIR, TEST_HOST, TEST_INSTANCE_KEY, fileMock, TerramanConstant.NCLOUD_USER_NAME);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+
+    @Test
     public void sshFileDownloadTest() {
         doNothing().when(commandProcess).sshFileDownload(TEST_DIR, TEST_LOCAL_DIR, TEST_FILE_NAME, TEST_HOST, TEST_ID_RSA, TerramanConstant.DEFAULT_USER_NAME);
 
@@ -79,6 +90,16 @@ public class CommandServiceTest {
 
     @Test
     public void getSSHResponseTest() {
+
+        when(commandProcess.getSSHResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+
+        String result = commandService.getSSHResponse(terramanCommandModel);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void getSSHPwdResponseTest() {
 
         when(commandProcess.getSSHResponse(terramanCommandModel)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
 
@@ -108,6 +129,24 @@ public class CommandServiceTest {
 
     @Test
     public void  execCommandOutputTest() {
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
+
+        String result = commandService.execCommandOutput(terramanCommandModel);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void  execPwdCommandOutputSShTest() {
+        doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getSSHResponse(terramanCommandModel);
+
+        String result = commandService.execCommandOutput(terramanCommandModel);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void  execPwdCommandOutputTest() {
         doReturn(Constants.RESULT_STATUS_SUCCESS).when(commandServiceMock).getResponse(terramanCommandModel);
 
         String result = commandService.execCommandOutput(terramanCommandModel);

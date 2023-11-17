@@ -42,6 +42,8 @@ public class TfFileServiceTest {
     private static final String TEST_OPENSTACK = "OPENSTACK";
     private static final String TEST_GCP = "GCP";
     private static final String TEST_VSPHERE = "VSPHERE";
+    private static final String TEST_NCLOUD = "NCLOUD";
+    private static final String TEST_NHN = "NHN";
 
     private static File fileMock;
     private static FileModel fileModel = null;
@@ -78,6 +80,7 @@ public class TfFileServiceTest {
         accountModel.setProject("testProject");
         accountModel.setProvider("testProvider");
         accountModel.setRegion("testRegion");
+        accountModel.setSite("testSite");
 
         fileModel = new FileModel();
         // AWS
@@ -96,6 +99,19 @@ public class TfFileServiceTest {
         fileModel.setVSpherePassword("testPassword");
         fileModel.setVSphereServer("testServer");
         fileModel.setVSphereUser("testUser");
+
+        // Ncloud
+        fileModel.setNcloudAccessKey("testAccessKey");
+        fileModel.setNcloudSecretKey("testSecretKey");
+        fileModel.setNcloudRegion("testRegion");
+        fileModel.setNcloudSite("testSite");
+
+        //Nhn
+        fileModel.setNhnUserName("testUserName");
+        fileModel.setNhnPassword("testPassword");
+        fileModel.setNhnAuthUrl("testAuthUrl");
+        fileModel.setNhnTenantName("testTenantName");
+        fileModel.setNhnRegion("testRegion");
 
         terramanCommandModel = new TerramanCommandModel();
         terramanCommandModel.setCommand("14");
@@ -188,6 +204,41 @@ public class TfFileServiceTest {
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
 
         String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_GCP, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderFileNcloudTest() {
+        HashMap response = new HashMap();
+        response.put("access_key", "ncloudAccessKey");
+        response.put("secret_key", "ncloudsecretKey");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
+
+        String result = tfFileService.createProviderFile(TEST_CLUSTER_ID, TEST_NCLOUD, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
+
+        assertEquals(Constants.RESULT_STATUS_FAIL, result);
+    }
+
+    @Test
+    public void createProviderFileNhnTest() {
+        HashMap response = new HashMap();
+        response.put("password", "nhnPassword");
+        response.put("auth_url", "nhnAuthUrl");
+        response.put("user_name", "nhnUserName");
+
+        when(propertyService.getVaultBase()).thenReturn(TEST_STR);
+        doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
+        when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
+        when(terramanFileProcess.createTfFileDiv(fileModel, TEST_CLUSTER_ID, TEST_PROCESS_GB, TEST_PROVIDER)).thenReturn(Constants.RESULT_STATUS_SUCCESS);
+        when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);
+
+        String result = tfFileService.createProviderFile("", TEST_NHN, TEST_SEQ, TEST_POD, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB);
 
         assertEquals(Constants.RESULT_STATUS_FAIL, result);
     }

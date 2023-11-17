@@ -90,9 +90,9 @@ public class NcloudService {
         // Ncloud Instance RootPassword 조회
         for (int i = 0; i < ncloudPrivateKeysModel.size(); i++) {
             String instanceNo = ncloudPrivateKeysModel.get(i).getInstanceNo();
-            String instanceprivateKey = ncloudPrivateKeysModel.get(i).getPrivateKey();
+            String instancePrivateKey = ncloudPrivateKeysModel.get(i).getPrivateKey();
             ncloudInstanceKeyInfoModel.setInstance_no(instanceNo);
-            ncloudInstanceKeyInfoModel.setPrivate_key(instanceprivateKey);
+            ncloudInstanceKeyInfoModel.setPrivate_key(instancePrivateKey);
             Object InstanceKey = commonService.sendNcloudJson(reqUrl, HttpMethod.PATCH, commonService.toJson(ncloudInstanceKeyInfoModel), Object.class);
             NcloudInstanceKeyModel ncloudInstanceKeyModel = commonService.setResultObject(InstanceKey, NcloudInstanceKeyModel.class);
 
