@@ -422,8 +422,8 @@ public class TerramanProcessService {
                 String line = "";
                 line = "    " + obj.getInstanceName() + ":" + "\\n"
                         + "      ansible_host: " + obj.getPublicIp() + "\\n"
-                        + "      ip: " + obj.getPublicIp() + "\\n"
-                        + "      access_ip: " + obj.getPublicIp() + "\\n"
+                        + "      ip: " + obj.getPrivateIp() + "\\n"
+                        + "      access_ip: " + obj.getPrivateIp() + "\\n"
                         + "      ansible_user: " + username + "\\n";
                 sb.append(line);
             }
