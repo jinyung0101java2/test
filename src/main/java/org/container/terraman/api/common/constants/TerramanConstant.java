@@ -32,6 +32,9 @@ public class TerramanConstant {
     public static final String CLUSTER_PRIVATE_KEY(String clusterName) {
         return "/home/" + CUSTOM_USER_NAME + "/.ssh/" + clusterName + "-key";
     }
+    public static final String NCLOUD_PRIVATE_KEY(String clusterName) {
+        return "/tmp/terraform/" + clusterName + "/" + clusterName + "-key";
+    }
     /*********************************************************************************************************/
 
     /**
@@ -131,14 +134,14 @@ public class TerramanConstant {
      * keys 문자 치환
      * */
     public static final String NCLOUD_PRIVATE_KEY_SED_QUOTES_REPLACE(String clusterId) {
-        return "sed -i 's/\"//g' /tmp/terraform/ncp-cluster/" + clusterId + "-key";
+        return "sed -i 's/\"//g' /tmp/terraform/"+ clusterId + "/" + clusterId + "-key";
     }
 
     /**
      * keys 문자 줄바꿈
      * */
     public static final String NCLOUD_PRIVATE_KEY_SED_NEW_LINE(String clusterId){
-        return "sed -i 's/,/\\n/g' /tmp/terraform/ncp-cluster/" + clusterId + "-key";
+        return "sed -i 's/,/\\n/g' /tmp/terraform/"+ clusterId + "/" + clusterId + "-key";
     }
 
     /**
