@@ -551,38 +551,26 @@ public class TerramanProcessService {
             List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
             for (int i = 0; i < ncloudPrivateKeysModel.size(); i++) {
                 if (ncloudPrivateKeysModel.get(i).getPublicIp().equals(instanceInfo.getPublicIp())) {
-                    terramanCommandModel.setInstanceKey(ncloudPrivateKeysModel.get(i).getPrivateKey());
                     terramanCommandModel.setHost(ncloudPrivateKeysModel.get(i).getPublicIp());
                 }
             }
             terramanCommandModel.setUserName(TerramanConstant.NCLOUD_USER_NAME);
-            chkCli = commandService.execPwdCommandOutput(terramanCommandModel);
-            LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
-
+            terramanCommandModel.setIdRsa(TerramanConstant.NCLOUD_PRIVATE_KEY(clusterName));
         } else {
             terramanCommandModel.setHost(instanceInfo.getPublicIp());
             terramanCommandModel.setIdRsa(TerramanConstant.CLUSTER_PRIVATE_KEY(clusterName));
             terramanCommandModel.setUserName(TerramanConstant.DEFAULT_USER_NAME);
-            chkCli = commandService.execCommandOutput(terramanCommandModel);
-            LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
         }
+        chkCli = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
         terramanCommandModel.setCommand("18");
-        if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
-            chkCli = commandService.execPwdCommandOutput(terramanCommandModel);
-            LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
-        } else {
-            chkCli = commandService.execCommandOutput(terramanCommandModel);
-            LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
-        }
+        chkCli = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
 
         terramanCommandModel.setCommand("10");
         for(int i=0; i<5; i++) {
-            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
-                accountCreate = commandService.execPwdCommandOutput(terramanCommandModel);
-            } else {
-                accountCreate = commandService.execCommandOutput(terramanCommandModel);
-            }
+            accountCreate = commandService.execCommandOutput(terramanCommandModel);
 
             LOGGER.info("Account Create :: {}", CommonUtils.loggerReplace(accountCreate.trim()));
 
@@ -605,11 +593,7 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("11");
 
         for(int i=0; i<5; i++) {
-            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
-                accountBinding = commandService.execPwdCommandOutput(terramanCommandModel);
-            } else {
-                accountBinding = commandService.execCommandOutput(terramanCommandModel);
-            }
+            accountBinding = commandService.execCommandOutput(terramanCommandModel);
 
             LOGGER.info("Account Binding :: {}", CommonUtils.loggerReplace(accountBinding.trim()));
 
@@ -632,11 +616,7 @@ public class TerramanProcessService {
         terramanCommandModel.setCommand("13");
 
         for(int i=0; i<5; i++) {
-            if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
-                cResult = commandService.execPwdCommandOutput(terramanCommandModel);
-            } else {
-                cResult = commandService.execCommandOutput(terramanCommandModel);
-            }
+            cResult = commandService.execCommandOutput(terramanCommandModel);
 
             LOGGER.info("Service Account Token :: {}", CommonUtils.loggerReplace(cResult.trim()));
 
