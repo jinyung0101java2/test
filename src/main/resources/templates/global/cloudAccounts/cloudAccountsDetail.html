@@ -73,6 +73,8 @@
                     document.getElementById('cloudAccountDetailName').value = data.name;
                     document.getElementById('cloudAccountDetailProvider').value = data.provider;
 
+
+
                     accountInfo = data;
 
                     var html = ``;
@@ -123,8 +125,46 @@
                             document.getElementById('cloudAccountOPENSTACKPassword').value = MASKED_DATA;
                             document.getElementById('cloudAccountOPENSTACKUserName').value = MASKED_DATA;
                             break;
+                        case 'NHN':
+                            html += `<tr><th scope="row" class="left">Tenant ID</th><td class="left box">
+                                    <input class="left" id="cloudAccountNHNTenantId" type="password" readonly>
+                                </td></tr>`;
+                            html +=  `<tr><th scope="row" class="left">Region</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
+                                </td></tr>`;
+                            html +=  `<tr><th scope="row" class="left">Auth URL</th><td class="left box">
+                                    <input class="left" id="cloudAccountNHNURL" type="password" readonly>
+                                </td></tr>`;
+                            html += `<tr><th scope="row" class="left">UserName</th><td class="left box">
+                                    <input class="left" id="cloudAccountNHNUserName" type="password" readonly>
+                                </td></tr>`;
+                            html +=  `<tr><th scope="row" class="left">Password</th><td class="left box">
+                                    <input class="left" id="cloudAccountNHNPassword" type="password" readonly>
+                                </td></tr>`;
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountNHNTenantId').value = MASKED_DATA;
+                            document.getElementById('cloudAccountDetailRegion').value = data.region;
+                            document.getElementById('cloudAccountNHNURL').value = MASKED_DATA;
+                            document.getElementById('cloudAccountNHNUserName').value = MASKED_DATA;
+                            document.getElementById('cloudAccountNHNPassword').value = MASKED_DATA;
+                            break;
+                        case 'NAVER' :
+                            html += `<tr><th scope="row" class="left">Region</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
+                                </td></tr>`;
+                            html += `<tr><th scope="row" class="left">Access-Key</th><td class="left box">
+                                    <input class="left" id="cloudAccountNAVERAccessKey" type="password" readonly>
+                                </td></tr>`;
+                            html += `<tr><th scope="row" class="left">Secret-Key</th><td class="left">
+                                    <input class="left" id="cloudAccountNAVERSecretKey" type="password" readonly>
+                                </td></tr>`;
+                            func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountDetailRegion').value = data.region;
+                            document.getElementById('cloudAccountNAVERAccessKey').value = MASKED_DATA;
+                            document.getElementById('cloudAccountNAVERSecretKey').value = MASKED_DATA;
+                            break;
                         default:
-                            //FIXME! Error 처리
+                        //FIXME! Error 처리
                     }
 
                     html = `<tr><th scope="row" class="left">Created</th><td class="left" id="created"></td></tr>`;
@@ -136,14 +176,14 @@
 
                 event(){
                     if(document.getElementById('delete')) {
-                    document.getElementById('delete').addEventListener('click', () => {
-                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, cloudAccountsDetail.delete);
-                }, false);}
+                        document.getElementById('delete').addEventListener('click', () => {
+                            func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, cloudAccountsDetail.delete);
+                        }, false);}
 
                     if(document.getElementById('modify')) {
-                    document.getElementById('modify').addEventListener('click', () => {
-                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, cloudAccountsDetail.modify);
-                }, false);}
+                        document.getElementById('modify').addEventListener('click', () => {
+                            func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, cloudAccountsDetail.modify);
+                        }, false);}
                 },
 
                 modify(){

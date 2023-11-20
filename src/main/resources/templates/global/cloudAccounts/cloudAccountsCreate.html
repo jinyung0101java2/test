@@ -19,7 +19,7 @@
                         <dt><label for="name">Name</label></dt>
                         <dd>
                             <input id="name" type="text" th:placeholder="#{M0839}"/>
-<!--        FIXME, placeHolder 문구                    -->
+                            <!--        FIXME, placeHolder 문구                    -->
                         </dd>
                     </dl>
                     <dl>
@@ -122,11 +122,35 @@
                                     "auth_url": document.getElementById('auth_url').value,
                                     "password": document.getElementById('password').value,
                                     "user_name" : document.getElementById('user_name').value
-                                    }
+                                }
+                            };
+                            break;
+                        case 'NHN':
+                            createName = {
+                                "resourceName": document.getElementById('name').value,
+                                "providerType": providerType,
+                                "region": document.getElementById('region').value,
+                                "tenant_id" : document.getElementById('tenant_id').value,
+                                "providerInfo" : {
+                                    "auth_url" : document.getElementById('auth_url').value,
+                                    "user_name" : document.getElementById('user_name').value,
+                                    "password" : document.getElementById('password').value
+                                },
+                            };
+                            break;
+                        case 'NAVER':
+                            createName = {
+                                "resourceName": document.getElementById('name').value,
+                                "providerType": providerType,
+                                "region": document.getElementById('region').value,
+                                "providerInfo": {
+                                    "accessKey": document.getElementById('accessKey').value,
+                                    "secretKey": document.getElementById('secretKey').value
+                                }
                             };
                             break;
                         default:
-                            //FIXME! error 처리.
+                        //FIXME! error 처리.
 
 
                     }
@@ -141,48 +165,51 @@
             };
             createCloudAccounts.init();
         };
-    function changeProviderSelect() {
-        func.removeHtml(document.getElementById('providerInfo'));
-        let html = ``;
-        let provider = document.querySelector('#provider > option:checked').value;
-        let values = info.get(provider);
-        if (provider === 'GCP') {
-            html += `<dl><dt><label for="jsonKey">jsonKey</label></dt><dd><input id="jsonKey" type="file" accept="application/json" /></dd></dl>`;
-            html += `<dl><dt><label for="projectName">projectName</label></dt><dd><input id="projectName" type="text" /></dd></dl>`;
-        }
-        else {
-            for (let key of Object.keys(values)) {
-                html += `<dl><dt><label for="${key}">${key}</label></dt><dd><input id="${key}" type="text" /></dd></dl>`;
+        function changeProviderSelect() {
+            func.removeHtml(document.getElementById('providerInfo'));
+            let html = ``;
+            let provider = document.querySelector('#provider > option:checked').value;
+            let values = info.get(provider);
+            if (provider === 'GCP') {
+                html += `<dl><dt><label for="jsonKey">jsonKey</label></dt><dd><input id="jsonKey" type="file" accept="application/json" /></dd></dl>`;
+                html += `<dl><dt><label for="projectName">projectName</label></dt><dd><input id="projectName" type="text" /></dd></dl>`;
             }
-        }
-        if(provider === 'OPENSTACK') {
-            html += `<dl><dt><label for="project">project</label></dt><dd><input id="project" type="text" /></dd></dl>`;
-        }
-        html += `<dl><dt><label for="region">region</label></dt><dd><input id="region" type="text" /></dd></dl>`;
-        func.appendHtml(document.getElementById('providerInfo'), html, 'dl');
-        if (provider === 'GCP') {
-            document.getElementById('jsonKey').addEventListener('change', onChange);
+            else {
+                for (let key of Object.keys(values)) {
+                    html += `<dl><dt><label for="${key}">${key}</label></dt><dd><input id="${key}" type="text" /></dd></dl>`;
+                }
+            }
+            if(provider === 'OPENSTACK') {
+                html += `<dl><dt><label for="project">project</label></dt><dd><input id="project" type="text" /></dd></dl>`;
+            }
+            if(provider === 'NHN') {
+                html += `<dl><dt><label for="tenant_id">tenant_id</label></dt><dd><input id="tenant_id" type="text" /></dd></dl>`;
+            }
+            html += `<dl><dt><label for="region">region</label></dt><dd><input id="region" type="text" /></dd></dl>`;
+            func.appendHtml(document.getElementById('providerInfo'), html, 'dl');
+            if (provider === 'GCP') {
+                document.getElementById('jsonKey').addEventListener('change', onChange);
+            }
+
         }
 
-    }
-
-    function onChange(event) {
-        let reader = new FileReader();
-        reader.onload = onReaderLoad;
-        providerInfo = "";
-        let file = event.target.files[0];
-        if (file.type && !file.type.endsWith('json')) {
-            func.alertPopup('ERROR', MSG_INVALID_FORMAT, false, MSG_CLOSE, true);
-            return; //FIXME! Alert
+        function onChange(event) {
+            let reader = new FileReader();
+            reader.onload = onReaderLoad;
+            providerInfo = "";
+            let file = event.target.files[0];
+            if (file.type && !file.type.endsWith('json')) {
+                func.alertPopup('ERROR', MSG_INVALID_FORMAT, false, MSG_CLOSE, true);
+                return; //FIXME! Alert
+            }
+            reader.readAsText(file);
         }
-        reader.readAsText(file);
-    }
 
-    function onReaderLoad(event){
-        providerInfo = JSON.parse(event.target.result);
-        //FIXME!!, CHECK
+        function onReaderLoad(event){
+            providerInfo = JSON.parse(event.target.result);
+            //FIXME!!, CHECK
 
-    }
+        }
 
     </script>
 </th:block>
