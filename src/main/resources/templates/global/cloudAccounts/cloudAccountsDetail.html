@@ -149,6 +149,9 @@
                             document.getElementById('cloudAccountNHNPassword').value = MASKED_DATA;
                             break;
                         case 'NAVER' :
+                            html += `<tr><th scope="row" class="left">site</th><td class="left">
+                                    <input class="left" id="cloudAccountNAVERSite" type="password" readonly>
+                                </td></tr>`;
                             html += `<tr><th scope="row" class="left">Region</th><td class="left box">
                                     <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
                                 </td></tr>`;
@@ -159,6 +162,7 @@
                                     <input class="left" id="cloudAccountNAVERSecretKey" type="password" readonly>
                                 </td></tr>`;
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+                            document.getElementById('cloudAccountNAVERSite').value = MASKED_DATA;
                             document.getElementById('cloudAccountDetailRegion').value = data.region;
                             document.getElementById('cloudAccountNAVERAccessKey').value = MASKED_DATA;
                             document.getElementById('cloudAccountNAVERSecretKey').value = MASKED_DATA;
