@@ -4,8 +4,7 @@ spring:
   cloud:
     vault:
       scheme: http
-      host: ${VAULT_IP}
-      port: ${VAULT_PORT}
+      uri: ${VAULT_URL}
       authentication: APPROLE
       kv:
         enabled: true
@@ -43,7 +42,7 @@ ncloud:
   instance:
     password:
       api:
-        url: "http://175.45.205.209:31090"
+        url: ${ROOT_PASSWORD_SERVER_URL}
 
 ---
 spring:
