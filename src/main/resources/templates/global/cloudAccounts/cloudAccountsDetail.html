@@ -126,8 +126,8 @@
                             document.getElementById('cloudAccountOPENSTACKUserName').value = MASKED_DATA;
                             break;
                         case 'NHN':
-                            html += `<tr><th scope="row" class="left">Tenant ID</th><td class="left box">
-                                    <input class="left" id="cloudAccountNHNTenantId" type="password" readonly>
+                            html += `<tr><th scope="row" class="left">Project</th><td class="left box">
+                                    <input class="left" id="cloudAccountDetailProject" type="password" readonly>
                                 </td></tr>`;
                             html +=  `<tr><th scope="row" class="left">Region</th><td class="left box">
                                     <input class="left" id="cloudAccountDetailRegion" type="text" readonly>
@@ -135,18 +135,18 @@
                             html +=  `<tr><th scope="row" class="left">Auth URL</th><td class="left box">
                                     <input class="left" id="cloudAccountNHNURL" type="password" readonly>
                                 </td></tr>`;
-                            html += `<tr><th scope="row" class="left">UserName</th><td class="left box">
-                                    <input class="left" id="cloudAccountNHNUserName" type="password" readonly>
-                                </td></tr>`;
                             html +=  `<tr><th scope="row" class="left">Password</th><td class="left box">
                                     <input class="left" id="cloudAccountNHNPassword" type="password" readonly>
                                 </td></tr>`;
+                            html += `<tr><th scope="row" class="left">UserName</th><td class="left box">
+                                    <input class="left" id="cloudAccountNHNUserName" type="password" readonly>
+                                </td></tr>`;
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
-                            document.getElementById('cloudAccountNHNTenantId').value = MASKED_DATA;
+                            document.getElementById('cloudAccountDetailProject').value = data.project;
                             document.getElementById('cloudAccountDetailRegion').value = data.region;
                             document.getElementById('cloudAccountNHNURL').value = MASKED_DATA;
-                            document.getElementById('cloudAccountNHNUserName').value = MASKED_DATA;
                             document.getElementById('cloudAccountNHNPassword').value = MASKED_DATA;
+                            document.getElementById('cloudAccountNHNUserName').value = MASKED_DATA;
                             break;
                         case 'NAVER' :
                             html += `<tr><th scope="row" class="left">site</th><td class="left">
