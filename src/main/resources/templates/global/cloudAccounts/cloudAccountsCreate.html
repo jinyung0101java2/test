@@ -130,11 +130,11 @@
                                 "resourceName": document.getElementById('name').value,
                                 "providerType": providerType,
                                 "region": document.getElementById('region').value,
-                                "tenant_id" : document.getElementById('tenant_id').value,
+                                "project" : document.getElementById('project').value,
                                 "providerInfo" : {
                                     "auth_url" : document.getElementById('auth_url').value,
-                                    "user_name" : document.getElementById('user_name').value,
-                                    "password" : document.getElementById('password').value
+                                    "password" : document.getElementById('password').value,
+                                    "user_name" : document.getElementById('user_name').value
                                 },
                             };
                             break;
@@ -184,7 +184,7 @@
                 html += `<dl><dt><label for="project">project</label></dt><dd><input id="project" type="text" /></dd></dl>`;
             }
             if(provider === 'NHN') {
-                html += `<dl><dt><label for="tenant_id">tenant_id</label></dt><dd><input id="tenant_id" type="text" /></dd></dl>`;
+                html += `<dl><dt><label for="project">project</label></dt><dd><input id="project" type="text" /></dd></dl>`;
             }
             if(provider === 'NAVER') {
                 html += `<dl><dt><label for="site">site</label></dt><dd><input id="site" type="text" /></dd></dl>`;
