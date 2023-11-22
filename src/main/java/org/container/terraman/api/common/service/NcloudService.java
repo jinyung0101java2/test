@@ -71,7 +71,9 @@ public class NcloudService {
         path = path + provider.toUpperCase() + Constants.DIV + seq;
         HashMap<String, Object> res = vaultService.read(path, HashMap.class);
         AccountModel account = accountService.getAccountInfo(seq);
-        String reqUrl = propertyService.getNcloudInstancePasswordApiUrl() + Constants.NCLOUD_INSTANCE_PASSWORD_API_PATH;
+//        String reqUrl = propertyService.getNcloudInstancePasswordApiUrl() + Constants.NCLOUD_INSTANCE_PASSWORD_API_PATH;
+        String reqUrl = "";
+
         List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
         NcloudAuthKeyModel ncloudAuthKeyModel = new NcloudAuthKeyModel("", "");
         NcloudInstanceKeyInfoModel ncloudInstanceKeyInfoModel = new NcloudInstanceKeyInfoModel("", "", "", "", ncloudAuthKeyModel);
