@@ -159,7 +159,7 @@ public class NcloudServiceTest {
         when(propertyService.getVaultBase()).thenReturn(TEST_STR);
         doReturn(response).when(vaultService).read(TEST_PATH, HashMap.class);
         when(accountService.getAccountInfo(TEST_SEQ)).thenReturn(accountModel);
-        when(propertyService.getNcloudInstancePasswordApiUrl()).thenReturn(TEST_API_URL);
+        //when(propertyService.getNcloudInstancePasswordApiUrl()).thenReturn(TEST_API_URL);
         when(instanceService.getNcloudPrivateKeysInfo(TEST_CLUSTER_ID, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB)).thenReturn(ncloudPrivateKeysModel);
         when(commonService.toJson(ncloudInstanceKeyInfoModel)).thenReturn(String.valueOf(ncloudInstanceKeyInfoResultModel));
 
