@@ -38,6 +38,11 @@ vault:
     cluster-token: "secret/cluster/{id}"
     cluster_api_url: "https://{ip}:6443"
 
+ncloud:
+  root:
+    password:
+      api:
+        url: "https://ncloud.apigw.gov-ntruss.com/vserver/v2/getRootPassword"
 ---
 spring:
   config:

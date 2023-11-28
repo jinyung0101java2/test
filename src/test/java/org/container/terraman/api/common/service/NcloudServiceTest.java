@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,8 @@ public class NcloudServiceTest {
     private static final String TEST_INSTANCE_NAME = "testInstanceName";
     private static final String TEST_PRIVATE_IP = "testPrivateIp";
     private static final String TEST_PUBLIC_IP = "testPublicIp";
+    private static final String TEST_ENCODE_PARAMETER = "testEncodeParameter";
+    private static final String TEST_SIGNATURE = "testSignature";
     private static final String TEST_ROOT_PASSWORD = "u8kfor!LDD&3od";
     private static final int TEST_SEQ = 13;
     private static final String TEST_STR = "test";
@@ -100,10 +103,10 @@ public class NcloudServiceTest {
         hashMap = new HashMap();
         hashMap.put("test","test");
 
-        ncloudPrivateKeyResultModel = new NcloudPrivateKeyModel("","","");
+        ncloudPrivateKeyResultModel = new NcloudPrivateKeyModel("","","","","", "");
         ncloudPrivateKeysResultModel = new ArrayList<>();
 
-        ncloudPrivateKeyModel = new NcloudPrivateKeyModel(TEST_INSTANCE_NO, TEST_PRIVATE_KEY, TEST_PUBLIC_IP);
+        ncloudPrivateKeyModel = new NcloudPrivateKeyModel(TEST_INSTANCE_NO, TEST_PRIVATE_KEY, TEST_PUBLIC_IP, TEST_ENCODE_PARAMETER, TEST_SIGNATURE, TEST_ROOT_PASSWORD);
         ncloudPrivateKeysModel = new ArrayList<>();
         ncloudPrivateKeysModel.add(ncloudPrivateKeyModel);
 
@@ -166,7 +169,7 @@ public class NcloudServiceTest {
     }
 
     @Test
-    public void createNcloudPublicKey() {
+    public void createNcloudPublicKey() throws UnsupportedEncodingException {
         when(ncloudService.getNcloudSSHKey(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB, TEST_SEQ)).thenReturn(ncloudInstanceKeysModel);
         when(instanceService.getNcloudPrivateKey(TEST_CLUSTER_ID, TEST_PROVIDER, TEST_HOST, TEST_ID_RSA, TEST_PROCESS_GB, TEST_PRIVATE_KEY)).thenReturn(ncloudPrivateKeyModel);
         when(commandService.execCommandOutput(terramanCommandModel)).thenReturn(TEST_STR);

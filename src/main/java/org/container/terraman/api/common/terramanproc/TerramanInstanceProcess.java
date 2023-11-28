@@ -193,6 +193,9 @@ public class TerramanInstanceProcess {
         String instanceNo = "";
         String privateKey = "";
         String publicIp = "";
+        String encodeParameter = "";
+        String signature = "";
+        String rootPassword = "";
 
         if((jsonObject != null) && (!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
@@ -222,7 +225,7 @@ public class TerramanInstanceProcess {
                 }
             }
         }
-        resultModel = new NcloudPrivateKeyModel(instanceNo, privateKey, publicIp);
+        resultModel = new NcloudPrivateKeyModel(instanceNo, privateKey, publicIp, encodeParameter, signature, rootPassword);
 
         return resultModel;
     }
@@ -240,8 +243,11 @@ public class TerramanInstanceProcess {
 
         String instanceNo = "";
         String privateKey = "";
-        String compInstanceId ="";
-        String publicIp ="";
+        String compInstanceId = "";
+        String publicIp = "";
+        String encodeParameter = "";
+        String signature = "";
+        String rootPassword = "";
 
         if((jsonObject != null) && (!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
@@ -261,7 +267,7 @@ public class TerramanInstanceProcess {
                 }
             }
         }
-        resultModel = new NcloudPrivateKeyModel(instanceNo, privateKey, publicIp);
+        resultModel = new NcloudPrivateKeyModel(instanceNo, privateKey, publicIp, encodeParameter, signature, rootPassword);
 
         return resultModel;
     }
@@ -434,6 +440,9 @@ public class TerramanInstanceProcess {
         String privateKey = "";
         String compInstanceId = "";
         String publicIp = "";
+        String encodeParameter = "";
+        String signature = "";
+        String rootPassword = "";
 
         if((jsonObject != null) && (!jsonObject.isJsonNull()) && jsonObject.size() > 0) {
             JsonArray resources = (JsonArray) jsonObject.get(TerramanConstant.RESOURCE_MSG);
@@ -460,7 +469,7 @@ public class TerramanInstanceProcess {
                             publicIp = getNcloudPublicIp(compInstanceId, jsonObject);
                             instanceNo = attributes.get(TerramanConstant.ISTANCE_NO_MSG).isJsonNull() ? "" : attributes.get(TerramanConstant.ISTANCE_NO_MSG).getAsString();
                         }
-                        modelList.add(new NcloudPrivateKeyModel(instanceNo, privateKey,publicIp));
+                        modelList.add(new NcloudPrivateKeyModel(instanceNo, privateKey, publicIp, encodeParameter, signature, privateKey));
                     }
                 }
             }

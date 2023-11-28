@@ -195,10 +195,10 @@ public class TerramanConstant {
     /**
      * terraform 실행 명령어
      * */
-    public static final String TERRAFORM_INIT_COMMAND = "terraform init";
-    public static final String TERRAFORM_PLAN_COMMAND = "terraform plan";
-    public static final String TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve";
-    public static final String TERRAFORM_DESTROY_COMMAND = "terraform destroy -auto-approve";
+    public static final String TERRAFORM_INIT_COMMAND = "opentofu init";
+    public static final String TERRAFORM_PLAN_COMMAND = "opentofu plan";
+    public static final String TERRAFORM_APPLY_COMMAND = "opentofu apply -auto-approve";
+    public static final String TERRAFORM_DESTROY_COMMAND = "opentofu destroy -auto-approve";
 
 
     /**
@@ -220,9 +220,9 @@ public class TerramanConstant {
     /**
      * TERRAFORM LOG MESSAGE - FAIL
      * */
-    public static final String TERRAFORM_INIT_FAIL_LOG = "ERROR - Terraform init is failed.";
-    public static final String TERRAFORM_PLAN_FAIL_LOG = "ERROR - Terraform plan is failed.";
-    public static final String TERRAFORM_APPLY_FAIL_LOG = "ERROR - Terraform apply is failed.";
+    public static final String TERRAFORM_INIT_FAIL_LOG = "ERROR - OpenTofu init is failed.";
+    public static final String TERRAFORM_PLAN_FAIL_LOG = "ERROR - OpenTofu plan is failed.";
+    public static final String TERRAFORM_APPLY_FAIL_LOG = "ERROR - OpenTofu apply is failed.";
 
     /**
      * TERRAFORM LOG MESSAGE - ERROR

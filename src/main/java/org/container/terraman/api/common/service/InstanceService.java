@@ -75,7 +75,7 @@ public class InstanceService {
         switch(provider.toUpperCase()) {
             case Constants.UPPER_NCLOUD: resultModel = getNcloudPrivateKeyIfo(clusterId, host, idRsa, processGb, privateKey); break;
             default : LOGGER.error("{} is Cloud not supported.", CommonUtils.loggerReplace(provider));
-                resultModel = new NcloudPrivateKeyModel("","","");
+                resultModel = new NcloudPrivateKeyModel("","","","","","");
                 break;
         }
 

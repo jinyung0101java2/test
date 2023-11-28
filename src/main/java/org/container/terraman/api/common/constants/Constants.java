@@ -34,7 +34,6 @@ public class Constants {
     public static final String  RSA_PRIVATE_KEY= "RPK";
 
     public static final String DIV = "/";
-    public static final String NCLOUD_INSTANCE_PASSWORD_API_PATH = "/ncp/getInstancePassword";
 
     public Constants() {
         throw new IllegalStateException();

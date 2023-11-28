@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 
 /**
@@ -86,7 +87,7 @@ public class TerramanController {
             @ApiImplicitParam(name = "processGb", value = "Terraman 생성 구분", required = false, dataType = "string", paramType = "path")
     })
     @PostMapping(value = "/create/{processGb:.+}")
-    public void initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) {
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) throws UnsupportedEncodingException {
         terramanService.createTerraman(terramanRequest, processGb);
     }
 
@@ -101,7 +102,7 @@ public class TerramanController {
             @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
     })
     @PostMapping(value = "/create")
-    public void initTerraman(@RequestBody TerramanRequest terramanRequest) {
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest) throws UnsupportedEncodingException {
         terramanService.createTerraman(terramanRequest, "Daemon");
     }
 

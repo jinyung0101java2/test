@@ -45,6 +45,9 @@ public class InstanceServiceTest {
     private static final String TEST_INSTANCE_NAME = "testInstanceName";
     private static final String TEST_PRIVATE_IP = "testPrivateIp";
     private static final String TEST_PUBLIC_IP = "testPublicIp";
+    private static final String TEST_ENCODE_PARAMETER = "testEncodeParameter";
+    private static final String TEST_SIGNATURE = "testSignature";
+    private static final String TEST_ROOT_PASSWORD = "testRootPassword";
 
     private static final String TEST_IP_ADDR = "1.1.1.1";
     private static final String TEST_INSTANCE_ID = "test";
@@ -87,10 +90,10 @@ public class InstanceServiceTest {
         instancesModel = new ArrayList<>();
         instancesModel.add(instanceModel);
 
-        ncloudPrivateKeyResultModel = new NcloudPrivateKeyModel("","","");
+        ncloudPrivateKeyResultModel = new NcloudPrivateKeyModel("","","","","","");
         ncloudPrivateKeysResultModel = new ArrayList<>();
 
-        ncloudPrivateKeyModel = new NcloudPrivateKeyModel(TEST_INSTANCE_NO, TEST_PRIVATE_KEY, TEST_PUBLIC_IP);
+        ncloudPrivateKeyModel = new NcloudPrivateKeyModel(TEST_INSTANCE_NO, TEST_PRIVATE_KEY, TEST_PUBLIC_IP, TEST_ENCODE_PARAMETER, TEST_SIGNATURE, TEST_ROOT_PASSWORD);
         ncloudPrivateKeysModel = new ArrayList<>();
         ncloudPrivateKeysModel.add(ncloudPrivateKeyModel);
 

@@ -1,10 +1,12 @@
 package org.container.terraman.api.common;
 
 import com.google.gson.Gson;
+import org.apache.commons.codec.binary.Base64;
 import org.container.terraman.api.common.constants.Constants;
 import org.container.terraman.api.common.constants.CommonStatusCode;
 import org.container.terraman.api.common.model.NcloudInstanceKeyModel;
 import org.container.terraman.api.common.util.CommonUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,15 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * Common Service 클래스
@@ -155,5 +164,82 @@ public class CommonService {
 
         return resEntity.getBody();
     };
+
+
+    /**
+     * Make Signature 설정
+     *
+     * @param timestamp the timestamp
+     * @param accessKey the access key
+     * @param secretKey the secret key
+     * @param targetURL the target URL
+     * @param param the param
+     * @return null
+     */
+    public static String makeSignature(long timestamp, String accessKey, String secretKey, String targetURL, String param) {
+
+        URI uri = URI.create(targetURL);
+        StringBuilder message = new StringBuilder()
+                .append("POST")
+                .append(" ").append(uri).append("?").append(param)
+                .append("\n")
+                .append(timestamp)
+                .append("\n")
+                .append(accessKey);
+        try {
+            SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(signingKey);
+
+            byte[] rawHmac = mac.doFinal(message.toString().getBytes("UTF-8"));
+            String signature = Base64.encodeBase64String(rawHmac);
+            return signature;
+
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    /**
+     * Data 설정
+     *
+     * @param timestamp the timestamp
+     * @param accessKey the access key
+     * @param Url the Url
+     * @param signature the signature
+     * @return String
+     */
+    public String getData(long timestamp, String accessKey, String Url, String signature) {
+        String ret = "";
+
+        try {
+
+            URL url = new URL(Url);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("x-ncp-apigw-timestamp", String.valueOf(timestamp));
+            conn.setRequestProperty("x-ncp-iam-access-key", accessKey);
+            conn.setRequestProperty("x-ncp-apigw-signature-v2", signature);
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            while((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JSONObject obj = new JSONObject(sb.toString());
+            JSONObject subObj = obj.getJSONObject("getRootPasswordResponse");
+            ret = subObj.getString("rootPassword");
+
+        } catch (Exception e) {
+        }
+        return ret;
+    }
 
 }
