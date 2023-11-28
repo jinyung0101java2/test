@@ -148,7 +148,7 @@ public class TerramanProcessService {
 
     public int terramanProcessInit(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 3. opentofu init 실행
+         * 3. tofu init 실행
          *
          * - command
          * TERRAFORM_INIT_COMMAND = "terraform init";
@@ -186,7 +186,7 @@ public class TerramanProcessService {
 
     public int terramanProcessPlan(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 4. opentofu plan 실행
+         * 4. tofu plan 실행
          *
          * - command
          * TERRAFORM_PLAN_COMMAND = "terraform plan -var vpc_name=cp-vpc -var route_table_name=cp-routing-public";
@@ -223,7 +223,7 @@ public class TerramanProcessService {
 
     public int terramanProcessApply(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 5. opentofu apply 실행
+         * 5. tofu apply 실행
          *
          * - command
          * TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve -var vpc_name=cp-vpc -var route_table_name=cp-routing-public";

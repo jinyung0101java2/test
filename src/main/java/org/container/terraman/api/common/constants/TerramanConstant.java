@@ -195,10 +195,10 @@ public class TerramanConstant {
     /**
      * terraform 실행 명령어
      * */
-    public static final String TERRAFORM_INIT_COMMAND = "opentofu init";
-    public static final String TERRAFORM_PLAN_COMMAND = "opentofu plan";
-    public static final String TERRAFORM_APPLY_COMMAND = "opentofu apply -auto-approve";
-    public static final String TERRAFORM_DESTROY_COMMAND = "opentofu destroy -auto-approve";
+    public static final String TERRAFORM_INIT_COMMAND = "tofu init";
+    public static final String TERRAFORM_PLAN_COMMAND = "tofu plan";
+    public static final String TERRAFORM_APPLY_COMMAND = "tofu apply -auto-approve";
+    public static final String TERRAFORM_DESTROY_COMMAND = "tofu destroy -auto-approve";
 
 
     /**
