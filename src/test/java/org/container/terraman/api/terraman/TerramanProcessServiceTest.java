@@ -17,6 +17,7 @@ import org.container.terraman.api.common.service.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -353,7 +354,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessGetInstanceIpTest() {
+    public void terramanProcessGetInstanceIpTest() throws UnsupportedEncodingException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());
@@ -371,7 +372,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessGetInstanceNullTest() {
+    public void terramanProcessGetInstanceNullTest() throws UnsupportedEncodingException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[1]);
         terramanCommandModel.setHost(gInstanceModel.getPublicIp());

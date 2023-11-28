@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+
 @Service
 public class TerramanService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TerramanService.class);
@@ -47,7 +49,7 @@ public class TerramanService {
      * @return the resultStatus
      */
     @Async
-    public void createTerraman(TerramanRequest terramanRequest, String processGb) {
+    public void createTerraman(TerramanRequest terramanRequest, String processGb) throws UnsupportedEncodingException {
         /**************************************************************************************************************************************
          * 변수 정의
          * ************************************************************************************************************************************/
@@ -126,21 +128,21 @@ public class TerramanService {
         }
 
         /**************************************************************************************************************************************
-         * 3. terraform init 실행
+         * 3. opentofu init 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
             mpSeq = terramanProcessService.terramanProcessInit(mpSeq, clusterId, processGb, host, idRsa);
         }
 
         /**************************************************************************************************************************************
-         * 4. terraform plan 실행
+         * 4. opentofu plan 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
             mpSeq = terramanProcessService.terramanProcessPlan(mpSeq, clusterId, processGb, host, idRsa);
         }
 
         /**************************************************************************************************************************************
-         * 5. terraform apply 실행
+         * 5. opentofu apply 실행
          * ************************************************************************************************************************************/
         if(mpSeq > -1) {
             mpSeq = terramanProcessService.terramanProcessApply(mpSeq, clusterId, processGb, host, idRsa);

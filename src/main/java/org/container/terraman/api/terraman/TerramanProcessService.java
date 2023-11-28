@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Service
@@ -147,7 +148,7 @@ public class TerramanProcessService {
 
     public int terramanProcessInit(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 3. terraform init 실행
+         * 3. opentofu init 실행
          *
          * - command
          * TERRAFORM_INIT_COMMAND = "terraform init";
@@ -185,7 +186,7 @@ public class TerramanProcessService {
 
     public int terramanProcessPlan(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 4. terraform plan 실행
+         * 4. opentofu plan 실행
          *
          * - command
          * TERRAFORM_PLAN_COMMAND = "terraform plan -var vpc_name=cp-vpc -var route_table_name=cp-routing-public";
@@ -222,7 +223,7 @@ public class TerramanProcessService {
 
     public int terramanProcessApply(int mpSeq, String clusterId, String processGb, String host, String idRsa) {
         /**************************************************************************************************************************************
-         * 5. terraform apply 실행
+         * 5. opentofu apply 실행
          *
          * - command
          * TERRAFORM_APPLY_COMMAND = "terraform apply -auto-approve -var vpc_name=cp-vpc -var route_table_name=cp-routing-public";
@@ -256,7 +257,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName, int seq) {
+    public int terramanProcessGetInstanceIp(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName, int seq) throws UnsupportedEncodingException {
         /**************************************************************************************************************************************
          * 6. Infra 생성 후 생성된 Instance IP 알아오기
          *

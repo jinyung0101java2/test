@@ -14,11 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,13 +67,16 @@ public class NcloudService {
      * @param seq       the seq
      * @return the NcloudInstanceKeyModel
      */
-    public List<NcloudInstanceKeyModel> getNcloudSSHKey(String clusterId, String provider, String host, String idRsa, String processGb, int seq) {
+    public List<NcloudInstanceKeyModel> getNcloudSSHKey(String clusterId, String provider, String host, String idRsa, String processGb, int seq) throws UnsupportedEncodingException {
+        URI uri = null;
+        long timestamp = new Date().getTime();
         String path = propertyService.getVaultBase();
         path = path + provider.toUpperCase() + Constants.DIV + seq;
         HashMap<String, Object> res = vaultService.read(path, HashMap.class);
         AccountModel account = accountService.getAccountInfo(seq);
-//        String reqUrl = propertyService.getNcloudInstancePasswordApiUrl() + Constants.NCLOUD_INSTANCE_PASSWORD_API_PATH;
-        String reqUrl = "";
+        String reqUrl = propertyService.getNcloudRootPasswordApiUrl();
+        uri = URI.create(reqUrl);
+        String requestURI = uri.getPath();
 
         List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
         NcloudAuthKeyModel ncloudAuthKeyModel = new NcloudAuthKeyModel("", "");
@@ -89,17 +93,19 @@ public class NcloudService {
 
         List<NcloudInstanceKeyModel> resultList = new ArrayList<>();
 
-        // Ncloud Instance RootPassword 조회
         for (int i = 0; i < ncloudPrivateKeysModel.size(); i++) {
-            String instanceNo = ncloudPrivateKeysModel.get(i).getInstanceNo();
-            String instancePrivateKey = ncloudPrivateKeysModel.get(i).getPrivateKey();
-            ncloudInstanceKeyInfoModel.setInstance_no(instanceNo);
-            ncloudInstanceKeyInfoModel.setPrivate_key(instancePrivateKey);
-            Object InstanceKey = commonService.sendNcloudJson(reqUrl, HttpMethod.PATCH, commonService.toJson(ncloudInstanceKeyInfoModel), Object.class);
-            NcloudInstanceKeyModel ncloudInstanceKeyModel = commonService.setResultObject(InstanceKey, NcloudInstanceKeyModel.class);
+            String encodeParameter = "serverInstanceNo" + "=" + ncloudPrivateKeysModel.get(i).getInstanceNo() + "&" +
+                    "privateKey" + "=" + URLEncoder.encode(ncloudPrivateKeysModel.get(i).getPrivateKey(), String.valueOf(StandardCharsets.UTF_8)) + "&" +
+                    "responseFormatType" + "=" + "json";
+            ncloudPrivateKeysModel.get(i).setEncodeParameter(encodeParameter);
 
-            resultList.add(new NcloudInstanceKeyModel(ncloudInstanceKeyModel.getServerInstanceNo(), ncloudInstanceKeyModel.getRootPassword()));
-            LOGGER.info("PublicIp ::: " + ncloudPrivateKeysModel.get(i).getPublicIp() + ", RootPassword ::: " + resultList.get(i).getRootPassword());
+            String signature = commonService.makeSignature(timestamp, ncloudAuthKeyModel.getAccess_key(), ncloudAuthKeyModel.getSecret_key(), requestURI, encodeParameter);
+            ncloudPrivateKeysModel.get(i).setSignature(signature);
+
+            String password = commonService.getData(timestamp, ncloudAuthKeyModel.getAccess_key(), reqUrl + "?" + encodeParameter, signature);
+            ncloudPrivateKeysModel.get(i).setRootPassword(password);
+
+            resultList.add(new NcloudInstanceKeyModel(ncloudPrivateKeysModel.get(i).getInstanceNo(), ncloudPrivateKeysModel.get(i).getRootPassword()));
         }
 
         return resultList;
@@ -118,7 +124,7 @@ public class NcloudService {
      * @param mpSeq      the mpSeq
      * @return the String
      */
-    public String createNcloudPublicKey(String clusterId, String provider, String host, String idRsa, String processGb, int seq, String privateKey, int mpSeq) {
+    public String createNcloudPublicKey(String clusterId, String provider, String host, String idRsa, String processGb, int seq, String privateKey, int mpSeq) throws UnsupportedEncodingException {
         String masterHost = host;
         String cResult = "";
         String resultCode = Constants.RESULT_STATUS_SUCCESS;
