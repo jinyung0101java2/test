@@ -521,7 +521,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessCreateVaultTest() {
+    public void terramanProcessCreateVaultTest() throws InterruptedException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();
@@ -569,7 +569,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessCreateVaulCreateErrortTest() {
+    public void terramanProcessCreateVaulCreateErrortTest() throws InterruptedException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
 
         terramanCommandModel.setCommand(TEST_COMMAND_NUMBER[9]);
@@ -590,7 +590,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessCreateVaultBindingErrorTest() {
+    public void terramanProcessCreateVaultBindingErrorTest() throws InterruptedException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
 
@@ -619,7 +619,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessCreateVaultSecretNameErrorTest() {
+    public void terramanProcessCreateVaultSecretNameErrorTest() throws InterruptedException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
 
@@ -651,7 +651,7 @@ public class TerramanProcessServiceTest {
     }
 
     @Test
-    public void terramanProcessCreateVaultTokenErrorTest() {
+    public void terramanProcessCreateVaultTokenErrorTest() throws InterruptedException {
         TerramanCommandModel terramanCommandModel = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel2 = new TerramanCommandModel();
         TerramanCommandModel terramanCommandModel3 = new TerramanCommandModel();

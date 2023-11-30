@@ -87,7 +87,7 @@ public class TerramanController {
             @ApiImplicitParam(name = "processGb", value = "Terraman 생성 구분", required = false, dataType = "string", paramType = "path")
     })
     @PostMapping(value = "/create/{processGb:.+}")
-    public void initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) throws UnsupportedEncodingException {
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest, @PathVariable String processGb) throws UnsupportedEncodingException, InterruptedException {
         terramanService.createTerraman(terramanRequest, processGb);
     }
 
@@ -102,7 +102,7 @@ public class TerramanController {
             @ApiImplicitParam(name = "terramanRequest", value = "Terraman 생성 정보", required = true, dataType = "TerramanRequest", paramType = "body")
     })
     @PostMapping(value = "/create")
-    public void initTerraman(@RequestBody TerramanRequest terramanRequest) throws UnsupportedEncodingException {
+    public void initTerraman(@RequestBody TerramanRequest terramanRequest) throws UnsupportedEncodingException, InterruptedException {
         terramanService.createTerraman(terramanRequest, "Daemon");
     }
 
