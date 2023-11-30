@@ -174,6 +174,7 @@ public class TerramanConstant {
     /**
      * account token 생성 명령어
      * */
+    public static final String KUBE_API_SERVER_CHECK = "kubectl get pod -n kube-system | grep kube-apiserver | awk '{print $3}'";
     public static final String SERVICE_ACCOUNT_CHECK1 = "kubectl get ns";
     public static final String SERVICE_ACCOUNT_CHECK2 = "sudo kubectl get ns";
     public static final String SERVICE_ACCOUNT_CREATE = "sudo kubectl create serviceaccount k8sadmin -n kube-system";
@@ -280,7 +281,7 @@ public class TerramanConstant {
     public static final String NAME_MSG = "name";
     public static final String AWS_INSTANCE_MSG = "aws_instance";
     public static final String NCLOUD_INSTANCE_MSG = "ncloud_instance";
-
+    public static final String RESOURCE_STATUS_RUNNING = "running";
     public static final String MODE_MSG = "mode";
     public static final String MANAGED_MSG = "managed";
     public static final String ID_MSG = "id";
@@ -332,6 +333,7 @@ public class TerramanConstant {
             case "23" : switchStr = CREATE_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
             case "24" : switchStr = COPY_NCLOUD_PUBLIC_KEY(terramanCommandModel.getClusterId()); break;
             case "25" : switchStr = CLUSTER_KUBESPRAY_YAML_FILE_COMMAND(terramanCommandModel.getContents()); break;
+            case "26" : switchStr = KUBE_API_SERVER_CHECK; break;
         }
         return switchStr;
     }

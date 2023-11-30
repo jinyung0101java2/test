@@ -49,7 +49,7 @@ public class TerramanService {
      * @return the resultStatus
      */
     @Async
-    public void createTerraman(TerramanRequest terramanRequest, String processGb) throws UnsupportedEncodingException {
+    public void createTerraman(TerramanRequest terramanRequest, String processGb) throws UnsupportedEncodingException, InterruptedException {
         /**************************************************************************************************************************************
          * 변수 정의
          * ************************************************************************************************************************************/

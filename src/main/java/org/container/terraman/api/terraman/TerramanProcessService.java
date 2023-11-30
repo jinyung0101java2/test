@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Timer;
 
 @Service
 public class TerramanProcessService {
@@ -525,7 +527,7 @@ public class TerramanProcessService {
         return mpSeq;
     }
 
-    public int terramanProcessCreateVault(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) {
+    public int terramanProcessCreateVault(int mpSeq, String clusterId, String processGb, String host, String idRsa, String provider, String clusterName) throws InterruptedException {
         /**************************************************************************************************************************************
          * 9. 클러스터 정보 vault 생성
          * clusterId = clusterId
@@ -544,9 +546,10 @@ public class TerramanProcessService {
         String chkCli = "";
 
         InstanceModel instanceInfo = instanceService.getInstance(clusterId, provider, host, idRsa, processGb);
+        Timer timer = new Timer();
 
         terramanCommandModel.setClusterId(clusterId);
-        terramanCommandModel.setCommand("17");
+        terramanCommandModel.setCommand("26");
 
         if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)) {
             List<NcloudPrivateKeyModel> ncloudPrivateKeysModel = instanceService.getNcloudPrivateKeys(clusterId, provider, host, idRsa, processGb);
@@ -565,9 +568,23 @@ public class TerramanProcessService {
         chkCli = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
-        terramanCommandModel.setCommand("18");
+        for (int i=0; i < 10; i++) {
+            if (!chkCli.equalsIgnoreCase(TerramanConstant.RESOURCE_STATUS_RUNNING)) {
+                LOGGER.info(Constants.RESULT_STATUS_MASTER_FAIL);
+                Thread.sleep(30000);
+            } else if (chkCli.equalsIgnoreCase(TerramanConstant.RESOURCE_STATUS_RUNNING)) {
+                LOGGER.info(Constants.RESULT_STATUS_MASTER_SUCCESS);
+                break;
+            }
+        }
+
+        terramanCommandModel.setCommand("17");
         chkCli = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Cluster Check two :: {}", CommonUtils.loggerReplace(chkCli));
+
+        terramanCommandModel.setCommand("18");
+        chkCli = commandService.execCommandOutput(terramanCommandModel);
+        LOGGER.info("Cluster Check three :: {}", CommonUtils.loggerReplace(chkCli));
 
         terramanCommandModel.setCommand("10");
         for(int i=0; i<5; i++) {
