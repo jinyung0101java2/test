@@ -568,7 +568,7 @@ public class TerramanProcessService {
         chkCli = commandService.execCommandOutput(terramanCommandModel);
         LOGGER.info("Cluster Check one :: {}", CommonUtils.loggerReplace(chkCli));
 
-        for (int i=0; i < 10; i++) {
+        for (int i=0; i < 4; i++) {
             if (!chkCli.equalsIgnoreCase(TerramanConstant.RESOURCE_STATUS_RUNNING)) {
                 LOGGER.info(Constants.RESULT_STATUS_MASTER_FAIL);
                 Thread.sleep(30000);
