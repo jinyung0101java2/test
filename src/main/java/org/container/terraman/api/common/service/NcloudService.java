@@ -71,7 +71,11 @@ public class NcloudService {
         URI uri = null;
         long timestamp = new Date().getTime();
         String path = propertyService.getVaultBase();
-        path = path + provider.toUpperCase() + Constants.DIV + seq;
+        if (provider.equalsIgnoreCase(Constants.UPPER_NCLOUD)){
+            path = path + Constants.UPPER_NAVER.toUpperCase() + Constants.DIV + seq;
+        } else {
+            path = path + provider.toUpperCase() + Constants.DIV + seq;
+        }
         HashMap<String, Object> res = vaultService.read(path, HashMap.class);
         AccountModel account = accountService.getAccountInfo(seq);
         String reqUrl = propertyService.getNcloudRootPasswordApiUrl();
@@ -84,8 +88,8 @@ public class NcloudService {
 
         String ncloudAccessKey = "";
         String ncloudSecretKey = "";
-        ncloudAccessKey = res != null ? String.valueOf(res.get("access_key")) : "";
-        ncloudSecretKey = res != null ? String.valueOf(res.get("secret_key")) : "";
+        ncloudAccessKey = res != null ? String.valueOf(res.get("accessKey")) : "";
+        ncloudSecretKey = res != null ? String.valueOf(res.get("secretKey")) : "";
         ncloudAuthKeyModel.setAccess_key(ncloudAccessKey);
         ncloudAuthKeyModel.setSecret_key(ncloudSecretKey);
         ncloudInstanceKeyInfoModel.setSite(account.getSite());

@@ -33,6 +33,7 @@ public class Constants {
     public static final String UPPER_NHN = "NHN";
     public static final String UPPER_VSPHERE = "VSPHERE";
     public static final String UPPER_NCLOUD = "NCLOUD";
+    public static final String UPPER_NAVER = "NAVER";
     public static final String  RSA_PRIVATE_KEY= "RPK";
 
     public static final String DIV = "/";

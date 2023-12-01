@@ -56,6 +56,11 @@ public class TerramanService {
         String clusterId = terramanRequest.getClusterId();
         int seq = StringUtils.isBlank(String.valueOf(terramanRequest.getSeq())) ? 0 : Integer.parseInt(terramanRequest.getSeq());
         String provider = terramanRequest.getProvider();
+
+        if (provider.equalsIgnoreCase(Constants.UPPER_NAVER)) {
+            provider = TerramanConstant.NCLOUD_USER_NAME;
+        }
+
         String clusterName = "";
 
         String cResult = "";
