@@ -25,9 +25,9 @@
                             <caption>Deployments List</caption>
                             <colgroup >
                                 <col width="25%" />
-                                <col width="25%" />
+                                <col width="21%" />
                                 <col width="8%" />
-                                <col width="24%" />
+                                <col width="28%" />
                                 <col width="18%" />
                             </colgroup>
                             <thead>
@@ -93,7 +93,22 @@
                 if(data.httpStatusCode == 200){
                     if(data.items.length > 0){
                         for(var i=0; i<=data.items.length-1; i++){
-                            var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td><td class="left">${data.items[i].namespace}</td><td>${data.items[i].runningPods} / ${data.items[i].totalPods}</td><td class="left">${data.items[i].images}</td><td>${data.items[i].creationTimestamp}</td></tr>`;
+                        imagesList = data.items[i].images;
+                        imagesHTML ="";
+
+                        if(imagesList != '-'){
+							for(var j=0; j<=imagesList.length-1; j++){
+							imagesHTML += `<dl><dt>${imagesList[j]}</dt></dl>`; };
+							}
+							else {
+							 imagesHTML = `<dl><dt>-</dt></dl>`; }
+
+                            var html = `<tr>` +
+                                    `<td class="left"><a href="javascript:;" data-name="${data.items[i].name}" data-id="${data.items[i].namespace}">${data.items[i].name}</a></td>` +
+                                    `<td class="left">${data.items[i].namespace}</td>` +
+                                    `<td>${data.items[i].runningPods} / ${data.items[i].totalPods}</td>` +
+                                    `<td class="left box">${imagesHTML}</td>` +
+                                    `<td>${data.items[i].creationTimestamp}</td></tr>`;
 
                             func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
                         };
