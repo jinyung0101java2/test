@@ -144,12 +144,19 @@
                 draw(data) {
                     info = new Map(Object.entries(data.items));
                     let html = ``;
+                    let createProviderHtml = ``;
+                    let registerProviderHtml = ``;
+
                     for (let key of info.keys()) {
-                        html += `<option value="${key}"`;
-                        html += `>${key}</option>`;
+                        if( key != 'KT') {
+                        createProviderHtml += `<option value="${key}">${key}</option>`; }
                     }
-                    func.appendHtml(document.getElementById('createProvider'), html);
-                    func.appendHtml(document.getElementById('registerProvider'), html);
+
+                    for (let key of info.keys()) {
+                        registerProviderHtml += `<option value="${key}">${key}</option>`;
+                    }
+                    func.appendHtml(document.getElementById('createProvider'), createProviderHtml);
+                    func.appendHtml(document.getElementById('registerProvider'), registerProviderHtml);
 
                     createClusters.event();
                 },

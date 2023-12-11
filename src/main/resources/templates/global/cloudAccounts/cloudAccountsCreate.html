@@ -68,12 +68,13 @@
                 draw(data) {
                     info = new Map(Object.entries(data.items));
                     let html = ``;
-                    for (let key of info.keys()) {
-                        html += `<option value="${key}"`;
-                        if (key == 'AWS') html += ` selected`;
-                        html += `>${key}</option>`;
+
+                   for (let key of info.keys()) {
+                        if( key != 'KT') {
+                        html += `<option value="${key}">${key}</option>`; }
                     }
                     func.appendHtml(document.getElementById('provider'), html, 'select');
+                    document.getElementById('provider').selectedIndex = "0";
 
                     createCloudAccounts.event();
                 },
