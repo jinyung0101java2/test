@@ -39,6 +39,9 @@ public class ConstantsUrl {
     public static final String URI_CP_GLOBAL_CLUSTERS = "/global/clusters";
     public static final String URI_CP_GLOBAL_CLOUD_ACCOUNTS = "/global/cloudAccounts";
     public static final String URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES = "/global/templates";
+    public static final String URI_CP_GLOBAL_KEY_MANAGEMENTS = "/global/keyManagements";
+
+    public static final String URI_CP_GLOBAL_ = "/global/templates";
 
     public static final String URI_CP_LIST = "/list";
     public static final String URI_CP_DETAILS = "/details";

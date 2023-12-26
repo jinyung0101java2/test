@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layouts/layout}">
+<div layout:fragment="content">
+	<div id="content" class="sub-page">
+		<article class="location">
+			<ul>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+				<li><a onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS)">Key Managements</a></li>
+			</ul>
+			<!-- Click event class="on" -->
+			<fieldset>
+				<input type="text" name="keyword" id="searchText" autocomplete="off" th:placeholder="#{M0017}" />
+				<button type="submit" id="search" th:text="#{M0031}"></button>
+			</fieldset>
+		</article>
+		<article class="base">
+			<div class="notice">
+				<h3>List</h3>
+				<!-- User -->
+				<div class="table_style01">
+					<!-- board -->
+					<table>
+						<caption>Key Managements List</caption>
+						<colgroup >
+							<col width="60%" />
+							<col width="10%" />
+							<col width="30%" />
+						</colgroup>
+						<thead>
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Provider</th>
+							<th scope="col">Created Time</th>
+						</tr>
+						</thead>
+						<tbody class="listTable">
+						</tbody>
+					</table>
+					<!-- more btn -->
+					<a class="more" href="javascript:">more</a>
+				</div>
+				<!-- btn -->
+				<a href="javascript:" class="create" th:text="#{M0024}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
+			</div>
+		</article>
+	</div>
+</div>
+<th:block layout:fragment="script">
+	<script type="text/javascript">
+		window.onload = () => {
+
+			IS_GLOBAL = true;
+			func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.INSTANCE_CODE_TEMPLATE);
+
+			const template = {
+				offset : 0, // 로드 페이지 넘버
+				limit : 10, // 로드 게시물 개수
+				allItemCount : 0, //게시물 촐 개수
+				type : 'administrator',
+
+				init(){
+					func.nameLoad = template.reset;
+
+					template.load();
+
+					template.event();
+				},
+
+				reset(){
+					func.removeHtml(document.querySelector('.listTable'));
+
+					template.offset = 0;
+
+					template.load();
+				},
+
+				load(){
+					func.loading();
+
+					// nameSpace 정보 조회
+					func.loadData('GET', `${func.url}templates?searchName=${document.getElementById('searchText').value}&limit=${template.limit}&offset=${template.offset}`, 'application/json', template.draw);
+				},
+
+				draw(data){
+					if(template.offset == 0) template.allItemCount = data.itemMetaData.allItemCount;
+					let html;
+					if(data.httpStatusCode == 200){
+						if(data.items.length > 0){
+							for(var i=0; i<=data.items.length-1; i++){
+								// var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].iaasName}" data-spac="${data.items[i].provider}">${data.items[i].created}</a></td></tr>`;
+								html = `<tr><td class="left"><a href="javascript:;" data-id="${data.items[i].id}">${data.items[i].name}</a></td><td>${data.items[i].provider}</td><td>${data.items[i].created}</td></tr>`;
+
+								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+							}
+						} else {
+							html = `<tr><td colspan="3">No Data.</td></tr>`;
+
+							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+						}
+					} else {
+						html = `<tr><td colspan="3">No Data.</td></tr>`;
+
+						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
+					}
+
+					// more 버튼 활성, 비활성
+					if(document.querySelector('.listTable').querySelectorAll('tr').length < template.allItemCount){
+						document.querySelector('.more').classList.toggle('on', true);
+					} else {
+						document.querySelector('.more').classList.toggle('on', false);
+					}
+
+					if(document.getElementById('loading')){
+						document.getElementById('wrap').removeChild(document.getElementById('loading'));
+					}
+
+					template.listEvent();
+				},
+
+				event(){
+					// more 버튼 event
+					document.querySelector('.more').addEventListener('click', () => {
+						if(document.querySelector('.listTable').querySelectorAll('tr').length < template.allItemCount){
+						template.offset++;
+
+						template.load();
+					}
+				}, false);
+
+					if(document.querySelector('.create')) {
+					document.querySelector('.create').addEventListener('click', () => {
+						document.location.href = URI_CP_GLOBAL_KEY_MANAGEMENTS + URI_CP_CREATE;
+				}, false);}
+				},
+
+				listEvent(){
+					var listAll = document.querySelector('.listTable').querySelectorAll('a');
+
+					for(var i=template.offset*10; i<=listAll.length-1; i++){
+						listAll[i].addEventListener('click', (e) => {
+							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
+
+						document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
+					}, true);
+					}
+				},
+			};
+			template.init();
+		}
+	</script>
+</th:block>
+</html>
+
+<!--<body>-->
+<!--	<div id="wrap">-->
+<!--		&lt;!&ndash; Header &ndash;&gt;-->
+<!--		<header>-->
+<!--			<div>-->
+<!--				&lt;!&ndash; logo &ndash;&gt;-->
+<!--				<h1>-->
+<!--					<a href="../index.html"><img src="../resources/img/logo.png" alt="K-PaaS 로고" /></a>-->
+<!--				</h1>-->
+<!--				&lt;!&ndash; menu &ndash;&gt;-->
+<!--				<div>-->
+<!--					&lt;!&ndash; title &ndash;&gt;-->
+<!--					<h3>-->
+<!--						All-->
+<!--						<div style="display:none;">-->
+<!--							<a href="javascript:;" class="nameTop">ALL</a>-->
+<!--							<ul class="nameSpace">-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--					</h3>-->
+<!--					&lt;!&ndash; member-menu &ndash;&gt;-->
+<!--					<div>-->
+<!--						<a href="javascript:;" id="logout">로그아웃</a>-->
+<!--						<div>-->
+<!--							<a href="javascript:;">환경설정</a>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</header>-->
+<!--		&lt;!&ndash; // Header &ndash;&gt;-->
+<!--		&lt;!&ndash; container &ndash;&gt;-->
+<!--		<div id="container">-->
+<!--			&lt;!&ndash; aside &ndash;&gt;-->
+<!--			<aside>-->
+<!--				<nav>-->
+<!--					<ul>-->
+<!--						<li>-->
+<!--							<a href="global.html" class="dep01">Global</a>-->
+<!--						</li>-->
+<!--						<li class="plus">-->
+<!--							<a href="javascript:;" class="dep01">Management</a>-->
+<!--							<ul class="sub">-->
+<!--								<li><a href="../index.html">Clusters</a></li>-->
+<!--								<li><a href="#none">Cloud Account</a></li>-->
+<!--								<li><a href="#none">Instance Code Temp</a></li>-->
+<!--							</ul>-->
+<!--						</li>-->
+<!--					</ul>-->
+<!--				</nav>-->
+<!--			</aside>-->
+<!--			&lt;!&ndash; // aside &ndash;&gt;-->
+<!--			&lt;!&ndash; Content &ndash;&gt;-->
+<!--			<div id="content" class="sub-page clusters">-->
+<!--				<article class="location">-->
+<!--					<ul>-->
+<!--						<li><a href="javascript:;">Global</a></li>-->
+<!--						<li><a href="javascript:;">Management</a></li>-->
+<!--						<li>Cluster</li>-->
+<!--					</ul>-->
+<!--					&lt;!&ndash; Click event class="on" &ndash;&gt;-->
+<!--					<fieldset>-->
+<!--						<input type="text" name="keyword" id="searchText" autocomplete="off" placeholder="검색어를 입력해주세요" />-->
+<!--						<button type="submit" id="search">검색</button>-->
+<!--					</fieldset>-->
+<!--				</article>-->
+<!--				<article class="base">-->
+<!--					<div class="notice">-->
+<!--						<h3>Cluster 목록</h3>-->
+<!--						&lt;!&ndash; User &ndash;&gt;-->
+<!--						<div class="table_style01">-->
+<!--							&lt;!&ndash; board &ndash;&gt;-->
+<!--							<table>-->
+<!--								<caption>Cluster 목록</caption>-->
+<!--								<colgroup >-->
+<!--                  <col />-->
+<!--                  <col />-->
+<!--                  <col />-->
+<!--                  <col />-->
+<!--                  <col />-->
+<!--								</colgroup>-->
+<!--								<thead>-->
+<!--									<tr>-->
+<!--										<th scope="col">클러스터명</th>-->
+<!--										<th scope="col">프로바이더</th>-->
+<!--										<th scope="col">K8s버전</th>-->
+<!--										<th scope="col">노드</th>-->
+<!--										<th scope="col">파드</th>-->
+<!--									</tr>-->
+<!--								</thead>-->
+<!--								<tbody class="listTable">-->
+<!--                  <tr>-->
+<!--                    <td><span class="fc-blue">Manage-cluster</span></td>-->
+<!--                    <td>AWS</td>-->
+<!--                    <td>1.21.5</td>-->
+<!--                    <td>3/3</td>-->
+<!--                    <td>15/180</td>-->
+<!--                  </tr>-->
+<!--                  <tr>-->
+<!--                    <td><span class="fc-blue">OpenStack-cluster</span></td>-->
+<!--                    <td>OpenStack</td>-->
+<!--                    <td>1.22.3</td>-->
+<!--                    <td>4/4</td>-->
+<!--                    <td>23/210</td>-->
+<!--                  </tr>-->
+<!--								</tbody>-->
+<!--							</table>-->
+<!--							&lt;!&ndash; more btn &ndash;&gt;-->
+<!--							<a class="more" href="javascript:;">more</a>-->
+<!--						</div>-->
+<!--						&lt;!&ndash; btn &ndash;&gt;-->
+<!--						<a href="javascript:;" class="create">신규</a>-->
+<!--					</div>-->
+<!--				</article>-->
+<!--			</div>-->
+<!--			&lt;!&ndash; // Content &ndash;&gt;-->
+<!--		</div>-->
+<!--		&lt;!&ndash; // container &ndash;&gt;-->
+<!--	</div>-->
+<!--	<script type="text/javascript" src="../resources/js/d3-5.4.0.min.js"></script>-->
+<!--	<script type="text/javascript" src="../resources/js/c3.min.js"></script>-->
+<!--	<script type="text/javascript" src="../resources/js/common.js"></script>-->
+<!--	<script type="text/javascript">-->
+<!--		/*-->
+<!--		window.onload = () => {-->
+
+<!--			func.init(0, 0);-->
+
+<!--			const nameSpace = {-->
+<!--				offset : 0, // 로드 페이지 넘버-->
+<!--				limit : 10, // 로드 게시물 개수-->
+<!--				allItemCount : 0, //게시물 촐 개수-->
+
+<!--				init(){-->
+<!--					func.nameLoad = nameSpace.reset;-->
+<!--					-->
+<!--					sessionStorage.setItem('nameSpace', 'all');-->
+
+<!--					nameSpace.load();-->
+
+<!--					nameSpace.event();-->
+<!--				},-->
+
+<!--				reset(){-->
+<!--					func.removeHtml(document.querySelector('.listTable'));-->
+
+<!--					nameSpace.load();-->
+<!--				},-->
+
+<!--				load(){-->
+<!--					func.loading();-->
+
+<!--					// nameSpace 정보 조회-->
+<!--					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces?searchName=${document.getElementById('searchText').value}&limit=${nameSpace.limit}&offset=${nameSpace.offset}`, 'application/json', nameSpace.draw);-->
+<!--				},-->
+
+<!--				draw(data){-->
+<!--					/*-->
+<!--					detailMessage: "정상적으로 처리 되었습니다."-->
+<!--					httpStatusCode: 200-->
+<!--					itemMetaData: {allItemCount: 42, remainingItemCount: 0}-->
+<!--					items: Array(42)-->
+<!--						0: {name: "jenkins-namespace", labels: null, namespaceStatus: "Active", creationTimestamp: "2020-11-12 18:39:07"}-->
+<!--						1: {name: "kms-jenkins-test", labels: null, namespaceStatus: "Active", creationTimestamp: "2020-11-12 14:21:37"}-->
+<!--						2: {name: "1112-ns", labels: null, namespaceStatus: "Active", creationTimestamp: "2020-11-12 10:18:30"}-->
+<!--					length: 42-->
+<!--					__proto__: Array(0)-->
+<!--					resultCode: "SUCCESS"-->
+<!--					resultMessage: "정상적으로 처리 되었습니다."-->
+<!--					-->
+
+<!--					// 초기 게시물 갯수 저장-->
+<!--					if(nameSpace.offset == 0) nameSpace.allItemCount = data.itemMetaData.allItemCount;-->
+
+<!--					for(var i=0; i<=data.items.length-1; i++){-->
+<!--						var html = `<tr><td class="left"><a href="javascript:;" data-name="${data.items[i].name}">${data.items[i].name}</a></td><td>${data.items[i].labels}</td><td class="${data.items[i].namespaceStatus.toLowerCase()}">${data.items[i].namespaceStatus}</td><td>${data.items[i].creationTimestamp}</td></tr>`;-->
+
+<!--						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');-->
+<!--					};-->
+
+<!--					// more 버튼 활성, 비활성-->
+<!--					if(document.querySelector('.listTable').querySelectorAll('tr').length < nameSpace.allItemCount){-->
+<!--						document.querySelector('.more').classList.toggle('on', true);-->
+<!--					} else {-->
+<!--						document.querySelector('.more').classList.toggle('on', false);-->
+<!--					};-->
+<!--					-->
+<!--					if(document.getElementById('loading')){-->
+<!--						document.getElementById('wrap').removeChild(document.getElementById('loading'));-->
+<!--					};-->
+
+<!--					nameSpace.listEvent();-->
+<!--				},-->
+
+<!--				event(){-->
+<!--					// more 버튼 event-->
+<!--					document.querySelector('.more').addEventListener('click', (e) => {-->
+<!--						if(document.querySelector('.listTable').querySelectorAll('tr').length < nameSpace.allItemCount){-->
+<!--							nameSpace.offset++;-->
+
+<!--							nameSpace.load();-->
+<!--						};-->
+<!--					}, false);-->
+
+<!--					document.querySelector('.create').addEventListener('click', (e) => {-->
+<!--						document.location.href = `${func.ui}clusters/namespacesCreat.html`;-->
+<!--					}, false);-->
+<!--				},-->
+
+<!--				listEvent(){-->
+<!--					var listAll = document.querySelector('.listTable').querySelectorAll('a');-->
+<!--					-->
+<!--					for(var i=nameSpace.offset*10; i<=listAll.length-1; i++){-->
+
+<!--						listAll[i].addEventListener('click', (e) => {-->
+<!--							sessionStorage.setItem('nameSpace', e.target.getAttribute('data-name'));-->
+
+<!--							document.location.href = `${func.ui}clusters/namespacesDetail.html`;-->
+<!--						}, true);-->
+<!--					};-->
+<!--				},-->
+<!--			}-->
+
+<!--			nameSpace.init();-->
+<!--		}-->
+<!--		*/-->
+<!--	</script>-->
+<!--</body>-->
+<!--</html>-->
