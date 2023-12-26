@@ -31,13 +31,19 @@
 
                         </tr>
                         <tr>
+                            <th scope="row" class="left">Cloud Account</th>
+                            <td class="left">
+                                <input class="left" id="cloudAccount" type="text" readonly>
+                            </td>
+                        </tr>
+                        <tr>
                             <th scope="row" class="left">Provider</th>
                             <td class="left">
                                 <input class="left" id="provider" type="text" readonly>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" class="left">Instance Code</th>
+                            <th scope="row" class="left">Private Key</th>
                             <td class="left">
                                 <textarea class="left" id="code" rows="30" readonly></textarea>
                                 <button type="button" class="right" id="codeButton" onclick="activeEdit('code', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
@@ -52,7 +58,7 @@
                 <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')"></button>
                 <div>
                     <a href="javascript:" id="modify" data-role="instanceCodeTemplates" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
-                    <a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" th:text="#{M0028}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS)" th:text="#{M0028}"></a>
                 </div>
             </div>
         </article>
@@ -64,7 +70,7 @@
         window.onload = () => {
 
             IS_GLOBAL = true;
-            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.INSTANCE_CODE_TEMPLATE);
+            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.KEY_MANAGEMENTS);
 
 
             const instanceCodeDetail = {
@@ -113,7 +119,7 @@
                 },
 
                 returnPage() {
-                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
+                    document.location.href = URI_CP_GLOBAL_KEY_MANAGEMENTS + URI_CP_DETAILS;
                 }
             };
 

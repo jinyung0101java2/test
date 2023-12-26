@@ -18,8 +18,17 @@
                     <dl>
                         <dt><label for="name">Name</label></dt>
                         <dd>
-                            <input id="name" type="text" th:placeholder="#{M0840}"/>
+                            <input id="name" type="text" th:placeholder="#{M0851}"/>
 <!--        FIXME, placeHolder 문구                    -->
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><label for="cloudAccount">Cloud Account</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="cloudAccount">
+                                </select>
+                            </fieldset>
                         </dd>
                     </dl>
                     <dl>
@@ -32,7 +41,7 @@
                         </dd>
                     </dl>
                     <dl>
-                        <dt><label for="code">Code</label></dt>
+                        <dt><label for="code">Private Key</label></dt>
                         <dd>
                             <textarea id="code" rows="30"></textarea>
                         </dd>
@@ -41,7 +50,7 @@
             </div>
             <!-- btn -->
             <div class="btn02">
-                <button onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES);" th:text="#{M0028}"></button>
+                <button onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS);" th:text="#{M0028}"></button>
                 <div>
                     <button type="submit" id="save" th:text="#{M0030}"></button>
                 </div>
@@ -58,7 +67,7 @@
         window.onload = () => {
 
             IS_GLOBAL = true;
-            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.INSTANCE_CODE_TEMPLATE);
+            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.KEY_MANAGEMENTS);
 
             const createCodeTemplates = {
                 init() {
