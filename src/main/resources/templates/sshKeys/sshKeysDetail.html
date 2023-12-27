@@ -7,8 +7,8 @@
     <div id="content" class="sub-page">
         <article class="location">
             <ul>
-                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
-                <li><a onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS)">Key Managements</a></li>
+                <li><a onclick="movePage(URI_CP_INDEX_URL)">Clusters</a></li>
+                <li><a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)">SSH Keys</a></li>
             </ul>
         </article>
         <article class="base detail">
@@ -31,19 +31,13 @@
 
                         </tr>
                         <tr>
-                            <th scope="row" class="left">Cloud Account</th>
-                            <td class="left">
-                                <input class="left" id="cloudAccount" type="text" readonly>
-                            </td>
-                        </tr>
-                        <tr>
                             <th scope="row" class="left">Provider</th>
                             <td class="left">
                                 <input class="left" id="provider" type="text" readonly>
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" class="left">Private Key</th>
+                            <th scope="row" class="left">Instance Code</th>
                             <td class="left">
                                 <textarea class="left" id="code" rows="30" readonly></textarea>
                                 <button type="button" class="right" id="codeButton" onclick="activeEdit('code', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
@@ -58,7 +52,7 @@
                 <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')"></button>
                 <div>
                     <a href="javascript:" id="modify" data-role="instanceCodeTemplates" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
-                    <a onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS)" th:text="#{M0028}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" th:text="#{M0028}"></a>
                 </div>
             </div>
         </article>
@@ -70,14 +64,14 @@
         window.onload = () => {
 
             IS_GLOBAL = true;
-            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.KEY_MANAGEMENTS);
+            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.SSH_KEYS);
 
 
-            const instanceCodeDetail = {
+            const sshKeysDetail = {
                 init(){
 
                     // nameSpace 정보 조회
-                    func.loadData('GET', `${func.url}templates/${sessionStorage.getItem('commonName')}`, 'application/json', instanceCodeDetail.draw);
+                    func.loadData('GET', `${func.url}templates/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
                 },
 
                 draw(data){
@@ -88,19 +82,19 @@
                     document.getElementById('provider').value = data.provider;
                     document.getElementById('code').value = data.hclScript;
 
-                    instanceCodeDetail.event()
+                    sshKeysDetail.event()
                 },
 
                 event(){
                     if(document.getElementById('delete')) {
-                    document.getElementById('delete').addEventListener('click', () => {
-                        func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, instanceCodeDetail.delete);
-                }, false);}
+                        document.getElementById('delete').addEventListener('click', () => {
+                            func.alertPopup('DELETE', MSG_CHECK_TO_DELETE, true, MSG_CONFIRM, sshKeysDetail.delete);
+                        }, false);}
 
                     if(document.getElementById('modify')) {
-                    document.getElementById('modify').addEventListener('click', () => {
-                        func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, instanceCodeDetail.modify);
-                    }, false);}
+                        document.getElementById('modify').addEventListener('click', () => {
+                            func.alertPopup('MODIFY', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, sshKeysDetail.modify);
+                        }, false);}
 
                 },
 
@@ -115,15 +109,15 @@
                         "providerType": document.getElementById('provider').value,
                         "hclScript": document.getElementById('code').value
                     };
-                    func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', instanceCodeDetail.returnPage);
+                    func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', sshKeysDetail.returnPage);
                 },
 
                 returnPage() {
-                    document.location.href = URI_CP_GLOBAL_KEY_MANAGEMENTS + URI_CP_DETAILS;
+                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
                 }
             };
 
-            instanceCodeDetail.init();
+            sshKeysDetail.init();
         }
     </script>
 </th:block>

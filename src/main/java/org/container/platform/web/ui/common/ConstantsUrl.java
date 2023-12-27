@@ -13,6 +13,7 @@ public class ConstantsUrl {
     public static final String URI_CP_INDEX_URL = "/container-platform/clusters";
     public static final String URI_CP_CLUSTERS_NAMESPACES = "/container-platform/namespaces";
     public static final String URI_CP_CLUSTERS_NODES = "/container-platform/nodes";
+    public static final String URI_CP_CLUSTERS_SSH_KEYS = "/container-platform/sshKeys";
 
     public static final String URI_CP_WORKLOADS_DEPLOYMENTS = "/container-platform/deployments";
     public static final String URI_CP_WORKLOADS_PODS = "/container-platform/pods";

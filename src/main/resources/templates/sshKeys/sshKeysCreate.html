@@ -7,22 +7,28 @@
     <div id="content" class="sub-page clusters">
         <article class="location">
             <ul>
-                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
-                <li><a onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS)">Key Managements</a></li>
+                <li><a onclick="movePage(URI_CP_INDEX_URL)">Clusters</a></li>
+                <li><a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)">SSH Keys</a></li>
             </ul>
         </article>
         <article class="base">
             <div class="creat">
-                <h3 th:text="|Key Managements #{M0024}|"></h3>
+                <h3 th:text="|SSH Keys #{M0024}|"></h3>
                 <div>
                     <dl>
                         <dt><label for="name">Name</label></dt>
                         <dd>
-                            <input id="name" type="text" th:placeholder="#{M0851}"/>
-<!--        FIXME, placeHolder 문구                    -->
+                            <input id="name" type="text" th:placeholder="#{M0840}"/>
+                            <!--        FIXME, placeHolder 문구                    -->
                         </dd>
                     </dl>
                     <dl>
+                        <dt><label for="cloudAccount">Name</label></dt>
+                        <dd>
+                            <input id="cloudAccount" type="text"/>
+                        </dd>
+                    </dl>
+                    <!--<dl>
                         <dt><label for="cloudAccount">Cloud Account</label></dt>
                         <dd>
                             <fieldset>
@@ -30,7 +36,7 @@
                                 </select>
                             </fieldset>
                         </dd>
-                    </dl>
+                    </dl>-->
                     <dl>
                         <dt><label for="provider">Provider</label></dt>
                         <dd>
@@ -50,7 +56,7 @@
             </div>
             <!-- btn -->
             <div class="btn02">
-                <button onclick="movePage(URI_CP_GLOBAL_KEY_MANAGEMENTS);" th:text="#{M0028}"></button>
+                <button onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS);" th:text="#{M0028}"></button>
                 <div>
                     <button type="submit" id="save" th:text="#{M0030}"></button>
                 </div>
@@ -67,13 +73,13 @@
         window.onload = () => {
 
             IS_GLOBAL = true;
-            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.KEY_MANAGEMENTS);
+            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.SSH_KEYS);
 
-            const createCodeTemplates = {
+            const createSshKeys = {
                 init() {
 
                     // provider 정보 조회
-                    func.loadData('GET', `${func.url}accounts/provider/info`, 'application/json', createCodeTemplates.draw);
+                    func.loadData('GET', `${func.url}accounts/provider/info`, 'application/json', createSshKeys.draw);
 
                 },
 
@@ -82,17 +88,17 @@
                     let html = ``;
                     for (let key of info.keys()) {
                         if( key != 'KT') {
-                        html += `<option value="${key}">${key}</option>`; }
+                            html += `<option value="${key}">${key}</option>`; }
                     }
                     func.appendHtml(document.getElementById('provider'), html, 'select');
                     document.getElementById('provider').selectedIndex = "0";
 
-                    createCodeTemplates.event();
+                    createSshKeys.event();
                 },
 
                 event() {
                     document.getElementById('save').addEventListener('click', () => {
-                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createCodeTemplates.save);
+                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createSshKeys.save);
                     }, false);
                 },
 
@@ -102,12 +108,13 @@
 
                     createName = {
                         "resourceName": document.getElementById('name').value,
+                        "cloudAccount": document.getElementById('cloudAccount').value,
                         "providerType": providerType,
-                        "hclScript": document.getElementById('code').value
+                        "privateKey": document.getElementById('code').value
                     };
 
                     //check FILE
-                    func.saveData('POST', `${func.url}templates`, JSON.stringify(createName), true, 'application/json', createCodeTemplates.saveComp);
+                    func.saveData('POST', `${func.url}sshKeys`, JSON.stringify(createName), true, 'application/json', createSshKeys.saveComp);
                     //FIXME!!, 확인 버튼 클릭 전 이동하는 이슈
                 },
 
@@ -115,7 +122,7 @@
                     func.historyBack();
                 }
             };
-            createCodeTemplates.init();
+            createSshKeys.init();
         }
 
     </script>
