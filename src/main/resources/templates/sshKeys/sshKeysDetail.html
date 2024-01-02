@@ -37,10 +37,10 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" class="left">Instance Code</th>
+                            <th scope="row" class="left">Private Key</th>
                             <td class="left">
-                                <textarea class="left" id="code" rows="30" readonly></textarea>
-                                <button type="button" class="right" id="codeButton" onclick="activeEdit('code', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
+                                <textarea class="left" id="keys" rows="30" readonly></textarea>
+                                <button type="button" class="right" id="codeButton" onclick="activeEdit('keys', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
                             </td>
                         </tr>
                         </tbody>
@@ -51,8 +51,8 @@
             <div class="btn02">
                 <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')"></button>
                 <div>
-                    <a href="javascript:" id="modify" data-role="instanceCodeTemplates" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
-                    <a onclick="movePage(URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES)" th:text="#{M0028}"></a>
+                    <a href="javascript:" id="modify" data-role="sshKeys" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
+                    <a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)" th:text="#{M0028}"></a>
                 </div>
             </div>
         </article>
@@ -70,8 +70,8 @@
             const sshKeysDetail = {
                 init(){
 
-                    // nameSpace 정보 조회
-                    func.loadData('GET', `${func.url}templates/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
+                    // sshKeys 정보 조회
+                    func.loadData('GET', `${func.url}keys/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
                 },
 
                 draw(data){
@@ -80,7 +80,7 @@
 
                     document.getElementById('name').value = data.name;
                     document.getElementById('provider').value = data.provider;
-                    document.getElementById('code').value = data.hclScript;
+                    document.getElementById('keys').value = data.privateKey;
 
                     sshKeysDetail.event()
                 },
@@ -99,21 +99,21 @@
                 },
 
                 delete(){
-                    func.saveData('DELETE', `${func.url}templates/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                    func.saveData('DELETE', `${func.url}keys/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
                 },
 
                 modify() {
-                    let updateTemplate = {
+                    let updateKey = {
                         "resourceUid": sessionStorage.getItem('commonName'),
                         "resourceName": document.getElementById('name').value,
                         "providerType": document.getElementById('provider').value,
-                        "hclScript": document.getElementById('code').value
+                        "privateKey": document.getElementById('keys').value
                     };
-                    func.saveData('PUT', `${func.url}templates`, JSON.stringify(updateTemplate), true, 'application/json', sshKeysDetail.returnPage);
+                    func.saveData('PUT', `${func.url}keys`, JSON.stringify(updateKey), true, 'application/json', sshKeysDetail.returnPage);
                 },
 
                 returnPage() {
-                    document.location.href = URI_CP_GLOBAL_INSTANCE_CODE_TEMPLATES + URI_CP_DETAILS;
+                    document.location.href = URI_CP_CLUSTERS_SSH_KEYS + URI_CP_DETAILS;
                 }
             };
 

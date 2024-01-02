@@ -25,15 +25,13 @@
 					<table>
 						<caption>SSH Keys List</caption>
 						<colgroup >
-							<col width="45%" />
-							<col width="15%" />
+							<col width="60%" />
 							<col width="10%" />
 							<col width="30%" />
 						</colgroup>
 						<thead>
 						<tr>
 							<th scope="col">Name</th>
-							<th scope="col">Cloud Account</th>
 							<th scope="col">Provider</th>
 							<th scope="col">Created Time</th>
 						</tr>
@@ -82,8 +80,8 @@
 				load(){
 					func.loading();
 
-					// nameSpace 정보 조회
-					func.loadData('GET', `${func.url}templates?searchName=${document.getElementById('searchText').value}&limit=${sshKeys.limit}&offset=${sshKeys.offset}`, 'application/json', sshKeys.draw);
+					// sshKeys 정보 조회
+					func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys?searchName=${document.getElementById('searchText').value}&limit=${sshKeys.limit}&offset=${sshKeys.offset}`, 'application/json', sshKeys.draw);
 				},
 
 				draw(data){
