@@ -8,91 +8,48 @@
         <article class="location">
             <ul>
                 <li><a onclick="movePage(URI_CP_INDEX_URL)">Clusters</a></li>
-                <li><a onclick="movePage(URI_CP_CLUSTERS_NAMESPACES)">Namespaces</a></li>
+                <li><a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)">SSH Keys</a></li>
             </ul>
         </article>
         <article class="base">
             <div class="creat">
-                <h3 th:text="|Namespaces #{M0024}|"></h3>
+                <h3 th:text="|SSH Keys #{M0024}|"></h3>
                 <div>
                     <dl>
                         <dt><label for="name">Name</label></dt>
                         <dd>
-                            <input id="name" type="text" th:placeholder="#{M0010}"/>
+                            <input id="name" type="text" th:placeholder="#{M0851}"/>
                         </dd>
                     </dl>
-                    <dl style="margin-top: 50px;">
-                        <dt style="height: 40px; line-height: 40px;"><label>Resource Quotas</label>
-                            <button style="border: 1px solid  #f7f7f7; border-radius: 5px; padding: 5px 15px; margin-left: 10px;" href="javascript:;" class="resAdd" th:text="#{M0027}"></button>
-                        </dt>
+                   <!-- <dl>
+                        <dt><label for="cloudAccounts">Cloud Accounts</label></dt>
                         <dd>
-                            <div class="table_style01 limitTable">
-                                <table>
-                                    <caption>Resource Quotas</caption>
-                                    <colgroup>
-                                        <col width="30%"/>
-                                        <col width="70%"/>
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="resourceQuotas">
-                                    <tr>
-                                        <td></td>
-                                        <td colspan="2">No Data.</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <fieldset>
+                                <select id="cloudAccounts">
+                                </select>
+                            </fieldset>
+                        </dd>
+                    </dl>-->
+                    <dl>
+                        <dt><label for="provider">Provider</label></dt>
+                        <dd>
+                            <fieldset>
+                                <select id="provider">
+                                </select>
+                            </fieldset>
                         </dd>
                     </dl>
-                    <dl style="margin-top: 50px;">
-                        <dt style="height: 40px; line-height: 40px;"><label>Limit Ranges</label>
-                            <button style="border: 1px solid  #f7f7f7; border-radius: 5px; padding: 5px 15px; margin-left: 10px;" href="javascript:;" class="limAdd" th:text="#{M0027}"></button>
-                        </dt>
+                    <dl>
+                        <dt><label for="key">Private Key</label></dt>
                         <dd>
-                            <div class="table_style01 limitTable">
-                                <table>
-                                    <colgroup>
-                                        <col width="30%"/>
-                                        <col width="12%"/>
-                                        <col width="14%"/>
-                                        <col width="9%"/>
-                                        <col width="9%"/>
-                                        <col width="13%"/>
-                                        <col width="13%"/>
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Resource</th>
-                                        <th scope="col">Min</th>
-                                        <th scope="col">Max</th>
-                                        <th scope="col">Default Request</th>
-                                        <th scope="col">Default Limit</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="limitQuotas">
-                                    <tr>
-                                        <td></td>
-                                        <td colspan="8">No Data.</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <textarea id="key" rows="30"></textarea>
                         </dd>
                     </dl>
                 </div>
             </div>
             <!-- btn -->
             <div class="btn02">
-                <button onclick="movePage(URI_CP_CLUSTERS_NAMESPACES);" th:text="#{M0028}"></button>
+                <button onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS);" th:text="#{M0028}"></button>
                 <div>
                     <button type="submit" id="save" th:text="#{M0030}"></button>
                 </div>
@@ -105,266 +62,55 @@
     <script type="text/javascript">
         window.onload = () => {
 
-            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.NAMESPACES);
+            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.SSH_KEYS);
 
-
-            const createNamespaces = {
+            const createSshKeys = {
                 init() {
-                    createNamespaces.event();
-                },
-                draw() {
+
+                    // provider 정보 조회
+                    func.loadData('GET', `${func.url}accounts/provider/info`, 'application/json', createSshKeys.draw);
 
                 },
+
+                draw(data) {
+                    info = new Map(Object.entries(data.items));
+                    let html = ``;
+                    for (let key of info.keys()) {
+                        if( key != 'KT') {
+                            html += `<option value="${key}">${key}</option>`; }
+                    }
+                    func.appendHtml(document.getElementById('provider'), html, 'select');
+                    document.getElementById('provider').selectedIndex = "0";
+
+                    createSshKeys.event();
+                },
+
                 event() {
-                    document.querySelector('.resAdd').addEventListener('click', (e) => {
-                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/popup/resourceQuotas/template`, 'application/json', createNamespaces.resource);
-                    }, false);
-
-                    document.querySelector('.limAdd').addEventListener('click', (e) => {
-                        func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/all/popup/limitRanges/template`, 'application/json', createNamespaces.limit);
-                    }, false);
-
-                    document.getElementById('save').addEventListener('click', (e) => {
-                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createNamespaces.save);
+                    document.getElementById('save').addEventListener('click', () => {
+                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createSshKeys.save);
                     }, false);
                 },
 
                 save() {
-                    var resourceName = document.querySelector('.resourceQuotas').querySelectorAll('input');
-                    var limitName = document.querySelector('.limitQuotas').querySelectorAll('input');
+                    let createName;
+                    let providerType = document.getElementById('provider').value;
 
-                    var resourceQuotasList = [];
-                    var limitRangesList = [];
-
-                    for (var i = 0; i <= resourceName.length - 1; i++) {
-                        resourceQuotasList.push(resourceName[i].getAttribute('data-name'));
-                    }
-                    ;
-
-                    for (var j = 0; j <= limitName.length - 1; j++) {
-                        limitRangesList.push(limitName[j].getAttribute('data-name'));
-                    }
-                    ;
-
-                    var createName = {
-                        "name": document.getElementById('name').value,
-                        "resourceQuotasList": resourceQuotasList,
-                        "limitRangesList": limitRangesList,
+                    createName = {
+                        "resourceName": document.getElementById('name').value,
+                        "providerType": providerType,
+                        "privateKey": document.getElementById('key').value
                     };
 
-
-                    func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/sshKeys`, JSON.stringify(createName), true, 'application/json', func.historyBack);
+                    //check FILE
+                    func.saveData('POST', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys`, JSON.stringify(createName), true, 'application/json', createSshKeys.saveComp);
+                    //FIXME!!, 확인 버튼 클릭 전 이동하는 이슈
                 },
 
-                resource(data) {
-
-                    if (data.items.length > 0) {
-                        var html = `<div class='modal-wrap' id='modal'><div class='modal wide'><h5>Resource Quotas</h5>`;
-
-                        html += `<div class="table_style01">
-									<table>
-										<caption>Resource Quotas</caption>
-										<colgroup >
-											<col width="7%" />
-											<col width="27%" />
-											<col width="66%" />
-										</colgroup>
-										<thead>
-											<tr>
-												<th scope="col"></th>
-												<th scope="col">Name</th>
-												<th scope="col">Status</th>
-											</tr>
-										</thead>
-										<tbody class="resourceList">`;
-
-                        var select = document.querySelector('.resourceQuotas').querySelectorAll('input[type=checkbox]');
-
-                        for (var i = 0; i <= data.items.length - 1; i++) {
-                            var chk = '';
-
-                            for (var j = 0; j <= select.length - 1; j++) {
-                                if (select[j].getAttribute('data-name') == data.items[i].name) {
-                                    chk = 'checked';
-                                }
-                                ;
-                            }
-                            ;
-
-                            html += `<tr>
-										<td><input type="checkbox" id="resourceChk${i}" data-name="${data.items[i].name}" ${chk}><label for="resourceChk${i}"></td>
-										<td class="left">${data.items[i].name}</td>
-										<td class="left">${data.items[i].status}</td>
-									</tr>`;
-                        }
-
-                        html += `			</tbody>
-									</table>
-								</div>`;
-                        html += `<a class='confirm' href='javascript:;'>`+ MSG_SELECTION_COMPLETE+ `</a>`;
-                        html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
-
-                        func.appendHtml(document.getElementById('wrap'), html, 'div');
-
-                        document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
-                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
-                        }, false);
-
-                        document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
-
-                            var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
-
-                            func.removeHtml(document.querySelector('.resourceQuotas'));
-
-                            for (var i = 0; i <= input.length - 1; i++) {
-                                if (input[i].checked == false) {
-                                    document.getElementById('modal').querySelector('.resourceList').removeChild(input[i].parentNode.parentNode);
-                                } else {
-                                    input[i].setAttribute('id', '');
-                                }
-                                ;
-                            }
-                            ;
-
-                            if (document.getElementById('modal').querySelectorAll('.resourceList tr').length > 0) {
-                                var html = document.getElementById('modal').querySelector('.resourceList').innerHTML;
-                            } else {
-                                var html = '<tr><td></td><td colspan="2">No Data.</td></tr>';
-                            }
-                            ;
-
-                            func.appendHtml(document.querySelector('.resourceQuotas'), html, 'tbody');
-
-                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
-                        }, false);
-                    } else {
-                        func.alertPopup('ERROR', MSG_NO_LIST, false, MSG_CLOSE, true);
-                    }
-                    ;
-                },
-
-                limit(data) {
-
-                    if (data.items.length > 0) {
-                        var html = `<div class='modal-wrap' id='modal'><div class='modal wide'><h5>Limit Ranges</h5>`;
-
-                        html += `<div class="table_style01">
-									<table>
-										<caption>Limit Ranges</caption>
-										<colgroup >
-											<col width="7%" />
-											<col width="25%" />
-											<col width="12%" />
-											<col width="15%" />
-											<col width="8%" />
-											<col width="8%" />
-											<col width="13%" />
-											<col width="12%" />
-										</colgroup>
-										<thead>
-											<tr>
-												<th scope="col"></th>
-												<th scope="col">Name</th>
-												<th scope="col">Type</th>
-												<th scope="col">Resource</th>
-												<th scope="col">Min</th>
-												<th scope="col">Max</th>
-												<th scope="col">Default Request</th>
-												<th scope="col">Default Limit</th>
-											</tr>
-										</thead>
-										<tbody class="limitList">`;
-
-                        var select = document.querySelector('.limitQuotas').querySelectorAll('input[type=checkbox]');
-
-                        for (var i = 0; i <= data.items.length - 1; i++) {
-                            var chk = '';
-
-                            for (var j = 0; j <= select.length - 1; j++) {
-                                if (select[j].getAttribute('data-comp') == data.items[i].name + data.items[i].type + data.items[i].resource) {
-                                    chk = 'checked';
-                                }
-                                ;
-                            }
-                            ;
-
-                            html += `<tr>
-										<td><input type="checkbox" id="limitChk${i}" data-name="${data.items[i].name}" data-comp="${data.items[i].name}${data.items[i].type}${data.items[i].resource}" ${chk}><label for="limitChk${i}"></td>
-										<td class="left">${data.items[i].name}</td>
-										<td>${data.items[i].type}</td>
-										<td>${data.items[i].resource}</td>
-										<td>${data.items[i].min}</td>
-										<td>${data.items[i].max}</td>
-										<td>${data.items[i].defaultRequest}</td>
-										<td>${data.items[i].defaultLimit}</td>
-									</tr>`;
-                        }
-                        ;
-
-                        html += `</tbody></table></div>`;
-                        html += `<a class='confirm' href='javascript:;'>`+ MSG_SELECTION_COMPLETE+ `</a>`;
-                        html += `<a class='close' href='javascript:;'>` + MSG_CLOSE + `</a></div></div>`;
-
-                        func.appendHtml(document.getElementById('wrap'), html, 'div');
-
-                        document.getElementById('modal').querySelector('.close').addEventListener('click', (e) => {
-                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
-                        }, false);
-
-
-                        //동일한 limitRanges 정책 체크 추가
-                        var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
-
-                        for(var i=0; i<=input.length-1; i++){
-                            input[i].addEventListener('click', (e) => {
-                                createNamespaces.limitRangesChecked(e.target.getAttribute('data-name'), e.target.checked);
-                            }, false);
-                        };
-
-
-                        document.getElementById('modal').querySelector('.confirm').addEventListener('click', (e) => {
-                            var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
-
-                            func.removeHtml(document.querySelector('.limitQuotas'));
-
-                            for (var i = 0; i <= input.length - 1; i++) {
-                                if (input[i].checked == false) {
-                                    document.getElementById('modal').querySelector('.limitList').removeChild(input[i].parentNode.parentNode);
-                                } else {
-                                    input[i].setAttribute('id', '');
-                                }
-                                ;
-                            }
-                            ;
-
-                            if (document.getElementById('modal').querySelectorAll('.limitList tr').length > 0) {
-                                var html = document.getElementById('modal').querySelector('.limitList').innerHTML;
-                            } else {
-                                var html = '<tr><td></td><td colspan="8">No Data.</td></tr>';
-                            }
-                            ;
-
-                            func.appendHtml(document.querySelector('.limitQuotas'), html, 'tbody');
-
-                            document.getElementById('wrap').removeChild(document.getElementById('modal'));
-                        }, false);
-                    } else {
-                        func.alertPopup('ERROR', MSG_NO_LIST, false, MSG_CLOSE, true);
-                    }
-                    ;
-                },
-                limitRangesChecked(name,isCheck){
-                    var input = document.getElementById('modal').querySelectorAll('input[type=checkbox]');
-
-                    for(var i=0; i<=input.length-1; i++){
-                        if(name == input[i].getAttribute('data-name')){
-                            input[i].checked = isCheck;
-                        };
-                    };
-                },
-            }
-
-            createNamespaces.init();
+                saveComp() {
+                    func.historyBack();
+                }
+            };
+            createSshKeys.init();
         }
     </script>
 </th:block>
