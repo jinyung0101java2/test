@@ -47,7 +47,6 @@ public class SshKeysController {
      *
      * @return the view
      */
-    @PreAuthorize("@authSecurity.checkIsSuperAdmin()")
     @ApiOperation(value = "SshKeys 생성 페이지 이동(Go to the ssh keys create page)", nickname = "getKSshKeysCreate")
     @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_SSH_KEYS + ConstantsUrl.URI_CP_CREATE)
     public String getKSshKeysCreate() {

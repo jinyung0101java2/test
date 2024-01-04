@@ -59,7 +59,6 @@
 				offset : 0, // 로드 페이지 넘버
 				limit : 10, // 로드 게시물 개수
 				allItemCount : 0, //게시물 총 개수
-				type : 'administrator',
 
 				init(){
 					func.nameLoad = sshKeys.reset;
@@ -96,12 +95,12 @@
 								func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 							}
 						} else {
-							html = `<tr><td colspan="4">No Data.</td></tr>`;
+							html = `<tr><td colspan="3">No Data.</td></tr>`;
 
 							func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 						}
 					} else {
-						html = `<tr><td colspan="4">No Data.</td></tr>`;
+						html = `<tr><td colspan="3">No Data.</td></tr>`;
 
 						func.appendHtml(document.querySelector('.listTable'), html, 'tbody');
 					}

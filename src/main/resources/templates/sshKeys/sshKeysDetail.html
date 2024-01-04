@@ -71,7 +71,8 @@
                 init(){
 
                     // sshKeys 정보 조회
-                    func.loadData('GET', `${func.url}keys/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
+                    //func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}`, 'application/json', nameDetail.draw);
+                    func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
                 },
 
                 draw(data){
@@ -99,7 +100,7 @@
                 },
 
                 delete(){
-                    func.saveData('DELETE', `${func.url}keys/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
+                    func.saveData('DELETE', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys/${sessionStorage.getItem('commonName')}`, '', true, 'application/json', func.historyBack);
                 },
 
                 modify() {
@@ -109,7 +110,7 @@
                         "providerType": document.getElementById('provider').value,
                         "privateKey": document.getElementById('keys').value
                     };
-                    func.saveData('PUT', `${func.url}keys`, JSON.stringify(updateKey), true, 'application/json', sshKeysDetail.returnPage);
+                    func.saveData('PUT', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys`, JSON.stringify(updateKey), true, 'application/json', sshKeysDetail.returnPage);
                 },
 
                 returnPage() {
