@@ -76,7 +76,7 @@
                     info = new Map(Object.entries(data.items));
                     let html = ``;
                     for (let key of info.keys()) {
-                        if( key != 'KT') {
+                        if( key != 'KT' && key != 'NAVER') {
                             html += `<option value="${key}">${key}</option>`; }
                     }
                     func.appendHtml(document.getElementById('provider'), html, 'select');
