@@ -39,8 +39,7 @@
                         <tr>
                             <th scope="row" class="left">Private Key</th>
                             <td class="left">
-                                <textarea class="left" id="keys" rows="30" readonly></textarea>
-                                <button type="button" class="right" id="codeButton" onclick="activeEdit('keys', this.id)" sec:authorize="hasAuthority('SUPER_ADMIN')">Edit</button>
+                                <input class="left box" id="keys" type="password" readonly>
                             </td>
                         </tr>
                         </tbody>
@@ -71,17 +70,16 @@
                 init(){
 
                     // sshKeys 정보 조회
-                    //func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/namespaces/${sessionStorage.getItem('nameSpace')}`, 'application/json', nameDetail.draw);
                     func.loadData('GET', `${func.url}clusters/${sessionStorage.getItem('cluster')}/keys/${sessionStorage.getItem('commonName')}`, 'application/json', sshKeysDetail.draw);
                 },
 
                 draw(data){
 
                     // Details data
-
                     document.getElementById('name').value = data.name;
                     document.getElementById('provider').value = data.provider;
-                    document.getElementById('keys').value = data.privateKey;
+                    //document.getElementById('keys').value = data.privateKey;
+                    document.getElementById('keys').value  = MASKED_DATA;
 
                     sshKeysDetail.event()
                 },
