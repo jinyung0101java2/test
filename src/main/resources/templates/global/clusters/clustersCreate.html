@@ -157,7 +157,7 @@
                     let registerProviderHtml = ``;
 
                     for (let key of info.keys()) {
-                        if( key != 'KT' && key != 'NAVER') {
+                        if( key != 'KT' ) {
                         createProviderHtml += `<option value="${key}">${key}</option>`; }
                     }
 
@@ -287,7 +287,13 @@
                         html += `>${item.name}</option>`;
                     }
 
-                    func.appendHtml(document.getElementById('createSshKeys'), html, 'dl');
+                    if (provider != 'NAVER'){
+                        document.getElementById('createSshKeys').removeAttribute("disabled")
+                        func.appendHtml(document.getElementById('createSshKeys'), html, 'dl');
+                    } else {
+                        document.getElementById('createSshKeys').setAttribute('disabled',true);
+                    }
+
                 });
             }
 
