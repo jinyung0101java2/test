@@ -7,8 +7,8 @@
 	<div id="content" class="sub-page">
 		<article class="location">
 			<ul>
-				<li><a onclick="movePage(URI_CP_INDEX_URL)">Clusters</a></li>
-				<li><a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)">SSH Keys</a></li>
+				<li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+				<li><a onclick="movePage(URI_CP_GLOBAL_SSH_KEYS)">SSH Keys</a></li>
 			</ul>
 			<!-- Click event class="on" -->
 			<fieldset>
@@ -53,7 +53,7 @@
 		window.onload = () => {
 
 			IS_GLOBAL = true;
-			func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.SSH_KEYS);
+			func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.SSH_KEYS);
 
 			const sshKeys = {
 				offset : 0, // 로드 페이지 넘버
@@ -131,7 +131,7 @@
 
 					if(document.querySelector('.create')) {
 						document.querySelector('.create').addEventListener('click', () => {
-							document.location.href = URI_CP_CLUSTERS_SSH_KEYS + URI_CP_CREATE;
+							document.location.href = URI_CP_GLOBAL_SSH_KEYS + URI_CP_CREATE;
 						}, false);}
 				},
 
@@ -142,7 +142,7 @@
 						listAll[i].addEventListener('click', (e) => {
 							sessionStorage.setItem('commonName', e.target.getAttribute('data-id'));
 
-							document.location.href = URI_CP_CLUSTERS_SSH_KEYS + URI_CP_DETAILS;
+							document.location.href = URI_CP_GLOBAL_SSH_KEYS + URI_CP_DETAILS;
 						}, true);
 					}
 				},

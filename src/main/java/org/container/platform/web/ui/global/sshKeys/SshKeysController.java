@@ -1,4 +1,4 @@
-package org.container.platform.web.ui.clusters.sshKeys;
+package org.container.platform.web.ui.global.sshKeys;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @PreAuthorize("@authSecurity.checkIsGlobal()")
 @Controller
 public class SshKeysController {
-    private static final String BASE_URL = "sshKeys/";
+    private static final String BASE_URL = "global/sshKeys/";
 
     /**
      * SshKeys 목록 페이지 이동(Go to the ssh keys list page)
@@ -26,7 +26,7 @@ public class SshKeysController {
      * @return the view
      */
     @ApiOperation(value = "SshKeys 목록 페이지 이동(Go to the ssh keys list page)", nickname = "getSshKeysList")
-    @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_SSH_KEYS)
+    @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_SSH_KEYS)
     public String getSshKeysList() {
         return BASE_URL + "sshKeys";
     }
@@ -37,7 +37,7 @@ public class SshKeysController {
      * @return the view
      */
     @ApiOperation(value = "SshKeys 상세 페이지 이동(Go to the ssh keys details page)", nickname = "getSshKeysDetails")
-    @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_SSH_KEYS + ConstantsUrl.URI_CP_DETAILS)
+    @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_SSH_KEYS + ConstantsUrl.URI_CP_DETAILS)
     public String getSshKeysDetails() {
         return BASE_URL + "sshKeysDetail";
     }
@@ -48,7 +48,7 @@ public class SshKeysController {
      * @return the view
      */
     @ApiOperation(value = "SshKeys 생성 페이지 이동(Go to the ssh keys create page)", nickname = "getKSshKeysCreate")
-    @GetMapping(value = ConstantsUrl.URI_CP_CLUSTERS_SSH_KEYS + ConstantsUrl.URI_CP_CREATE)
+    @GetMapping(value = ConstantsUrl.URI_CP_GLOBAL_SSH_KEYS + ConstantsUrl.URI_CP_CREATE)
     public String getKSshKeysCreate() {
         return BASE_URL + "sshKeysCreate";
     }

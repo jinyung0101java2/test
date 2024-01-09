@@ -7,8 +7,8 @@
     <div id="content" class="sub-page">
         <article class="location">
             <ul>
-                <li><a onclick="movePage(URI_CP_INDEX_URL)">Clusters</a></li>
-                <li><a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)">SSH Keys</a></li>
+                <li><a onclick="movePage(URI_CP_BASE_URL)">Global</a></li>
+                <li><a onclick="movePage(URI_CP_GLOBAL_SSH_KEYS)">SSH Keys</a></li>
             </ul>
         </article>
         <article class="base detail">
@@ -51,7 +51,7 @@
                 <button type="submit" id="delete" th:text="#{M0026}" sec:authorize="hasAuthority('SUPER_ADMIN')"></button>
                 <div>
                     <a href="javascript:" id="modify" data-role="sshKeys" th:text="#{M0025}" sec:authorize="hasAuthority('SUPER_ADMIN')"></a>
-                    <a onclick="movePage(URI_CP_CLUSTERS_SSH_KEYS)" th:text="#{M0028}"></a>
+                    <a onclick="movePage(URI_CP_GLOBAL_SSH_KEYS)" th:text="#{M0028}"></a>
                 </div>
             </div>
         </article>
@@ -63,7 +63,7 @@
         window.onload = () => {
 
             IS_GLOBAL = true;
-            func.init(ASIDE_DP1.CLUSTERS, ASIDE_DP2.SSH_KEYS);
+            func.init(ASIDE_DP1.GLOBAL, ASIDE_DP2.SSH_KEYS);
 
 
             const sshKeysDetail = {
@@ -112,7 +112,7 @@
                 },
 
                 returnPage() {
-                    document.location.href = URI_CP_CLUSTERS_SSH_KEYS + URI_CP_DETAILS;
+                    document.location.href = URI_CP_GLOBAL_SSH_KEYS + URI_CP_DETAILS;
                 }
             };
 
