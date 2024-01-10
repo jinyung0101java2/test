@@ -42,7 +42,8 @@
                     <dl>
                         <dt><label for="key">Private Key</label></dt>
                         <dd>
-                            <textarea id="key" rows="30"></textarea>
+                            <input id="key" type="file" accept="text/plain" /><br><br>
+                            <div id="output"></div>
                         </dd>
                     </dl>
                 </div>
@@ -86,19 +87,41 @@
                 },
 
                 event() {
-                    document.getElementById('save').addEventListener('click', () => {
-                        func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createSshKeys.save);
-                    }, false);
+                    if(document.getElementById('save')) {
+                        document.getElementById('save').addEventListener('click', () => {
+                            func.alertPopup('SAVE', MSG_CHECK_TO_SAVE, true, MSG_CONFIRM, createSshKeys.save);
+                        }, false);
+                    }
+
+                    if(document.getElementById('key')) {
+                        document.getElementById("key").addEventListener('click', () => {
+                            let target = document.getElementById("key");
+                            target.onchange = (e) => {
+                                processFile(e.target.files[0]);
+                            }
+                            function processFile(file) {
+                                var reader = new FileReader();
+
+                                reader.onload = function () {
+                                    let privateKey =  reader.result
+                                    output.innerText = reader.result;
+                                    sessionStorage.setItem('privateKey', privateKey);
+                                };
+                                reader.readAsText(file, "euc-kr");
+                            }
+                        }, false);
+                    }
                 },
 
                 save() {
                     let createName;
                     let providerType = document.getElementById('provider').value;
+                    let privateKey = sessionStorage.getItem('privateKey');
 
                     createName = {
                         "resourceName": document.getElementById('name').value,
                         "providerType": providerType,
-                        "privateKey": document.getElementById('key').value
+                        "privateKey": privateKey
                     };
 
                     //check FILE
